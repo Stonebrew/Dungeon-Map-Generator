@@ -1,26 +1,18 @@
 import { Crown, Lock } from 'lucide-react';
-import type { TierId } from '../types';
+import { getFeatureDescription, getFeatureLabel, getRequiredTier, getTierLabel, type FeatureKey } from '../lib/entitlements';
 import { Badge, Panel } from './Badge';
-
-const tierNames: Record<TierId, string> = {
-  lantern: 'Lantern',
-  adventurer: 'Adventurer',
-  dungeonwright: 'Dungeonwright',
-};
-
-export type LockedFeatureInfo = {
-  name: string;
-  requiredTier: TierId;
-  reason: string;
-};
 
 export function LockedFeature({
   feature,
   onUpgrade,
 }: {
-  feature: LockedFeatureInfo;
+  feature: FeatureKey;
   onUpgrade: () => void;
 }) {
+  const label = getFeatureLabel(feature);
+  const requiredTier = getRequiredTier(feature);
+  const description = getFeatureDescription(feature);
+
   return (
     <Panel className="border-brass/35">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
@@ -31,11 +23,11 @@ export function LockedFeature({
               <Lock className="h-5 w-5" aria-hidden="true" />
             </span>
             <div>
-              <h2 className="font-serif text-3xl font-bold">{feature.name}</h2>
-              <p className="mt-1 text-sm font-bold text-ink/60">Available in {tierNames[feature.requiredTier]} and above.</p>
+              <h2 className="font-serif text-3xl font-bold">{label}</h2>
+              <p className="mt-1 text-sm font-bold text-ink/60">Available in {getTierLabel(requiredTier)} and above.</p>
             </div>
           </div>
-          <p className="mt-4 text-sm leading-6 text-ink/70">{feature.reason}</p>
+          <p className="mt-4 text-sm leading-6 text-ink/70">{description}</p>
         </div>
         <button type="button" onClick={onUpgrade} className="inline-flex items-center justify-center gap-2 rounded-md bg-brass px-4 py-2 text-sm font-bold text-white">
           <Crown className="h-4 w-4" aria-hidden="true" />

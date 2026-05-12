@@ -1,8 +1,8 @@
 import { Archive, FileDown, Lock, Map, RefreshCcw, Swords } from 'lucide-react';
-import type { Dungeon } from '../types';
+import type { Dungeon, TierId } from '../types';
 import { DungeonMap } from './DungeonMap';
 import { Badge, Panel } from './Badge';
-import type { LockedFeatureInfo } from './LockedFeature';
+import { canAccessFeature, type FeatureKey } from '../lib/entitlements';
 
 function InfoChip({ label, value }: { label: string; value: string }) {
   return (
@@ -43,19 +43,25 @@ function ActionButton({
 
 export function DungeonSummary({
   dungeon,
-  premiumUnlocked,
+  tier,
   onNavigate,
   onLockedFeature,
   onPlaceholderFeature,
 }: {
   dungeon: Dungeon;
-  premiumUnlocked: boolean;
+  tier: TierId;
   onNavigate: (view: 'gm' | 'player' | 'upgrade' | 'rerolls') => void;
-  onLockedFeature: (feature: LockedFeatureInfo) => void;
+  onLockedFeature: (feature: FeatureKey) => void;
   onPlaceholderFeature: (feature: { name: string; text: string }) => void;
 }) {
-  const selectPremiumFeature = (feature: LockedFeatureInfo, unlockedView?: 'player' | 'rerolls') => {
-    if (premiumUnlocked && unlockedView) {
+  const hasColorMap = canAccessFeature(tier, 'colorMap');
+  const hasPlayerMap = canAccessFeature(tier, 'playerMap');
+  const hasPdfExport = canAccessFeature(tier, 'pdfExport');
+  const hasArchive = canAccessFeature(tier, 'archive');
+  const hasRerolls = canAccessFeature(tier, 'fullReroll');
+
+  const selectPremiumFeature = (feature: FeatureKey, unlockedView?: 'player' | 'rerolls') => {
+    if (canAccessFeature(tier, feature) && unlockedView) {
       onNavigate(unlockedView);
       return;
     }
@@ -83,7 +89,7 @@ export function DungeonSummary({
         <p className="mt-1 text-sm leading-6 text-ink/75">{dungeon.hook}</p>
       </div>
 
-      <DungeonMap mode="gm" mapStyle={dungeon.mapStyle} colorEnabled={premiumUnlocked} compact showLegend />
+      <DungeonMap mode="gm" mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} compact showLegend />
 
       <div className="space-y-2">
         <ActionButton primary label="Run This Dungeon" icon={Swords} onClick={() => onNavigate('gm')} />
@@ -91,14 +97,10 @@ export function DungeonSummary({
           <ActionButton
             label="Player Map"
             icon={Map}
-            locked={!premiumUnlocked}
+            locked={!hasPlayerMap}
             onClick={() =>
               selectPremiumFeature(
-                {
-                  name: 'Player-Safe Map',
-                  requiredTier: 'adventurer',
-                  reason: 'Share a spoiler-free map with your players while keeping traps, secrets, treasure, and GM-only labels hidden.',
-                },
+                'playerMap',
                 'player',
               )
             }
@@ -106,31 +108,23 @@ export function DungeonSummary({
           <ActionButton
             label="Export PDF"
             icon={FileDown}
-            locked={!premiumUnlocked}
+            locked={!hasPdfExport}
             onClick={() =>
-              premiumUnlocked
+              hasPdfExport
                 ? onPlaceholderFeature({
                     name: 'PDF Export',
                     text: 'PDF export is available to this mock tier, but real PDF generation is intentionally not implemented in this prototype.',
                   })
-                : onLockedFeature({
-                    name: 'PDF Export',
-                    requiredTier: 'adventurer',
-                    reason: 'Prepare a table-ready handout packet for the dungeon. This prototype only shows the export entry point.',
-                  })
+                : onLockedFeature('pdfExport')
             }
           />
           <ActionButton
             label="Reroll"
             icon={RefreshCcw}
-            locked={!premiumUnlocked}
+            locked={!hasRerolls}
             onClick={() =>
               selectPremiumFeature(
-                {
-                  name: 'Reroll / Refresh Tools',
-                  requiredTier: 'adventurer',
-                  reason: 'Adjust today’s dungeon with full rerolls, map-preserving variants, or targeted partial refreshes.',
-                },
+                'fullReroll',
                 'rerolls',
               )
             }
@@ -138,18 +132,14 @@ export function DungeonSummary({
           <ActionButton
             label="Archive"
             icon={Archive}
-            locked={!premiumUnlocked}
+            locked={!hasArchive}
             onClick={() =>
-              premiumUnlocked
+              hasArchive
                 ? onPlaceholderFeature({
                     name: 'Archive Access',
                     text: 'Archive access is available to this mock tier, but real saved dungeon storage is intentionally not implemented in this prototype.',
                   })
-                : onLockedFeature({
-                    name: 'Archive Access',
-                    requiredTier: 'adventurer',
-                    reason: 'Keep previous daily dungeons available for later sessions, reskins, or campaign prep.',
-                  })
+                : onLockedFeature('archive')
             }
           />
         </div>

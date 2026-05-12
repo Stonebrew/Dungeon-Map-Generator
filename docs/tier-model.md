@@ -85,3 +85,7 @@ Full access tier focused on control.
 ## Reroll Rules
 
 Full dungeon rerolls and partial refreshes are separate resources. Unused rerolls and refreshes carry over up to double the tier's daily limit. Reroll controls are UI-only in the current prototype.
+
+## Implementation Note
+
+Feature keys, required tiers, labels, and locked-feature descriptions live in `src/lib/entitlements.ts` so UI components do not hard-code subscription comparisons.

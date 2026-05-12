@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import type { Dungeon, TierId } from '../types';
+import { canAccessFeature } from '../lib/entitlements';
 import { DungeonMap } from './DungeonMap';
 import { EncounterTable, EncounterTablesSection } from './EncounterTable';
 import { Badge, Panel, SectionHeader } from './Badge';
@@ -25,9 +26,11 @@ function InfoPill({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function GMView({ dungeon, isUnlocked }: { dungeon: Dungeon; isUnlocked: (tier: TierId) => boolean }) {
+export function GMView({ dungeon, tier }: { dungeon: Dungeon; tier: TierId }) {
   const [activeTab, setActiveTab] = useState<GmTab>('setup');
   const [expandedRoom, setExpandedRoom] = useState<number | undefined>();
+  const hasColorMap = canAccessFeature(tier, 'colorMap');
+  const canRefreshRooms = canAccessFeature(tier, 'partialRefresh');
 
   useEffect(() => {
     setExpandedRoom(undefined);
@@ -74,7 +77,7 @@ export function GMView({ dungeon, isUnlocked }: { dungeon: Dungeon; isUnlocked: 
         </Panel>
       )}
 
-      {activeTab === 'map' && <DungeonMap mode="gm" mapStyle={dungeon.mapStyle} colorEnabled={isUnlocked('adventurer')} />}
+      {activeTab === 'map' && <DungeonMap mode="gm" mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} />}
       {activeTab === 'areas' && (
         <div className="space-y-4">
           <Panel className="p-3">
@@ -114,7 +117,7 @@ export function GMView({ dungeon, isUnlocked }: { dungeon: Dungeon; isUnlocked: 
               <RoomCard
                 key={room.number}
                 room={room}
-                canRefresh={isUnlocked('adventurer')}
+                canRefresh={canRefreshRooms}
                 expanded={expandedRoom === room.number}
                 onToggle={() => openRoom(room.number)}
               />

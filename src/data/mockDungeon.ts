@@ -3,12 +3,7 @@ import type { Dungeon, Plan, RerollAllowance, RerollCounts, TierId } from '../ty
 export const currentTier: TierId = 'lantern';
 
 // Backend integration point: replace these mock exports with generated dungeon,
-// entitlement, archive, and reroll payloads once server data exists.
-export const tierRank: Record<TierId, number> = {
-  lantern: 0,
-  adventurer: 1,
-  dungeonwright: 2,
-};
+// archive, and reroll payloads once server data exists.
 
 export const plans: Plan[] = [
   {

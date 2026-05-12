@@ -19,6 +19,8 @@ The first prototype demonstrates the daily dungeon reading experience with mock 
 
 The prototype uses three mock tiers: Lantern, Adventurer, and Dungeonwright. Lantern is free, Adventurer unlocks table-use features, and Dungeonwright unlocks advanced control features.
 
+Feature entitlement checks are centralized in `src/lib/entitlements.ts`. The temporary mock dungeon and mock user tier selectors are isolated in the Prototype Dev Panel and should be replaced by real daily generation and account data later.
+
 ## Out Of Scope
 
 - Backend generation

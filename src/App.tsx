@@ -1,14 +1,16 @@
 import { BookOpen, Crown, Dice5, RefreshCcw, ScrollText, Shield } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import { Badge, Panel } from './components/Badge';
+import { DevPanel } from './components/DevPanel';
 import { DungeonSummary } from './components/DungeonSummary';
 import { EncounterTablesSection } from './components/EncounterTable';
 import { GMView } from './components/GMView';
-import { LockedFeature, type LockedFeatureInfo } from './components/LockedFeature';
+import { LockedFeature } from './components/LockedFeature';
 import { PlayerMapView } from './components/PlayerMapView';
 import { PremiumPlans } from './components/PremiumPlans';
 import { RerollPanel } from './components/RerollPanel';
-import { currentTier, mockDungeons, plans, rerollAllowancesByTier, rerollCountsByTier, tierRank } from './data/mockDungeon';
+import { currentTier, mockDungeons, plans, rerollAllowancesByTier, rerollCountsByTier } from './data/mockDungeon';
+import { canAccessFeature, type FeatureKey, tierRank } from './lib/entitlements';
 import type { Plan, TierId } from './types';
 
 type ViewId = 'today' | 'gm' | 'player' | 'encounters' | 'upgrade' | 'rerolls' | 'locked' | 'placeholder';
@@ -22,22 +24,14 @@ const viewItems: { id: ViewId; label: string; icon: typeof BookOpen }[] = [
   { id: 'rerolls', label: 'Rerolls', icon: RefreshCcw },
 ];
 
-const lockedFeatures: Partial<Record<ViewId, LockedFeatureInfo>> = {
-  player: {
-    name: 'Player-Safe Map',
-    requiredTier: 'adventurer',
-    reason: 'Share a spoiler-free map with your players while keeping traps, secrets, treasure, and GM-only labels hidden.',
-  },
-  rerolls: {
-    name: 'Reroll / Refresh Tools',
-    requiredTier: 'adventurer',
-    reason: 'Adjust today’s dungeon with full rerolls, map-preserving variants, or targeted partial refreshes.',
-  },
+const lockedFeatures: Partial<Record<ViewId, FeatureKey>> = {
+  player: 'playerMap',
+  rerolls: 'fullReroll',
 };
 
 function App() {
   const [view, setView] = useState<ViewId>('today');
-  const [lockedFeature, setLockedFeature] = useState<LockedFeatureInfo | undefined>();
+  const [lockedFeature, setLockedFeature] = useState<FeatureKey | undefined>();
   const [placeholderFeature, setPlaceholderFeature] = useState<{ name: string; text: string } | undefined>();
   const [selectedDungeonId, setSelectedDungeonId] = useState(mockDungeons[0].id);
   const [selectedTier, setSelectedTier] = useState<TierId>(currentTier);
@@ -47,9 +41,7 @@ function App() {
     [selectedDungeonId],
   );
 
-  const isUnlocked = (requiredTier: TierId) => tierRank[selectedTier] >= tierRank[requiredTier];
-
-  const showLockedFeature = (feature: LockedFeatureInfo) => {
+  const showLockedFeature = (feature: FeatureKey) => {
     setLockedFeature(feature);
     setView('locked');
   };
@@ -61,12 +53,12 @@ function App() {
 
   const isViewLocked = (targetView: ViewId) => {
     const lock = lockedFeatures[targetView];
-    return Boolean(lock && !isUnlocked(lock.requiredTier));
+    return Boolean(lock && !canAccessFeature(selectedTier, lock));
   };
 
   const navigateTo = (targetView: ViewId) => {
     const lock = lockedFeatures[targetView];
-    if (lock && !isUnlocked(lock.requiredTier)) {
+    if (lock && !canAccessFeature(selectedTier, lock)) {
       showLockedFeature(lock);
       return;
     }
@@ -77,18 +69,18 @@ function App() {
     setSelectedTier(nextTier);
     const lock = lockedFeatures[view];
 
-    if (lock && tierRank[nextTier] < tierRank[lock.requiredTier]) {
+    if (lock && !canAccessFeature(nextTier, lock)) {
       setLockedFeature(lock);
       setView('locked');
       return;
     }
 
-    if (view === 'locked' && lockedFeature && tierRank[nextTier] >= tierRank[lockedFeature.requiredTier]) {
+    if (view === 'locked' && lockedFeature && canAccessFeature(nextTier, lockedFeature)) {
       setView('today');
       return;
     }
 
-    if (view === 'placeholder' && tierRank[nextTier] < tierRank.adventurer) {
+    if (view === 'placeholder' && !canAccessFeature(nextTier, 'pdfExport')) {
       setView('today');
     }
   };
@@ -111,54 +103,29 @@ function App() {
           </div>
 
           <div className="px-4 py-5 sm:px-6 lg:px-8">
-            <div className="mb-4 grid gap-3 lg:grid-cols-[1fr_16rem]">
-              {/* Temporary prototype selector: replace with daily generation/archive selection once backend data exists. */}
-              <label className="block rounded-md border border-ink/10 bg-white/70 p-3 text-sm shadow-tool">
-                <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-ink/45">Mock Dungeon Selector</span>
-                <select
-                  value={selectedDungeonId}
-                  onChange={(event) => setSelectedDungeonId(event.target.value)}
-                  className="mt-2 w-full rounded-md border border-ink/10 bg-white px-3 py-2 text-sm font-bold text-ink"
-                >
-                  {mockDungeons.map((dungeon) => (
-                    <option key={dungeon.id} value={dungeon.id}>
-                      {dungeon.title}
-                    </option>
-                  ))}
-                </select>
-              </label>
-
-              {/* Temporary prototype selector: replace with real subscription/account data once auth and billing exist. */}
-              <label className="block rounded-md border border-ink/10 bg-white/70 p-3 text-sm shadow-tool">
-                <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-ink/45">Mock User Tier</span>
-                <select
-                  value={selectedTier}
-                  onChange={(event) => handleTierChange(event.target.value as TierId)}
-                  className="mt-2 w-full rounded-md border border-ink/10 bg-white px-3 py-2 text-sm font-bold text-ink"
-                >
-                  {plans.map((plan) => (
-                    <option key={plan.id} value={plan.id}>
-                      {plan.name}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
+            <DevPanel
+              dungeons={mockDungeons}
+              selectedDungeonId={selectedDungeonId}
+              onDungeonChange={setSelectedDungeonId}
+              plans={plans}
+              selectedTier={selectedTier}
+              onTierChange={handleTierChange}
+            />
 
             {view === 'today' && (
               <DungeonSummary
                 dungeon={selectedDungeon}
-                premiumUnlocked={isUnlocked('adventurer')}
+                tier={selectedTier}
                 onNavigate={navigateTo}
                 onLockedFeature={showLockedFeature}
                 onPlaceholderFeature={showPlaceholderFeature}
               />
             )}
-            {view === 'gm' && <GMView dungeon={selectedDungeon} isUnlocked={isUnlocked} />}
-            {view === 'player' && <PlayerMapView dungeon={selectedDungeon} premiumUnlocked={isUnlocked('adventurer')} />}
+            {view === 'gm' && <GMView dungeon={selectedDungeon} tier={selectedTier} />}
+            {view === 'player' && <PlayerMapView dungeon={selectedDungeon} premiumUnlocked={canAccessFeature(selectedTier, 'playerMap')} />}
             {view === 'encounters' && <EncounterTablesSection tables={selectedDungeon.encounterTables} />}
             {view === 'upgrade' && <PremiumPlans plans={plans} currentTier={selectedTier} tierRank={tierRank} />}
-            {view === 'rerolls' && <RerollPanel rerolls={rerollCountsByTier[selectedTier]} allowance={rerollAllowancesByTier[selectedTier]} isUnlocked={isUnlocked} onLockedFeature={showLockedFeature} />}
+            {view === 'rerolls' && <RerollPanel tier={selectedTier} rerolls={rerollCountsByTier[selectedTier]} allowance={rerollAllowancesByTier[selectedTier]} onLockedFeature={showLockedFeature} />}
             {view === 'locked' && lockedFeature && <LockedFeature feature={lockedFeature} onUpgrade={() => setView('upgrade')} />}
             {view === 'placeholder' && placeholderFeature && <PlaceholderFeature feature={placeholderFeature} />}
           </div>

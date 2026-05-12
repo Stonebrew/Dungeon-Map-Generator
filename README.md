@@ -37,3 +37,5 @@ Open the local URL printed by Vite, usually `http://127.0.0.1:5173/`.
 The current UI includes Today’s Dungeon, GM View, Player Safe Map View, Encounter Tables, Premium Plans, and a mock Reroll / Refresh panel. Dungeon content is system-agnostic and avoids system-specific stat blocks.
 
 The current mock subscription model has three tiers: Lantern, Adventurer, and Dungeonwright.
+
+Feature access is centralized in `src/lib/entitlements.ts`. Temporary prototype selectors for mock dungeon and mock user tier testing live in `src/components/DevPanel.tsx`.

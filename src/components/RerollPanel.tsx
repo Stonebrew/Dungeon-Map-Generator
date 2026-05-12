@@ -1,7 +1,7 @@
 import { Lock } from 'lucide-react';
 import type { RerollAllowance, RerollCounts, TierId } from '../types';
+import { canAccessFeature, getFeatureDescription, getFeatureLabel, type FeatureKey } from '../lib/entitlements';
 import { Badge, Panel, SectionHeader } from './Badge';
-import type { LockedFeatureInfo } from './LockedFeature';
 
 function ResourceCard({
   label,
@@ -78,21 +78,18 @@ function RerollTypeCard({
 }
 
 function PremiumControl({
-  label,
-  required,
-  reason,
+  feature,
   options,
-  isUnlocked,
+  tier,
   onLockedFeature,
 }: {
-  label: string;
-  required: TierId;
-  reason: string;
+  feature: FeatureKey;
   options: string[];
-  isUnlocked: (tier: TierId) => boolean;
-  onLockedFeature: (feature: LockedFeatureInfo) => void;
+  tier: TierId;
+  onLockedFeature: (feature: FeatureKey) => void;
 }) {
-  const unlocked = isUnlocked(required);
+  const unlocked = canAccessFeature(tier, feature);
+  const label = getFeatureLabel(feature);
   const controlClasses = `block rounded-md border p-3 text-left ${unlocked ? 'border-ink/10 bg-white' : 'border-ink/10 bg-ink/5 text-ink/45 hover:bg-ink/10'}`;
 
   if (!unlocked) {
@@ -100,13 +97,8 @@ function PremiumControl({
       <button
         type="button"
         className={controlClasses}
-        onClick={() =>
-          onLockedFeature({
-            name: label,
-            requiredTier: required,
-            reason,
-          })
-        }
+        onClick={() => onLockedFeature(feature)}
+        title={getFeatureDescription(feature)}
       >
         <span className="flex items-center justify-between gap-2 text-xs font-bold uppercase tracking-[0.14em]">
           {label}
@@ -132,29 +124,31 @@ function PremiumControl({
 }
 
 export function RerollPanel({
+  tier,
   rerolls,
   allowance,
-  isUnlocked,
   onLockedFeature,
 }: {
+  tier: TierId;
   rerolls: RerollCounts;
   allowance: RerollAllowance;
-  isUnlocked: (tier: TierId) => boolean;
-  onLockedFeature: (feature: LockedFeatureInfo) => void;
+  onLockedFeature: (feature: FeatureKey) => void;
 }) {
   const controls = [
-    { label: 'Theme Selector', required: 'dungeonwright' as TierId, reason: 'Choose a dungeon mood before generating or refreshing content.', options: ['Flooded shrine', 'Lost mine', 'Forest barrow'] },
-    { label: 'Difficulty Selector', required: 'dungeonwright' as TierId, reason: 'Tune the danger level to match the table’s appetite tonight.', options: ['Low', 'Moderate', 'High', 'Severe'] },
-    { label: 'Day / Night Variant', required: 'dungeonwright' as TierId, reason: 'Shift the dungeon atmosphere and encounter behavior without changing the whole premise.', options: ['Day', 'Night', 'Twilight'] },
-    { label: 'Fog-of-war Map View', required: 'dungeonwright' as TierId, reason: 'Reveal only explored areas while keeping the rest of the dungeon obscured during play.', options: ['Explored only', 'Room reveal', 'GM reveal'] },
-    { label: 'Dungeon Size', required: 'dungeonwright' as TierId, reason: 'Scale the dungeon up or down for the session length you actually have.', options: ['Small', 'Standard', 'Large'] },
-    { label: 'Inhabitant Type', required: 'dungeonwright' as TierId, reason: 'Steer the main opposition toward bandits, undead, constructs, spirits, or other fantasy groups.', options: ['Bandits', 'Undead', 'Constructs'] },
-    { label: 'Puzzle Frequency', required: 'dungeonwright' as TierId, reason: 'Adjust how often rooms ask players to solve, infer, or experiment.', options: ['Low', 'Standard', 'High'] },
-    { label: 'Hazard Frequency', required: 'dungeonwright' as TierId, reason: 'Adjust how often the dungeon itself creates pressure.', options: ['Low', 'Standard', 'High'] },
-    { label: 'Treasure Frequency', required: 'dungeonwright' as TierId, reason: 'Adjust how reward-dense the dungeon feels.', options: ['Low', 'Standard', 'High'] },
-    { label: 'Secret Frequency', required: 'dungeonwright' as TierId, reason: 'Adjust how many hidden rooms, routes, and clues appear.', options: ['Low', 'Standard', 'High'] },
-    { label: 'Export Bundle', required: 'dungeonwright' as TierId, reason: 'Prepare grouped GM notes, player maps, and table handouts as a future export bundle.', options: ['GM + player pack', 'Table packet', 'Campaign note pack'] },
+    { feature: 'themeSelector' as FeatureKey, options: ['Flooded shrine', 'Lost mine', 'Forest barrow'] },
+    { feature: 'difficultySelector' as FeatureKey, options: ['Low', 'Moderate', 'High', 'Severe'] },
+    { feature: 'dayNightVariant' as FeatureKey, options: ['Day', 'Night', 'Twilight'] },
+    { feature: 'fogOfWar' as FeatureKey, options: ['Explored only', 'Room reveal', 'GM reveal'] },
+    { feature: 'dungeonSize' as FeatureKey, options: ['Small', 'Standard', 'Large'] },
+    { feature: 'inhabitantType' as FeatureKey, options: ['Bandits', 'Undead', 'Constructs'] },
+    { feature: 'puzzleFrequency' as FeatureKey, options: ['Low', 'Standard', 'High'] },
+    { feature: 'hazardFrequency' as FeatureKey, options: ['Low', 'Standard', 'High'] },
+    { feature: 'treasureFrequency' as FeatureKey, options: ['Low', 'Standard', 'High'] },
+    { feature: 'secretFrequency' as FeatureKey, options: ['Low', 'Standard', 'High'] },
+    { feature: 'exportBundle' as FeatureKey, options: ['GM + player pack', 'Table packet', 'Campaign note pack'] },
   ];
+  const canUseFullRerolls = canAccessFeature(tier, 'fullReroll');
+  const canUsePartialRefreshes = canAccessFeature(tier, 'partialRefresh');
 
   return (
     <div className="space-y-5">
@@ -182,21 +176,21 @@ export function RerollPanel({
           text="Creates a new dungeon."
           buttonLabel="Mock Full Dungeon Reroll"
           poolLabel="Uses full reroll pool"
-          locked={!isUnlocked('adventurer')}
+          locked={!canUseFullRerolls}
         />
         <RerollTypeCard
           title="Variant Reroll"
           text="Keeps the map but changes theme, inhabitants, story, or encounters."
           buttonLabel="Mock Variant Reroll"
           poolLabel="Uses full reroll pool"
-          locked={!isUnlocked('adventurer')}
+          locked={!canUseFullRerolls}
         />
         <RerollTypeCard
           title="Partial Refresh"
           text="Changes one room, table, hook, treasure result, or dungeon section."
           buttonLabel="Mock Partial Refresh"
           poolLabel="Uses partial refresh pool"
-          locked={!isUnlocked('adventurer')}
+          locked={!canUsePartialRefreshes}
         />
       </div>
 
@@ -205,7 +199,7 @@ export function RerollPanel({
         <p className="mt-2 text-sm leading-6 text-ink/65">Unused rerolls and refreshes carry over up to double the daily limit in the tier model.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {controls.map((control) => (
-            <PremiumControl key={control.label} {...control} isUnlocked={isUnlocked} onLockedFeature={onLockedFeature} />
+            <PremiumControl key={control.feature} {...control} tier={tier} onLockedFeature={onLockedFeature} />
           ))}
         </div>
       </Panel>
