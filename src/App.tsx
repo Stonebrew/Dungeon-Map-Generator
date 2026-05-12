@@ -1,5 +1,6 @@
-import { BookOpen, Crown, Dice5, RefreshCcw, ScrollText, Shield } from 'lucide-react';
+import { Archive, BookOpen, Crown, Dice5, RefreshCcw, ScrollText, Shield } from 'lucide-react';
 import { useMemo, useState } from 'react';
+import { ArchiveView } from './components/ArchiveView';
 import { Badge, Panel } from './components/Badge';
 import { DevPanel } from './components/DevPanel';
 import { DungeonSummary } from './components/DungeonSummary';
@@ -14,12 +15,13 @@ import { currentTier, mockDungeons, plans, rerollAllowancesByTier, rerollCountsB
 import { canAccessFeature, type FeatureKey, tierRank } from './lib/entitlements';
 import type { Plan, TierId } from './types';
 
-type ViewId = 'today' | 'run' | 'gm' | 'player' | 'encounters' | 'upgrade' | 'rerolls' | 'locked' | 'placeholder';
+type ViewId = 'today' | 'run' | 'gm' | 'player' | 'archive' | 'encounters' | 'upgrade' | 'rerolls' | 'locked' | 'placeholder';
 
 const viewItems: { id: ViewId; label: string; icon: typeof BookOpen }[] = [
   { id: 'today', label: 'Today', icon: BookOpen },
   { id: 'gm', label: 'GM View', icon: ScrollText },
   { id: 'player', label: 'Player Map', icon: Shield },
+  { id: 'archive', label: 'Archive', icon: Archive },
   { id: 'encounters', label: 'Tables', icon: Dice5 },
   { id: 'upgrade', label: 'Plans', icon: Crown },
   { id: 'rerolls', label: 'Rerolls', icon: RefreshCcw },
@@ -27,6 +29,7 @@ const viewItems: { id: ViewId; label: string; icon: typeof BookOpen }[] = [
 
 const lockedFeatures: Partial<Record<ViewId, FeatureKey>> = {
   player: 'playerMap',
+  archive: 'archive',
   rerolls: 'fullReroll',
 };
 
@@ -36,6 +39,7 @@ function App() {
   const [placeholderFeature, setPlaceholderFeature] = useState<{ name: string; text: string } | undefined>();
   const [selectedDungeonId, setSelectedDungeonId] = useState(mockDungeons[0].id);
   const [selectedTier, setSelectedTier] = useState<TierId>(currentTier);
+  const [savedDungeonIds, setSavedDungeonIds] = useState<Set<string>>(() => new Set());
   const currentPlan = useMemo(() => plans.find((plan) => plan.id === selectedTier), [selectedTier]);
   const selectedDungeon = useMemo(
     () => mockDungeons.find((dungeon) => dungeon.id === selectedDungeonId) ?? mockDungeons[0],
@@ -50,6 +54,28 @@ function App() {
   const showPlaceholderFeature = (feature: { name: string; text: string }) => {
     setPlaceholderFeature(feature);
     setView('placeholder');
+  };
+
+  const toggleFavorite = (dungeonId: string) => {
+    if (!canAccessFeature(selectedTier, 'favorite')) {
+      showLockedFeature('favorite');
+      return;
+    }
+
+    setSavedDungeonIds((current) => {
+      const next = new Set(current);
+      if (next.has(dungeonId)) {
+        next.delete(dungeonId);
+      } else {
+        next.add(dungeonId);
+      }
+      return next;
+    });
+  };
+
+  const selectArchivedDungeon = (dungeonId: string, nextView: ViewId = 'today') => {
+    setSelectedDungeonId(dungeonId);
+    setView(nextView);
   };
 
   const isViewLocked = (targetView: ViewId) => {
@@ -117,14 +143,34 @@ function App() {
               <DungeonSummary
                 dungeon={selectedDungeon}
                 tier={selectedTier}
+                isSaved={savedDungeonIds.has(selectedDungeon.id)}
                 onNavigate={navigateTo}
+                onToggleFavorite={() => toggleFavorite(selectedDungeon.id)}
                 onLockedFeature={showLockedFeature}
                 onPlaceholderFeature={showPlaceholderFeature}
               />
             )}
-            {view === 'run' && <RunMode dungeon={selectedDungeon} tier={selectedTier} onExit={() => setView('today')} />}
+            {view === 'run' && (
+              <RunMode
+                dungeon={selectedDungeon}
+                tier={selectedTier}
+                isSaved={savedDungeonIds.has(selectedDungeon.id)}
+                onToggleFavorite={() => toggleFavorite(selectedDungeon.id)}
+                onLockedFeature={showLockedFeature}
+                onExit={() => setView('today')}
+              />
+            )}
             {view === 'gm' && <GMView dungeon={selectedDungeon} tier={selectedTier} />}
             {view === 'player' && <PlayerMapView dungeon={selectedDungeon} premiumUnlocked={canAccessFeature(selectedTier, 'playerMap')} />}
+            {view === 'archive' && (
+              <ArchiveView
+                dungeons={mockDungeons}
+                savedDungeonIds={savedDungeonIds}
+                currentDungeonId={selectedDungeon.id}
+                onSelectDungeon={(dungeonId) => selectArchivedDungeon(dungeonId)}
+                onRunDungeon={(dungeonId) => selectArchivedDungeon(dungeonId, 'run')}
+              />
+            )}
             {view === 'encounters' && <EncounterTablesSection tables={selectedDungeon.encounterTables} />}
             {view === 'upgrade' && <PremiumPlans plans={plans} currentTier={selectedTier} tierRank={tierRank} />}
             {view === 'rerolls' && <RerollPanel tier={selectedTier} rerolls={rerollCountsByTier[selectedTier]} allowance={rerollAllowancesByTier[selectedTier]} onLockedFeature={showLockedFeature} />}
@@ -133,7 +179,7 @@ function App() {
           </div>
         </main>
 
-        <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-6 border-t border-ink/10 bg-white/95 px-1 py-2 shadow-tool backdrop-blur lg:hidden">
+        <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-7 border-t border-ink/10 bg-white/95 px-1 py-2 shadow-tool backdrop-blur lg:hidden">
           {viewItems.map((item) => {
             const Icon = item.icon;
             return (

@@ -1,4 +1,4 @@
-import { Archive, FileDown, Lock, Map, RefreshCcw, Swords } from 'lucide-react';
+import { Archive, Bookmark, FileDown, Lock, Map, RefreshCcw, Swords } from 'lucide-react';
 import type { Dungeon, TierId } from '../types';
 import { DungeonMap } from './DungeonMap';
 import { Badge, Panel } from './Badge';
@@ -44,13 +44,17 @@ function ActionButton({
 export function DungeonSummary({
   dungeon,
   tier,
+  isSaved,
   onNavigate,
+  onToggleFavorite,
   onLockedFeature,
   onPlaceholderFeature,
 }: {
   dungeon: Dungeon;
   tier: TierId;
-  onNavigate: (view: 'run' | 'gm' | 'player' | 'upgrade' | 'rerolls') => void;
+  isSaved: boolean;
+  onNavigate: (view: 'run' | 'gm' | 'player' | 'archive' | 'upgrade' | 'rerolls') => void;
+  onToggleFavorite: () => void;
   onLockedFeature: (feature: FeatureKey) => void;
   onPlaceholderFeature: (feature: { name: string; text: string }) => void;
 }) {
@@ -58,6 +62,7 @@ export function DungeonSummary({
   const hasPlayerMap = canAccessFeature(tier, 'playerMap');
   const hasPdfExport = canAccessFeature(tier, 'pdfExport');
   const hasArchive = canAccessFeature(tier, 'archive');
+  const hasFavorite = canAccessFeature(tier, 'favorite');
   const hasRerolls = canAccessFeature(tier, 'fullReroll');
 
   const selectPremiumFeature = (feature: FeatureKey, unlockedView?: 'player' | 'rerolls') => {
@@ -93,7 +98,13 @@ export function DungeonSummary({
 
       <div className="space-y-2">
         <ActionButton primary label="Run This Dungeon" icon={Swords} onClick={() => onNavigate('run')} />
-        <div className="grid grid-cols-2 gap-2 xl:grid-cols-4">
+        <div className="grid grid-cols-2 gap-2 xl:grid-cols-5">
+          <ActionButton
+            label={isSaved ? 'Saved' : 'Save'}
+            icon={Bookmark}
+            locked={!hasFavorite}
+            onClick={() => (hasFavorite ? onToggleFavorite() : onLockedFeature('favorite'))}
+          />
           <ActionButton
             label="Player Map"
             icon={Map}
@@ -133,14 +144,7 @@ export function DungeonSummary({
             label="Archive"
             icon={Archive}
             locked={!hasArchive}
-            onClick={() =>
-              hasArchive
-                ? onPlaceholderFeature({
-                    name: 'Archive Access',
-                    text: 'Archive access is available to this mock tier, but real saved dungeon storage is intentionally not implemented in this prototype.',
-                  })
-                : onLockedFeature('archive')
-            }
+            onClick={() => (hasArchive ? onNavigate('archive') : onLockedFeature('archive'))}
           />
         </div>
       </div>

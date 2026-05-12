@@ -1,4 +1,4 @@
-import { ArrowLeft, ChevronLeft, ChevronRight, MapPin } from 'lucide-react';
+import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, Lock, MapPin } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import type { Dungeon, Room, TierId } from '../types';
@@ -102,9 +102,24 @@ function CurrentRoomPanel({ room }: { room: Room }) {
   );
 }
 
-export function RunMode({ dungeon, tier, onExit }: { dungeon: Dungeon; tier: TierId; onExit: () => void }) {
+export function RunMode({
+  dungeon,
+  tier,
+  isSaved,
+  onToggleFavorite,
+  onLockedFeature,
+  onExit,
+}: {
+  dungeon: Dungeon;
+  tier: TierId;
+  isSaved: boolean;
+  onToggleFavorite: () => void;
+  onLockedFeature: (feature: 'favorite') => void;
+  onExit: () => void;
+}) {
   const [currentRoomNumber, setCurrentRoomNumber] = useState(dungeon.rooms[0]?.number ?? 1);
   const hasColorMap = canAccessFeature(tier, 'colorMap');
+  const hasFavorite = canAccessFeature(tier, 'favorite');
   const currentIndex = useMemo(
     () => Math.max(0, dungeon.rooms.findIndex((room) => room.number === currentRoomNumber)),
     [dungeon.rooms, currentRoomNumber],
@@ -139,10 +154,22 @@ export function RunMode({ dungeon, tier, onExit }: { dungeon: Dungeon; tier: Tie
           <h1 className="mt-2 font-serif text-3xl font-bold leading-tight sm:text-4xl">{dungeon.title}</h1>
           <p className="mt-1 text-sm font-semibold text-ink/55">Live table view focused on one room at a time.</p>
         </div>
-        <button type="button" onClick={onExit} className="inline-flex items-center justify-center gap-2 rounded-md border border-ink/10 bg-white px-3 py-2 text-sm font-bold text-ink/70 shadow-tool">
-          <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-          Return to App
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            onClick={() => (hasFavorite ? onToggleFavorite() : onLockedFeature('favorite'))}
+            className={`inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-bold shadow-tool ${
+              hasFavorite ? 'bg-brass text-white hover:bg-brass/90' : 'bg-ink/10 text-ink/45 hover:bg-ink/15'
+            }`}
+          >
+            {hasFavorite ? <Bookmark className={`h-4 w-4 ${isSaved ? 'fill-white' : ''}`} aria-hidden="true" /> : <Lock className="h-4 w-4" aria-hidden="true" />}
+            {isSaved ? 'Saved' : 'Save'}
+          </button>
+          <button type="button" onClick={onExit} className="inline-flex items-center justify-center gap-2 rounded-md border border-ink/10 bg-white px-3 py-2 text-sm font-bold text-ink/70 shadow-tool">
+            <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+            Return to App
+          </button>
+        </div>
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.35fr)]">
