@@ -9,6 +9,7 @@ The first prototype demonstrates the daily dungeon reading experience with mock 
 ## Core Views
 
 - Today’s Dungeon summary
+- Run Mode for live table use
 - Dungeon Detail / GM View
 - Player Safe Map View
 - Encounter Tables

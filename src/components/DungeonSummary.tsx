@@ -50,7 +50,7 @@ export function DungeonSummary({
 }: {
   dungeon: Dungeon;
   tier: TierId;
-  onNavigate: (view: 'gm' | 'player' | 'upgrade' | 'rerolls') => void;
+  onNavigate: (view: 'run' | 'gm' | 'player' | 'upgrade' | 'rerolls') => void;
   onLockedFeature: (feature: FeatureKey) => void;
   onPlaceholderFeature: (feature: { name: string; text: string }) => void;
 }) {
@@ -92,7 +92,7 @@ export function DungeonSummary({
       <DungeonMap mode="gm" mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} compact showLegend />
 
       <div className="space-y-2">
-        <ActionButton primary label="Run This Dungeon" icon={Swords} onClick={() => onNavigate('gm')} />
+        <ActionButton primary label="Run This Dungeon" icon={Swords} onClick={() => onNavigate('run')} />
         <div className="grid grid-cols-2 gap-2 xl:grid-cols-4">
           <ActionButton
             label="Player Map"

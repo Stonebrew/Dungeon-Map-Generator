@@ -9,11 +9,12 @@ import { LockedFeature } from './components/LockedFeature';
 import { PlayerMapView } from './components/PlayerMapView';
 import { PremiumPlans } from './components/PremiumPlans';
 import { RerollPanel } from './components/RerollPanel';
+import { RunMode } from './components/RunMode';
 import { currentTier, mockDungeons, plans, rerollAllowancesByTier, rerollCountsByTier } from './data/mockDungeon';
 import { canAccessFeature, type FeatureKey, tierRank } from './lib/entitlements';
 import type { Plan, TierId } from './types';
 
-type ViewId = 'today' | 'gm' | 'player' | 'encounters' | 'upgrade' | 'rerolls' | 'locked' | 'placeholder';
+type ViewId = 'today' | 'run' | 'gm' | 'player' | 'encounters' | 'upgrade' | 'rerolls' | 'locked' | 'placeholder';
 
 const viewItems: { id: ViewId; label: string; icon: typeof BookOpen }[] = [
   { id: 'today', label: 'Today', icon: BookOpen },
@@ -121,6 +122,7 @@ function App() {
                 onPlaceholderFeature={showPlaceholderFeature}
               />
             )}
+            {view === 'run' && <RunMode dungeon={selectedDungeon} tier={selectedTier} onExit={() => setView('today')} />}
             {view === 'gm' && <GMView dungeon={selectedDungeon} tier={selectedTier} />}
             {view === 'player' && <PlayerMapView dungeon={selectedDungeon} premiumUnlocked={canAccessFeature(selectedTier, 'playerMap')} />}
             {view === 'encounters' && <EncounterTablesSection tables={selectedDungeon.encounterTables} />}
