@@ -1,10 +1,24 @@
-export type TierId = 'lantern' | 'adventurer' | 'dungeonwright';
+export type UserTier = 'lantern' | 'adventurer' | 'dungeonwright';
+
+export type TierId = UserTier;
 
 export type Threat = 'Low' | 'Moderate' | 'High' | 'Severe';
 
 export type EncounterType = 'Combat' | 'Social' | 'Hazard' | 'Puzzle' | 'Exploration';
 
 export type MapStyle = 'blackfen' | 'shrine' | 'cavern' | 'crypt' | 'sewer' | 'laboratory';
+
+export type DungeonMapData = {
+  style: MapStyle;
+  gmMapId: string;
+  playerMapId: string;
+  playerSafe: {
+    hideSecrets: boolean;
+    hideTreasure: boolean;
+    hideHazards: boolean;
+    hideGmNotes: boolean;
+  };
+};
 
 export type Inhabitant = {
   name: string;
@@ -18,10 +32,12 @@ export type Inhabitant = {
   leverage: string;
 };
 
-export type Room = {
+export type DungeonRoom = {
+  id?: string;
   number: number;
   name: string;
   readAloud: string;
+  readAloudText?: string;
   gmNotes: string;
   threat: Threat;
   tags: string[];
@@ -29,18 +45,30 @@ export type Room = {
   treasure: string;
   secrets: string;
   exits: string;
+  refreshEligibility?: {
+    eligible: boolean;
+    reason?: string;
+  };
 };
 
-export type TableEntry = {
+export type Room = DungeonRoom;
+
+export type EncounterEntry = {
   roll: string;
   result: string;
   type?: EncounterType;
 };
 
+export type TreasureEntry = EncounterEntry;
+
+export type EncounterTable = EncounterEntry[];
+
+export type TableEntry = EncounterEntry;
+
 export type EncounterTables = {
-  wandering: TableEntry[];
-  environmental: TableEntry[];
-  complications: TableEntry[];
+  wandering: EncounterTable;
+  environmental: EncounterTable;
+  complications: EncounterTable;
 };
 
 export type Dungeon = {
@@ -53,21 +81,29 @@ export type Dungeon = {
   estimatedPlayTime: string;
   hook: string;
   background: string;
+  map: DungeonMapData;
   mapStyle: MapStyle;
   mapPlaceholder: string;
   playerMapPlaceholder: string;
-  rooms: Room[];
+  rooms: DungeonRoom[];
   encounterTables: EncounterTables;
-  treasureTable: TableEntry[];
+  treasureTable: TreasureEntry[];
   gmNotes: string[];
+  featureMetadata?: {
+    premiumMapAvailable?: boolean;
+    playerMapAvailable?: boolean;
+    refreshableRoomNumbers?: number[];
+  };
 };
 
-export type RerollCounts = {
+export type RerollResources = {
   remainingFull: number;
   storedFull: number;
   remainingPartial: number;
   storedPartial: number;
 };
+
+export type RerollCounts = RerollResources;
 
 export type RerollAllowance = {
   fullDailyLimit: number;

@@ -130,6 +130,17 @@ export const mockDungeon: Dungeon = {
     'A cracked bell rings under the marsh every midnight. Each peal draws lights from nearby graves toward the old tollhouse causeway.',
   background:
     'The tollhouse was built over a sealed shrine to a forgotten river saint. Bandits broke the seal while hiding contraband, and now rival scavengers, spirits, and waterlogged hazards crowd the rooms below.',
+  map: {
+    style: 'blackfen',
+    gmMapId: 'gm-map',
+    playerMapId: 'player-map',
+    playerSafe: {
+      hideSecrets: true,
+      hideTreasure: true,
+      hideHazards: true,
+      hideGmNotes: true,
+    },
+  },
   mapStyle: 'blackfen',
   mapPlaceholder: 'gm-map',
   playerMapPlaceholder: 'player-map',
@@ -387,6 +398,17 @@ const ruinedShrineDungeon: Dungeon = {
     'A village healer needs one saintly finger-bone before dawn, but the roadside shrine has gone silent and its votive candles now burn with smoke-black flames.',
   background:
     'The shrine was a quiet stop for travelers until grave-robbers pried open the reliquary. Their leader discovered the relic is not bone at all, but a key to an older vow buried below the altar.',
+  map: {
+    style: 'shrine',
+    gmMapId: 'ruined-shrine-gm',
+    playerMapId: 'ruined-shrine-player',
+    playerSafe: {
+      hideSecrets: true,
+      hideTreasure: true,
+      hideHazards: true,
+      hideGmNotes: true,
+    },
+  },
   mapStyle: 'shrine',
   mapPlaceholder: 'ruined-shrine-gm',
   playerMapPlaceholder: 'ruined-shrine-player',
@@ -566,6 +588,17 @@ const cavernDungeon: Dungeon = {
     'A ferry chain snapped after echoes began singing from the river cliff. The ferryman will lose the crossing unless someone retrieves the chain anchor from the newly opened caves.',
   background:
     'The caves were sealed by a crystal fall. Recent floods exposed them and woke a colony of glass-wing beasts, a stranded prospector, and an old river spirit bound to the anchor stone.',
+  map: {
+    style: 'cavern',
+    gmMapId: 'cavern-gm',
+    playerMapId: 'cavern-player',
+    playerSafe: {
+      hideSecrets: true,
+      hideTreasure: true,
+      hideHazards: true,
+      hideGmNotes: true,
+    },
+  },
   mapStyle: 'cavern',
   mapPlaceholder: 'cavern-gm',
   playerMapPlaceholder: 'cavern-player',
@@ -733,6 +766,17 @@ const cryptDungeon: Dungeon = {
     'A noble funeral procession stopped at Hollowmere when the coffin politely refused to enter. The family will pay for answers before mourners become scandal witnesses.',
   background:
     'The tomb houses rival branches of one family. A forged lineage plaque has awakened the dead, who want the living to settle succession before the new body is admitted.',
+  map: {
+    style: 'crypt',
+    gmMapId: 'crypt-gm',
+    playerMapId: 'crypt-player',
+    playerSafe: {
+      hideSecrets: true,
+      hideTreasure: true,
+      hideHazards: true,
+      hideGmNotes: true,
+    },
+  },
   mapStyle: 'crypt',
   mapPlaceholder: 'crypt-gm',
   playerMapPlaceholder: 'crypt-player',
@@ -912,6 +956,17 @@ const sewerDungeon: Dungeon = {
     'Marketbell\'s public fountain has begun spilling yellow dye and confession notes. The council hires the party to enter the Saffron Drain before the festival crowd riots.',
   background:
     'An undercity route links dye vats, old drainage tunnels, and a forgotten civic archive. Smugglers used it until a whistleblower hid proof of council corruption inside the waterworks.',
+  map: {
+    style: 'sewer',
+    gmMapId: 'sewer-gm',
+    playerMapId: 'sewer-player',
+    playerSafe: {
+      hideSecrets: true,
+      hideTreasure: true,
+      hideHazards: true,
+      hideGmNotes: true,
+    },
+  },
   mapStyle: 'sewer',
   mapPlaceholder: 'sewer-gm',
   playerMapPlaceholder: 'sewer-player',
@@ -1091,6 +1146,17 @@ const laboratoryDungeon: Dungeon = {
     'A second sunrise flickers every night above the old academy hill. The faculty wants the workshop shut down before the false dawn becomes permanent and burns the district awake.',
   background:
     'Professor Vellum tried to bottle a harmless training sun for apprentices. The project failed when an assistant trapped a living spark in the engine and hid the shutdown phrase in the lab notes.',
+  map: {
+    style: 'laboratory',
+    gmMapId: 'lab-gm',
+    playerMapId: 'lab-player',
+    playerSafe: {
+      hideSecrets: true,
+      hideTreasure: true,
+      hideHazards: true,
+      hideGmNotes: true,
+    },
+  },
   mapStyle: 'laboratory',
   mapPlaceholder: 'lab-gm',
   playerMapPlaceholder: 'lab-player',
