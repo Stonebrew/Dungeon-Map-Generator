@@ -13,7 +13,7 @@ import { RerollPanel } from './components/RerollPanel';
 import { RunMode } from './components/RunMode';
 import { currentTier, mockDungeons, plans, rerollAllowancesByTier, rerollCountsByTier } from './data/mockDungeon';
 import { canAccessFeature, type FeatureKey, tierRank } from './lib/entitlements';
-import type { Plan, TierId } from './types';
+import type { Plan, RerollCounts, TierId } from './types';
 
 type ViewId = 'today' | 'run' | 'gm' | 'player' | 'archive' | 'encounters' | 'upgrade' | 'rerolls' | 'locked' | 'placeholder';
 
@@ -40,6 +40,7 @@ function App() {
   const [selectedDungeonId, setSelectedDungeonId] = useState(mockDungeons[0].id);
   const [selectedTier, setSelectedTier] = useState<TierId>(currentTier);
   const [savedDungeonIds, setSavedDungeonIds] = useState<Set<string>>(() => new Set());
+  const [sessionRerollCounts, setSessionRerollCounts] = useState<Record<TierId, RerollCounts>>(() => rerollCountsByTier);
   const currentPlan = useMemo(() => plans.find((plan) => plan.id === selectedTier), [selectedTier]);
   const selectedDungeon = useMemo(
     () => mockDungeons.find((dungeon) => dungeon.id === selectedDungeonId) ?? mockDungeons[0],
@@ -76,6 +77,36 @@ function App() {
   const selectArchivedDungeon = (dungeonId: string, nextView: ViewId = 'today') => {
     setSelectedDungeonId(dungeonId);
     setView(nextView);
+  };
+
+  const consumeRerollResource = (resource: 'full' | 'partial') => {
+    const feature: FeatureKey = resource === 'full' ? 'fullReroll' : 'partialRefresh';
+
+    if (!canAccessFeature(selectedTier, feature)) {
+      showLockedFeature(feature);
+      return false;
+    }
+
+    let used = false;
+    setSessionRerollCounts((current) => {
+      const currentCounts = current[selectedTier];
+      const remainingKey = resource === 'full' ? 'remainingFull' : 'remainingPartial';
+
+      if (currentCounts[remainingKey] <= 0) {
+        return current;
+      }
+
+      used = true;
+      return {
+        ...current,
+        [selectedTier]: {
+          ...currentCounts,
+          [remainingKey]: currentCounts[remainingKey] - 1,
+        },
+      };
+    });
+
+    return used;
   };
 
   const isViewLocked = (targetView: ViewId) => {
@@ -160,7 +191,14 @@ function App() {
                 onExit={() => setView('today')}
               />
             )}
-            {view === 'gm' && <GMView dungeon={selectedDungeon} tier={selectedTier} />}
+            {view === 'gm' && (
+              <GMView
+                dungeon={selectedDungeon}
+                tier={selectedTier}
+                partialRefreshRemaining={sessionRerollCounts[selectedTier].remainingPartial}
+                onUsePartialRefresh={() => consumeRerollResource('partial')}
+              />
+            )}
             {view === 'player' && <PlayerMapView dungeon={selectedDungeon} premiumUnlocked={canAccessFeature(selectedTier, 'playerMap')} />}
             {view === 'archive' && (
               <ArchiveView
@@ -173,7 +211,16 @@ function App() {
             )}
             {view === 'encounters' && <EncounterTablesSection tables={selectedDungeon.encounterTables} />}
             {view === 'upgrade' && <PremiumPlans plans={plans} currentTier={selectedTier} tierRank={tierRank} />}
-            {view === 'rerolls' && <RerollPanel tier={selectedTier} rerolls={rerollCountsByTier[selectedTier]} allowance={rerollAllowancesByTier[selectedTier]} onLockedFeature={showLockedFeature} />}
+            {view === 'rerolls' && (
+              <RerollPanel
+                tier={selectedTier}
+                rerolls={sessionRerollCounts[selectedTier]}
+                allowance={rerollAllowancesByTier[selectedTier]}
+                onUseFullReroll={() => consumeRerollResource('full')}
+                onUsePartialRefresh={() => consumeRerollResource('partial')}
+                onLockedFeature={showLockedFeature}
+              />
+            )}
             {view === 'locked' && lockedFeature && <LockedFeature feature={lockedFeature} onUpgrade={() => setView('upgrade')} />}
             {view === 'placeholder' && placeholderFeature && <PlaceholderFeature feature={placeholderFeature} />}
           </div>

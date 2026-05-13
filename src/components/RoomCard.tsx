@@ -1,5 +1,6 @@
 import { ChevronDown, ChevronRight, Lock } from 'lucide-react';
 import type { ReactNode } from 'react';
+import { useEffect, useState } from 'react';
 import type { Room } from '../types';
 import { Badge, Field } from './Badge';
 
@@ -26,14 +27,38 @@ function DetailSection({ title, children }: { title: string; children: ReactNode
 export function RoomCard({
   room,
   canRefresh,
+  partialRefreshRemaining,
+  onRefresh,
   expanded,
   onToggle,
 }: {
   room: Room;
   canRefresh: boolean;
+  partialRefreshRemaining: number;
+  onRefresh: () => boolean;
   expanded: boolean;
   onToggle: () => void;
 }) {
+  const [refreshMessage, setRefreshMessage] = useState<string>();
+  const refreshDisabled = !canRefresh || partialRefreshRemaining <= 0;
+
+  useEffect(() => {
+    setRefreshMessage(undefined);
+  }, [room.number]);
+
+  const handleRefresh = () => {
+    if (!canRefresh) {
+      return;
+    }
+
+    const used = onRefresh();
+    setRefreshMessage(
+      used
+        ? `Mock refreshed Room ${room.number}. No real room content changed.`
+        : 'No mock partial refreshes remaining today.',
+    );
+  };
+
   return (
     <article id={`room-${room.number}`} className={`scroll-mt-36 rounded-md border bg-white p-4 shadow-tool ${expanded ? 'border-ember/50' : 'border-ink/10'}`}>
       <button type="button" onClick={onToggle} className="w-full text-left">
@@ -105,13 +130,20 @@ export function RoomCard({
 
           <button
             type="button"
+            disabled={refreshDisabled}
+            onClick={handleRefresh}
             className={`flex w-full items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-bold ${
-              canRefresh ? 'border-ember bg-ember text-white' : 'border-ink/10 bg-ink/5 text-ink/45'
+              !refreshDisabled ? 'border-ember bg-ember text-white' : 'border-ink/10 bg-ink/5 text-ink/45'
             }`}
           >
-            {!canRefresh && <Lock className="h-4 w-4" aria-hidden="true" />}
-            Partial Refresh
+            {refreshDisabled && <Lock className="h-4 w-4" aria-hidden="true" />}
+            {canRefresh && partialRefreshRemaining <= 0 ? 'No Partial Refreshes Left' : 'Partial Refresh'}
           </button>
+          {refreshMessage && (
+            <p className="rounded-md border border-brass/30 bg-brass/10 p-2 text-sm font-semibold text-brass">
+              {refreshMessage}
+            </p>
+          )}
         </div>
       )}
     </article>

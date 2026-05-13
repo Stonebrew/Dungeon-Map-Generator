@@ -1,4 +1,5 @@
 import { Lock } from 'lucide-react';
+import { useState } from 'react';
 import type { RerollAllowance, RerollCounts, TierId } from '../types';
 import { canAccessFeature, getFeatureDescription, getFeatureLabel, type FeatureKey } from '../lib/entitlements';
 import { Badge, Panel, SectionHeader } from './Badge';
@@ -55,22 +56,28 @@ function RerollTypeCard({
   buttonLabel,
   poolLabel,
   locked,
+  depleted,
+  onUse,
 }: {
   title: string;
   text: string;
   buttonLabel: string;
   poolLabel: string;
   locked: boolean;
+  depleted: boolean;
+  onUse: () => void;
 }) {
+  const disabled = locked || depleted;
+
   return (
-    <article className={`rounded-md border p-4 shadow-tool ${locked ? 'border-ink/10 bg-ink/5 text-ink/45' : 'border-ember bg-white'}`}>
+    <article className={`rounded-md border p-4 shadow-tool ${disabled ? 'border-ink/10 bg-ink/5 text-ink/45' : 'border-ember bg-white'}`}>
       <div className="flex items-start justify-between gap-3">
         <h3 className="font-serif text-xl font-bold">{title}</h3>
-        {locked && <Lock className="h-5 w-5" aria-hidden="true" />}
+        {disabled && <Lock className="h-5 w-5" aria-hidden="true" />}
       </div>
       <p className="mt-2 text-sm leading-6">{text}</p>
-      <p className="mt-3 text-xs font-bold uppercase tracking-[0.14em] text-ink/45">{poolLabel}</p>
-      <button type="button" disabled={locked} className="mt-4 w-full rounded-md bg-ember px-3 py-2 text-sm font-bold text-white disabled:bg-ink/10 disabled:text-ink/40">
+      <p className="mt-3 text-xs font-bold uppercase tracking-[0.14em] text-ink/45">{depleted && !locked ? 'No mock uses remaining today' : poolLabel}</p>
+      <button type="button" disabled={disabled} onClick={onUse} className="mt-4 w-full rounded-md bg-ember px-3 py-2 text-sm font-bold text-white disabled:bg-ink/10 disabled:text-ink/40">
         {buttonLabel}
       </button>
     </article>
@@ -127,13 +134,18 @@ export function RerollPanel({
   tier,
   rerolls,
   allowance,
+  onUseFullReroll,
+  onUsePartialRefresh,
   onLockedFeature,
 }: {
   tier: TierId;
   rerolls: RerollCounts;
   allowance: RerollAllowance;
+  onUseFullReroll: () => boolean;
+  onUsePartialRefresh: () => boolean;
   onLockedFeature: (feature: FeatureKey) => void;
 }) {
+  const [feedback, setFeedback] = useState<string>();
   const controls = [
     { feature: 'themeSelector' as FeatureKey, options: ['Flooded shrine', 'Lost mine', 'Forest barrow'] },
     { feature: 'difficultySelector' as FeatureKey, options: ['Low', 'Moderate', 'High', 'Severe'] },
@@ -149,6 +161,13 @@ export function RerollPanel({
   ];
   const canUseFullRerolls = canAccessFeature(tier, 'fullReroll');
   const canUsePartialRefreshes = canAccessFeature(tier, 'partialRefresh');
+  const fullRerollsDepleted = canUseFullRerolls && rerolls.remainingFull <= 0;
+  const partialRefreshesDepleted = canUsePartialRefreshes && rerolls.remainingPartial <= 0;
+
+  const handleMockAction = (resource: 'full' | 'partial', message: string) => {
+    const used = resource === 'full' ? onUseFullReroll() : onUsePartialRefresh();
+    setFeedback(used ? message : `No mock ${resource === 'full' ? 'full rerolls' : 'partial refreshes'} remaining today.`);
+  };
 
   return (
     <div className="space-y-5">
@@ -170,6 +189,14 @@ export function RerollPanel({
         />
       </div>
 
+      {feedback && (
+        <Panel className="border-brass/35 p-3">
+          <Badge tone="warning">Prototype feedback</Badge>
+          <p className="mt-2 text-sm font-semibold text-ink/70">{feedback}</p>
+          <p className="mt-1 text-xs leading-5 text-ink/50">No real dungeon content was generated or changed.</p>
+        </Panel>
+      )}
+
       <div className="grid gap-4 xl:grid-cols-3">
         <RerollTypeCard
           title="Full Dungeon Reroll"
@@ -177,6 +204,8 @@ export function RerollPanel({
           buttonLabel="Mock Full Dungeon Reroll"
           poolLabel="Uses full reroll pool"
           locked={!canUseFullRerolls}
+          depleted={fullRerollsDepleted}
+          onUse={() => handleMockAction('full', 'Mock full dungeon reroll used. No real dungeon content changed.')}
         />
         <RerollTypeCard
           title="Variant Reroll"
@@ -184,6 +213,8 @@ export function RerollPanel({
           buttonLabel="Mock Variant Reroll"
           poolLabel="Uses full reroll pool"
           locked={!canUseFullRerolls}
+          depleted={fullRerollsDepleted}
+          onUse={() => handleMockAction('full', 'Mock variant reroll used. The map and dungeon content are unchanged in this prototype.')}
         />
         <RerollTypeCard
           title="Partial Refresh"
@@ -191,6 +222,8 @@ export function RerollPanel({
           buttonLabel="Mock Partial Refresh"
           poolLabel="Uses partial refresh pool"
           locked={!canUsePartialRefreshes}
+          depleted={partialRefreshesDepleted}
+          onUse={() => handleMockAction('partial', 'Mock partial refresh used. No room, table, hook, treasure, or section content changed.')}
         />
       </div>
 

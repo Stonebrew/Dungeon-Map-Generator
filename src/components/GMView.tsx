@@ -26,7 +26,17 @@ function InfoPill({ label, value }: { label: string; value: string }) {
   );
 }
 
-export function GMView({ dungeon, tier }: { dungeon: Dungeon; tier: TierId }) {
+export function GMView({
+  dungeon,
+  tier,
+  partialRefreshRemaining,
+  onUsePartialRefresh,
+}: {
+  dungeon: Dungeon;
+  tier: TierId;
+  partialRefreshRemaining: number;
+  onUsePartialRefresh: () => boolean;
+}) {
   const [activeTab, setActiveTab] = useState<GmTab>('setup');
   const [expandedRoom, setExpandedRoom] = useState<number | undefined>();
   const hasColorMap = canAccessFeature(tier, 'colorMap');
@@ -118,6 +128,8 @@ export function GMView({ dungeon, tier }: { dungeon: Dungeon; tier: TierId }) {
                 key={room.number}
                 room={room}
                 canRefresh={canRefreshRooms}
+                partialRefreshRemaining={partialRefreshRemaining}
+                onRefresh={() => onUsePartialRefresh()}
                 expanded={expandedRoom === room.number}
                 onToggle={() => openRoom(room.number)}
               />
