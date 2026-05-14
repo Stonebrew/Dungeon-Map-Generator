@@ -32,9 +32,26 @@ The `Dungeon` contract defines the complete ready-to-run dungeon payload the fro
 - `style`: current placeholder map style key.
 - `gmMapId`: identifier for the GM-facing map asset or generated map.
 - `playerMapId`: identifier for the player-safe map asset or generated map.
+- `connections`: source-of-truth room connectivity metadata. Each connection has `from`, `to`, `type`, optional `note`, and a prototype `path` used for SVG route rendering.
 - `playerSafe`: rules for what the player map should hide, including secrets, treasure, hazards, and GM notes.
 
-The prototype still renders maps from local SVG layouts. A backend map service can later replace `gmMapId` and `playerMapId` with generated asset IDs or URLs.
+The prototype still renders room shapes from local SVG layouts. Visual route rendering is derived from `map.connections`, so normal corridors and GM-only secret routes share the same source of truth as room exit text. A backend map service can later replace `gmMapId` and `playerMapId` with generated asset IDs or URLs, but the visual routes should continue to match `map.connections`.
+
+Connection `type` is currently either `normal` or `secret`. Connections are treated as bidirectional unless a future one-way route flag is intentionally used. Secret connections should be described in room text as hidden, collapsed, concealed, crawlspace, or otherwise GM-only, and should remain hidden from player-safe map views.
+
+Example:
+
+```ts
+connections: [
+  { from: 1, to: 2, type: 'normal', path: 'M120 180 H220' },
+  { from: 4, to: 5, type: 'normal', path: 'M360 220 C390 240 420 260 450 280' },
+  { from: 3, to: 5, type: 'secret', note: 'Hidden crawlspace behind cracked tiles.', path: 'M200 140 C260 200 340 250 450 280' },
+]
+```
+
+Room `exits` text should match `map.connections`. If the map says Room 4 connects to Room 5, both rooms should normally mention the route. If the room text mentions an exit to Room 5, the map should include that connection. Secret routes can be mentioned in `exits`, `secrets`, or GM notes, but they should use clear language such as hidden, secret, concealed, crawlspace, collapsed, false, or similar.
+
+The current `path` field is prototype SVG data, not a procedural generation API. It prevents hand-drawn corridor paths from silently disagreeing with `map.connections`. Future generated map data can replace it with richer geometry, anchors, or asset coordinates as long as the renderer derives routes from the same connection records.
 
 ## Room Fields
 
@@ -84,3 +101,5 @@ Encounter entries may include an encounter `type`: `Combat`, `Social`, `Hazard`,
 ## Backend Replacement Path
 
 When backend generation is added, the frontend should replace `src/data/mockDungeon.ts` with fetched or hydrated `Dungeon` payloads. Components should continue reading the shared contract from `src/types.ts`, while entitlement checks remain centralized in `src/lib/entitlements.ts`.
+
+Future generation should create the visual map layout, `map.connections`, visual route geometry, and room exit descriptions from the same generation pass so those surfaces cannot drift apart.

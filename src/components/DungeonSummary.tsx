@@ -94,7 +94,7 @@ export function DungeonSummary({
         <p className="mt-1 text-sm leading-6 text-ink/75">{dungeon.hook}</p>
       </div>
 
-      <DungeonMap mode="gm" mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} compact showLegend />
+      <DungeonMap mode="gm" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} compact showLegend />
 
       <div className="space-y-2">
         <ActionButton primary label="Run This Dungeon" icon={Swords} onClick={() => onNavigate('run')} />

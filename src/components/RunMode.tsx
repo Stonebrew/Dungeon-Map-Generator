@@ -174,7 +174,7 @@ export function RunMode({
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.35fr)]">
         <div className="space-y-4">
-          <DungeonMap mode="gm" mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} compact showLegend />
+          <DungeonMap mode="gm" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} compact showLegend />
 
           <Panel className="p-3">
             <div className="flex items-center justify-between gap-3">

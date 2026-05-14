@@ -10,7 +10,7 @@ export function PlayerMapView({ dungeon, premiumUnlocked }: { dungeon: Dungeon; 
         title="Player Safe View"
         text="A clean map handout that hides traps, treasure, secret doors, room notes, and GM-only information."
       />
-      <DungeonMap mode="player" mapStyle={dungeon.mapStyle} colorEnabled={premiumUnlocked} />
+      <DungeonMap mode="player" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={premiumUnlocked} />
       <Panel>
         <h3 className="font-serif text-2xl font-bold">Visible To Players</h3>
         <p className="mt-3 text-sm leading-6 text-ink/75">

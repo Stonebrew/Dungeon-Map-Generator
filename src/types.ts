@@ -8,10 +8,23 @@ export type EncounterType = 'Combat' | 'Social' | 'Hazard' | 'Puzzle' | 'Explora
 
 export type MapStyle = 'blackfen' | 'shrine' | 'cavern' | 'crypt' | 'sewer' | 'laboratory';
 
+export type MapConnection = {
+  from: number;
+  to: number;
+  type: 'normal' | 'secret';
+  note?: string;
+  // SVG route path used by the prototype renderer. Backend-generated maps should derive this from the same source as room exits.
+  path?: string;
+  // Reserved for future one-way routes. Current mock validation treats links as bidirectional unless this is set.
+  oneWay?: boolean;
+};
+
 export type DungeonMapData = {
   style: MapStyle;
   gmMapId: string;
   playerMapId: string;
+  // Source of truth for room connectivity; room exit text and visual routes should match these links.
+  connections?: MapConnection[];
   playerSafe: {
     hideSecrets: boolean;
     hideTreasure: boolean;

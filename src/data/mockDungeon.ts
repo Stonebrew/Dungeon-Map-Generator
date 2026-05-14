@@ -134,6 +134,18 @@ export const mockDungeon: Dungeon = {
     style: 'blackfen',
     gmMapId: 'gm-map',
     playerMapId: 'player-map',
+    connections: [
+      { from: 1, to: 2, type: 'normal', path: 'M190 128 H246' },
+      { from: 2, to: 4, type: 'normal', path: 'M306 166 V224' },
+      { from: 3, to: 4, type: 'normal', path: 'M214 266 H238' },
+      { from: 4, to: 5, type: 'normal', path: 'M342 262 H386' },
+      { from: 5, to: 6, type: 'normal', path: 'M456 186 V140' },
+      { from: 5, to: 8, type: 'normal', path: 'M432 298 V340' },
+      { from: 5, to: 9, type: 'normal', path: 'M528 242 H560' },
+      { from: 7, to: 8, type: 'normal', path: 'M210 386 H374' },
+      { from: 1, to: 4, type: 'secret', note: 'Loose plaque crawlspace', path: 'M180 172 C206 198 222 222 250 250' },
+      { from: 8, to: 9, type: 'secret', note: 'Pressure niche passage', path: 'M496 378 C528 350 548 322 582 286' },
+    ],
     playerSafe: {
       hideSecrets: true,
       hideTreasure: true,
@@ -169,7 +181,7 @@ export const mockDungeon: Dungeon = {
       ],
       treasure: 'A locked strongbox with old bridge tokens worth a modest purse.',
       secrets: 'A loose plaque hides a narrow crawlspace to Room 4.',
-      exits: 'North to Room 2, east to Room 3, crawlspace to Room 4.',
+      exits: 'East to Room 2, hidden crawlspace to Room 4.',
     },
     {
       number: 2,
@@ -195,7 +207,7 @@ export const mockDungeon: Dungeon = {
       ],
       treasure: 'Three silver reliquary seals tucked inside a dry ledger case.',
       secrets: 'One ledger lists a hidden reliquary door in Room 8.',
-      exits: 'South to Room 1, west to Room 5.',
+      exits: 'West to Room 1, south to Room 4.',
     },
     {
       number: 3,
@@ -209,7 +221,7 @@ export const mockDungeon: Dungeon = {
       inhabitants: [],
       treasure: 'A waterproof scroll tube wedged under tile fragments.',
       secrets: 'The drain grate can be removed to reach Room 6 by crawling.',
-      exits: 'West to Room 1, drain crawl to Room 6.',
+      exits: 'East to Room 4.',
     },
     {
       number: 4,
@@ -235,7 +247,7 @@ export const mockDungeon: Dungeon = {
       ],
       treasure: 'A pouch of mismatched gems hidden inside a cracked road sign.',
       secrets: 'A chalk map marks a bypass around Room 7.',
-      exits: 'Crawlspace to Room 1, low tunnel to Room 5.',
+      exits: 'North arch to Room 2, washroom gap to Room 3, low tunnel to Room 5, hidden crawlspace to Room 1.',
     },
     {
       number: 5,
@@ -261,7 +273,7 @@ export const mockDungeon: Dungeon = {
       ],
       treasure: 'A saint medallion wrapped around an altar peg.',
       secrets: 'Moving the altar reveals stairs to Room 8.',
-      exits: 'East to Room 2, south to Room 4, north to Room 6, stairs to Room 8.',
+      exits: 'West to Room 4, north to Room 6, south stair to Room 8, east to Room 9.',
     },
     {
       number: 6,
@@ -275,7 +287,7 @@ export const mockDungeon: Dungeon = {
       inhabitants: [],
       treasure: 'A brass handbell that muffles nearby footfalls for a short time.',
       secrets: 'A carved mark shows the proper rhythm: three short pulls, one long pull.',
-      exits: 'South to Room 5, drain crawl to Room 3, shaft ladder to Room 9.',
+      exits: 'South to Room 5.',
     },
     {
       number: 7,
@@ -289,7 +301,7 @@ export const mockDungeon: Dungeon = {
       inhabitants: [],
       treasure: 'Trade silver, dry rations, and a wrapped ceremonial dagger.',
       secrets: 'A false crate bottom holds letters naming the bandit captain.',
-      exits: 'Hidden door to Room 5, narrow tunnel to Room 8.',
+      exits: 'Narrow tunnel to Room 8.',
     },
     {
       number: 8,
@@ -341,7 +353,7 @@ export const mockDungeon: Dungeon = {
       ],
       treasure: 'The bell clapper, a ceremonial relic, and water-bright coins.',
       secrets: 'The bell contains the name of the forgotten saint etched inside the rim.',
-      exits: 'Shaft to Room 6, hidden passage to Room 8.',
+      exits: 'West to Room 5, hidden passage to Room 8.',
     },
   ],
   encounterTables: {
@@ -402,6 +414,15 @@ const ruinedShrineDungeon: Dungeon = {
     style: 'shrine',
     gmMapId: 'ruined-shrine-gm',
     playerMapId: 'ruined-shrine-player',
+    connections: [
+      { from: 1, to: 2, type: 'normal', path: 'M220 216 H260' },
+      { from: 1, to: 6, type: 'normal', path: 'M152 262 V318' },
+      { from: 2, to: 3, type: 'normal', path: 'M388 206 H424' },
+      { from: 3, to: 4, type: 'normal', path: 'M480 254 V310' },
+      { from: 4, to: 5, type: 'normal', path: 'M432 348 H388' },
+      { from: 5, to: 6, type: 'normal', path: 'M270 344 H216' },
+      { from: 2, to: 5, type: 'secret', note: 'Truthful vow hidden stair', path: 'M318 258 C304 284 292 304 274 326' },
+    ],
     playerSafe: {
       hideSecrets: true,
       hideTreasure: true,
@@ -435,7 +456,7 @@ const ruinedShrineDungeon: Dungeon = {
       ],
       treasure: 'A pouch of pilgrim coins hidden in the alms cart axle.',
       secrets: 'Old scratch marks show the wall stones can be climbed silently.',
-      exits: 'Door to Room 2, wall gap to Room 3.',
+      exits: 'Door to Room 2, root-split path to Room 6.',
     },
     {
       number: 2,
@@ -507,7 +528,7 @@ const ruinedShrineDungeon: Dungeon = {
       ],
       treasure: 'A saint-thread charm that helps locate the missing relic.',
       secrets: 'The "finger-bone" is a carved key wrapped in bone dust.',
-      exits: 'Hidden stair to Room 2, low passage to Room 6.',
+      exits: 'Hidden stair to Room 2, crawl to Room 4, low passage to Room 6.',
     },
     {
       number: 6,
@@ -531,7 +552,7 @@ const ruinedShrineDungeon: Dungeon = {
       ],
       treasure: 'The saint key, a silver reliquary, and a promise of village gratitude.',
       secrets: 'The relic opens an older shrine elsewhere, setting up a future hook.',
-      exits: 'Low passage to Room 5, root split to the prayer yard.',
+      exits: 'Low passage to Room 5, root-split path to Room 1 and the prayer yard.',
     },
   ],
   encounterTables: {
@@ -592,6 +613,16 @@ const cavernDungeon: Dungeon = {
     style: 'cavern',
     gmMapId: 'cavern-gm',
     playerMapId: 'cavern-player',
+    connections: [
+      { from: 1, to: 2, type: 'normal', path: 'M156 224 C180 208 190 192 218 174' },
+      { from: 1, to: 3, type: 'normal', path: 'M156 252 C184 276 194 306 222 326' },
+      { from: 2, to: 4, type: 'normal', path: 'M286 186 C310 196 326 208 352 220' },
+      { from: 3, to: 6, type: 'normal', path: 'M288 316 C388 350 466 348 548 316' },
+      { from: 4, to: 5, type: 'normal', path: 'M424 210 C452 188 470 170 498 154' },
+      { from: 5, to: 6, type: 'normal', path: 'M540 198 C568 234 584 264 600 300' },
+      { from: 2, to: 5, type: 'secret', note: 'Low underwater arch', path: 'M276 166 C344 130 422 118 498 154' },
+      { from: 4, to: 6, type: 'secret', note: 'Dry chimney hidden in the nest', path: 'M432 200 C466 244 504 268 574 286' },
+    ],
     playerSafe: {
       hideSecrets: true,
       hideTreasure: true,
@@ -673,7 +704,7 @@ const cavernDungeon: Dungeon = {
       ],
       treasure: 'Shed crystal wing scales that catch lantern light beautifully.',
       secrets: 'The nest hides a dry chimney to Room 6.',
-      exits: 'Slope to Room 2, chimney to Room 6.',
+      exits: 'Slope to Room 2, narrow passage to Room 5, chimney to Room 6.',
     },
     {
       number: 5,
@@ -697,7 +728,7 @@ const cavernDungeon: Dungeon = {
       ],
       treasure: 'The ferry chain anchor and a water-polished memory stone.',
       secrets: 'The old chain belongs to a vanished village crossing.',
-      exits: 'Underwater arch to Room 2, dry rise to Room 6.',
+      exits: 'Underwater arch to Room 2, narrow passage to Room 4, dry rise to Room 6.',
     },
     {
       number: 6,
@@ -770,6 +801,15 @@ const cryptDungeon: Dungeon = {
     style: 'crypt',
     gmMapId: 'crypt-gm',
     playerMapId: 'crypt-player',
+    connections: [
+      { from: 1, to: 2, type: 'normal', path: 'M360 128 V170' },
+      { from: 2, to: 3, type: 'normal', path: 'M256 214 H210' },
+      { from: 2, to: 4, type: 'normal', path: 'M464 214 H510' },
+      { from: 3, to: 5, type: 'normal', path: 'M210 260 C214 298 244 310 276 342' },
+      { from: 4, to: 6, type: 'normal', path: 'M510 260 C506 298 476 310 444 342' },
+      { from: 5, to: 6, type: 'normal', path: 'M276 366 H444' },
+      { from: 1, to: 4, type: 'secret', note: 'Ribbon-hidden seam to servant ossuary', path: 'M424 90 C486 112 540 152 570 174' },
+    ],
     playerSafe: {
       hideSecrets: true,
       hideTreasure: true,
@@ -815,7 +855,7 @@ const cryptDungeon: Dungeon = {
       ],
       treasure: 'An ivory genealogy clasp from an empty chair.',
       secrets: 'One name mask has been swapped with a servant\'s mask.',
-      exits: 'Stairs to Room 1, arch to Room 3, curtain to Room 5.',
+      exits: 'Stairs to Room 1, arch to Room 3, side arch to Room 4.',
     },
     {
       number: 3,
@@ -839,7 +879,7 @@ const cryptDungeon: Dungeon = {
       ],
       treasure: 'Old funeral coins, safe to take only after the rite is repaired.',
       secrets: 'The trench hides a weighted plaque naming a disinherited heir.',
-      exits: 'Arch to Room 2, stairs to Room 6.',
+      exits: 'Arch to Room 2, lower stairs to Room 5.',
     },
     {
       number: 4,
@@ -863,7 +903,7 @@ const cryptDungeon: Dungeon = {
       ],
       treasure: 'A ribbon ledger proving who served each branch.',
       secrets: 'The housekeeper watched the plaque being swapped.',
-      exits: 'Seam to Room 1, crawl to Room 5.',
+      exits: 'Side arch to Room 2, hidden seam to Room 1, lower stair to Room 6.',
     },
     {
       number: 5,
@@ -875,7 +915,7 @@ const cryptDungeon: Dungeon = {
       inhabitants: [],
       treasure: 'Silver inlay from the false plaque if removed intact.',
       secrets: 'The real plaque is hidden behind the chapel\'s funeral bell.',
-      exits: 'Curtain to Room 2, crawl to Room 4, bell door to Room 6.',
+      exits: 'Lower stairs to Room 3, bell door to Room 6.',
     },
     {
       number: 6,
@@ -899,7 +939,7 @@ const cryptDungeon: Dungeon = {
       ],
       treasure: 'Founder\'s signet of legal authority and a family debt of gratitude.',
       secrets: 'The new corpse tried to confess the forgery before dying.',
-      exits: 'Stairs to Room 3, bell door to Room 5.',
+      exits: 'Lower stair to Room 4, bell door to Room 5.',
     },
   ],
   encounterTables: {
@@ -960,6 +1000,15 @@ const sewerDungeon: Dungeon = {
     style: 'sewer',
     gmMapId: 'sewer-gm',
     playerMapId: 'sewer-player',
+    connections: [
+      { from: 1, to: 2, type: 'normal', path: 'M166 238 H220' },
+      { from: 1, to: 3, type: 'normal', path: 'M156 196 V150' },
+      { from: 2, to: 4, type: 'normal', path: 'M340 238 H358' },
+      { from: 4, to: 6, type: 'normal', path: 'M474 238 H570' },
+      { from: 5, to: 6, type: 'normal', path: 'M604 346 C626 328 636 306 626 292' },
+      { from: 3, to: 5, type: 'secret', note: 'Valve crawl behind the cot', path: 'M156 150 C214 178 260 210 306 252 S410 326 468 356' },
+      { from: 4, to: 5, type: 'secret', note: 'Crate-bottom maintenance route', path: 'M474 270 C500 294 520 310 536 330' },
+    ],
     playerSafe: {
       hideSecrets: true,
       hideTreasure: true,
@@ -1005,7 +1054,7 @@ const sewerDungeon: Dungeon = {
       ],
       treasure: 'A waterproof pouch of smuggler tally sticks.',
       secrets: 'A false arrow points toward a vermin nest instead of the archive.',
-      exits: 'Back to Room 1, culvert to Room 4, hatch to Room 5.',
+      exits: 'Back to Room 1, culvert to Room 4.',
     },
     {
       number: 3,
@@ -1028,8 +1077,8 @@ const sewerDungeon: Dungeon = {
         },
       ],
       treasure: 'Valve keys and a clean undercity sketch.',
-      secrets: 'One tea tin contains a note from the whistleblower.',
-      exits: 'Hatch to Room 1, valve crawl to Room 5.',
+      secrets: 'One tea tin contains a note from the whistleblower, and a hidden valve crawl leads to Room 5.',
+      exits: 'Hatch to Room 1, hidden valve crawl to Room 5.',
     },
     {
       number: 4,
@@ -1052,8 +1101,8 @@ const sewerDungeon: Dungeon = {
         },
       ],
       treasure: 'Fine saffron cloth and a smuggler passphrase.',
-      secrets: 'A crate bottom hides a route to Room 6.',
-      exits: 'Culvert to Room 2, skiff tunnel to Room 6.',
+      secrets: 'A crate bottom hides a maintenance route to Room 5.',
+      exits: 'Culvert to Room 2, skiff tunnel to Room 6, hidden crate route to Room 5.',
     },
     {
       number: 5,
@@ -1065,7 +1114,7 @@ const sewerDungeon: Dungeon = {
       inhabitants: [],
       treasure: 'A brass valve wheel stamped with the old city motto.',
       secrets: 'The motto gives the correct valve order: service, truth, water, bread.',
-      exits: 'Hatch to Room 2, crawl to Room 3, overflow to Room 6.',
+      exits: 'Hidden valve crawl to Room 3, hidden crate route to Room 4, overflow to Room 6.',
     },
     {
       number: 6,
@@ -1150,6 +1199,15 @@ const laboratoryDungeon: Dungeon = {
     style: 'laboratory',
     gmMapId: 'lab-gm',
     playerMapId: 'lab-player',
+    connections: [
+      { from: 1, to: 2, type: 'normal', path: 'M216 132 H274' },
+      { from: 1, to: 4, type: 'normal', path: 'M158 174 V284' },
+      { from: 2, to: 3, type: 'normal', path: 'M426 110 H506' },
+      { from: 2, to: 5, type: 'normal', path: 'M364 158 V302' },
+      { from: 3, to: 6, type: 'normal', path: 'M568 206 V286' },
+      { from: 4, to: 5, type: 'normal', path: 'M228 332 H306' },
+      { from: 5, to: 6, type: 'normal', path: 'M434 348 H520' },
+    ],
     playerSafe: {
       hideSecrets: true,
       hideTreasure: true,

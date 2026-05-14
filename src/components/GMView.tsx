@@ -87,7 +87,7 @@ export function GMView({
         </Panel>
       )}
 
-      {activeTab === 'map' && <DungeonMap mode="gm" mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} />}
+      {activeTab === 'map' && <DungeonMap mode="gm" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} />}
       {activeTab === 'areas' && (
         <div className="space-y-4">
           <Panel className="p-3">
