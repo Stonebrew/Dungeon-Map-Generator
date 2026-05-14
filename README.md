@@ -45,4 +45,4 @@ Mock dungeon data follows the shared contract in `src/types.ts`, including stabl
 
 Prototype-only app state is isolated in `src/hooks/useMockDailyDungeonApp.ts`. It stands in for future backend/account/subscription data and should be replaced as real APIs are connected.
 
-Future backend/API planning notes live in `docs/api-boundary.md`.
+Future backend/API planning notes live in `docs/api-boundary.md` and `docs/backend-plan.md`.
