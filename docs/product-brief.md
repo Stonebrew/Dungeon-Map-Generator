@@ -24,6 +24,8 @@ Feature entitlement checks are centralized in `src/lib/entitlements.ts`. The tem
 
 Mock dungeon payloads now include backend-planning fields such as ISO dates, stable room IDs, structured exits, and `map.connections` as the source of truth for map connectivity. Run `npm run validate:dungeons` before changing mock dungeon content or map routes.
 
+Prototype app state is isolated in `src/hooks/useMockDailyDungeonApp.ts`. This hook currently owns mock dungeon selection, mock tier selection, favorites, reroll resources, locked feature state, and view routing until real backend/account APIs exist.
+
 ## Out Of Scope
 
 - Backend generation

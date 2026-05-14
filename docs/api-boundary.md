@@ -2,6 +2,8 @@
 
 This document sketches future API and data boundaries for Daily Dungeon. It is planning documentation only; the current app remains a frontend prototype using mock data.
 
+The current prototype state layer lives in `src/hooks/useMockDailyDungeonApp.ts`. That hook is a temporary stand-in for the backend boundaries described here.
+
 ## Principles
 
 - Free Lantern users receive the global cached daily dungeon.

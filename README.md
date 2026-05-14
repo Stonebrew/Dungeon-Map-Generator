@@ -43,4 +43,6 @@ Feature access is centralized in `src/lib/entitlements.ts`. Temporary prototype 
 
 Mock dungeon data follows the shared contract in `src/types.ts`, including stable dungeon IDs, ISO dates, stable room IDs, structured exits, and `map.connections` as the source of truth for map connectivity.
 
+Prototype-only app state is isolated in `src/hooks/useMockDailyDungeonApp.ts`. It stands in for future backend/account/subscription data and should be replaced as real APIs are connected.
+
 Future backend/API planning notes live in `docs/api-boundary.md`.
