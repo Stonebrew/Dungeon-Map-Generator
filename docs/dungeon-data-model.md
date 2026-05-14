@@ -9,6 +9,7 @@ The `Dungeon` contract defines the complete ready-to-run dungeon payload the fro
 ## Main Dungeon Fields
 
 - `id`: stable dungeon identifier.
+- `dateIso`: ISO-8601 date for backend sorting, daily lookup, and archive grouping.
 - `date`: display date for the daily dungeon or archived dungeon.
 - `title`: dungeon title.
 - `theme`: short theme or premise label.
@@ -18,7 +19,7 @@ The `Dungeon` contract defines the complete ready-to-run dungeon payload the fro
 - `hook`: short story hook.
 - `background`: GM-facing setup context.
 - `map`: backend-ready `DungeonMapData` object.
-- `mapStyle`, `mapPlaceholder`, `playerMapPlaceholder`: current prototype compatibility fields used by the SVG placeholder renderer.
+- `mapStyle`, `mapPlaceholder`, `playerMapPlaceholder`: deprecated prototype compatibility fields. Prefer `map.style`, `map.gmMapId`, `map.playerMapId`, or future generated map asset metadata.
 - `rooms`: ordered `DungeonRoom` list.
 - `encounterTables`: wandering, environmental, and room complication tables.
 - `treasureTable`: system-neutral treasure entries.
@@ -30,10 +31,10 @@ The `Dungeon` contract defines the complete ready-to-run dungeon payload the fro
 `DungeonMapData` contains:
 
 - `style`: current placeholder map style key.
-- `gmMapId`: identifier for the GM-facing map asset or generated map.
-- `playerMapId`: identifier for the player-safe map asset or generated map.
+- `gmMapId`: deprecated prototype identifier for the GM-facing map asset or generated map; future payloads may replace this with richer asset metadata.
+- `playerMapId`: deprecated prototype identifier for the player-safe map asset or generated map; future payloads may replace this with richer asset metadata.
 - `connections`: source-of-truth room connectivity metadata. Each connection has `from`, `to`, `type`, optional `note`, and a prototype `path` used for SVG route rendering.
-- `playerSafe`: rules for what the player map should hide, including secrets, treasure, hazards, and GM notes.
+- `playerSafe`: rules for what the player map should hide, including secrets, treasure, hazards, GM notes, and optional player-facing description copy.
 
 The prototype still renders room shapes from local SVG layouts. Visual route rendering is derived from `map.connections`, so normal corridors and GM-only secret routes share the same source of truth as room exit text. A backend map service can later replace `gmMapId` and `playerMapId` with generated asset IDs or URLs, but the visual routes should continue to match `map.connections`.
 
@@ -57,7 +58,7 @@ The current `path` field is prototype SVG data, not a procedural generation API.
 
 Each `DungeonRoom` supports:
 
-- `id`: optional stable room identifier for future backend updates.
+- `id`: stable room identifier for backend updates, refreshes, route references, and UI focus.
 - `number`: visible keyed room number.
 - `name`: room name.
 - `readAloud` and optional `readAloudText`: player-facing boxed text.
@@ -67,8 +68,32 @@ Each `DungeonRoom` supports:
 - `inhabitants`: system-agnostic creature or NPC entries.
 - `treasure`: room treasure text.
 - `secrets`: hidden information.
-- `exits`: visible or discoverable exits.
+- `exits`: visible or discoverable exit prose for table readability.
+- `structuredExits`: backend-ready exit records. Each structured exit can include `toRoomId`, `toRoomNumber`, `type`, `label`, `description`, and `note`.
 - `refreshEligibility`: optional future metadata for whether a room can be partially refreshed.
+
+Structured exit example:
+
+```ts
+structuredExits: [
+  {
+    toRoomId: 'dd-2026-05-10-room-06',
+    toRoomNumber: 6,
+    type: 'normal',
+    label: 'Overflow to Room 6',
+    description: 'A waist-high overflow tunnel drains toward the archive.',
+  },
+  {
+    toRoomId: 'dd-2026-05-10-room-03',
+    toRoomNumber: 3,
+    type: 'secret',
+    label: 'Hidden valve crawl',
+    note: 'Found behind the pumpkeeper cot.',
+  },
+]
+```
+
+The current mock data enriches structured exits from `map.connections` so the prototype remains easy to maintain. Future backend generation should emit structured exits directly rather than relying on prose parsing.
 
 ## System-Agnostic Encounter Labels
 
@@ -103,3 +128,7 @@ Encounter entries may include an encounter `type`: `Combat`, `Social`, `Hazard`,
 When backend generation is added, the frontend should replace `src/data/mockDungeon.ts` with fetched or hydrated `Dungeon` payloads. Components should continue reading the shared contract from `src/types.ts`, while entitlement checks remain centralized in `src/lib/entitlements.ts`.
 
 Future generation should create the visual map layout, `map.connections`, visual route geometry, and room exit descriptions from the same generation pass so those surfaces cannot drift apart.
+
+## Validation
+
+Run `npm run validate:dungeons` to validate all mock dungeons. The script checks room references, duplicate connections, structured exits, room exit consistency, secret route labeling, and required prototype visual route paths.

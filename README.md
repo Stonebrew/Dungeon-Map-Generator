@@ -31,6 +31,7 @@ Open the local URL printed by Vite, usually `http://127.0.0.1:5173/`.
 - `npm run build` type-checks and builds the production bundle.
 - `npm run preview` previews the production build locally.
 - `npm run lint` runs ESLint.
+- `npm run validate:dungeons` checks mock dungeon connectivity, structured exits, and prototype map route paths.
 
 ## Prototype Scope
 
@@ -39,3 +40,5 @@ The current UI includes Today’s Dungeon, Run Mode, GM View, Player Safe Map Vi
 The current mock subscription model has three tiers: Lantern, Adventurer, and Dungeonwright.
 
 Feature access is centralized in `src/lib/entitlements.ts`. Temporary prototype selectors for mock dungeon and mock user tier testing live in `src/components/DevPanel.tsx`.
+
+Mock dungeon data follows the shared contract in `src/types.ts`, including stable dungeon IDs, ISO dates, stable room IDs, structured exits, and `map.connections` as the source of truth for map connectivity.

@@ -19,9 +19,23 @@ export type MapConnection = {
   oneWay?: boolean;
 };
 
+export type RoomExitType = 'normal' | 'secret' | 'locked' | 'oneWay';
+
+export type RoomExit = {
+  id?: string;
+  toRoomId?: string;
+  toRoomNumber?: number;
+  type: RoomExitType;
+  label: string;
+  description?: string;
+  note?: string;
+};
+
 export type DungeonMapData = {
   style: MapStyle;
+  // Deprecated for backend planning: prefer generated map assets or richer geometry metadata.
   gmMapId: string;
+  // Deprecated for backend planning: prefer generated player-safe map assets or richer geometry metadata.
   playerMapId: string;
   // Source of truth for room connectivity; room exit text and visual routes should match these links.
   connections?: MapConnection[];
@@ -30,6 +44,7 @@ export type DungeonMapData = {
     hideTreasure: boolean;
     hideHazards: boolean;
     hideGmNotes: boolean;
+    description?: string;
   };
 };
 
@@ -46,7 +61,7 @@ export type Inhabitant = {
 };
 
 export type DungeonRoom = {
-  id?: string;
+  id: string;
   number: number;
   name: string;
   readAloud: string;
@@ -57,7 +72,9 @@ export type DungeonRoom = {
   inhabitants: Inhabitant[];
   treasure: string;
   secrets: string;
+  // UI-facing prose kept for table readability. Backend payloads should also provide structuredExits.
   exits: string;
+  structuredExits: RoomExit[];
   refreshEligibility?: {
     eligible: boolean;
     reason?: string;
@@ -86,6 +103,8 @@ export type EncounterTables = {
 
 export type Dungeon = {
   id: string;
+  dateIso: string;
+  // Display date used by the current UI. Keep formatting in the frontend or backend presentation layer.
   date: string;
   title: string;
   theme: string;
@@ -95,8 +114,11 @@ export type Dungeon = {
   hook: string;
   background: string;
   map: DungeonMapData;
+  // Deprecated compatibility field. Use map.style for renderer selection.
   mapStyle: MapStyle;
+  // Deprecated compatibility field. Use map.gmMapId or future map asset metadata.
   mapPlaceholder: string;
+  // Deprecated compatibility field. Use map.playerMapId or future player-safe map asset metadata.
   playerMapPlaceholder: string;
   rooms: DungeonRoom[];
   encounterTables: EncounterTables;

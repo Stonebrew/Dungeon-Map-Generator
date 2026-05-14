@@ -22,6 +22,8 @@ The prototype uses three mock tiers: Lantern, Adventurer, and Dungeonwright. Lan
 
 Feature entitlement checks are centralized in `src/lib/entitlements.ts`. The temporary mock dungeon and mock user tier selectors are isolated in the Prototype Dev Panel and should be replaced by real daily generation and account data later.
 
+Mock dungeon payloads now include backend-planning fields such as ISO dates, stable room IDs, structured exits, and `map.connections` as the source of truth for map connectivity. Run `npm run validate:dungeons` before changing mock dungeon content or map routes.
+
 ## Out Of Scope
 
 - Backend generation

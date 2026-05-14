@@ -1,4 +1,4 @@
-import type { Dungeon, Plan, RerollAllowance, RerollCounts, TierId } from '../types';
+import type { Dungeon, DungeonRoom, MapConnection, Plan, RerollAllowance, RerollCounts, RoomExit, TierId } from '../types';
 
 export const currentTier: TierId = 'lantern';
 
@@ -118,8 +118,56 @@ export const rerollAllowancesByTier: Record<TierId, RerollAllowance> = {
   },
 };
 
-export const mockDungeon: Dungeon = {
+type DraftRoom = Omit<DungeonRoom, 'id' | 'structuredExits'> & Partial<Pick<DungeonRoom, 'id' | 'structuredExits'>>;
+type DraftDungeon = Omit<Dungeon, 'rooms'> & { rooms: DraftRoom[] };
+
+function getRoomId(dungeonId: string, roomNumber: number) {
+  return `${dungeonId}-room-${String(roomNumber).padStart(2, '0')}`;
+}
+
+function exitTypeForConnection(connection: MapConnection, roomNumber: number): RoomExit['type'] {
+  if (connection.oneWay && connection.from === roomNumber) {
+    return 'oneWay';
+  }
+
+  return connection.type;
+}
+
+function buildStructuredExits(dungeon: DraftDungeon, room: DraftRoom): RoomExit[] {
+  const roomId = room.id ?? getRoomId(dungeon.id, room.number);
+
+  return (dungeon.map.connections ?? [])
+    .filter((connection) => connection.from === room.number || connection.to === room.number)
+    .map((connection) => {
+      const targetRoomNumber = connection.from === room.number ? connection.to : connection.from;
+      const type = exitTypeForConnection(connection, room.number);
+
+      return {
+        id: `${roomId}-to-${getRoomId(dungeon.id, targetRoomNumber)}`,
+        toRoomId: getRoomId(dungeon.id, targetRoomNumber),
+        toRoomNumber: targetRoomNumber,
+        type,
+        label: connection.note ?? `${type === 'secret' ? 'Hidden route' : type === 'oneWay' ? 'One-way route' : 'Route'} to Room ${targetRoomNumber}`,
+        description: room.exits,
+        note: connection.note,
+      };
+    });
+}
+
+function finalizeDungeon(dungeon: DraftDungeon): Dungeon {
+  return {
+    ...dungeon,
+    rooms: dungeon.rooms.map((room) => ({
+      ...room,
+      id: room.id ?? getRoomId(dungeon.id, room.number),
+      structuredExits: room.structuredExits ?? buildStructuredExits(dungeon, room),
+    })),
+  };
+}
+
+const mockDungeonDraft: DraftDungeon = {
   id: 'dd-2026-05-06',
+  dateIso: '2026-05-06',
   date: 'May 6, 2026',
   title: 'The Bell Below Blackfen',
   theme: 'Flooded shrine beneath a ruined tollhouse',
@@ -398,8 +446,9 @@ export const mockDungeon: Dungeon = {
   ],
 };
 
-const ruinedShrineDungeon: Dungeon = {
+const ruinedShrineDungeonDraft: DraftDungeon = {
   id: 'dd-2026-05-07',
+  dateIso: '2026-05-07',
   date: 'May 7, 2026',
   title: 'Ashes at Saint Orra\'s Finger-Bone Shrine',
   theme: 'Small ruined shrine occupied by desperate relic-thieves',
@@ -597,8 +646,9 @@ const ruinedShrineDungeon: Dungeon = {
   ],
 };
 
-const cavernDungeon: Dungeon = {
+const cavernDungeonDraft: DraftDungeon = {
   id: 'dd-2026-05-08',
+  dateIso: '2026-05-08',
   date: 'May 8, 2026',
   title: 'The Singing Caves of Glasswater Bend',
   theme: 'Natural cavern where sound, crystal, and hungry creatures reshape the path',
@@ -785,8 +835,9 @@ const cavernDungeon: Dungeon = {
   ],
 };
 
-const cryptDungeon: Dungeon = {
+const cryptDungeonDraft: DraftDungeon = {
   id: 'dd-2026-05-09',
+  dateIso: '2026-05-09',
   date: 'May 9, 2026',
   title: 'The Courteous Dead of Hollowmere Tomb',
   theme: 'Crypt where polite undead debate who deserves burial honor',
@@ -984,8 +1035,9 @@ const cryptDungeon: Dungeon = {
   ],
 };
 
-const sewerDungeon: Dungeon = {
+const sewerDungeonDraft: DraftDungeon = {
   id: 'dd-2026-05-10',
+  dateIso: '2026-05-10',
   date: 'May 10, 2026',
   title: 'The Saffron Drain Beneath Marketbell',
   theme: 'Sewer and undercity route used by smugglers, vermin, and civic saboteurs',
@@ -1183,8 +1235,9 @@ const sewerDungeon: Dungeon = {
   ],
 };
 
-const laboratoryDungeon: Dungeon = {
+const laboratoryDungeonDraft: DraftDungeon = {
   id: 'dd-2026-05-11',
+  dateIso: '2026-05-11',
   date: 'May 11, 2026',
   title: 'Professor Vellum\'s Workshop for Unfinished Suns',
   theme: 'Abandoned arcane laboratory full of unstable light, constructs, and unpaid assistants',
@@ -1393,6 +1446,13 @@ const laboratoryDungeon: Dungeon = {
     'A good ending prevents the false dawn and decides the spark\'s future.',
   ],
 };
+
+export const mockDungeon = finalizeDungeon(mockDungeonDraft);
+const ruinedShrineDungeon = finalizeDungeon(ruinedShrineDungeonDraft);
+const cavernDungeon = finalizeDungeon(cavernDungeonDraft);
+const cryptDungeon = finalizeDungeon(cryptDungeonDraft);
+const sewerDungeon = finalizeDungeon(sewerDungeonDraft);
+const laboratoryDungeon = finalizeDungeon(laboratoryDungeonDraft);
 
 export const mockDungeons: Dungeon[] = [
   mockDungeon,

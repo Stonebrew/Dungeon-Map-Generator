@@ -53,17 +53,30 @@ function exitRoomReferences(room: DungeonRoom) {
     refs.add(Number(match[1]));
   }
 
+  for (const exit of room.structuredExits) {
+    if (exit.toRoomNumber) {
+      refs.add(exit.toRoomNumber);
+    }
+  }
+
   return refs;
 }
 
 function roomMentionsConnection(room: DungeonRoom, targetRoomNumber: number) {
-  return new RegExp(`\\bRoom\\s+${targetRoomNumber}\\b`, 'i').test(room.exits);
+  return room.structuredExits.some((exit) => exit.toRoomNumber === targetRoomNumber) || new RegExp(`\\bRoom\\s+${targetRoomNumber}\\b`, 'i').test(room.exits);
 }
 
 function roomMarksSecretConnection(room: DungeonRoom, targetRoomNumber: number) {
   const text = roomText(room);
+  const structuredSecretText = room.structuredExits
+    .filter((exit) => exit.toRoomNumber === targetRoomNumber)
+    .map((exit) => `${exit.type} ${exit.label} ${exit.description ?? ''} ${exit.note ?? ''}`)
+    .join(' ')
+    .toLowerCase();
   const mentionsTarget = new RegExp(`\\bRoom\\s+${targetRoomNumber}\\b`, 'i').test(text);
-  return mentionsTarget && hiddenRouteWords.some((word) => text.includes(word));
+  const structuredMarksSecret = hiddenRouteWords.some((word) => structuredSecretText.includes(word));
+
+  return (mentionsTarget && hiddenRouteWords.some((word) => text.includes(word))) || structuredMarksSecret;
 }
 
 export function validateDungeon(dungeon: Dungeon): DungeonValidationResult {
@@ -112,6 +125,22 @@ export function validateDungeon(dungeon: Dungeon): DungeonValidationResult {
         severity: 'warning',
         message: `${connectionLabel(connection)} is missing a visual route path for the prototype map renderer.`,
         roomNumbers: [connection.from, connection.to],
+      });
+    }
+
+    if (!fromRoom.structuredExits.some((exit) => exit.toRoomNumber === connection.to)) {
+      warnings.push({
+        severity: 'warning',
+        message: `Room ${connection.from} is missing a structured exit to Room ${connection.to}.`,
+        roomNumbers: [connection.from, connection.to],
+      });
+    }
+
+    if (!connection.oneWay && !toRoom.structuredExits.some((exit) => exit.toRoomNumber === connection.from)) {
+      warnings.push({
+        severity: 'warning',
+        message: `Room ${connection.to} is missing a structured exit to Room ${connection.from}.`,
+        roomNumbers: [connection.to, connection.from],
       });
     }
 
