@@ -1,4 +1,4 @@
-import { ArrowLeft, Bookmark, ChevronLeft, ChevronRight, Lock, MapPin } from 'lucide-react';
+import { ArrowLeft, BookOpenText, Bookmark, ChevronLeft, ChevronRight, Coins, DoorOpen, EyeOff, Lock, MapPin, ScrollText, ShieldAlert, UsersRound } from 'lucide-react';
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import type { Dungeon, Room, TierId } from '../types';
@@ -8,13 +8,13 @@ import { DungeonMap } from './DungeonMap';
 import { EncounterTablesSection } from './EncounterTable';
 
 const quickSections = [
-  { id: 'read-aloud', label: 'Read Aloud' },
-  { id: 'gm-notes', label: 'GM Notes' },
-  { id: 'inhabitants', label: 'Inhabitants' },
-  { id: 'treasure', label: 'Treasure' },
-  { id: 'secrets', label: 'Secrets' },
-  { id: 'exits', label: 'Exits' },
-  { id: 'encounter-tables', label: 'Encounter Tables' },
+  { id: 'read-aloud', label: 'Read', icon: BookOpenText },
+  { id: 'gm-notes', label: 'Notes', icon: ScrollText },
+  { id: 'inhabitants', label: 'Inhabitants', icon: UsersRound },
+  { id: 'treasure', label: 'Treasure', icon: Coins },
+  { id: 'secrets', label: 'Secrets', icon: EyeOff },
+  { id: 'exits', label: 'Exits', icon: DoorOpen },
+  { id: 'encounter-tables', label: 'Tables', icon: ShieldAlert },
 ];
 
 function threatTone(threat: string) {
@@ -30,10 +30,25 @@ function scrollToRunSection(sectionId: string) {
   });
 }
 
-function RunSection({ id, title, children }: { id: string; title: string; children: ReactNode }) {
+function RunSection({
+  id,
+  title,
+  icon,
+  accent = false,
+  children,
+}: {
+  id: string;
+  title: string;
+  icon: ReactNode;
+  accent?: boolean;
+  children: ReactNode;
+}) {
   return (
-    <section id={`run-${id}`} className="scroll-mt-28 rounded-md border border-ink/10 bg-parchment/55 p-3">
-      <h3 className="text-xs font-bold uppercase tracking-[0.14em] text-ink/45">{title}</h3>
+    <section id={`run-${id}`} className={`scroll-mt-32 rounded-md border p-3 ${accent ? 'border-brass/30 bg-brass/10' : 'border-ink/10 bg-parchment/55'}`}>
+      <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-ink/50">
+        <span className={`inline-flex h-7 w-7 items-center justify-center rounded-md ${accent ? 'bg-brass/15 text-brass' : 'bg-white text-ink/45'}`}>{icon}</span>
+        {title}
+      </h3>
       <div className="mt-2 text-sm leading-6 text-ink/75">{children}</div>
     </section>
   );
@@ -41,10 +56,13 @@ function RunSection({ id, title, children }: { id: string; title: string; childr
 
 function CurrentRoomPanel({ room }: { room: Room }) {
   return (
-    <Panel className="space-y-3">
-      <div className="flex flex-wrap items-start justify-between gap-3">
+    <Panel className="space-y-3 p-3 sm:p-4">
+      <div className="flex flex-wrap items-start justify-between gap-3 border-b border-ink/10 pb-3">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.16em] text-ember">Current Room {room.number}</p>
+          <p className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-ember">
+            <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
+            Players Here: Room {room.number}
+          </p>
           <h2 className="font-serif text-3xl font-bold leading-tight">{room.name}</h2>
         </div>
         <div className="flex flex-wrap gap-2">
@@ -55,15 +73,15 @@ function CurrentRoomPanel({ room }: { room: Room }) {
         </div>
       </div>
 
-      <RunSection id="read-aloud" title="Read Aloud">
-        <p className="border-l-4 border-brass/50 pl-3">{room.readAloud}</p>
+      <RunSection id="read-aloud" title="Read Aloud" icon={<BookOpenText className="h-4 w-4" aria-hidden="true" />} accent>
+        <p className="border-l-4 border-brass/50 pl-3 font-medium text-ink/80">{room.readAloud}</p>
       </RunSection>
 
-      <RunSection id="gm-notes" title="GM Notes">
+      <RunSection id="gm-notes" title="GM Notes" icon={<ScrollText className="h-4 w-4" aria-hidden="true" />}>
         <p>{room.gmNotes}</p>
       </RunSection>
 
-      <RunSection id="inhabitants" title="Inhabitants">
+      <RunSection id="inhabitants" title="Inhabitants" icon={<UsersRound className="h-4 w-4" aria-hidden="true" />}>
         {room.inhabitants.length > 0 ? (
           <div className="space-y-3">
             {room.inhabitants.map((inhabitant) => (
@@ -88,14 +106,14 @@ function CurrentRoomPanel({ room }: { room: Room }) {
       </RunSection>
 
       <div className="grid gap-3 lg:grid-cols-3">
-        <RunSection id="treasure" title="Treasure">
+        <RunSection id="treasure" title="Treasure" icon={<Coins className="h-4 w-4" aria-hidden="true" />}>
           <p>{room.treasure}</p>
         </RunSection>
-        <RunSection id="secrets" title="Secrets">
+        <RunSection id="secrets" title="Secrets" icon={<EyeOff className="h-4 w-4" aria-hidden="true" />}>
           <p>{room.secrets}</p>
         </RunSection>
-        <RunSection id="exits" title="Exits">
-          <p>{room.exits}</p>
+        <RunSection id="exits" title="Exits" icon={<DoorOpen className="h-4 w-4" aria-hidden="true" />} accent>
+          <p className="font-semibold text-ink/80">{room.exits}</p>
         </RunSection>
       </div>
     </Panel>
@@ -148,11 +166,14 @@ export function RunMode({
 
   return (
     <div className="space-y-4">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+      <div className="rounded-md border border-ink/10 bg-white p-3 shadow-tool sm:p-4">
+        <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <Badge tone="danger">Run Mode</Badge>
+          <Badge tone="danger">Live Table Mode</Badge>
           <h1 className="mt-2 font-serif text-3xl font-bold leading-tight sm:text-4xl">{dungeon.title}</h1>
-          <p className="mt-1 text-sm font-semibold text-ink/55">Live table view focused on one room at a time.</p>
+          <p className="mt-1 text-sm font-semibold text-ink/55">
+            Room {currentRoom.number}: {currentRoom.name} · {currentRoom.exits}
+          </p>
         </div>
         <div className="flex flex-wrap gap-2">
           <button
@@ -170,18 +191,19 @@ export function RunMode({
             Return to App
           </button>
         </div>
+        </div>
       </div>
 
       <div className="grid gap-4 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.35fr)]">
         <div className="space-y-4">
           <DungeonMap mode="gm" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} compact showLegend />
 
-          <Panel className="p-3">
+          <Panel className="sticky top-3 z-10 p-3">
             <div className="flex items-center justify-between gap-3">
               <h2 className="font-serif text-xl font-bold">Room Quick Jump</h2>
               <Badge tone="accent">{currentIndex + 1} / {dungeon.rooms.length}</Badge>
             </div>
-            <div className="mt-3 grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
+            <div className="mt-3 grid max-h-[28rem] gap-2 overflow-y-auto pr-1 sm:grid-cols-2 xl:grid-cols-1">
               {dungeon.rooms.map((room) => {
                 const active = room.number === currentRoom.number;
                 return (
@@ -190,7 +212,7 @@ export function RunMode({
                     type="button"
                     onClick={() => selectRoom(room.number)}
                     className={`rounded-md border p-2 text-left text-sm ${
-                      active ? 'border-ember bg-ember text-white shadow-tool' : 'border-ink/10 bg-parchment/60 text-ink/75 hover:bg-parchment'
+                      active ? 'border-ember bg-ember text-white shadow-tool ring-2 ring-ember/25' : 'border-ink/10 bg-parchment/60 text-ink/75 hover:bg-parchment'
                     }`}
                   >
                     <span className="flex items-start justify-between gap-2">
@@ -210,6 +232,7 @@ export function RunMode({
         </div>
 
         <div id="run-current-room" className="scroll-mt-24 space-y-4">
+          <div className="sticky top-0 z-20 rounded-md border border-ink/10 bg-parchment/95 p-2 shadow-tool backdrop-blur">
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
@@ -218,7 +241,10 @@ export function RunMode({
               className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-ink px-3 py-2 text-sm font-bold text-white disabled:bg-ink/10 disabled:text-ink/40"
             >
               <ChevronLeft className="h-4 w-4" aria-hidden="true" />
-              Previous Room
+              <span>
+                <span className="block text-[11px] uppercase tracking-[0.12em] opacity-70">Previous</span>
+                <span>Room</span>
+              </span>
             </button>
             <button
               type="button"
@@ -226,12 +252,15 @@ export function RunMode({
               onClick={() => moveRoom(1)}
               className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-ink px-3 py-2 text-sm font-bold text-white disabled:bg-ink/10 disabled:text-ink/40"
             >
-              Next Room
+              <span>
+                <span className="block text-[11px] uppercase tracking-[0.12em] opacity-70">Next</span>
+                <span>Room</span>
+              </span>
               <ChevronRight className="h-4 w-4" aria-hidden="true" />
             </button>
           </div>
 
-          <div className="flex gap-2 overflow-x-auto pb-1">
+          <div className="mt-2 flex gap-2 overflow-x-auto pb-1">
             {quickSections.map((section) => (
               <button
                 key={section.id}
@@ -239,16 +268,31 @@ export function RunMode({
                 onClick={() => scrollToRunSection(section.id)}
                 className="inline-flex shrink-0 items-center gap-2 rounded-md border border-ink/10 bg-white px-3 py-2 text-xs font-bold text-ink/65 shadow-tool hover:bg-parchment"
               >
-                <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
+                <section.icon className="h-3.5 w-3.5" aria-hidden="true" />
                 {section.label}
               </button>
             ))}
+          </div>
           </div>
 
           <CurrentRoomPanel room={currentRoom} />
 
           <section id="run-encounter-tables" className="scroll-mt-28">
-            <EncounterTablesSection tables={dungeon.encounterTables} embedded />
+            <details className="rounded-md border border-ink/10 bg-white p-3 shadow-tool">
+              <summary className="flex cursor-pointer list-none items-center justify-between gap-3">
+                <span>
+                  <span className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.14em] text-ember">
+                    <ShieldAlert className="h-4 w-4" aria-hidden="true" />
+                    Encounter Tables
+                  </span>
+                  <span className="mt-1 block text-sm text-ink/60">Open when the table needs motion, pressure, or complications.</span>
+                </span>
+                <Badge tone="accent">d6 tables</Badge>
+              </summary>
+              <div className="mt-3 border-t border-ink/10 pt-3">
+                <EncounterTablesSection tables={dungeon.encounterTables} embedded />
+              </div>
+            </details>
           </section>
         </div>
       </div>
