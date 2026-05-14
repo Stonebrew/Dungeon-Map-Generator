@@ -42,3 +42,5 @@ The current mock subscription model has three tiers: Lantern, Adventurer, and Du
 Feature access is centralized in `src/lib/entitlements.ts`. Temporary prototype selectors for mock dungeon and mock user tier testing live in `src/components/DevPanel.tsx`.
 
 Mock dungeon data follows the shared contract in `src/types.ts`, including stable dungeon IDs, ISO dates, stable room IDs, structured exits, and `map.connections` as the source of truth for map connectivity.
+
+Future backend/API planning notes live in `docs/api-boundary.md`.
