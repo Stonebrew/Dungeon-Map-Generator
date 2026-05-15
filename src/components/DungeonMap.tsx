@@ -64,6 +64,170 @@ function RubbleChips({ chips }: { chips: { x: number; y: number; r?: number }[] 
   );
 }
 
+function AssetStoneFloorTile({ x, y, w = 28, h = 22, tone = 0 }: { x: number; y: number; w?: number; h?: number; tone?: number }) {
+  const fills = ['#c7b185', '#d7c49d', '#bda477', '#e0d0ad'];
+  return (
+    <g>
+      <rect x={x} y={y} width={w} height={h} fill={fills[tone % fills.length]} stroke="#6f563d" strokeWidth="1.15" opacity="0.96" />
+      <path d={`M${x + 5} ${y + 5} h${Math.max(7, w * 0.35)} M${x + w - 8} ${y + h - 5} h-8`} stroke="#f6ead1" strokeWidth="1" opacity="0.28" />
+    </g>
+  );
+}
+
+function AssetCrackedTile({ x, y, scale = 1 }: { x: number; y: number; scale?: number }) {
+  return <path d={`M${x} ${y} l${12 * scale} ${-7 * scale} l${8 * scale} ${10 * scale} l${10 * scale} ${-5 * scale}`} stroke="#4f3d2e" strokeWidth={1.8 * scale} strokeLinecap="round" fill="none" opacity="0.56" />;
+}
+
+function AssetWallBlock({ x, y, w, h, vertical = false }: { x: number; y: number; w: number; h: number; vertical?: boolean }) {
+  return (
+    <g>
+      <rect x={x} y={y} width={w} height={h} rx="2" fill="#2f2924" stroke="#110d0a" strokeWidth="1.2" />
+      <path d={vertical ? `M${x + w * 0.5} ${y + 4} V${y + h - 4}` : `M${x + 4} ${y + h * 0.45} H${x + w - 4}`} stroke="#665647" strokeWidth="1.2" opacity="0.55" />
+      <path d={vertical ? `M${x + 2} ${y + 5} V${y + h - 5}` : `M${x + 5} ${y + 2} H${x + w - 5}`} stroke="#8b7860" strokeWidth="1" opacity="0.38" />
+    </g>
+  );
+}
+
+function AssetWallCorner({ x, y }: { x: number; y: number }) {
+  return (
+    <g filter="url(#markerInk)">
+      <rect x={x - 2} y={y - 2} width="18" height="18" rx="3" fill="#1f1a16" />
+      <path d={`M${x + 3} ${y + 5} h8 M${x + 6} ${y + 3} v10`} stroke="#85705a" strokeWidth="1.2" opacity="0.56" />
+    </g>
+  );
+}
+
+function AssetCorridorSlabs({ path }: { path: string }) {
+  return (
+    <g>
+      <path d={path} stroke="#1a1511" strokeWidth="46" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.28" />
+      <path d={path} stroke="#3a2f25" strokeWidth="38" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.9" />
+      <path d={path} stroke="#927249" strokeWidth="30" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.96" />
+      <path d={path} stroke="#cfbc92" strokeWidth="23" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.98" />
+      <path d={path} stroke="#6e563c" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" fill="none" strokeDasharray="16 12" opacity="0.72" />
+      <path d={path} stroke="#f4e4bd" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" strokeDasharray="5 20" opacity="0.68" />
+    </g>
+  );
+}
+
+function AssetMossPatch({ x, y, scale = 1 }: { x: number; y: number; scale?: number }) {
+  return (
+    <g transform={`translate(${x} ${y}) scale(${scale})`} opacity="0.82">
+      <path d="M0 10 C12 -5 36 -1 44 14 C30 24 10 24 0 10 Z" fill="#365b35" opacity="0.58" />
+      <circle cx="12" cy="11" r="4" fill="#6f914f" opacity="0.5" />
+      <circle cx="29" cy="13" r="5" fill="#557a43" opacity="0.55" />
+    </g>
+  );
+}
+
+function AssetRubblePile({ x, y, scale = 1 }: { x: number; y: number; scale?: number }) {
+  const rocks = [
+    { x: 0, y: 8, s: 8 },
+    { x: 10, y: 2, s: 10 },
+    { x: 22, y: 9, s: 7 },
+    { x: 17, y: 17, s: 6 },
+  ];
+  return (
+    <g transform={`translate(${x} ${y}) scale(${scale})`} opacity="0.85">
+      {rocks.map((rock) => (
+        <path key={`${rock.x}-${rock.y}`} d={`M${rock.x} ${rock.y} l${rock.s} -3 l6 6 l-${rock.s * 0.45} 8 l-${rock.s} -2 Z`} fill="#7a654d" stroke="#4b3c2e" strokeWidth="1" />
+      ))}
+    </g>
+  );
+}
+
+function AssetWaterChannel({ x, y, w, h }: { x: number; y: number; w: number; h: number }) {
+  return (
+    <g opacity="0.86">
+      <path d={`M${x} ${y + h / 2} C${x + w * 0.22} ${y - 5} ${x + w * 0.7} ${y + h + 5} ${x + w} ${y + h / 2}`} stroke="#3f7883" strokeWidth={h} strokeLinecap="round" fill="none" opacity="0.54" />
+      <path d={`M${x + 8} ${y + h / 2} C${x + w * 0.34} ${y + 3} ${x + w * 0.62} ${y + h - 3} ${x + w - 8} ${y + h / 2}`} stroke="#c6ece8" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.5" />
+    </g>
+  );
+}
+
+function AssetStairs({ x, y, w = 58, h = 34 }: { x: number; y: number; w?: number; h?: number }) {
+  return (
+    <g opacity="0.82">
+      <rect x={x} y={y} width={w} height={h} rx="3" fill="#9f875f" opacity="0.34" />
+      {Array.from({ length: 5 }).map((_, index) => (
+        <path key={index} d={`M${x + 7} ${y + 6 + index * 5} H${x + w - 7}`} stroke="#4f3d2e" strokeWidth="1.6" opacity="0.65" />
+      ))}
+    </g>
+  );
+}
+
+function AssetPillar({ x, y }: { x: number; y: number }) {
+  return (
+    <g filter="url(#markerInk)">
+      <circle cx={x} cy={y} r="13" fill="#c6b28a" stroke="#31271f" strokeWidth="4" />
+      <circle cx={x} cy={y} r="5" fill="#efe1bd" opacity="0.72" />
+    </g>
+  );
+}
+
+function AssetAltarMark({ x, y }: { x: number; y: number }) {
+  return (
+    <g opacity="0.9">
+      <rect x={x - 22} y={y - 12} width="44" height="24" rx="4" fill="#8a6740" stroke="#3a2b20" strokeWidth="2.5" />
+      <path d={`M${x} ${y - 18} V${y + 18} M${x - 15} ${y} H${x + 15}`} stroke="#e8d18e" strokeWidth="2.2" opacity="0.7" />
+      <circle cx={x} cy={y} r="20" fill="none" stroke="#a77d3c" strokeWidth="1.6" opacity="0.58" />
+    </g>
+  );
+}
+
+function AssetBrokenWallSegment({ x, y, rotate = 0 }: { x: number; y: number; rotate?: number }) {
+  return (
+    <g transform={`translate(${x} ${y}) rotate(${rotate})`} opacity="0.86">
+      <rect x="-18" y="-5" width="16" height="10" rx="2" fill="#29231e" />
+      <rect x="2" y="-7" width="20" height="13" rx="2" fill="#332b24" />
+      <path d="M-12 -1 h7 M7 -2 h10" stroke="#86705a" strokeWidth="1.2" opacity="0.55" />
+    </g>
+  );
+}
+
+function AssetDebrisChips({ x, y }: { x: number; y: number }) {
+  return (
+    <g opacity="0.72">
+      <path d={`M${x} ${y} l5 -3 l4 5 l-6 4 Z M${x + 14} ${y + 8} l4 -2 l3 4 l-5 3 Z M${x + 24} ${y - 3} l6 -2 l3 5 l-6 3 Z`} fill="#6f5a43" />
+    </g>
+  );
+}
+
+function AssetRuinGround() {
+  return (
+    <g>
+      <path d="M74 160 C120 116 212 124 270 132 C350 100 450 130 548 160 C592 198 576 268 550 304 C590 350 558 414 488 426 C390 448 330 418 274 410 C200 438 116 416 82 370 C46 322 62 228 74 160 Z" fill="#7f673f" opacity="0.12" />
+      <path d="M84 168 C142 140 212 146 270 150 M410 136 C466 142 524 162 554 206 M86 384 C142 408 210 402 260 382 M420 420 C478 420 536 398 548 352" stroke="#5d7440" strokeWidth="24" strokeLinecap="round" fill="none" opacity="0.16" />
+      <path d="M112 288 C178 266 236 292 302 270 S438 250 520 286" stroke="#4c8790" strokeWidth="18" strokeLinecap="round" fill="none" opacity="0.12" />
+      <RubbleChips chips={[{ x: 94, y: 150, r: 7 }, { x: 236, y: 128 }, { x: 540, y: 176, r: 6 }, { x: 566, y: 392 }, { x: 92, y: 414, r: 5 }, { x: 346, y: 430, r: 7 }]} />
+    </g>
+  );
+}
+
+function AssetBrokenEdge({ x, y, variant = 0 }: { x: number; y: number; variant?: number }) {
+  const paths = [
+    `M${x} ${y} l12 -8 l10 8 l12 -6`,
+    `M${x} ${y} l10 9 l14 -7 l9 8`,
+    `M${x} ${y} l8 -10 l16 5 l10 -8`,
+  ];
+  return <path d={paths[variant % paths.length]} stroke="#211a15" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.84" />;
+}
+
+function LevelTwoRouteApron({ connections }: { connections: MapConnection[] }) {
+  const normalPaths = connections.filter((connection) => connection.type === 'normal' && connection.path).map((connection) => connection.path as string);
+
+  return (
+    <g>
+      {normalPaths.map((path) => (
+        <path key={`${path}-apron`} d={path} stroke="#6f5638" strokeWidth="60" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.16" />
+      ))}
+      {normalPaths.map((path) => (
+        <path key={`${path}-moss-edge`} d={path} stroke="#456238" strokeWidth="52" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.08" strokeDasharray="26 34" />
+      ))}
+    </g>
+  );
+}
+
 function MapRoom({
   x,
   y,
@@ -549,6 +713,133 @@ function BlackfenLayout({ connections, palette, isPlayer, enhanced }: { connecti
   );
 }
 
+function LevelTwoRoomShell({ x, y, w, h, final = false }: { x: number; y: number; w: number; h: number; final?: boolean }) {
+  const tileW = 28;
+  const tileH = 22;
+  const cols = Math.ceil((w - 24) / tileW);
+  const rows = Math.ceil((h - 24) / tileH);
+  const horizontalBlocks = Math.max(2, Math.floor(w / 28));
+  const verticalBlocks = Math.max(2, Math.floor(h / 26));
+
+  return (
+    <g>
+      <rect x={x - 12} y={y + 11} width={w + 24} height={h + 17} rx="6" fill="#2a211b" opacity="0.34" />
+      <path d={`M${x - 8} ${y + 2} Q${x - 6} ${y - 8} ${x + 8} ${y - 8} H${x + w - 12} Q${x + w + 10} ${y - 7} ${x + w + 8} ${y + 12} V${y + h - 10} Q${x + w + 6} ${y + h + 9} ${x + w - 12} ${y + h + 8} H${x + 10} Q${x - 10} ${y + h + 6} ${x - 8} ${y + h - 12} Z`} fill="#1d1713" />
+      <rect x={x + 6} y={y + 6} width={w - 12} height={h - 12} rx="4" fill={final ? '#d3b98f' : '#cab284'} />
+      <g clipPath={`url(#level-two-room-${x}-${y})`}>
+        <defs>
+          <clipPath id={`level-two-room-${x}-${y}`}>
+            <rect x={x + 12} y={y + 12} width={w - 24} height={h - 24} rx="3" />
+          </clipPath>
+        </defs>
+        {Array.from({ length: rows }).map((_, row) =>
+          Array.from({ length: cols }).map((__, col) => (
+            <AssetStoneFloorTile key={`${row}-${col}`} x={x + 12 + col * tileW - (row % 2 ? 11 : 0)} y={y + 12 + row * tileH} w={tileW + 1} h={tileH + 1} tone={row + col + (final ? 1 : 0)} />
+          )),
+        )}
+      </g>
+      <rect x={x + 8} y={y + 8} width={w - 16} height={h - 16} rx="3" fill="none" stroke="#f2dfb6" strokeWidth="3" opacity="0.46" />
+      <rect x={x + 12} y={y + 12} width={w - 24} height={h - 24} rx="2" fill="none" stroke="#4b3828" strokeWidth="3" opacity="0.32" />
+      {Array.from({ length: horizontalBlocks }).map((_, index) => {
+        const blockW = w / horizontalBlocks;
+        return (
+          <g key={`h-${index}`}>
+            <AssetWallBlock x={x + index * blockW} y={y - 8} w={blockW + 1} h={14} />
+            <AssetWallBlock x={x + index * blockW} y={y + h - 6} w={blockW + 1} h={14} />
+          </g>
+        );
+      })}
+      {Array.from({ length: verticalBlocks }).map((_, index) => {
+        const blockH = h / verticalBlocks;
+        return (
+          <g key={`v-${index}`}>
+            <AssetWallBlock x={x - 8} y={y + index * blockH} w={14} h={blockH + 1} vertical />
+            <AssetWallBlock x={x + w - 6} y={y + index * blockH} w={14} h={blockH + 1} vertical />
+          </g>
+        );
+      })}
+      <AssetWallCorner x={x - 8} y={y - 8} />
+      <AssetWallCorner x={x + w - 8} y={y - 8} />
+      <AssetWallCorner x={x - 8} y={y + h - 8} />
+      <AssetWallCorner x={x + w - 8} y={y + h - 8} />
+      <AssetBrokenEdge x={x + w - 34} y={y + 2} variant={(x + y) % 3} />
+      <AssetBrokenEdge x={x + 8} y={y + h - 5} variant={(x + y + 1) % 3} />
+    </g>
+  );
+}
+
+function LevelTwoConnectionRoutes({ connections, palette, isPlayer }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean }) {
+  const normalPaths = connections.filter((connection) => connection.type === 'normal' && connection.path).map((connection) => connection.path as string);
+  const secretPaths = connections.filter((connection) => connection.type === 'secret' && connection.path).map((connection) => connection.path as string);
+
+  return (
+    <>
+      {normalPaths.map((path) => (
+        <AssetCorridorSlabs key={path} path={path} />
+      ))}
+      {!isPlayer && <SecretRoutes paths={secretPaths} stroke={palette.secretStroke} />}
+    </>
+  );
+}
+
+function LevelTwoShrineRenderer({ connections, palette, isPlayer }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean }) {
+  const roomNumbers = [
+    { x: 154, y: 216, label: '1' },
+    { x: 324, y: 204, label: '2' },
+    { x: 480, y: 211, label: '3' },
+    { x: 490, y: 348, label: '4' },
+    { x: 329, y: 344, label: '5' },
+    { x: 167, y: 354, label: '6' },
+  ];
+
+  return (
+    <>
+      <AssetRuinGround />
+      <LevelTwoRouteApron connections={connections} />
+      <path d="M120 148 C184 126 218 152 268 142 C350 120 432 136 526 166 C552 218 528 272 540 318 C548 366 514 408 440 414 C366 424 322 392 264 402 C204 412 144 398 106 360 C82 304 98 224 120 148 Z" fill="#80633e" opacity="0.1" />
+      <LevelTwoConnectionRoutes connections={connections} palette={palette} isPlayer={isPlayer} />
+      <LevelTwoRoomShell x={88} y={170} w={132} h={92} />
+      <LevelTwoRoomShell x={260} y={150} w={128} h={108} />
+      <LevelTwoRoomShell x={424} y={168} w={112} h={86} />
+      <LevelTwoRoomShell x={432} y={310} w={116} h={76} />
+      <LevelTwoRoomShell x={270} y={302} w={118} h={84} />
+      <LevelTwoRoomShell x={118} y={318} w={98} h={72} final />
+      <g>
+        <AssetAltarMark x={326} y={205} />
+        <AssetPillar x={292} y={184} />
+        <AssetPillar x={358} y={184} />
+        <AssetStairs x={442} y={222} w={62} h={28} />
+        <AssetMossPatch x={102} y={226} scale={0.78} />
+        <AssetMossPatch x={504} y={356} scale={0.62} />
+        <AssetRubblePile x={132} y={184} scale={0.82} />
+        <AssetRubblePile x={292} y={354} scale={0.7} />
+        <AssetBrokenWallSegment x={214} y={318} rotate={-14} />
+        <AssetBrokenWallSegment x={424} y={166} rotate={8} />
+        <AssetWaterChannel x={446} y={366} w={72} h={12} />
+        <AssetMossPatch x={224} y={246} scale={0.52} />
+        <AssetMossPatch x={386} y={254} scale={0.48} />
+        <AssetRubblePile x={222} y={294} scale={0.55} />
+        <AssetRubblePile x={392} y={288} scale={0.5} />
+        <AssetDebrisChips x={162} y={356} />
+        <AssetDebrisChips x={512} y={196} />
+        <AssetDebrisChips x={240} y={236} />
+        <AssetDebrisChips x={402} y={240} />
+        <AssetCrackedTile x={282} y={178} scale={0.9} />
+        <AssetCrackedTile x={454} y={336} scale={0.78} />
+        <AssetCrackedTile x={142} y={374} scale={0.72} />
+      </g>
+      {!isPlayer && (
+        <>
+          <MapMarker x={366} y={172} label="H" />
+          <MapMarker x={528} y={326} label="T" />
+          <MapMarker x={202} y={334} label="B" />
+        </>
+      )}
+      <RoomNumbers rooms={roomNumbers} />
+    </>
+  );
+}
+
 function ShrineLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
   const roomNumbers = [
     { x: 154, y: 216, label: '1' },
@@ -767,6 +1058,9 @@ function MapLayout({ mapData, style, palette, isPlayer, enhanced }: { mapData?: 
 
   switch (style) {
     case 'shrine':
+      if (enhanced) {
+        return <LevelTwoShrineRenderer connections={connections} palette={palette} isPlayer={isPlayer} />;
+      }
       return <ShrineLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'cavern':
       return <CavernLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
