@@ -92,7 +92,7 @@ Interaction with `map.connections`:
 
 Level 2 would introduce a deterministic map skinning layer using local tile primitives or generated vector/bitmap assets bundled with the app.
 
-In the current prototype, Level 2 should be explored one map style at a time. Shrine/ruins, crypt, and sewer now use the shared Level 2 renderer family. Building each style incrementally keeps the renderer understandable and makes it easier to compare Level 2 quality against the existing enhanced SVG fallback before converting every map style.
+In the current prototype, Level 2 should be explored one map style at a time. Shrine/ruins, crypt, sewer, and laboratory/workshop now use the shared Level 2 renderer family. Building each style incrementally keeps the renderer understandable and makes it easier to compare Level 2 quality against the existing enhanced SVG fallback before converting every map style.
 
 Benefits:
 
@@ -123,6 +123,12 @@ Required asset categories:
 - Sewer pipe segment
 - Drain grate
 - Sludge stain and runoff marks
+- Arcane circle and rune mark
+- Workbench silhouette
+- Gear or mechanical mark
+- Brass conduit or pipe
+- Scorched stain and experimental residue
+- Broken apparatus and small tool debris
 - Stairs
 - Pillar
 - Altar or shrine mark
@@ -163,6 +169,7 @@ Current implementation notes:
 - `LevelTwoRoomShell` renders reusable room structure: floor tiles, thick walls, masonry blocks, corners, edge shadows, and optional broken ruin edges.
 - Tile primitives such as floor tiles, wall blocks, wall corners, cracks, debris, and rubble should be reused before adding style-specific one-offs.
 - Sewer-specific Level 2 tokens cover damp stone, stained masonry, dark water, algae/sludge, metal pipes, grates, and corridor water channels.
+- Laboratory-specific Level 2 tokens cover worn workshop stone, brass accents, rune glow, machinery marks, scorched floor stains, experimental residue, and metal-reinforced corridor details.
 
 Level 2 layer order:
 
