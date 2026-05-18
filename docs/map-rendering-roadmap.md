@@ -92,7 +92,7 @@ Interaction with `map.connections`:
 
 Level 2 would introduce a deterministic map skinning layer using local tile primitives or generated vector/bitmap assets bundled with the app.
 
-In the current prototype, Level 2 should be explored one map style at a time. Shrine/ruins, crypt, sewer, and laboratory/workshop now use the shared Level 2 renderer family. Building each style incrementally keeps the renderer understandable and makes it easier to compare Level 2 quality against the existing enhanced SVG fallback before converting every map style.
+In the current prototype, Level 2 should be explored one map style at a time. Shrine/ruins, crypt, sewer, laboratory/workshop, and blackfen/original now use the shared Level 2 renderer family. Building each style incrementally keeps the renderer understandable and makes it easier to compare Level 2 quality against the existing enhanced SVG fallback before converting every map style.
 
 Benefits:
 
@@ -129,6 +129,9 @@ Required asset categories:
 - Brass conduit or pipe
 - Scorched stain and experimental residue
 - Broken apparatus and small tool debris
+- Damp stone patch
+- Broken threshold stones
+- Old shrine or tollhouse barrier mark
 - Stairs
 - Pillar
 - Altar or shrine mark
@@ -170,6 +173,7 @@ Current implementation notes:
 - Tile primitives such as floor tiles, wall blocks, wall corners, cracks, debris, and rubble should be reused before adding style-specific one-offs.
 - Sewer-specific Level 2 tokens cover damp stone, stained masonry, dark water, algae/sludge, metal pipes, grates, and corridor water channels.
 - Laboratory-specific Level 2 tokens cover worn workshop stone, brass accents, rune glow, machinery marks, scorched floor stains, experimental residue, and metal-reinforced corridor details.
+- Blackfen-specific Level 2 tokens cover damp old stone, muted wet floors, water stains, moss, weathered masonry, marsh staining, old shrine/tollhouse accents, and dark cracks.
 
 Level 2 layer order:
 
