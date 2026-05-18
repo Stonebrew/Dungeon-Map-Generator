@@ -3,7 +3,7 @@ import { LevelTwoBlackfenRenderer, LevelTwoCavernRenderer, LevelTwoCryptRenderer
 import { blackfenTheme, cavernTheme, cryptTheme, laboratoryTheme, sewerTheme, shrineTheme } from './themes';
 import type { LevelTwoEnvironmentDefinition } from './types';
 
-export const levelTwoEnvironmentRegistry: Record<MapStyle, LevelTwoEnvironmentDefinition> = {
+export const levelTwoEnvironmentRegistry: Partial<Record<MapStyle, LevelTwoEnvironmentDefinition>> = {
   blackfen: {
     mapStyle: 'blackfen',
     renderer: LevelTwoBlackfenRenderer,

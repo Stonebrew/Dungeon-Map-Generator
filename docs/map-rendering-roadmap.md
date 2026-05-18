@@ -170,7 +170,9 @@ Interaction with `map.connections`:
 
 Current implementation notes:
 
-- `DungeonMap` stays mostly orchestration: it decides whether to show the Lantern schematic renderer or a Level 2 premium renderer.
+- `DungeonMap` stays mostly orchestration: it owns the map card, SVG frame, legend, fog overlay, and renderer selection.
+- Lantern schematic rendering lives in `src/components/maps/schematic/SchematicDungeonMap.tsx`.
+- The old enhanced SVG renderer lives in `src/components/maps/fallback/EnhancedFallbackMap.tsx` as a fallback for unsupported future styles or dev testing.
 - The compatibility barrel `src/components/maps/LevelTwoMapRenderer.tsx` re-exports the organized Level 2 modules.
 - Shared Level 2 code lives under `src/components/maps/level-two/shared/`.
 - Environment-specific renderers live under `src/components/maps/level-two/environments/`.
@@ -184,7 +186,7 @@ Current implementation notes:
 - Laboratory-specific Level 2 tokens cover worn workshop stone, brass accents, rune glow, machinery marks, scorched floor stains, experimental residue, and metal-reinforced corridor details.
 - Blackfen-specific Level 2 tokens cover damp old stone, muted wet floors, water stains, moss, weathered masonry, marsh staining, old shrine/tollhouse accents, and dark cracks.
 - Cavern-specific Level 2 tokens cover rough natural stone, darker cave walls, mineral highlights, underground pools, damp rock, fungus, loose stones, natural tunnels, and shadowed cave edges. Cavern remains a specialized organic renderer and uses irregular chamber silhouettes instead of the rectangular `LevelTwoRoomShell`.
-- Future environments should be added by creating a new environment renderer, adding or reusing theme tokens, and registering the style in `level-two/registry.ts`.
+- Future environments should be added by creating a new environment renderer, adding or reusing theme tokens, and registering the style in `level-two/registry.ts`. If a style is not ready for Level 2 yet, it can temporarily route through the fallback renderer while still using `map.connections`.
 
 Level 2 layer order:
 
