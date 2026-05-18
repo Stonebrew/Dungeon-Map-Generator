@@ -1,5 +1,5 @@
 import { Badge } from './Badge';
-import { LevelTwoBlackfenRenderer, LevelTwoCavernRenderer, LevelTwoCryptRenderer, LevelTwoLaboratoryRenderer, LevelTwoSewerRenderer, LevelTwoShrineRenderer } from './maps/LevelTwoMapRenderer';
+import { getLevelTwoEnvironment } from './maps/LevelTwoMapRenderer';
 import type { DungeonMapData, MapConnection, MapStyle } from '../types';
 
 type MapPalette = {
@@ -766,37 +766,25 @@ function LaboratoryLayout({ connections, palette, isPlayer, enhanced }: { connec
 function MapLayout({ mapData, style, palette, isPlayer, enhanced }: { mapData?: DungeonMapData; style: MapStyle; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
   const connections = mapData?.connections ?? [];
 
+  if (enhanced) {
+    const levelTwoEnvironment = getLevelTwoEnvironment(style);
+    const LevelTwoRenderer = levelTwoEnvironment.renderer;
+    return <LevelTwoRenderer connections={connections} secretStroke={palette.secretStroke} isPlayer={isPlayer} />;
+  }
+
   switch (style) {
     case 'shrine':
-      if (enhanced) {
-        return <LevelTwoShrineRenderer connections={connections} secretStroke={palette.secretStroke} isPlayer={isPlayer} />;
-      }
       return <ShrineLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'cavern':
-      if (enhanced) {
-        return <LevelTwoCavernRenderer connections={connections} secretStroke={palette.secretStroke} isPlayer={isPlayer} />;
-      }
       return <CavernLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'crypt':
-      if (enhanced) {
-        return <LevelTwoCryptRenderer connections={connections} secretStroke={palette.secretStroke} isPlayer={isPlayer} />;
-      }
       return <CryptLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'sewer':
-      if (enhanced) {
-        return <LevelTwoSewerRenderer connections={connections} secretStroke={palette.secretStroke} isPlayer={isPlayer} />;
-      }
       return <SewerLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'laboratory':
-      if (enhanced) {
-        return <LevelTwoLaboratoryRenderer connections={connections} secretStroke={palette.secretStroke} isPlayer={isPlayer} />;
-      }
       return <LaboratoryLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'blackfen':
     default:
-      if (enhanced) {
-        return <LevelTwoBlackfenRenderer connections={connections} secretStroke={palette.secretStroke} isPlayer={isPlayer} />;
-      }
       return <BlackfenLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
   }
 }

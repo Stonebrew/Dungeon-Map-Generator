@@ -170,16 +170,21 @@ Interaction with `map.connections`:
 
 Current implementation notes:
 
-- The shared Level 2 renderer helpers live in `src/components/maps/LevelTwoMapRenderer.tsx`.
-- `LevelTwoMapTheme` holds theme tokens for floor palettes, foundation tones, wall tones, corridor colors, terrain details, moss, water, dust, and rubble.
+- `DungeonMap` stays mostly orchestration: it decides whether to show the Lantern schematic renderer or a Level 2 premium renderer.
+- The compatibility barrel `src/components/maps/LevelTwoMapRenderer.tsx` re-exports the organized Level 2 modules.
+- Shared Level 2 code lives under `src/components/maps/level-two/shared/`.
+- Environment-specific renderers live under `src/components/maps/level-two/environments/`.
+- `src/components/maps/level-two/registry.ts` maps each `mapStyle` to its renderer, theme tokens, geometry strategy, supported renderer level, route variant, and player-safe hiding rules.
+- `LevelTwoMapTheme` in `src/components/maps/level-two/themes.ts` holds theme tokens for floor palettes, foundation tones, wall tones, corridor colors, terrain details, moss, water, dust, and rubble.
 - `LevelTwoFoundation` renders only a soft, irregular terrain wash beneath the dungeon. It should not render broad brick fields or masonry wallpaper outside playable rooms and corridors.
 - `LevelTwoConnectionRoutes` renders normal corridors and GM-only secret routes from `map.connections`.
-- `LevelTwoRoomShell` renders reusable room structure: floor tiles, thick walls, masonry blocks, corners, edge shadows, and optional broken ruin edges.
+- `LevelTwoRoomShell` renders reusable constructed-room structure: floor tiles, thick walls, masonry blocks, corners, edge shadows, and optional broken ruin edges.
 - Tile primitives such as floor tiles, wall blocks, wall corners, cracks, debris, and rubble should be reused before adding style-specific one-offs.
 - Sewer-specific Level 2 tokens cover damp stone, stained masonry, dark water, algae/sludge, metal pipes, grates, and corridor water channels.
 - Laboratory-specific Level 2 tokens cover worn workshop stone, brass accents, rune glow, machinery marks, scorched floor stains, experimental residue, and metal-reinforced corridor details.
 - Blackfen-specific Level 2 tokens cover damp old stone, muted wet floors, water stains, moss, weathered masonry, marsh staining, old shrine/tollhouse accents, and dark cracks.
-- Cavern-specific Level 2 tokens cover rough natural stone, darker cave walls, mineral highlights, underground pools, damp rock, fungus, loose stones, natural tunnels, and shadowed cave edges. Cavern uses organic chamber silhouettes instead of the rectangular `LevelTwoRoomShell`.
+- Cavern-specific Level 2 tokens cover rough natural stone, darker cave walls, mineral highlights, underground pools, damp rock, fungus, loose stones, natural tunnels, and shadowed cave edges. Cavern remains a specialized organic renderer and uses irregular chamber silhouettes instead of the rectangular `LevelTwoRoomShell`.
+- Future environments should be added by creating a new environment renderer, adding or reusing theme tokens, and registering the style in `level-two/registry.ts`.
 
 Level 2 layer order:
 
