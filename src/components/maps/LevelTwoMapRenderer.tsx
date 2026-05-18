@@ -1,0 +1,599 @@
+import type { ReactNode } from 'react';
+import type { MapConnection } from '../../types';
+
+export type LevelTwoMapTheme = {
+  floorTiles: string[];
+  floorStroke: string;
+  floorHighlight: string;
+  foundationFill: string;
+  foundationTileStroke: string;
+  wallDark: string;
+  wallStroke: string;
+  wallMid: string;
+  wallHighlight: string;
+  shadow: string;
+  corridorShadow: string;
+  corridorOuter: string;
+  corridorMid: string;
+  corridorFloor: string;
+  corridorSeam: string;
+  corridorHighlight: string;
+  moss: string;
+  water: string;
+  dust: string;
+  rubble: string;
+};
+
+const shrineTheme: LevelTwoMapTheme = {
+  floorTiles: ['#c7b185', '#d7c49d', '#bda477', '#e0d0ad'],
+  floorStroke: '#6f563d',
+  floorHighlight: '#f6ead1',
+  foundationFill: '#8a7048',
+  foundationTileStroke: '#56412f',
+  wallDark: '#1d1713',
+  wallStroke: '#110d0a',
+  wallMid: '#2f2924',
+  wallHighlight: '#8b7860',
+  shadow: '#17110e',
+  corridorShadow: '#1a1511',
+  corridorOuter: '#3a2f25',
+  corridorMid: '#927249',
+  corridorFloor: '#cfbc92',
+  corridorSeam: '#6e563c',
+  corridorHighlight: '#f4e4bd',
+  moss: '#456238',
+  water: '#3f7883',
+  dust: '#d8cfba',
+  rubble: '#7a654d',
+};
+
+const cryptTheme: LevelTwoMapTheme = {
+  floorTiles: ['#756957', '#8a7a63', '#5f5549', '#9a8a70'],
+  floorStroke: '#3a3129',
+  floorHighlight: '#c3b493',
+  foundationFill: '#5f5549',
+  foundationTileStroke: '#3a3129',
+  wallDark: '#171411',
+  wallStroke: '#110d0a',
+  wallMid: '#2f2924',
+  wallHighlight: '#8b7860',
+  shadow: '#12100e',
+  corridorShadow: '#11100e',
+  corridorOuter: '#40372e',
+  corridorMid: '#756957',
+  corridorFloor: '#9a8a70',
+  corridorSeam: '#2f2822',
+  corridorHighlight: '#c9b996',
+  moss: '#4c5b40',
+  water: '#526f76',
+  dust: '#d8cfba',
+  rubble: '#7a654d',
+};
+
+type RoomNumberPoint = { x: number; y: number; label: string };
+
+export function LevelTwoFloorTile({
+  x,
+  y,
+  theme,
+  w = 28,
+  h = 22,
+  tone = 0,
+  opacity = 0.96,
+}: {
+  x: number;
+  y: number;
+  theme: LevelTwoMapTheme;
+  w?: number;
+  h?: number;
+  tone?: number;
+  opacity?: number;
+}) {
+  return (
+    <g>
+      <rect x={x} y={y} width={w} height={h} fill={theme.floorTiles[tone % theme.floorTiles.length]} stroke={theme.floorStroke} strokeWidth="1.15" opacity={opacity} />
+      <path d={`M${x + 5} ${y + 5} h${Math.max(7, w * 0.35)} M${x + w - 8} ${y + h - 5} h-8`} stroke={theme.floorHighlight} strokeWidth="1" opacity="0.28" />
+    </g>
+  );
+}
+
+export function LevelTwoCrack({ x, y, scale = 1, stroke = '#4f3d2e' }: { x: number; y: number; scale?: number; stroke?: string }) {
+  return <path d={`M${x} ${y} l${12 * scale} ${-7 * scale} l${8 * scale} ${10 * scale} l${10 * scale} ${-5 * scale}`} stroke={stroke} strokeWidth={1.8 * scale} strokeLinecap="round" fill="none" opacity="0.56" />;
+}
+
+export function LevelTwoWallBlock({ x, y, w, h, theme, vertical = false }: { x: number; y: number; w: number; h: number; theme: LevelTwoMapTheme; vertical?: boolean }) {
+  return (
+    <g>
+      <rect x={x} y={y} width={w} height={h} rx="2" fill={theme.wallMid} stroke={theme.wallStroke} strokeWidth="1.2" />
+      <path d={vertical ? `M${x + w * 0.5} ${y + 4} V${y + h - 4}` : `M${x + 4} ${y + h * 0.45} H${x + w - 4}`} stroke="#665647" strokeWidth="1.2" opacity="0.55" />
+      <path d={vertical ? `M${x + 2} ${y + 5} V${y + h - 5}` : `M${x + 5} ${y + 2} H${x + w - 5}`} stroke={theme.wallHighlight} strokeWidth="1" opacity="0.38" />
+    </g>
+  );
+}
+
+export function LevelTwoWallCorner({ x, y, theme }: { x: number; y: number; theme: LevelTwoMapTheme }) {
+  return (
+    <g filter="url(#markerInk)">
+      <rect x={x - 2} y={y - 2} width="18" height="18" rx="3" fill={theme.wallDark} />
+      <path d={`M${x + 3} ${y + 5} h8 M${x + 6} ${y + 3} v10`} stroke={theme.wallHighlight} strokeWidth="1.2" opacity="0.56" />
+    </g>
+  );
+}
+
+export function LevelTwoRubble({ x, y, theme, scale = 1 }: { x: number; y: number; theme: LevelTwoMapTheme; scale?: number }) {
+  const rocks = [
+    { x: 0, y: 8, s: 8 },
+    { x: 10, y: 2, s: 10 },
+    { x: 22, y: 9, s: 7 },
+    { x: 17, y: 17, s: 6 },
+  ];
+
+  return (
+    <g transform={`translate(${x} ${y}) scale(${scale})`} opacity="0.85">
+      {rocks.map((rock) => (
+        <path key={`${rock.x}-${rock.y}`} d={`M${rock.x} ${rock.y} l${rock.s} -3 l6 6 l-${rock.s * 0.45} 8 l-${rock.s} -2 Z`} fill={theme.rubble} stroke="#4b3c2e" strokeWidth="1" />
+      ))}
+    </g>
+  );
+}
+
+export function LevelTwoDebris({ x, y, fill = '#6f5a43' }: { x: number; y: number; fill?: string }) {
+  return (
+    <g opacity="0.72">
+      <path d={`M${x} ${y} l5 -3 l4 5 l-6 4 Z M${x + 14} ${y + 8} l4 -2 l3 4 l-5 3 Z M${x + 24} ${y - 3} l6 -2 l3 5 l-6 3 Z`} fill={fill} />
+    </g>
+  );
+}
+
+function LevelTwoRubbleChips({ chips, fill = '#77624b' }: { chips: { x: number; y: number; r?: number }[]; fill?: string }) {
+  return (
+    <g opacity="0.62">
+      {chips.map((chip) => (
+        <path key={`${chip.x}-${chip.y}`} d={`M${chip.x} ${chip.y} l${chip.r ?? 5} -2 l3 5 l-${chip.r ?? 5} 3 Z`} fill={fill} opacity="0.48" />
+      ))}
+    </g>
+  );
+}
+
+function LevelTwoMoss({ x, y, theme, scale = 1 }: { x: number; y: number; theme: LevelTwoMapTheme; scale?: number }) {
+  return (
+    <g transform={`translate(${x} ${y}) scale(${scale})`} opacity="0.82">
+      <path d="M0 10 C12 -5 36 -1 44 14 C30 24 10 24 0 10 Z" fill={theme.moss} opacity="0.58" />
+      <circle cx="12" cy="11" r="4" fill="#6f914f" opacity="0.5" />
+      <circle cx="29" cy="13" r="5" fill="#557a43" opacity="0.55" />
+    </g>
+  );
+}
+
+function LevelTwoWater({ x, y, w, h, theme }: { x: number; y: number; w: number; h: number; theme: LevelTwoMapTheme }) {
+  return (
+    <g opacity="0.86">
+      <path d={`M${x} ${y + h / 2} C${x + w * 0.22} ${y - 5} ${x + w * 0.7} ${y + h + 5} ${x + w} ${y + h / 2}`} stroke={theme.water} strokeWidth={h} strokeLinecap="round" fill="none" opacity="0.54" />
+      <path d={`M${x + 8} ${y + h / 2} C${x + w * 0.34} ${y + 3} ${x + w * 0.62} ${y + h - 3} ${x + w - 8} ${y + h / 2}`} stroke="#c6ece8" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.5" />
+    </g>
+  );
+}
+
+function LevelTwoDust({ x, y, w, h, theme }: { x: number; y: number; w: number; h: number; theme: LevelTwoMapTheme }) {
+  return (
+    <g opacity="0.26">
+      <path d={`M${x} ${y + h / 2} C${x + w * 0.25} ${y - 8} ${x + w * 0.72} ${y + h + 8} ${x + w} ${y + h / 2}`} stroke={theme.dust} strokeWidth={h} strokeLinecap="round" fill="none" />
+      <path d={`M${x + 10} ${y + h / 2} C${x + w * 0.35} ${y + 4} ${x + w * 0.62} ${y + h - 4} ${x + w - 10} ${y + h / 2}`} stroke="#fff6df" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.42" />
+    </g>
+  );
+}
+
+function LevelTwoSecretRoutes({ paths, stroke }: { paths: string[]; stroke: string }) {
+  return (
+    <>
+      {paths.map((path) => (
+        <path key={`${path}-level-two-secret`} d={path} stroke={stroke} strokeWidth="4.5" strokeDasharray="10 8" strokeLinecap="round" strokeLinejoin="round" fill="none" filter="url(#inkRoughen)" />
+      ))}
+    </>
+  );
+}
+
+export function LevelTwoConnectionRoutes({
+  connections,
+  secretStroke,
+  isPlayer,
+  theme,
+  variant = 'ruin',
+}: {
+  connections: MapConnection[];
+  secretStroke: string;
+  isPlayer: boolean;
+  theme: LevelTwoMapTheme;
+  variant?: 'ruin' | 'crypt';
+}) {
+  const normalPaths = connections.filter((connection) => connection.type === 'normal' && connection.path).map((connection) => connection.path as string);
+  const secretPaths = connections.filter((connection) => connection.type === 'secret' && connection.path).map((connection) => connection.path as string);
+  const widths = variant === 'crypt' ? { shadow: 58, outer: 46, mid: 36, floor: 28, seam: 5, highlight: 1.6 } : { shadow: 46, outer: 38, mid: 30, floor: 23, seam: 5, highlight: 2 };
+
+  return (
+    <>
+      {normalPaths.map((path) => (
+        <g key={path}>
+          <path d={path} stroke={theme.corridorShadow} strokeWidth={widths.shadow} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity={variant === 'crypt' ? '0.22' : '0.28'} />
+          <path d={path} stroke={theme.corridorOuter} strokeWidth={widths.outer} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.9" />
+          <path d={path} stroke={theme.corridorMid} strokeWidth={widths.mid} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.96" />
+          <path d={path} stroke={theme.corridorFloor} strokeWidth={widths.floor} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity={variant === 'crypt' ? '0.9' : '0.98'} />
+          <path d={path} stroke={theme.corridorSeam} strokeWidth={widths.seam} strokeLinecap="round" strokeLinejoin="round" fill="none" strokeDasharray={variant === 'crypt' ? '18 14' : '16 12'} opacity={variant === 'crypt' ? '0.42' : '0.72'} />
+          <path d={path} stroke={theme.corridorHighlight} strokeWidth={widths.highlight} strokeLinecap="round" strokeLinejoin="round" fill="none" strokeDasharray={variant === 'crypt' ? '8 16' : '5 20'} opacity={variant === 'crypt' ? '0.45' : '0.68'} />
+        </g>
+      ))}
+      {!isPlayer && <LevelTwoSecretRoutes paths={secretPaths} stroke={secretStroke} />}
+    </>
+  );
+}
+
+export function LevelTwoConnectionApron({ connections, theme }: { connections: MapConnection[]; theme: LevelTwoMapTheme }) {
+  const normalPaths = connections.filter((connection) => connection.type === 'normal' && connection.path).map((connection) => connection.path as string);
+
+  return (
+    <g>
+      {normalPaths.map((path) => (
+        <path key={`${path}-apron-shadow`} d={path} stroke="#1b1410" strokeWidth="78" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.12" />
+      ))}
+      {normalPaths.map((path) => (
+        <path key={`${path}-apron`} d={path} stroke={theme.foundationFill} strokeWidth="68" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.22" />
+      ))}
+      {normalPaths.map((path) => (
+        <path key={`${path}-apron-floor`} d={path} stroke={theme.corridorMid} strokeWidth="52" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.16" />
+      ))}
+      {normalPaths.map((path) => (
+        <path key={`${path}-apron-seams`} d={path} stroke="#4d3a2b" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.3" strokeDasharray="20 18" />
+      ))}
+      {normalPaths.map((path) => (
+        <path key={`${path}-moss-edge`} d={path} stroke={theme.moss} strokeWidth="72" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.1" strokeDasharray="30 36" />
+      ))}
+    </g>
+  );
+}
+
+export function LevelTwoFoundation({
+  id,
+  path,
+  theme,
+  bounds,
+  tile,
+  rows,
+  cols,
+  children,
+}: {
+  id: string;
+  path: string;
+  theme: LevelTwoMapTheme;
+  bounds: { x: number; y: number; w: number; h: number };
+  tile: { w: number; h: number; offset?: number; opacity?: number };
+  rows: number;
+  cols: number;
+  children?: ReactNode;
+}) {
+  return (
+    <g>
+      <defs>
+        <clipPath id={id}>
+          <path d={path} />
+        </clipPath>
+      </defs>
+      <path d={path} fill={theme.shadow} opacity="0.14" transform="translate(0 8)" />
+      <path d={path} fill={theme.foundationFill} opacity="0.2" />
+      <g clipPath={`url(#${id})`}>
+        <rect x={bounds.x} y={bounds.y} width={bounds.w} height={bounds.h} fill={theme.foundationFill} opacity="0.18" />
+        {Array.from({ length: rows }).map((_, row) =>
+          Array.from({ length: cols }).map((__, col) => {
+            const x = bounds.x + col * tile.w - (row % 2 ? tile.offset ?? tile.w / 2 : 0);
+            const y = bounds.y + row * tile.h;
+            const fill = theme.floorTiles[(row + col) % theme.floorTiles.length];
+            return <rect key={`${row}-${col}`} x={x} y={y} width={tile.w + 1} height={tile.h + 1} fill={fill} stroke={theme.foundationTileStroke} strokeWidth="0.95" opacity={tile.opacity ?? 0.28} />;
+          }),
+        )}
+        {children}
+      </g>
+    </g>
+  );
+}
+
+export function LevelTwoRoomShell({
+  x,
+  y,
+  w,
+  h,
+  theme,
+  final = false,
+  variant = 'ruin',
+}: {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+  theme: LevelTwoMapTheme;
+  final?: boolean;
+  variant?: 'ruin' | 'crypt';
+}) {
+  const tileW = variant === 'crypt' ? 30 : 28;
+  const tileH = variant === 'crypt' ? 22 : 22;
+  const cols = Math.ceil((w - 24) / tileW);
+  const rows = Math.ceil((h - 24) / tileH);
+  const horizontalBlocks = Math.max(2, Math.floor(w / (variant === 'crypt' ? 30 : 28)));
+  const verticalBlocks = Math.max(2, Math.floor(h / (variant === 'crypt' ? 28 : 26)));
+  const clipId = `level-two-${variant}-room-${x}-${y}`;
+
+  return (
+    <g>
+      <rect x={x - 10} y={y + 9} width={w + 20} height={h + 16} rx="5" fill={theme.shadow} opacity="0.36" />
+      {variant === 'ruin' ? (
+        <path d={`M${x - 8} ${y + 2} Q${x - 6} ${y - 8} ${x + 8} ${y - 8} H${x + w - 12} Q${x + w + 10} ${y - 7} ${x + w + 8} ${y + 12} V${y + h - 10} Q${x + w + 6} ${y + h + 9} ${x + w - 12} ${y + h + 8} H${x + 10} Q${x - 10} ${y + h + 6} ${x - 8} ${y + h - 12} Z`} fill={theme.wallDark} />
+      ) : (
+        <rect x={x - 8} y={y - 8} width={w + 16} height={h + 16} rx="4" fill={theme.wallDark} />
+      )}
+      <rect x={x + 7} y={y + 7} width={w - 14} height={h - 14} rx="3" fill={final ? theme.floorTiles[1] : theme.floorTiles[0]} />
+      <g clipPath={`url(#${clipId})`}>
+        <defs>
+          <clipPath id={clipId}>
+            <rect x={x + 12} y={y + 12} width={w - 24} height={h - 24} rx={variant === 'crypt' ? '2' : '3'} />
+          </clipPath>
+        </defs>
+        {Array.from({ length: rows }).map((_, row) =>
+          Array.from({ length: cols }).map((__, col) => <LevelTwoFloorTile key={`${row}-${col}`} x={x + 12 + col * tileW - (row % 2 ? 12 : 0)} y={y + 12 + row * tileH} w={tileW + 1} h={tileH + 1} tone={row + col + (final ? 2 : 0)} theme={theme} />),
+        )}
+      </g>
+      <rect x={x + 9} y={y + 9} width={w - 18} height={h - 18} rx={variant === 'crypt' ? '2' : '3'} fill="none" stroke={theme.floorHighlight} strokeWidth={variant === 'crypt' ? '2.4' : '3'} opacity={variant === 'crypt' ? '0.38' : '0.46'} />
+      <rect x={x + 15} y={y + 15} width={w - 30} height={h - 30} rx="1" fill="none" stroke={variant === 'crypt' ? '#2d251f' : '#4b3828'} strokeWidth="3" opacity={variant === 'crypt' ? '0.42' : '0.32'} />
+      {Array.from({ length: horizontalBlocks }).map((_, index) => {
+        const blockW = w / horizontalBlocks;
+        return (
+          <g key={`h-${index}`}>
+            <LevelTwoWallBlock x={x + index * blockW} y={y - 8} w={blockW + 1} h={14} theme={theme} />
+            <LevelTwoWallBlock x={x + index * blockW} y={y + h - 6} w={blockW + 1} h={14} theme={theme} />
+          </g>
+        );
+      })}
+      {Array.from({ length: verticalBlocks }).map((_, index) => {
+        const blockH = h / verticalBlocks;
+        return (
+          <g key={`v-${index}`}>
+            <LevelTwoWallBlock x={x - 8} y={y + index * blockH} w={14} h={blockH + 1} theme={theme} vertical />
+            <LevelTwoWallBlock x={x + w - 6} y={y + index * blockH} w={14} h={blockH + 1} theme={theme} vertical />
+          </g>
+        );
+      })}
+      <LevelTwoWallCorner x={x - 8} y={y - 8} theme={theme} />
+      <LevelTwoWallCorner x={x + w - 8} y={y - 8} theme={theme} />
+      <LevelTwoWallCorner x={x - 8} y={y + h - 8} theme={theme} />
+      <LevelTwoWallCorner x={x + w - 8} y={y + h - 8} theme={theme} />
+      {variant === 'ruin' && (
+        <>
+          <LevelTwoBrokenEdge x={x + w - 34} y={y + 2} variant={(x + y) % 3} />
+          <LevelTwoBrokenEdge x={x + 8} y={y + h - 5} variant={(x + y + 1) % 3} />
+        </>
+      )}
+    </g>
+  );
+}
+
+function LevelTwoBrokenEdge({ x, y, variant = 0 }: { x: number; y: number; variant?: number }) {
+  const paths = [
+    `M${x} ${y} l12 -8 l10 8 l12 -6`,
+    `M${x} ${y} l10 9 l14 -7 l9 8`,
+    `M${x} ${y} l8 -10 l16 5 l10 -8`,
+  ];
+  return <path d={paths[variant % paths.length]} stroke="#211a15" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.84" />;
+}
+
+function LevelTwoRoomNumber({ x, y, label }: RoomNumberPoint) {
+  return (
+    <g>
+      <rect x={x - 20} y={y - 20} width="40" height="40" rx="10" fill="#fff8ef" opacity="0.82" />
+      <text x={x} y={y + 9} textAnchor="middle" fontSize="34" fontWeight="900" fill="#211a16" paintOrder="stroke" stroke="#fff8ef" strokeWidth="4">
+        {label}
+      </text>
+    </g>
+  );
+}
+
+function LevelTwoRoomNumbers({ rooms }: { rooms: RoomNumberPoint[] }) {
+  return (
+    <>
+      {rooms.map((room) => (
+        <LevelTwoRoomNumber key={room.label} {...room} />
+      ))}
+    </>
+  );
+}
+
+function LevelTwoMarker({ x, y, label }: { x: number; y: number; label: string }) {
+  return (
+    <g filter="url(#markerInk)">
+      <circle cx={x} cy={y} r="12" fill="#fff8ef" stroke="#7b3f28" strokeWidth="2.5" />
+      <circle cx={x} cy={y} r="8.5" fill="#b85c38" opacity="0.94" />
+      <text x={x} y={y + 4} textAnchor="middle" fontSize="11" fontWeight="900" fill="#fff8ef">
+        {label}
+      </text>
+    </g>
+  );
+}
+
+function LevelTwoStairs({ x, y, w = 58, h = 34 }: { x: number; y: number; w?: number; h?: number }) {
+  return (
+    <g opacity="0.82">
+      <rect x={x} y={y} width={w} height={h} rx="3" fill="#9f875f" opacity="0.34" />
+      {Array.from({ length: 5 }).map((_, index) => (
+        <path key={index} d={`M${x + 7} ${y + 6 + index * 5} H${x + w - 7}`} stroke="#4f3d2e" strokeWidth="1.6" opacity="0.65" />
+      ))}
+    </g>
+  );
+}
+
+function LevelTwoPillar({ x, y }: { x: number; y: number }) {
+  return (
+    <g filter="url(#markerInk)">
+      <circle cx={x} cy={y} r="13" fill="#c6b28a" stroke="#31271f" strokeWidth="4" />
+      <circle cx={x} cy={y} r="5" fill="#efe1bd" opacity="0.72" />
+    </g>
+  );
+}
+
+function LevelTwoAltarMark({ x, y }: { x: number; y: number }) {
+  return (
+    <g opacity="0.9">
+      <rect x={x - 22} y={y - 12} width="44" height="24" rx="4" fill="#8a6740" stroke="#3a2b20" strokeWidth="2.5" />
+      <path d={`M${x} ${y - 18} V${y + 18} M${x - 15} ${y} H${x + 15}`} stroke="#e8d18e" strokeWidth="2.2" opacity="0.7" />
+      <circle cx={x} cy={y} r="20" fill="none" stroke="#a77d3c" strokeWidth="1.6" opacity="0.58" />
+    </g>
+  );
+}
+
+function LevelTwoBrokenWallSegment({ x, y, rotate = 0 }: { x: number; y: number; rotate?: number }) {
+  return (
+    <g transform={`translate(${x} ${y}) rotate(${rotate})`} opacity="0.86">
+      <rect x="-18" y="-5" width="16" height="10" rx="2" fill="#29231e" />
+      <rect x="2" y="-7" width="20" height="13" rx="2" fill="#332b24" />
+      <path d="M-12 -1 h7 M7 -2 h10" stroke="#86705a" strokeWidth="1.2" opacity="0.55" />
+    </g>
+  );
+}
+
+function LevelTwoSarcophagus({ x, y, w = 56, h = 24 }: { x: number; y: number; w?: number; h?: number }) {
+  return (
+    <g filter="url(#markerInk)" opacity="0.9">
+      <rect x={x} y={y} width={w} height={h} rx="5" fill="#8b8270" stroke="#2a2520" strokeWidth="2.2" />
+      <rect x={x + 7} y={y + 5} width={w - 14} height={h - 10} rx="3" fill="#b3a589" opacity="0.42" />
+      <path d={`M${x + w / 2} ${y + 5} V${y + h - 5} M${x + 12} ${y + h / 2} H${x + w - 12}`} stroke="#463a30" strokeWidth="1.7" opacity="0.58" />
+    </g>
+  );
+}
+
+function LevelTwoCarvedLine({ x, y, w, vertical = false }: { x: number; y: number; w: number; vertical?: boolean }) {
+  return (
+    <g opacity="0.55">
+      <path d={vertical ? `M${x} ${y} V${y + w}` : `M${x} ${y} H${x + w}`} stroke="#514538" strokeWidth="5" strokeLinecap="round" />
+      <path d={vertical ? `M${x} ${y + 5} V${y + w - 5}` : `M${x + 5} ${y} H${x + w - 5}`} stroke="#c3b493" strokeWidth="1.3" strokeLinecap="round" opacity="0.55" strokeDasharray="8 8" />
+    </g>
+  );
+}
+
+export function LevelTwoShrineRenderer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
+  const roomNumbers = [
+    { x: 154, y: 216, label: '1' },
+    { x: 324, y: 204, label: '2' },
+    { x: 480, y: 211, label: '3' },
+    { x: 490, y: 348, label: '4' },
+    { x: 329, y: 344, label: '5' },
+    { x: 167, y: 354, label: '6' },
+  ];
+  const footprintPath =
+    'M70 158 C112 108 206 116 268 128 C342 92 448 116 558 158 C606 206 584 268 554 306 C604 360 562 428 488 444 C396 464 330 426 274 422 C202 452 112 426 72 374 C36 326 50 224 70 158 Z';
+
+  return (
+    <>
+      <LevelTwoFoundation id="level-two-ruin-footprint" path={footprintPath} theme={shrineTheme} bounds={{ x: 44, y: 96, w: 548, h: 368 }} tile={{ w: 34, h: 26, offset: 16, opacity: 0.26 }} rows={13} cols={17}>
+        <path d="M92 172 C156 142 218 150 278 148 M392 140 C470 148 528 174 558 220 M90 378 C150 410 220 400 270 382 M410 420 C478 420 536 398 552 350" stroke="#425f35" strokeWidth="28" strokeLinecap="round" fill="none" opacity="0.18" />
+        <path d="M106 286 C176 258 238 292 304 270 S438 250 524 286" stroke={shrineTheme.water} strokeWidth="22" strokeLinecap="round" fill="none" opacity="0.15" />
+        <path d="M126 154 C210 124 330 132 420 138 C486 144 536 168 566 218 M82 326 C142 404 238 414 314 390 C390 430 500 414 552 342" stroke="#241c16" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.28" strokeDasharray="42 20 16 24" />
+        <path d="M142 160 C222 140 332 146 420 152 M108 342 C178 390 250 392 316 366 M412 404 C474 404 524 380 540 338" stroke="#d6bf8d" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.24" strokeDasharray="34 28" />
+      </LevelTwoFoundation>
+      <LevelTwoRubbleChips chips={[{ x: 94, y: 150, r: 7 }, { x: 236, y: 128 }, { x: 540, y: 176, r: 6 }, { x: 566, y: 392 }, { x: 92, y: 414, r: 5 }, { x: 346, y: 430, r: 7 }]} />
+      <LevelTwoConnectionApron connections={connections} theme={shrineTheme} />
+      <path d="M120 148 C184 126 218 152 268 142 C350 120 432 136 526 166 C552 218 528 272 540 318 C548 366 514 408 440 414 C366 424 322 392 264 402 C204 412 144 398 106 360 C82 304 98 224 120 148 Z" fill="#80633e" opacity="0.1" />
+      <LevelTwoConnectionRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} theme={shrineTheme} />
+      <LevelTwoRoomShell x={88} y={170} w={132} h={92} theme={shrineTheme} />
+      <LevelTwoRoomShell x={260} y={150} w={128} h={108} theme={shrineTheme} />
+      <LevelTwoRoomShell x={424} y={168} w={112} h={86} theme={shrineTheme} />
+      <LevelTwoRoomShell x={432} y={310} w={116} h={76} theme={shrineTheme} />
+      <LevelTwoRoomShell x={270} y={302} w={118} h={84} theme={shrineTheme} />
+      <LevelTwoRoomShell x={118} y={318} w={98} h={72} theme={shrineTheme} final />
+      <g>
+        <LevelTwoAltarMark x={326} y={205} />
+        <LevelTwoPillar x={292} y={184} />
+        <LevelTwoPillar x={358} y={184} />
+        <LevelTwoStairs x={442} y={222} w={62} h={28} />
+        <LevelTwoMoss x={102} y={226} scale={0.78} theme={shrineTheme} />
+        <LevelTwoMoss x={504} y={356} scale={0.62} theme={shrineTheme} />
+        <LevelTwoRubble x={132} y={184} scale={0.82} theme={shrineTheme} />
+        <LevelTwoRubble x={292} y={354} scale={0.7} theme={shrineTheme} />
+        <LevelTwoBrokenWallSegment x={214} y={318} rotate={-14} />
+        <LevelTwoBrokenWallSegment x={424} y={166} rotate={8} />
+        <LevelTwoWater x={446} y={366} w={72} h={12} theme={shrineTheme} />
+        <LevelTwoMoss x={224} y={246} scale={0.52} theme={shrineTheme} />
+        <LevelTwoMoss x={386} y={254} scale={0.48} theme={shrineTheme} />
+        <LevelTwoRubble x={222} y={294} scale={0.55} theme={shrineTheme} />
+        <LevelTwoRubble x={392} y={288} scale={0.5} theme={shrineTheme} />
+        <LevelTwoDebris x={162} y={356} />
+        <LevelTwoDebris x={512} y={196} />
+        <LevelTwoDebris x={240} y={236} />
+        <LevelTwoDebris x={402} y={240} />
+        <LevelTwoCrack x={282} y={178} scale={0.9} />
+        <LevelTwoCrack x={454} y={336} scale={0.78} />
+        <LevelTwoCrack x={142} y={374} scale={0.72} />
+      </g>
+      {!isPlayer && (
+        <>
+          <LevelTwoMarker x={366} y={172} label="H" />
+          <LevelTwoMarker x={528} y={326} label="T" />
+          <LevelTwoMarker x={202} y={334} label="B" />
+        </>
+      )}
+      <LevelTwoRoomNumbers rooms={roomNumbers} />
+    </>
+  );
+}
+
+export function LevelTwoCryptRenderer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
+  const roomNumbers = [
+    { x: 360, y: 89, label: '1' },
+    { x: 360, y: 215, label: '2' },
+    { x: 149, y: 217, label: '3' },
+    { x: 571, y: 217, label: '4' },
+    { x: 206, y: 365, label: '5' },
+    { x: 514, y: 365, label: '6' },
+  ];
+  const footprintPath = 'M252 38 H468 V148 H646 V286 H594 V424 H420 V398 H300 V424 H126 V286 H74 V148 H252 Z';
+
+  return (
+    <>
+      <LevelTwoFoundation id="level-two-crypt-footprint" path={footprintPath} theme={cryptTheme} bounds={{ x: 70, y: 38, w: 580, h: 390 }} tile={{ w: 32, h: 24, offset: 16, opacity: 0.34 }} rows={17} cols={19}>
+        <path d="M360 44 V416 M82 216 H638 M196 216 V408 M524 216 V408" stroke="#2c2520" strokeWidth="8" strokeLinecap="round" fill="none" opacity="0.38" />
+        <path d="M360 58 V398 M104 216 H616 M206 224 V392 M514 224 V392" stroke="#b9aa8d" strokeWidth="1.6" strokeLinecap="round" fill="none" opacity="0.32" strokeDasharray="18 14" />
+        <path d="M120 132 H600 M120 300 H600" stroke="#211b17" strokeWidth="12" strokeLinecap="round" fill="none" opacity="0.16" strokeDasharray="48 24" />
+      </LevelTwoFoundation>
+      <LevelTwoDust x={114} y={128} w={500} h={24} theme={cryptTheme} />
+      <LevelTwoDust x={120} y={302} w={486} h={20} theme={cryptTheme} />
+      <LevelTwoConnectionRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} theme={cryptTheme} variant="crypt" />
+      <LevelTwoRoomShell x={296} y={50} w={128} h={78} theme={cryptTheme} variant="crypt" />
+      <LevelTwoRoomShell x={256} y={170} w={208} h={90} theme={cryptTheme} variant="crypt" />
+      <LevelTwoRoomShell x={88} y={174} w={122} h={86} theme={cryptTheme} variant="crypt" />
+      <LevelTwoRoomShell x={510} y={174} w={122} h={86} theme={cryptTheme} variant="crypt" />
+      <LevelTwoRoomShell x={136} y={326} w={140} h={78} theme={cryptTheme} variant="crypt" />
+      <LevelTwoRoomShell x={444} y={326} w={140} h={78} theme={cryptTheme} final variant="crypt" />
+      <g>
+        <LevelTwoSarcophagus x={332} y={103} w={56} h={20} />
+        <LevelTwoSarcophagus x={288} y={230} w={52} h={18} />
+        <LevelTwoSarcophagus x={380} y={230} w={52} h={18} />
+        <LevelTwoSarcophagus x={168} y={378} w={58} h={18} />
+        <LevelTwoSarcophagus x={486} y={378} w={58} h={18} />
+        <LevelTwoCarvedLine x={310} y={205} w={100} />
+        <LevelTwoCarvedLine x={360} y={70} w={46} vertical />
+        <LevelTwoCarvedLine x={206} y={336} w={44} vertical />
+        <LevelTwoCarvedLine x={514} y={336} w={44} vertical />
+        <LevelTwoDust x={280} y={250} w={160} h={14} theme={cryptTheme} />
+        <LevelTwoRubble x={116} y={222} scale={0.64} theme={cryptTheme} />
+        <LevelTwoRubble x={542} y={204} scale={0.66} theme={cryptTheme} />
+        <LevelTwoDebris x={190} y={348} />
+        <LevelTwoDebris x={556} y={382} />
+        <LevelTwoCrack x={330} y={188} scale={0.82} stroke="#4f463c" />
+        <LevelTwoCrack x={528} y={222} scale={0.72} stroke="#4f463c" />
+        <LevelTwoCrack x={154} y={224} scale={0.68} stroke="#4f463c" />
+      </g>
+      {!isPlayer && (
+        <>
+          <LevelTwoMarker x={190} y={192} label="H" />
+          <LevelTwoMarker x={258} y={346} label="T" />
+          <LevelTwoMarker x={566} y={346} label="B" />
+        </>
+      )}
+      <LevelTwoRoomNumbers rooms={roomNumbers} />
+    </>
+  );
+}

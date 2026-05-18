@@ -151,6 +151,26 @@ Interaction with `map.connections`:
 - Visual tiles should be placed from geometry derived from the same connection records, not from independent hand-drawn corridors.
 - Level 2 route rendering must continue to derive normal corridors and GM-only secret routes from `map.connections`.
 
+Current implementation notes:
+
+- The shared Level 2 renderer helpers live in `src/components/maps/LevelTwoMapRenderer.tsx`.
+- `LevelTwoMapTheme` holds theme tokens for floor palettes, foundation tones, wall tones, corridor colors, terrain details, moss, water, dust, and rubble.
+- `LevelTwoFoundation` renders the shared terrain and floor footprint beneath the dungeon.
+- `LevelTwoConnectionRoutes` renders normal corridors and GM-only secret routes from `map.connections`.
+- `LevelTwoRoomShell` renders reusable room structure: floor tiles, thick walls, masonry blocks, corners, edge shadows, and optional broken ruin edges.
+- Tile primitives such as floor tiles, wall blocks, wall corners, cracks, debris, and rubble should be reused before adding style-specific one-offs.
+
+Level 2 layer order:
+
+1. Base map parchment and global texture from `DungeonMap`.
+2. Level 2 foundation footprint and shared terrain.
+3. Optional connection apron or broad terrain binding.
+4. Normal corridors derived from `map.connections`.
+5. Room shells and room floor material.
+6. Theme-specific environmental details.
+7. GM markers and secret routes in GM views only.
+8. Room numbers last, so labels remain readable above every visual layer.
+
 ### Level 3: Generated/Illustrated Map Image Pipeline
 
 Level 3 would generate or assemble premium map images through a backend pipeline, likely after the dungeon generation system is stable.
