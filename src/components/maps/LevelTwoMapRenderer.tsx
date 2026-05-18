@@ -275,19 +275,19 @@ export function LevelTwoConnectionApron({ connections, theme }: { connections: M
   return (
     <g>
       {normalPaths.map((path) => (
-        <path key={`${path}-apron-shadow`} d={path} stroke="#1b1410" strokeWidth="78" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.12" />
+        <path key={`${path}-apron-shadow`} d={path} stroke="#1b1410" strokeWidth="58" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.08" />
       ))}
       {normalPaths.map((path) => (
-        <path key={`${path}-apron`} d={path} stroke={theme.foundationFill} strokeWidth="68" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.22" />
+        <path key={`${path}-apron`} d={path} stroke={theme.foundationFill} strokeWidth="48" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.12" />
       ))}
       {normalPaths.map((path) => (
-        <path key={`${path}-apron-floor`} d={path} stroke={theme.corridorMid} strokeWidth="52" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.16" />
+        <path key={`${path}-apron-floor`} d={path} stroke={theme.corridorMid} strokeWidth="36" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.1" />
       ))}
       {normalPaths.map((path) => (
-        <path key={`${path}-apron-seams`} d={path} stroke="#4d3a2b" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.3" strokeDasharray="20 18" />
+        <path key={`${path}-apron-seams`} d={path} stroke="#4d3a2b" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.18" strokeDasharray="20 18" />
       ))}
       {normalPaths.map((path) => (
-        <path key={`${path}-moss-edge`} d={path} stroke={theme.moss} strokeWidth="72" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.1" strokeDasharray="30 36" />
+        <path key={`${path}-moss-edge`} d={path} stroke={theme.moss} strokeWidth="52" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.06" strokeDasharray="30 36" />
       ))}
     </g>
   );
@@ -297,19 +297,11 @@ export function LevelTwoFoundation({
   id,
   path,
   theme,
-  bounds,
-  tile,
-  rows,
-  cols,
   children,
 }: {
   id: string;
   path: string;
   theme: LevelTwoMapTheme;
-  bounds: { x: number; y: number; w: number; h: number };
-  tile: { w: number; h: number; offset?: number; opacity?: number };
-  rows: number;
-  cols: number;
   children?: ReactNode;
 }) {
   return (
@@ -319,18 +311,9 @@ export function LevelTwoFoundation({
           <path d={path} />
         </clipPath>
       </defs>
-      <path d={path} fill={theme.shadow} opacity="0.14" transform="translate(0 8)" />
-      <path d={path} fill={theme.foundationFill} opacity="0.2" />
+      <path d={path} fill={theme.shadow} opacity="0.1" transform="translate(0 8)" />
+      <path d={path} fill={theme.foundationFill} opacity="0.07" />
       <g clipPath={`url(#${id})`}>
-        <rect x={bounds.x} y={bounds.y} width={bounds.w} height={bounds.h} fill={theme.foundationFill} opacity="0.18" />
-        {Array.from({ length: rows }).map((_, row) =>
-          Array.from({ length: cols }).map((__, col) => {
-            const x = bounds.x + col * tile.w - (row % 2 ? tile.offset ?? tile.w / 2 : 0);
-            const y = bounds.y + row * tile.h;
-            const fill = theme.floorTiles[(row + col) % theme.floorTiles.length];
-            return <rect key={`${row}-${col}`} x={x} y={y} width={tile.w + 1} height={tile.h + 1} fill={fill} stroke={theme.foundationTileStroke} strokeWidth="0.95" opacity={tile.opacity ?? 0.28} />;
-          }),
-        )}
         {children}
       </g>
     </g>
@@ -573,11 +556,11 @@ export function LevelTwoShrineRenderer({ connections, secretStroke, isPlayer }: 
 
   return (
     <>
-      <LevelTwoFoundation id="level-two-ruin-footprint" path={footprintPath} theme={shrineTheme} bounds={{ x: 44, y: 96, w: 548, h: 368 }} tile={{ w: 34, h: 26, offset: 16, opacity: 0.26 }} rows={13} cols={17}>
-        <path d="M92 172 C156 142 218 150 278 148 M392 140 C470 148 528 174 558 220 M90 378 C150 410 220 400 270 382 M410 420 C478 420 536 398 552 350" stroke="#425f35" strokeWidth="28" strokeLinecap="round" fill="none" opacity="0.18" />
-        <path d="M106 286 C176 258 238 292 304 270 S438 250 524 286" stroke={shrineTheme.water} strokeWidth="22" strokeLinecap="round" fill="none" opacity="0.15" />
-        <path d="M126 154 C210 124 330 132 420 138 C486 144 536 168 566 218 M82 326 C142 404 238 414 314 390 C390 430 500 414 552 342" stroke="#241c16" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.28" strokeDasharray="42 20 16 24" />
-        <path d="M142 160 C222 140 332 146 420 152 M108 342 C178 390 250 392 316 366 M412 404 C474 404 524 380 540 338" stroke="#d6bf8d" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.24" strokeDasharray="34 28" />
+      <LevelTwoFoundation id="level-two-ruin-footprint" path={footprintPath} theme={shrineTheme}>
+        <path d="M92 172 C156 142 218 150 278 148 M392 140 C470 148 528 174 558 220 M90 378 C150 410 220 400 270 382 M410 420 C478 420 536 398 552 350" stroke="#425f35" strokeWidth="18" strokeLinecap="round" fill="none" opacity="0.1" />
+        <path d="M106 286 C176 258 238 292 304 270 S438 250 524 286" stroke={shrineTheme.water} strokeWidth="16" strokeLinecap="round" fill="none" opacity="0.1" />
+        <path d="M126 154 C210 124 330 132 420 138 C486 144 536 168 566 218 M82 326 C142 404 238 414 314 390 C390 430 500 414 552 342" stroke="#241c16" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.14" strokeDasharray="42 20 16 24" />
+        <path d="M142 160 C222 140 332 146 420 152 M108 342 C178 390 250 392 316 366 M412 404 C474 404 524 380 540 338" stroke="#d6bf8d" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.14" strokeDasharray="34 28" />
       </LevelTwoFoundation>
       <LevelTwoRubbleChips chips={[{ x: 94, y: 150, r: 7 }, { x: 236, y: 128 }, { x: 540, y: 176, r: 6 }, { x: 566, y: 392 }, { x: 92, y: 414, r: 5 }, { x: 346, y: 430, r: 7 }]} />
       <LevelTwoConnectionApron connections={connections} theme={shrineTheme} />
@@ -638,10 +621,10 @@ export function LevelTwoCryptRenderer({ connections, secretStroke, isPlayer }: {
 
   return (
     <>
-      <LevelTwoFoundation id="level-two-crypt-footprint" path={footprintPath} theme={cryptTheme} bounds={{ x: 70, y: 38, w: 580, h: 390 }} tile={{ w: 32, h: 24, offset: 16, opacity: 0.34 }} rows={17} cols={19}>
-        <path d="M360 44 V416 M82 216 H638 M196 216 V408 M524 216 V408" stroke="#2c2520" strokeWidth="8" strokeLinecap="round" fill="none" opacity="0.38" />
-        <path d="M360 58 V398 M104 216 H616 M206 224 V392 M514 224 V392" stroke="#b9aa8d" strokeWidth="1.6" strokeLinecap="round" fill="none" opacity="0.32" strokeDasharray="18 14" />
-        <path d="M120 132 H600 M120 300 H600" stroke="#211b17" strokeWidth="12" strokeLinecap="round" fill="none" opacity="0.16" strokeDasharray="48 24" />
+      <LevelTwoFoundation id="level-two-crypt-footprint" path={footprintPath} theme={cryptTheme}>
+        <path d="M360 44 V416 M82 216 H638 M196 216 V408 M524 216 V408" stroke="#2c2520" strokeWidth="5" strokeLinecap="round" fill="none" opacity="0.18" />
+        <path d="M360 58 V398 M104 216 H616 M206 224 V392 M514 224 V392" stroke="#b9aa8d" strokeWidth="1.3" strokeLinecap="round" fill="none" opacity="0.2" strokeDasharray="18 14" />
+        <path d="M120 132 H600 M120 300 H600" stroke="#211b17" strokeWidth="8" strokeLinecap="round" fill="none" opacity="0.08" strokeDasharray="48 24" />
       </LevelTwoFoundation>
       <LevelTwoDust x={114} y={128} w={500} h={24} theme={cryptTheme} />
       <LevelTwoDust x={120} y={302} w={486} h={20} theme={cryptTheme} />
@@ -696,10 +679,10 @@ export function LevelTwoSewerRenderer({ connections, secretStroke, isPlayer }: {
 
   return (
     <>
-      <LevelTwoFoundation id="level-two-sewer-footprint" path={footprintPath} theme={sewerTheme} bounds={{ x: 34, y: 58, w: 662, h: 374 }} tile={{ w: 34, h: 25, offset: 17, opacity: 0.3 }} rows={15} cols={21}>
-        <path d="M52 240 H674 M156 84 V286 M280 204 V386 M416 170 V286 M536 254 V410" stroke={sewerTheme.water} strokeWidth="26" strokeLinecap="round" fill="none" opacity="0.22" />
-        <path d="M56 220 H672 M156 88 V274 M280 214 V374 M416 180 V280 M536 264 V398" stroke="#92a077" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.35" strokeDasharray="18 16" />
-        <path d="M44 186 H230 M230 202 H482 M482 184 H682 M458 312 H634 M42 290 H344" stroke="#151d1a" strokeWidth="9" strokeLinecap="round" opacity="0.28" strokeDasharray="52 26" />
+      <LevelTwoFoundation id="level-two-sewer-footprint" path={footprintPath} theme={sewerTheme}>
+        <path d="M52 240 H674 M156 84 V286 M280 204 V386 M416 170 V286 M536 254 V410" stroke={sewerTheme.water} strokeWidth="18" strokeLinecap="round" fill="none" opacity="0.12" />
+        <path d="M56 220 H672 M156 88 V274 M280 214 V374 M416 180 V280 M536 264 V398" stroke="#92a077" strokeWidth="1.6" strokeLinecap="round" fill="none" opacity="0.22" strokeDasharray="18 16" />
+        <path d="M44 186 H230 M230 202 H482 M482 184 H682 M458 312 H634 M42 290 H344" stroke="#151d1a" strokeWidth="6" strokeLinecap="round" opacity="0.12" strokeDasharray="52 26" />
       </LevelTwoFoundation>
       <LevelTwoConnectionApron connections={connections} theme={sewerTheme} />
       <LevelTwoSludgeStain x={78} y={248} w={70} h={24} theme={sewerTheme} />

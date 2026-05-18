@@ -158,7 +158,7 @@ Current implementation notes:
 
 - The shared Level 2 renderer helpers live in `src/components/maps/LevelTwoMapRenderer.tsx`.
 - `LevelTwoMapTheme` holds theme tokens for floor palettes, foundation tones, wall tones, corridor colors, terrain details, moss, water, dust, and rubble.
-- `LevelTwoFoundation` renders the shared terrain and floor footprint beneath the dungeon.
+- `LevelTwoFoundation` renders only a soft, irregular terrain wash beneath the dungeon. It should not render broad brick fields or masonry wallpaper outside playable rooms and corridors.
 - `LevelTwoConnectionRoutes` renders normal corridors and GM-only secret routes from `map.connections`.
 - `LevelTwoRoomShell` renders reusable room structure: floor tiles, thick walls, masonry blocks, corners, edge shadows, and optional broken ruin edges.
 - Tile primitives such as floor tiles, wall blocks, wall corners, cracks, debris, and rubble should be reused before adding style-specific one-offs.
@@ -167,7 +167,7 @@ Current implementation notes:
 Level 2 layer order:
 
 1. Base map parchment and global texture from `DungeonMap`.
-2. Level 2 foundation footprint and shared terrain.
+2. Subtle Level 2 terrain wash and shared shadow.
 3. Optional connection apron or broad terrain binding.
 4. Normal corridors derived from `map.connections`.
 5. Room shells and room floor material.
@@ -229,6 +229,7 @@ These rules should remain true across all future renderer levels:
 - Secret routes must remain GM-only unless explicitly revealed by a future fog-of-war system.
 - Player maps must hide GM-only markers, secret routes, traps, treasure, and GM notes.
 - Room numbers and required GM markers must remain readable on mobile.
+- Broad background masonry or repeated tile fields should be avoided; material detail belongs inside rooms, along corridors, and in small terrain accents.
 - Lantern maps should remain useful and clear, even if visually simpler.
 - Premium maps should feel visibly more table-ready than Lantern maps.
 - Decoration should never make the map harder to run at the table.
