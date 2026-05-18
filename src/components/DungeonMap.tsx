@@ -193,12 +193,64 @@ function AssetDebrisChips({ x, y }: { x: number; y: number }) {
   );
 }
 
+function AssetSarcophagus({ x, y, w = 56, h = 24 }: { x: number; y: number; w?: number; h?: number }) {
+  return (
+    <g filter="url(#markerInk)" opacity="0.9">
+      <rect x={x} y={y} width={w} height={h} rx="5" fill="#8b8270" stroke="#2a2520" strokeWidth="2.2" />
+      <rect x={x + 7} y={y + 5} width={w - 14} height={h - 10} rx="3" fill="#b3a589" opacity="0.42" />
+      <path d={`M${x + w / 2} ${y + 5} V${y + h - 5} M${x + 12} ${y + h / 2} H${x + w - 12}`} stroke="#463a30" strokeWidth="1.7" opacity="0.58" />
+    </g>
+  );
+}
+
+function AssetDustVeil({ x, y, w, h }: { x: number; y: number; w: number; h: number }) {
+  return (
+    <g opacity="0.26">
+      <path d={`M${x} ${y + h / 2} C${x + w * 0.25} ${y - 8} ${x + w * 0.72} ${y + h + 8} ${x + w} ${y + h / 2}`} stroke="#d8cfba" strokeWidth={h} strokeLinecap="round" fill="none" />
+      <path d={`M${x + 10} ${y + h / 2} C${x + w * 0.35} ${y + 4} ${x + w * 0.62} ${y + h - 4} ${x + w - 10} ${y + h / 2}`} stroke="#fff6df" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.42" />
+    </g>
+  );
+}
+
+function AssetCarvedLine({ x, y, w, vertical = false }: { x: number; y: number; w: number; vertical?: boolean }) {
+  return (
+    <g opacity="0.55">
+      <path d={vertical ? `M${x} ${y} V${y + w}` : `M${x} ${y} H${x + w}`} stroke="#514538" strokeWidth="5" strokeLinecap="round" />
+      <path d={vertical ? `M${x} ${y + 5} V${y + w - 5}` : `M${x + 5} ${y} H${x + w - 5}`} stroke="#c3b493" strokeWidth="1.3" strokeLinecap="round" opacity="0.55" strokeDasharray="8 8" />
+    </g>
+  );
+}
+
 function AssetRuinGround() {
+  const footprintPath =
+    'M70 158 C112 108 206 116 268 128 C342 92 448 116 558 158 C606 206 584 268 554 306 C604 360 562 428 488 444 C396 464 330 426 274 422 C202 452 112 426 72 374 C36 326 50 224 70 158 Z';
+  const tileW = 34;
+  const tileH = 26;
+
   return (
     <g>
-      <path d="M74 160 C120 116 212 124 270 132 C350 100 450 130 548 160 C592 198 576 268 550 304 C590 350 558 414 488 426 C390 448 330 418 274 410 C200 438 116 416 82 370 C46 322 62 228 74 160 Z" fill="#7f673f" opacity="0.12" />
-      <path d="M84 168 C142 140 212 146 270 150 M410 136 C466 142 524 162 554 206 M86 384 C142 408 210 402 260 382 M420 420 C478 420 536 398 548 352" stroke="#5d7440" strokeWidth="24" strokeLinecap="round" fill="none" opacity="0.16" />
-      <path d="M112 288 C178 266 236 292 302 270 S438 250 520 286" stroke="#4c8790" strokeWidth="18" strokeLinecap="round" fill="none" opacity="0.12" />
+      <defs>
+        <clipPath id="level-two-ruin-footprint">
+          <path d={footprintPath} />
+        </clipPath>
+      </defs>
+      <path d={footprintPath} fill="#17110e" opacity="0.14" transform="translate(0 8)" />
+      <path d={footprintPath} fill="#8a7048" opacity="0.18" />
+      <g clipPath="url(#level-two-ruin-footprint)">
+        <rect x="44" y="96" width="548" height="368" fill="#8b7047" opacity="0.16" />
+        {Array.from({ length: 13 }).map((_, row) =>
+          Array.from({ length: 17 }).map((__, col) => {
+            const x = 48 + col * tileW - (row % 2 ? 16 : 0);
+            const y = 110 + row * tileH;
+            const tone = (row + col) % 4 === 0 ? '#92774f' : (row + col) % 4 === 1 ? '#a48658' : (row + col) % 4 === 2 ? '#7d6645' : '#b09467';
+            return <rect key={`${row}-${col}`} x={x} y={y} width={tileW + 1} height={tileH + 1} fill={tone} stroke="#56412f" strokeWidth="0.9" opacity="0.26" />;
+          }),
+        )}
+        <path d="M92 172 C156 142 218 150 278 148 M392 140 C470 148 528 174 558 220 M90 378 C150 410 220 400 270 382 M410 420 C478 420 536 398 552 350" stroke="#425f35" strokeWidth="28" strokeLinecap="round" fill="none" opacity="0.18" />
+        <path d="M106 286 C176 258 238 292 304 270 S438 250 524 286" stroke="#3e7c85" strokeWidth="22" strokeLinecap="round" fill="none" opacity="0.15" />
+        <path d="M126 154 C210 124 330 132 420 138 C486 144 536 168 566 218 M82 326 C142 404 238 414 314 390 C390 430 500 414 552 342" stroke="#241c16" strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.28" strokeDasharray="42 20 16 24" />
+        <path d="M142 160 C222 140 332 146 420 152 M108 342 C178 390 250 392 316 366 M412 404 C474 404 524 380 540 338" stroke="#d6bf8d" strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.24" strokeDasharray="34 28" />
+      </g>
       <RubbleChips chips={[{ x: 94, y: 150, r: 7 }, { x: 236, y: 128 }, { x: 540, y: 176, r: 6 }, { x: 566, y: 392 }, { x: 92, y: 414, r: 5 }, { x: 346, y: 430, r: 7 }]} />
     </g>
   );
@@ -219,10 +271,19 @@ function LevelTwoRouteApron({ connections }: { connections: MapConnection[] }) {
   return (
     <g>
       {normalPaths.map((path) => (
-        <path key={`${path}-apron`} d={path} stroke="#6f5638" strokeWidth="60" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.16" />
+        <path key={`${path}-apron-shadow`} d={path} stroke="#1b1410" strokeWidth="78" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.12" />
       ))}
       {normalPaths.map((path) => (
-        <path key={`${path}-moss-edge`} d={path} stroke="#456238" strokeWidth="52" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.08" strokeDasharray="26 34" />
+        <path key={`${path}-apron`} d={path} stroke="#80633c" strokeWidth="68" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.22" />
+      ))}
+      {normalPaths.map((path) => (
+        <path key={`${path}-apron-floor`} d={path} stroke="#ad8d5e" strokeWidth="52" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.16" />
+      ))}
+      {normalPaths.map((path) => (
+        <path key={`${path}-apron-seams`} d={path} stroke="#4d3a2b" strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.3" strokeDasharray="20 18" />
+      ))}
+      {normalPaths.map((path) => (
+        <path key={`${path}-moss-edge`} d={path} stroke="#456238" strokeWidth="72" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.1" strokeDasharray="30 36" />
       ))}
     </g>
   );
@@ -923,6 +984,166 @@ function CavernLayout({ connections, palette, isPlayer, enhanced }: { connection
   );
 }
 
+function CryptFoundation() {
+  const footprintPath = 'M252 38 H468 V148 H646 V286 H594 V424 H420 V398 H300 V424 H126 V286 H74 V148 H252 Z';
+  const tileW = 32;
+  const tileH = 24;
+
+  return (
+    <g>
+      <defs>
+        <clipPath id="level-two-crypt-footprint">
+          <path d={footprintPath} />
+        </clipPath>
+      </defs>
+      <path d={footprintPath} fill="#12100e" opacity="0.18" transform="translate(0 8)" />
+      <path d={footprintPath} fill="#5f5549" opacity="0.22" />
+      <g clipPath="url(#level-two-crypt-footprint)">
+        <rect x="70" y="38" width="580" height="390" fill="#665b4d" opacity="0.28" />
+        {Array.from({ length: 17 }).map((_, row) =>
+          Array.from({ length: 19 }).map((__, col) => {
+            const x = 72 + col * tileW - (row % 2 ? 16 : 0);
+            const y = 42 + row * tileH;
+            const tone = (row + col) % 4 === 0 ? '#756957' : (row + col) % 4 === 1 ? '#8a7a63' : (row + col) % 4 === 2 ? '#5f5549' : '#9a8a70';
+            return <rect key={`${row}-${col}`} x={x} y={y} width={tileW + 1} height={tileH + 1} fill={tone} stroke="#3a3129" strokeWidth="0.95" opacity="0.34" />;
+          }),
+        )}
+        <path d="M360 44 V416 M82 216 H638 M196 216 V408 M524 216 V408" stroke="#2c2520" strokeWidth="8" strokeLinecap="round" fill="none" opacity="0.38" />
+        <path d="M360 58 V398 M104 216 H616 M206 224 V392 M514 224 V392" stroke="#b9aa8d" strokeWidth="1.6" strokeLinecap="round" fill="none" opacity="0.32" strokeDasharray="18 14" />
+        <path d="M120 132 H600 M120 300 H600" stroke="#211b17" strokeWidth="12" strokeLinecap="round" fill="none" opacity="0.16" strokeDasharray="48 24" />
+      </g>
+      <AssetDustVeil x={114} y={128} w={500} h={24} />
+      <AssetDustVeil x={120} y={302} w={486} h={20} />
+    </g>
+  );
+}
+
+function CryptRoomShell({ x, y, w, h, final = false }: { x: number; y: number; w: number; h: number; final?: boolean }) {
+  const tileW = 30;
+  const tileH = 22;
+  const cols = Math.ceil((w - 24) / tileW);
+  const rows = Math.ceil((h - 24) / tileH);
+  const horizontalBlocks = Math.max(2, Math.floor(w / 30));
+  const verticalBlocks = Math.max(2, Math.floor(h / 28));
+
+  return (
+    <g>
+      <rect x={x - 10} y={y + 9} width={w + 20} height={h + 16} rx="5" fill="#14110f" opacity="0.36" />
+      <rect x={x - 8} y={y - 8} width={w + 16} height={h + 16} rx="4" fill="#171411" />
+      <rect x={x + 7} y={y + 7} width={w - 14} height={h - 14} rx="3" fill={final ? '#8f826d' : '#7a6d5b'} />
+      <g clipPath={`url(#level-two-crypt-room-${x}-${y})`}>
+        <defs>
+          <clipPath id={`level-two-crypt-room-${x}-${y}`}>
+            <rect x={x + 12} y={y + 12} width={w - 24} height={h - 24} rx="2" />
+          </clipPath>
+        </defs>
+        {Array.from({ length: rows }).map((_, row) =>
+          Array.from({ length: cols }).map((__, col) => {
+            const tone = row + col + (final ? 2 : 0);
+            return <AssetStoneFloorTile key={`${row}-${col}`} x={x + 12 + col * tileW - (row % 2 ? 12 : 0)} y={y + 12 + row * tileH} w={tileW + 1} h={tileH + 1} tone={tone} />;
+          }),
+        )}
+      </g>
+      <rect x={x + 9} y={y + 9} width={w - 18} height={h - 18} rx="2" fill="none" stroke="#c9b996" strokeWidth="2.4" opacity="0.38" />
+      <rect x={x + 15} y={y + 15} width={w - 30} height={h - 30} rx="1" fill="none" stroke="#2d251f" strokeWidth="3" opacity="0.42" />
+      {Array.from({ length: horizontalBlocks }).map((_, index) => {
+        const blockW = w / horizontalBlocks;
+        return (
+          <g key={`h-${index}`}>
+            <AssetWallBlock x={x + index * blockW} y={y - 8} w={blockW + 1} h={14} />
+            <AssetWallBlock x={x + index * blockW} y={y + h - 6} w={blockW + 1} h={14} />
+          </g>
+        );
+      })}
+      {Array.from({ length: verticalBlocks }).map((_, index) => {
+        const blockH = h / verticalBlocks;
+        return (
+          <g key={`v-${index}`}>
+            <AssetWallBlock x={x - 8} y={y + index * blockH} w={14} h={blockH + 1} vertical />
+            <AssetWallBlock x={x + w - 6} y={y + index * blockH} w={14} h={blockH + 1} vertical />
+          </g>
+        );
+      })}
+      <AssetWallCorner x={x - 8} y={y - 8} />
+      <AssetWallCorner x={x + w - 8} y={y - 8} />
+      <AssetWallCorner x={x - 8} y={y + h - 8} />
+      <AssetWallCorner x={x + w - 8} y={y + h - 8} />
+    </g>
+  );
+}
+
+function CryptConnectionRoutes({ connections, palette, isPlayer }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean }) {
+  const normalPaths = connections.filter((connection) => connection.type === 'normal' && connection.path).map((connection) => connection.path as string);
+  const secretPaths = connections.filter((connection) => connection.type === 'secret' && connection.path).map((connection) => connection.path as string);
+
+  return (
+    <>
+      {normalPaths.map((path) => (
+        <g key={path}>
+          <path d={path} stroke="#11100e" strokeWidth="58" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.22" />
+          <path d={path} stroke="#40372e" strokeWidth="46" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.9" />
+          <path d={path} stroke="#756957" strokeWidth="36" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.98" />
+          <path d={path} stroke="#9a8a70" strokeWidth="28" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.9" />
+          <path d={path} stroke="#2f2822" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.42" strokeDasharray="18 14" />
+          <path d={path} stroke="#c9b996" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.45" strokeDasharray="8 16" />
+        </g>
+      ))}
+      {!isPlayer && <SecretRoutes paths={secretPaths} stroke={palette.secretStroke} />}
+    </>
+  );
+}
+
+function LevelTwoCryptRenderer({ connections, palette, isPlayer }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean }) {
+  const roomNumbers = [
+    { x: 360, y: 89, label: '1' },
+    { x: 360, y: 215, label: '2' },
+    { x: 149, y: 217, label: '3' },
+    { x: 571, y: 217, label: '4' },
+    { x: 206, y: 365, label: '5' },
+    { x: 514, y: 365, label: '6' },
+  ];
+
+  return (
+    <>
+      <CryptFoundation />
+      <CryptConnectionRoutes connections={connections} palette={palette} isPlayer={isPlayer} />
+      <CryptRoomShell x={296} y={50} w={128} h={78} />
+      <CryptRoomShell x={256} y={170} w={208} h={90} />
+      <CryptRoomShell x={88} y={174} w={122} h={86} />
+      <CryptRoomShell x={510} y={174} w={122} h={86} />
+      <CryptRoomShell x={136} y={326} w={140} h={78} />
+      <CryptRoomShell x={444} y={326} w={140} h={78} final />
+      <g>
+        <AssetSarcophagus x={332} y={103} w={56} h={20} />
+        <AssetSarcophagus x={288} y={230} w={52} h={18} />
+        <AssetSarcophagus x={380} y={230} w={52} h={18} />
+        <AssetSarcophagus x={168} y={378} w={58} h={18} />
+        <AssetSarcophagus x={486} y={378} w={58} h={18} />
+        <AssetCarvedLine x={310} y={205} w={100} />
+        <AssetCarvedLine x={360} y={70} w={46} vertical />
+        <AssetCarvedLine x={206} y={336} w={44} vertical />
+        <AssetCarvedLine x={514} y={336} w={44} vertical />
+        <AssetDustVeil x={280} y={250} w={160} h={14} />
+        <AssetRubblePile x={116} y={222} scale={0.64} />
+        <AssetRubblePile x={542} y={204} scale={0.66} />
+        <AssetDebrisChips x={190} y={348} />
+        <AssetDebrisChips x={556} y={382} />
+        <AssetCrackedTile x={330} y={188} scale={0.82} />
+        <AssetCrackedTile x={528} y={222} scale={0.72} />
+        <AssetCrackedTile x={154} y={224} scale={0.68} />
+      </g>
+      {!isPlayer && (
+        <>
+          <MapMarker x={190} y={192} label="H" />
+          <MapMarker x={258} y={346} label="T" />
+          <MapMarker x={566} y={346} label="B" />
+        </>
+      )}
+      <RoomNumbers rooms={roomNumbers} />
+    </>
+  );
+}
+
 function CryptLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
   const roomNumbers = [
     { x: 360, y: 89, label: '1' },
@@ -1065,6 +1286,9 @@ function MapLayout({ mapData, style, palette, isPlayer, enhanced }: { mapData?: 
     case 'cavern':
       return <CavernLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'crypt':
+      if (enhanced) {
+        return <LevelTwoCryptRenderer connections={connections} palette={palette} isPlayer={isPlayer} />;
+      }
       return <CryptLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'sewer':
       return <SewerLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
