@@ -22,6 +22,8 @@ export type LevelTwoMapTheme = {
   water: string;
   dust: string;
   rubble: string;
+  metal: string;
+  sludge: string;
 };
 
 const shrineTheme: LevelTwoMapTheme = {
@@ -45,6 +47,8 @@ const shrineTheme: LevelTwoMapTheme = {
   water: '#3f7883',
   dust: '#d8cfba',
   rubble: '#7a654d',
+  metal: '#4e4740',
+  sludge: '#52663c',
 };
 
 const cryptTheme: LevelTwoMapTheme = {
@@ -68,6 +72,33 @@ const cryptTheme: LevelTwoMapTheme = {
   water: '#526f76',
   dust: '#d8cfba',
   rubble: '#7a654d',
+  metal: '#4b4640',
+  sludge: '#4c5b40',
+};
+
+const sewerTheme: LevelTwoMapTheme = {
+  floorTiles: ['#53604e', '#66705a', '#454d43', '#74715a'],
+  floorStroke: '#29332c',
+  floorHighlight: '#a4ad8f',
+  foundationFill: '#4b5448',
+  foundationTileStroke: '#27312b',
+  wallDark: '#151b18',
+  wallStroke: '#0d120f',
+  wallMid: '#2c3832',
+  wallHighlight: '#6f7b68',
+  shadow: '#0f1412',
+  corridorShadow: '#0d1412',
+  corridorOuter: '#24352f',
+  corridorMid: '#4f5d4d',
+  corridorFloor: '#6c735b',
+  corridorSeam: '#27352e',
+  corridorHighlight: '#9eab8e',
+  moss: '#47683f',
+  water: '#223f3d',
+  dust: '#a79f83',
+  rubble: '#5c5749',
+  metal: '#343a3a',
+  sludge: '#5d6437',
 };
 
 type RoomNumberPoint = { x: number; y: number; label: string };
@@ -204,11 +235,16 @@ export function LevelTwoConnectionRoutes({
   secretStroke: string;
   isPlayer: boolean;
   theme: LevelTwoMapTheme;
-  variant?: 'ruin' | 'crypt';
+  variant?: 'ruin' | 'crypt' | 'sewer';
 }) {
   const normalPaths = connections.filter((connection) => connection.type === 'normal' && connection.path).map((connection) => connection.path as string);
   const secretPaths = connections.filter((connection) => connection.type === 'secret' && connection.path).map((connection) => connection.path as string);
-  const widths = variant === 'crypt' ? { shadow: 58, outer: 46, mid: 36, floor: 28, seam: 5, highlight: 1.6 } : { shadow: 46, outer: 38, mid: 30, floor: 23, seam: 5, highlight: 2 };
+  const widths =
+    variant === 'crypt'
+      ? { shadow: 58, outer: 46, mid: 36, floor: 28, seam: 5, highlight: 1.6 }
+      : variant === 'sewer'
+        ? { shadow: 62, outer: 50, mid: 40, floor: 31, seam: 5, highlight: 1.8 }
+        : { shadow: 46, outer: 38, mid: 30, floor: 23, seam: 5, highlight: 2 };
 
   return (
     <>
@@ -220,6 +256,12 @@ export function LevelTwoConnectionRoutes({
           <path d={path} stroke={theme.corridorFloor} strokeWidth={widths.floor} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity={variant === 'crypt' ? '0.9' : '0.98'} />
           <path d={path} stroke={theme.corridorSeam} strokeWidth={widths.seam} strokeLinecap="round" strokeLinejoin="round" fill="none" strokeDasharray={variant === 'crypt' ? '18 14' : '16 12'} opacity={variant === 'crypt' ? '0.42' : '0.72'} />
           <path d={path} stroke={theme.corridorHighlight} strokeWidth={widths.highlight} strokeLinecap="round" strokeLinejoin="round" fill="none" strokeDasharray={variant === 'crypt' ? '8 16' : '5 20'} opacity={variant === 'crypt' ? '0.45' : '0.68'} />
+          {variant === 'sewer' && (
+            <>
+              <path d={path} stroke={theme.water} strokeWidth="13" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.72" />
+              <path d={path} stroke="#789783" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" strokeDasharray="14 18" opacity="0.5" />
+            </>
+          )}
         </g>
       ))}
       {!isPlayer && <LevelTwoSecretRoutes paths={secretPaths} stroke={secretStroke} />}
@@ -310,14 +352,14 @@ export function LevelTwoRoomShell({
   h: number;
   theme: LevelTwoMapTheme;
   final?: boolean;
-  variant?: 'ruin' | 'crypt';
+  variant?: 'ruin' | 'crypt' | 'sewer';
 }) {
-  const tileW = variant === 'crypt' ? 30 : 28;
+  const tileW = variant === 'crypt' || variant === 'sewer' ? 30 : 28;
   const tileH = variant === 'crypt' ? 22 : 22;
   const cols = Math.ceil((w - 24) / tileW);
   const rows = Math.ceil((h - 24) / tileH);
-  const horizontalBlocks = Math.max(2, Math.floor(w / (variant === 'crypt' ? 30 : 28)));
-  const verticalBlocks = Math.max(2, Math.floor(h / (variant === 'crypt' ? 28 : 26)));
+  const horizontalBlocks = Math.max(2, Math.floor(w / (variant === 'crypt' || variant === 'sewer' ? 30 : 28)));
+  const verticalBlocks = Math.max(2, Math.floor(h / (variant === 'crypt' || variant === 'sewer' ? 28 : 26)));
   const clipId = `level-two-${variant}-room-${x}-${y}`;
 
   return (
@@ -340,7 +382,7 @@ export function LevelTwoRoomShell({
         )}
       </g>
       <rect x={x + 9} y={y + 9} width={w - 18} height={h - 18} rx={variant === 'crypt' ? '2' : '3'} fill="none" stroke={theme.floorHighlight} strokeWidth={variant === 'crypt' ? '2.4' : '3'} opacity={variant === 'crypt' ? '0.38' : '0.46'} />
-      <rect x={x + 15} y={y + 15} width={w - 30} height={h - 30} rx="1" fill="none" stroke={variant === 'crypt' ? '#2d251f' : '#4b3828'} strokeWidth="3" opacity={variant === 'crypt' ? '0.42' : '0.32'} />
+      <rect x={x + 15} y={y + 15} width={w - 30} height={h - 30} rx="1" fill="none" stroke={variant === 'crypt' ? '#2d251f' : variant === 'sewer' ? '#1f302a' : '#4b3828'} strokeWidth="3" opacity={variant === 'crypt' ? '0.42' : '0.32'} />
       {Array.from({ length: horizontalBlocks }).map((_, index) => {
         const blockW = w / horizontalBlocks;
         return (
@@ -474,6 +516,49 @@ function LevelTwoCarvedLine({ x, y, w, vertical = false }: { x: number; y: numbe
   );
 }
 
+function LevelTwoDrainGrate({ x, y, rotate = 0 }: { x: number; y: number; rotate?: number }) {
+  return (
+    <g transform={`translate(${x} ${y}) rotate(${rotate})`} opacity="0.86" filter="url(#markerInk)">
+      <rect x="-18" y="-10" width="36" height="20" rx="3" fill="#1d2422" stroke="#0c1110" strokeWidth="2" />
+      {[-10, -4, 2, 8].map((offset) => (
+        <path key={offset} d={`M${offset} -7 V7`} stroke="#66706a" strokeWidth="1.5" opacity="0.75" />
+      ))}
+      <path d="M-14 -4 H14 M-14 4 H14" stroke="#0d1110" strokeWidth="1.2" opacity="0.55" />
+    </g>
+  );
+}
+
+function LevelTwoPipeSegment({ x, y, w = 70, rotate = 0, theme }: { x: number; y: number; w?: number; rotate?: number; theme: LevelTwoMapTheme }) {
+  return (
+    <g transform={`translate(${x} ${y}) rotate(${rotate})`} opacity="0.78">
+      <path d={`M0 0 H${w}`} stroke={theme.metal} strokeWidth="10" strokeLinecap="round" />
+      <path d={`M5 -3 H${w - 5}`} stroke="#7a817d" strokeWidth="2" strokeLinecap="round" opacity="0.48" />
+      {[16, w - 18].map((offset) => (
+        <rect key={offset} x={offset - 3} y="-7" width="6" height="14" rx="2" fill="#202625" stroke="#101514" strokeWidth="1" />
+      ))}
+    </g>
+  );
+}
+
+function LevelTwoSludgeStain({ x, y, w, h, theme }: { x: number; y: number; w: number; h: number; theme: LevelTwoMapTheme }) {
+  return (
+    <g opacity="0.58">
+      <path d={`M${x} ${y + h / 2} C${x + w * 0.22} ${y - h * 0.35} ${x + w * 0.72} ${y + h * 1.35} ${x + w} ${y + h / 2} C${x + w * 0.72} ${y + h * 0.9} ${x + w * 0.24} ${y + h * 0.86} ${x} ${y + h / 2} Z`} fill={theme.sludge} opacity="0.45" />
+      <path d={`M${x + 9} ${y + h / 2} C${x + w * 0.38} ${y + 2} ${x + w * 0.62} ${y + h - 2} ${x + w - 9} ${y + h / 2}`} stroke="#8b8f54" strokeWidth="1.6" strokeLinecap="round" fill="none" opacity="0.36" />
+    </g>
+  );
+}
+
+function LevelTwoRunoffMarks({ x, y, w, vertical = false, theme }: { x: number; y: number; w: number; vertical?: boolean; theme: LevelTwoMapTheme }) {
+  return (
+    <g opacity="0.46">
+      {[0, 11, 22].map((offset) => (
+        <path key={offset} d={vertical ? `M${x + offset} ${y} C${x + offset - 4} ${y + w * 0.36} ${x + offset + 5} ${y + w * 0.66} ${x + offset} ${y + w}` : `M${x} ${y + offset} C${x + w * 0.36} ${y + offset - 4} ${x + w * 0.66} ${y + offset + 5} ${x + w} ${y + offset}`} stroke={theme.water} strokeWidth="2.4" strokeLinecap="round" fill="none" />
+      ))}
+    </g>
+  );
+}
+
 export function LevelTwoShrineRenderer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
   const roomNumbers = [
     { x: 154, y: 216, label: '1' },
@@ -591,6 +676,64 @@ export function LevelTwoCryptRenderer({ connections, secretStroke, isPlayer }: {
           <LevelTwoMarker x={190} y={192} label="H" />
           <LevelTwoMarker x={258} y={346} label="T" />
           <LevelTwoMarker x={566} y={346} label="B" />
+        </>
+      )}
+      <LevelTwoRoomNumbers rooms={roomNumbers} />
+    </>
+  );
+}
+
+export function LevelTwoSewerRenderer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
+  const roomNumbers = [
+    { x: 112, y: 238, label: '1' },
+    { x: 280, y: 238, label: '2' },
+    { x: 156, y: 112, label: '3' },
+    { x: 416, y: 238, label: '4' },
+    { x: 536, y: 371, label: '5' },
+    { x: 626, y: 235, label: '6' },
+  ];
+  const footprintPath = 'M34 184 H226 V62 H230 V184 H484 V168 H696 V304 H636 V424 H456 V310 H344 V292 H204 V300 H42 Z';
+
+  return (
+    <>
+      <LevelTwoFoundation id="level-two-sewer-footprint" path={footprintPath} theme={sewerTheme} bounds={{ x: 34, y: 58, w: 662, h: 374 }} tile={{ w: 34, h: 25, offset: 17, opacity: 0.3 }} rows={15} cols={21}>
+        <path d="M52 240 H674 M156 84 V286 M280 204 V386 M416 170 V286 M536 254 V410" stroke={sewerTheme.water} strokeWidth="26" strokeLinecap="round" fill="none" opacity="0.22" />
+        <path d="M56 220 H672 M156 88 V274 M280 214 V374 M416 180 V280 M536 264 V398" stroke="#92a077" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.35" strokeDasharray="18 16" />
+        <path d="M44 186 H230 M230 202 H482 M482 184 H682 M458 312 H634 M42 290 H344" stroke="#151d1a" strokeWidth="9" strokeLinecap="round" opacity="0.28" strokeDasharray="52 26" />
+      </LevelTwoFoundation>
+      <LevelTwoConnectionApron connections={connections} theme={sewerTheme} />
+      <LevelTwoSludgeStain x={78} y={248} w={70} h={24} theme={sewerTheme} />
+      <LevelTwoSludgeStain x={236} y={250} w={84} h={22} theme={sewerTheme} />
+      <LevelTwoSludgeStain x={468} y={374} w={88} h={24} theme={sewerTheme} />
+      <LevelTwoConnectionRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} theme={sewerTheme} variant="sewer" />
+      <LevelTwoRoomShell x={58} y={196} w={108} h={84} theme={sewerTheme} variant="sewer" />
+      <LevelTwoRoomShell x={220} y={196} w={120} h={84} theme={sewerTheme} variant="sewer" />
+      <LevelTwoRoomShell x={96} y={74} w={120} h={76} theme={sewerTheme} variant="sewer" />
+      <LevelTwoRoomShell x={358} y={194} w={116} h={88} theme={sewerTheme} variant="sewer" />
+      <LevelTwoRoomShell x={468} y={330} w={136} h={82} theme={sewerTheme} variant="sewer" />
+      <LevelTwoRoomShell x={570} y={178} w={112} h={114} theme={sewerTheme} final variant="sewer" />
+      <g>
+        <LevelTwoPipeSegment x={78} y={214} w={62} theme={sewerTheme} />
+        <LevelTwoPipeSegment x={242} y={210} w={74} theme={sewerTheme} />
+        <LevelTwoPipeSegment x={598} y={270} w={58} rotate={90} theme={sewerTheme} />
+        <LevelTwoDrainGrate x={386} y={258} />
+        <LevelTwoDrainGrate x={624} y={244} rotate={90} />
+        <LevelTwoDrainGrate x={536} y={378} />
+        <LevelTwoRunoffMarks x={78} y={252} w={66} theme={sewerTheme} />
+        <LevelTwoRunoffMarks x={494} y={346} w={52} vertical theme={sewerTheme} />
+        <LevelTwoMoss x={130} y={132} scale={0.52} theme={sewerTheme} />
+        <LevelTwoMoss x={478} y={258} scale={0.46} theme={sewerTheme} />
+        <LevelTwoRubble x={354} y={218} scale={0.52} theme={sewerTheme} />
+        <LevelTwoDebris x={246} y={264} fill="#43493f" />
+        <LevelTwoDebris x={584} y={206} fill="#43493f" />
+        <LevelTwoCrack x={112} y={224} scale={0.68} stroke="#26332d" />
+        <LevelTwoCrack x={506} y={356} scale={0.72} stroke="#26332d" />
+      </g>
+      {!isPlayer && (
+        <>
+          <LevelTwoMarker x={324} y={214} label="H" />
+          <LevelTwoMarker x={458} y={216} label="T" />
+          <LevelTwoMarker x={660} y={202} label="B" />
         </>
       )}
       <LevelTwoRoomNumbers rooms={roomNumbers} />

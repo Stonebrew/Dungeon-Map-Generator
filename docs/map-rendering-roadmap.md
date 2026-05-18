@@ -92,7 +92,7 @@ Interaction with `map.connections`:
 
 Level 2 would introduce a deterministic map skinning layer using local tile primitives or generated vector/bitmap assets bundled with the app.
 
-In the current prototype, Level 2 should be explored one map style at a time. The first target is the shrine/ruins style because it has clear reusable asset needs: stone floor tiles, masonry wall blocks, broken walls, moss, rubble, pillars, stairs, altar markings, cracks, water stains, and small debris. Building one style first keeps the renderer understandable and makes it easier to compare Level 2 quality against the existing enhanced SVG renderer before converting every map style.
+In the current prototype, Level 2 should be explored one map style at a time. Shrine/ruins, crypt, and sewer now use the shared Level 2 renderer family. Building each style incrementally keeps the renderer understandable and makes it easier to compare Level 2 quality against the existing enhanced SVG fallback before converting every map style.
 
 Benefits:
 
@@ -120,6 +120,9 @@ Required asset categories:
 - Moss patch
 - Rubble pile
 - Water tile or channel
+- Sewer pipe segment
+- Drain grate
+- Sludge stain and runoff marks
 - Stairs
 - Pillar
 - Altar or shrine mark
@@ -159,6 +162,7 @@ Current implementation notes:
 - `LevelTwoConnectionRoutes` renders normal corridors and GM-only secret routes from `map.connections`.
 - `LevelTwoRoomShell` renders reusable room structure: floor tiles, thick walls, masonry blocks, corners, edge shadows, and optional broken ruin edges.
 - Tile primitives such as floor tiles, wall blocks, wall corners, cracks, debris, and rubble should be reused before adding style-specific one-offs.
+- Sewer-specific Level 2 tokens cover damp stone, stained masonry, dark water, algae/sludge, metal pipes, grates, and corridor water channels.
 
 Level 2 layer order:
 
