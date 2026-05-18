@@ -1,5 +1,5 @@
 import { Badge } from './Badge';
-import { LevelTwoBlackfenRenderer, LevelTwoCryptRenderer, LevelTwoLaboratoryRenderer, LevelTwoSewerRenderer, LevelTwoShrineRenderer } from './maps/LevelTwoMapRenderer';
+import { LevelTwoBlackfenRenderer, LevelTwoCavernRenderer, LevelTwoCryptRenderer, LevelTwoLaboratoryRenderer, LevelTwoSewerRenderer, LevelTwoShrineRenderer } from './maps/LevelTwoMapRenderer';
 import type { DungeonMapData, MapConnection, MapStyle } from '../types';
 
 type MapPalette = {
@@ -773,6 +773,9 @@ function MapLayout({ mapData, style, palette, isPlayer, enhanced }: { mapData?: 
       }
       return <ShrineLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'cavern':
+      if (enhanced) {
+        return <LevelTwoCavernRenderer connections={connections} secretStroke={palette.secretStroke} isPlayer={isPlayer} />;
+      }
       return <CavernLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'crypt':
       if (enhanced) {
