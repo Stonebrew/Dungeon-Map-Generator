@@ -500,6 +500,17 @@ function LaboratoryDetails({ palette, isPlayer }: { palette: MapPalette; isPlaye
   );
 }
 
+function ForestRuinDetails({ palette, isPlayer }: { palette: MapPalette; isPlayer: boolean }) {
+  return (
+    <g opacity={isPlayer ? '0.42' : '0.62'}>
+      <path d="M76 212 C156 154 238 166 314 146 S480 150 560 206" stroke={palette.accent} strokeWidth="9" strokeLinecap="round" fill="none" opacity="0.18" strokeDasharray="4 14" />
+      <path d="M106 276 C186 242 254 282 332 254 S470 226 548 284" stroke={palette.water} strokeWidth="16" strokeLinecap="round" fill="none" opacity="0.16" />
+      <path d="M108 236 C142 216 166 244 192 226 M304 212 C332 190 354 224 382 202 M468 360 C508 334 534 370 568 344" stroke={palette.floorLine} strokeWidth="4" strokeLinecap="round" fill="none" opacity="0.3" />
+      <CrackMarks stroke={palette.floorLine} points={['M250 172 l20 -12 l14 18', 'M486 192 l18 -10 l12 14', 'M156 374 l16 -12 l12 15']} />
+    </g>
+  );
+}
+
 function BlackfenLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
   const roomNumbers = [
     { x: 130, y: 130, label: '1' },
@@ -541,6 +552,48 @@ function BlackfenLayout({ connections, palette, isPlayer, enhanced }: { connecti
           <MapMarker x={174} y={106} label="T" />
           <MapMarker x={508} y={202} label="H" />
           <MapMarker x={633} y={238} label="B" />
+        </>
+      )}
+      <RoomNumbers rooms={roomNumbers} />
+    </>
+  );
+}
+
+function ForestRuinLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
+  const roomNumbers = [
+    { x: 126, y: 246, label: '1' },
+    { x: 292, y: 190, label: '2' },
+    { x: 476, y: 190, label: '3' },
+    { x: 536, y: 347, label: '4' },
+    { x: 335, y: 349, label: '5' },
+    { x: 166, y: 358, label: '6' },
+  ];
+
+  return (
+    <>
+      <path d="M54 206 C130 136 218 148 292 128 S488 140 582 218 C618 310 570 394 452 414 C350 442 260 410 178 410 C96 394 48 318 54 206 Z" fill={palette.featureFill} opacity="0.34" />
+      {enhanced && <ForestRuinDetails palette={palette} isPlayer={isPlayer} />}
+      <ConnectionRoutes connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />
+      <MapRoom x={70} y={202} w={112} h={88} label="1" fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <MapRoom x={232} y={146} w={120} h={88} label="2" fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <MapRoom x={420} y={148} w={112} h={84} label="3" fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <MapRoom x={476} y={306} w={120} h={82} label="4" fill={palette.finalFill} palette={palette} enhanced={enhanced} />
+      <MapRoom x={276} y={308} w={118} h={82} label="5" fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <MapRoom x={112} y={322} w={108} h={72} label="6" fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      {enhanced && (
+        <g>
+          <MossPatch x={82} y={260} scale={0.66} />
+          <MossPatch x={318} y={170} scale={0.58} />
+          <MossPatch x={500} y={332} scale={0.58} />
+          <RubbleChips chips={[{ x: 236, y: 176 }, { x: 520, y: 214, r: 6 }, { x: 162, y: 374, r: 4 }]} />
+          <CrackMarks stroke={palette.floorLine} points={['M260 166 l16 -10 l12 15', 'M506 330 l18 -12 l14 16']} />
+        </g>
+      )}
+      {!isPlayer && (
+        <>
+          <MapMarker x={330} y={164} label="H" />
+          <MapMarker x={520} y={326} label="T" />
+          <MapMarker x={188} y={340} label="B" />
         </>
       )}
       <RoomNumbers rooms={roomNumbers} />
@@ -771,6 +824,8 @@ export function EnhancedFallbackMap({ mapData, style, palette, isPlayer, enhance
       return <CavernLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'crypt':
       return <CryptLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
+    case 'forestRuin':
+      return <ForestRuinLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'sewer':
       return <SewerLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'laboratory':
