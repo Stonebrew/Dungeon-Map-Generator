@@ -35,7 +35,7 @@ export const levelTwoEnvironmentRegistry: Partial<Record<MapStyle, LevelTwoEnvir
     mapStyle: 'forestRuin',
     renderer: LevelTwoForestRuinRenderer,
     theme: forestRuinTheme,
-    geometryStrategy: 'constructed',
+    geometryStrategy: 'hybrid',
     rendererLevel: 2,
     routeVariant: 'ruin',
     playerSafe: { hideGmMarkers: true, hideSecretRoutes: true },

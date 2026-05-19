@@ -1,7 +1,7 @@
 import type { ComponentType } from 'react';
 import type { MapConnection, MapStyle } from '../../../types';
 
-export type LevelTwoGeometryStrategy = 'constructed' | 'organic';
+export type LevelTwoGeometryStrategy = 'constructed' | 'organic' | 'hybrid';
 export type LevelTwoRendererLevel = 2;
 export type LevelTwoRouteVariant = 'ruin' | 'crypt' | 'sewer' | 'laboratory' | 'blackfen' | 'cavern';
 
