@@ -6,11 +6,11 @@ export type Threat = 'Low' | 'Moderate' | 'High' | 'Severe';
 
 export type EncounterType = 'Combat' | 'Social' | 'Hazard' | 'Puzzle' | 'Exploration';
 
-export type MapStyle = 'blackfen' | 'shrine' | 'cavern' | 'crypt' | 'sewer' | 'laboratory' | 'forestRuin' | 'volcanicForge' | 'frozenRuin';
+export type MapStyle = 'blackfen' | 'shrine' | 'cavern' | 'crypt' | 'sewer' | 'laboratory' | 'forestRuin' | 'volcanicForge' | 'frozenRuin' | 'desertTemple';
 
 export type LayoutRole = 'hub' | 'branch' | 'loop' | 'spoke' | 'island' | 'threshold' | 'deadEnd' | 'secretPocket' | 'landmark' | 'objective' | 'transition';
 
-export type AreaShape = 'rectilinear' | 'organic' | 'platform' | 'clearing' | 'chamber' | 'shaft' | 'bridge' | 'fragment' | 'hall' | 'ledge' | 'pool' | 'courtyard' | 'channel';
+export type AreaShape = 'rectilinear' | 'organic' | 'platform' | 'clearing' | 'chamber' | 'shaft' | 'bridge' | 'fragment' | 'hall' | 'ledge' | 'pool' | 'courtyard' | 'channel' | 'stair';
 
 export type AreaScale = 'tiny' | 'small' | 'medium' | 'large' | 'huge';
 

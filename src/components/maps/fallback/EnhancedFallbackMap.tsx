@@ -698,6 +698,49 @@ function FrozenRuinLayout({ connections, palette, isPlayer, enhanced }: { connec
   );
 }
 
+function DesertTempleLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
+  const roomNumbers = [
+    { x: 94, y: 250, label: '1' },
+    { x: 248, y: 178, label: '2' },
+    { x: 412, y: 154, label: '3' },
+    { x: 554, y: 244, label: '4' },
+    { x: 390, y: 300, label: '5' },
+    { x: 244, y: 366, label: '6' },
+    { x: 112, y: 398, label: '7' },
+    { x: 500, y: 402, label: '8' },
+  ];
+
+  return (
+    <>
+      <path d="M42 214 C86 132 176 150 236 104 C304 54 396 82 468 118 C560 98 654 158 666 252 C642 344 574 382 526 438 C432 466 352 420 292 436 C196 464 74 438 42 354 C14 302 16 250 42 214 Z" fill={palette.featureFill} opacity="0.34" />
+      {enhanced && (
+        <g opacity={isPlayer ? '0.42' : '0.62'}>
+          <path d="M72 260 C150 190 226 158 304 126 M246 370 C334 330 448 296 596 232" stroke={palette.accent} strokeWidth="16" strokeLinecap="round" fill="none" opacity="0.18" />
+          <path d="M78 118 C178 90 258 116 346 82 M410 396 C500 360 582 386 660 338" stroke={palette.floorLine} strokeWidth="3" strokeLinecap="round" fill="none" opacity="0.32" strokeDasharray="22 18" />
+          <CrackMarks stroke={palette.floorLine} points={['M384 292 l22 -13 l16 20', 'M524 232 l18 -11 l14 18', 'M228 352 l16 -10 l10 16']} />
+        </g>
+      )}
+      <ConnectionRoutes connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />
+      <MapRoom x={50} y={214} w={88} h={72} fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <MapRoom x={190} y={134} w={118} h={86} fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <MapRoom x={350} y={104} w={124} h={94} fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <MapRoom x={506} y={202} w={106} h={88} fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <MapRoom x={328} y={254} w={124} h={92} fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <MapRoom x={186} y={324} w={116} h={84} fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <MapRoom x={64} y={362} w={96} h={72} fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <MapRoom x={444} y={366} w={112} h={74} fill={palette.finalFill} palette={palette} enhanced={enhanced} />
+      {!isPlayer && (
+        <>
+          <MapMarker x={458} y={276} label="H" />
+          <MapMarker x={536} y={386} label="T" />
+          <MapMarker x={126} y={374} label="B" />
+        </>
+      )}
+      <RoomNumbers rooms={roomNumbers} />
+    </>
+  );
+}
+
 function ShrineLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
   const roomNumbers = [
     { x: 154, y: 216, label: '1' },
@@ -921,6 +964,8 @@ export function EnhancedFallbackMap({ mapData, style, palette, isPlayer, enhance
       return <CavernLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'crypt':
       return <CryptLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
+    case 'desertTemple':
+      return <DesertTempleLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'forestRuin':
       return <ForestRuinLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'frozenRuin':

@@ -41,7 +41,9 @@ export function LevelTwoConnectionRoutes({
                 ? { shadow: 58, outer: 46, mid: 36, floor: 27, seam: 5, highlight: 1.8 }
                 : variant === 'frozenRuin'
                   ? { shadow: 54, outer: 42, mid: 32, floor: 24, seam: 4, highlight: 1.8 }
-                  : { shadow: 46, outer: 38, mid: 30, floor: 23, seam: 5, highlight: 2 };
+                  : variant === 'desertTemple'
+                    ? { shadow: 52, outer: 42, mid: 32, floor: 23, seam: 4, highlight: 1.8 }
+                    : { shadow: 46, outer: 38, mid: 30, floor: 23, seam: 5, highlight: 2 };
 
   return (
     <>
@@ -87,6 +89,12 @@ export function LevelTwoConnectionRoutes({
             <>
               <path d={path} stroke={theme.runeGlow} strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.34" strokeDasharray="11 13" />
               <path d={path} stroke={theme.wallHighlight} strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.5" strokeDasharray="3 15" />
+            </>
+          )}
+          {variant === 'desertTemple' && (
+            <>
+              <path d={path} stroke={theme.dust} strokeWidth="9" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.42" strokeDasharray="22 18" />
+              <path d={path} stroke={theme.brass} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.34" strokeDasharray="8 18" />
             </>
           )}
         </g>

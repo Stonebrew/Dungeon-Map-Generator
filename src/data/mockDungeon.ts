@@ -163,6 +163,10 @@ const mapLayoutGrammarByStyle: Record<MapStyle, NonNullable<Dungeon['map']['layo
     grammar: ['floodedIslands', 'fragmentedVertical'],
     notes: 'Frozen ruin/arctic cave with cracked pools, ice bridges, slick ledges, snow-buried stonework, and hazardous under-ice routes.',
   },
+  desertTemple: {
+    grammar: ['fragmentedVertical', 'linearRoute'],
+    notes: 'Sand-buried temple with exposed upper platforms, diagonal dune trails, sunken chambers, blocked thresholds, and hidden under-sand passages.',
+  },
 };
 
 const roomLayoutMetadataByStyle: Record<MapStyle, Record<number, RoomLayoutMetadata>> = {
@@ -245,6 +249,16 @@ const roomLayoutMetadataByStyle: Record<MapStyle, Record<number, RoomLayoutMetad
     7: { layoutRole: 'secretPocket', areaShape: 'shaft', areaScale: 'small', openness: 'enclosed', environmentRole: 'natural' },
     8: { layoutRole: 'objective', areaShape: 'chamber', areaScale: 'medium', openness: 'enclosed', environmentRole: 'ritual' },
   },
+  desertTemple: {
+    1: { layoutRole: 'threshold', areaShape: 'stair', areaScale: 'small', openness: 'exposed', environmentRole: 'natural' },
+    2: { layoutRole: 'hub', areaShape: 'courtyard', areaScale: 'large', openness: 'open', environmentRole: 'collapsed' },
+    3: { layoutRole: 'branch', areaShape: 'hall', areaScale: 'medium', openness: 'semiOpen', environmentRole: 'fortified' },
+    4: { layoutRole: 'branch', areaShape: 'chamber', areaScale: 'medium', openness: 'semiOpen', environmentRole: 'ritual' },
+    5: { layoutRole: 'transition', areaShape: 'platform', areaScale: 'large', openness: 'exposed', environmentRole: 'hazardAdjacent' },
+    6: { layoutRole: 'branch', areaShape: 'chamber', areaScale: 'medium', openness: 'enclosed', environmentRole: 'collapsed' },
+    7: { layoutRole: 'secretPocket', areaShape: 'shaft', areaScale: 'small', openness: 'enclosed', environmentRole: 'collapsed' },
+    8: { layoutRole: 'objective', areaShape: 'chamber', areaScale: 'medium', openness: 'enclosed', environmentRole: 'ritual' },
+  },
 };
 
 function getConnectionLayoutMetadata(style: MapStyle, connection: MapConnection): Pick<MapConnection, 'routeStyle' | 'routeDifficulty'> {
@@ -285,6 +299,20 @@ function getConnectionLayoutMetadata(style: MapStyle, connection: MapConnection)
     const bridgePairs = new Set(['3-5', '5-8']);
     const key = [connection.from, connection.to].sort((a, b) => a - b).join('-');
     return { routeStyle: bridgePairs.has(key) ? 'bridge' : connection.from === 7 || connection.to === 7 ? 'tunnel' : 'trail', routeDifficulty: bridgePairs.has(key) ? 'hazardous' : 'clear' };
+  }
+
+  if (style === 'desertTemple') {
+    const key = [connection.from, connection.to].sort((a, b) => a - b).join('-');
+    if (key === '5-8') {
+      return { routeStyle: 'stair', routeDifficulty: 'unstable' };
+    }
+    if (key === '1-7') {
+      return { routeStyle: 'crawl', routeDifficulty: 'hidden' };
+    }
+    if (key === '2-5' || key === '5-6') {
+      return { routeStyle: 'ledge', routeDifficulty: 'narrow' };
+    }
+    return { routeStyle: key === '1-2' || key === '2-3' ? 'trail' : 'causeway', routeDifficulty: 'clear' };
   }
 
   return { routeStyle: 'corridor', routeDifficulty: 'clear' };
@@ -2336,6 +2364,245 @@ const frozenRuinDungeonDraft: DraftDungeon = {
   ],
 };
 
+const desertTempleDungeonDraft: DraftDungeon = {
+  id: 'dd-2026-05-15',
+  dateIso: '2026-05-15',
+  date: 'May 15, 2026',
+  title: 'The Sunken Ziggurat of Arakeph',
+  theme: 'Sand-buried desert temple with exposed platforms, sunken chambers, wind-cut paths, and hidden lower passages',
+  difficulty: 'Moderate',
+  partySize: '3-5 adventurers',
+  estimatedPlayTime: '2-3 hours',
+  hook:
+    'A three-day windstorm has uncovered the top of an ancient ziggurat. By dawn, a black doorway was visible in the sand, and by noon, the dunes around it began to move against the wind.',
+  background:
+    'Arakeph was a sun-priest archive built around a sealed lower reliquary. The upper temple collapsed into the dunes after its keepers buried a dangerous prophecy beneath the main stair. Now shifting sand exposes old platforms while hiding safer passages below.',
+  map: {
+    style: 'desertTemple',
+    gmMapId: 'desert-temple-gm',
+    playerMapId: 'desert-temple-player',
+    connections: [
+      { from: 1, to: 2, type: 'normal', routeStyle: 'trail', routeDifficulty: 'clear', path: 'M138 238 C172 214 206 192 224 178' },
+      { from: 2, to: 3, type: 'normal', routeStyle: 'trail', routeDifficulty: 'clear', path: 'M306 166 C342 150 378 144 412 154' },
+      { from: 2, to: 5, type: 'normal', routeStyle: 'ledge', routeDifficulty: 'narrow', path: 'M264 222 C298 252 338 276 368 292' },
+      { from: 3, to: 4, type: 'normal', routeStyle: 'causeway', routeDifficulty: 'clear', path: 'M474 176 C506 194 532 220 554 244' },
+      { from: 4, to: 5, type: 'normal', routeStyle: 'causeway', routeDifficulty: 'clear', path: 'M506 272 C474 284 430 294 390 300' },
+      { from: 5, to: 6, type: 'normal', routeStyle: 'ledge', routeDifficulty: 'narrow', path: 'M328 324 C300 340 270 354 244 366' },
+      { from: 6, to: 7, type: 'normal', routeStyle: 'tunnel', routeDifficulty: 'narrow', path: 'M188 382 C160 388 134 394 112 398' },
+      { from: 5, to: 8, type: 'normal', routeStyle: 'stair', routeDifficulty: 'unstable', path: 'M452 334 C470 360 486 382 500 402' },
+      { from: 1, to: 7, type: 'secret', routeStyle: 'crawl', routeDifficulty: 'hidden', note: 'Concealed under-sand crawl below the entrance stair', path: 'M92 282 C82 326 88 370 108 392' },
+    ],
+    playerSafe: {
+      hideSecrets: true,
+      hideTreasure: true,
+      hideHazards: true,
+      hideGmNotes: true,
+      description: 'A sand-buried temple ruin with exposed platforms, dune trails, broken causeways, and sunken lower chambers.',
+    },
+  },
+  mapStyle: 'desertTemple',
+  mapPlaceholder: 'desert-temple-gm',
+  playerMapPlaceholder: 'desert-temple-player',
+  rooms: [
+    {
+      number: 1,
+      name: 'Wind-Cut Entrance Stair',
+      readAloud: 'A stair of sun-bleached stone descends between dunes. Sand pours over each step in thin streams, whispering around a half-buried doorway.',
+      gmNotes: 'The entrance is safe if crossed steadily. A concealed under-sand crawl can be found by brushing sand from the lowest left-hand step.',
+      threat: 'Low',
+      tags: ['Entrance', 'Buried threshold', 'Secret route'],
+      inhabitants: [
+        {
+          name: 'Dune Vermin',
+          role: 'Scout scavengers',
+          threat: 'Low',
+          durability: 'Fragile',
+          damage: 'Light',
+          tactics: 'Burst from sand pockets, distract pack animals, retreat through cracks',
+          morale: 'Scatter if exposed to loud metal chimes',
+          wants: 'Shade, crumbs, and cool stone cracks',
+          leverage: 'Can be baited with water drops or dried dates',
+        },
+      ],
+      treasure: 'A sun-worn bronze stair marker shaped like a tiny ziggurat.',
+      secrets: 'A concealed under-sand crawl below the entrance stair leads to Room 7.',
+      exits: 'Wind-cut trail to Room 2, concealed under-sand crawl to Room 7.',
+    },
+    {
+      number: 2,
+      name: 'Exposed Sun Court',
+      readAloud: 'A broad courtyard lies open to the sky. Only the tops of old walls remain, and dunes have filled the corners like pale water.',
+      gmNotes: 'This is the surface hub. Sand shifts across inscriptions every few minutes, revealing clue fragments in changing order.',
+      threat: 'Moderate',
+      tags: ['Open court', 'Clues', 'Sand'],
+      inhabitants: [],
+      treasure: 'A cracked tile showing the sun above a buried eye.',
+      secrets: 'The inscriptions describe a lower chamber deliberately hidden under the main stair.',
+      exits: 'Wind-cut trail to Room 1, dune trail to Room 3, narrow ledge down to Room 5.',
+    },
+    {
+      number: 3,
+      name: 'Half-Buried Colonnade',
+      readAloud: 'Broken columns stand in uneven rows, their bases swallowed by sand. Shadows stripe the floor where roof stones once rested.',
+      gmNotes: 'The colonnade gives cover and sightlines. A careful party can read column shadows to predict the next sand shift.',
+      threat: 'Moderate',
+      tags: ['Columns', 'Navigation', 'Exploration'],
+      inhabitants: [
+        {
+          name: 'Sun-Bleached Bandits',
+          role: 'Scout scavengers',
+          threat: 'Moderate',
+          durability: 'Standard',
+          damage: 'Light',
+          tactics: 'Use columns as cover, retreat toward open sun, barter if outnumbered',
+          morale: 'Yield if offered water and a safe way out',
+          wants: 'Relics light enough to carry before the temple sinks again',
+          leverage: 'Know which columns mark safe footing',
+        },
+      ],
+      treasure: 'A linen-wrapped column cap etched with travel prayers.',
+      secrets: 'One column is hollow and carries wind from Room 4.',
+      exits: 'Dune trail to Room 2, exposed causeway to Room 4.',
+    },
+    {
+      number: 4,
+      name: 'Sand-Choked Offering Hall',
+      readAloud: 'Sand has filled the old offering hall nearly to the carved lintel. Bowls, coins, and votive hands poke from the slope.',
+      gmNotes: 'Digging too quickly triggers a sliding sand hazard. Patient work reveals offerings and a safer causeway edge toward Room 5.',
+      threat: 'High',
+      tags: ['Hazard', 'Offerings', 'Sand drift'],
+      inhabitants: [
+        {
+          name: 'Glass-Eyed Scarabs',
+          role: 'Swarm guardians',
+          threat: 'Moderate in numbers',
+          durability: 'Fragile',
+          damage: 'Light',
+          tactics: 'Boil from offering bowls, blind with glittering wings, vanish into sand',
+          morale: 'Retreat if the offering bowls are covered',
+          wants: 'To keep offerings buried and undisturbed',
+          leverage: 'Follow old incense or polished copper',
+        },
+      ],
+      treasure: 'A handful of old votive coins fused by desert heat.',
+      secrets: 'The newest offering is fresh, proving someone entered recently.',
+      exits: 'Exposed causeway to Room 3, buried causeway down to Room 5.',
+    },
+    {
+      number: 5,
+      name: 'Broken Ziggurat Tier',
+      readAloud: 'A cracked platform juts from the sand like the prow of a stone ship. Below it, a darker stair disappears into a sunken gap.',
+      gmNotes: 'This transition area defines the vertical burial. Sand slides can separate the party if they move carelessly near the edge.',
+      threat: 'High',
+      tags: ['Platform', 'Drop', 'Vertical route'],
+      inhabitants: [],
+      treasure: 'A gold-dusted plumb weight used by temple builders.',
+      secrets: 'A carved arrow hidden under sand points to the sealed reliquary below.',
+      exits: 'Narrow ledge to Room 2, buried causeway to Room 4, collapsed ledge to Room 6, unstable stair to Room 8.',
+    },
+    {
+      number: 6,
+      name: 'Sunken Inscription Room',
+      readAloud: 'The room is lower than the rest of the ruin, cool and dim beneath a ceiling of packed sand. Inscriptions cover every visible stone.',
+      gmNotes: 'The inscriptions explain that the lower reliquary was sealed to prevent a prophecy from being stolen. Reading them aloud wakes the sandbound spirits.',
+      threat: 'Moderate',
+      tags: ['Puzzle', 'Lore', 'Lower chamber'],
+      inhabitants: [
+        {
+          name: 'Sandbound Scribes',
+          role: 'Social spirits',
+          threat: 'Moderate if mocked',
+          durability: 'Standard',
+          damage: 'Light',
+          tactics: 'Speak through falling sand, obscure false readers, test intent with riddles',
+          morale: 'Help anyone who copies a truth without stealing the original',
+          wants: 'Their warnings preserved accurately',
+          leverage: 'Respectful transcription and water poured on hot stone',
+        },
+      ],
+      treasure: 'A clay seal stamped with the ziggurat name.',
+      secrets: 'One inscription names the sealed lower reliquary and its guardian vow.',
+      exits: 'Collapsed ledge to Room 5, narrow tunnel to Room 7.',
+    },
+    {
+      number: 7,
+      name: 'Hidden Under-Sand Crawl',
+      readAloud: 'A cramped passage runs beneath the dunes. Roots of ancient plaster hang from the ceiling, and the air smells of hot dust and old resin.',
+      gmNotes: 'This route is hidden from the entrance and cramped enough to make retreat tense. It lets players bypass the exposed court if found early.',
+      threat: 'Low',
+      tags: ['Secret', 'Crawl', 'Bypass'],
+      inhabitants: [],
+      treasure: 'A sealed resin tube containing a map fragment of the lower stair.',
+      secrets: 'The crawl was built as an escape route for reliquary keepers.',
+      exits: 'Narrow tunnel to Room 6, concealed under-sand crawl to Room 1.',
+    },
+    {
+      number: 8,
+      name: 'Sealed Lower Reliquary',
+      readAloud: 'A chamber of warm shadow waits below the main stair. A stone sunburst seals a black niche, and sand falls upward in thin golden streams.',
+      gmNotes: 'The finale can be solved by restoring the copied warning, bargaining with the guardian, or sealing the prophecy again. Breaking the niche releases a violent sand surge.',
+      threat: 'Severe',
+      tags: ['Finale', 'Reliquary', 'Negotiation'],
+      inhabitants: [
+        {
+          name: 'The Sunken Vow',
+          role: 'Guardian leader',
+          threat: 'Severe',
+          durability: 'Very Tough',
+          damage: 'Serious',
+          tactics: 'Moves through falling sand, blocks exits with dunes, tests whether intruders came to preserve or steal',
+          morale: 'Relents if the warning is preserved without opening the black niche',
+          wants: 'The sealed prophecy kept from ambitious rulers',
+          leverage: 'Accepts truthful copies, restored seals, and promises witnessed by sunlight',
+        },
+      ],
+      treasure: 'A sunburst reliquary seal, a copied prophecy warning, and a cool black stone that points north at dawn.',
+      secrets: 'The prophecy is dangerous because it names a conqueror who has not been born yet.',
+      exits: 'Unstable stair to Room 5.',
+    },
+  ],
+  encounterTables: {
+    wandering: [
+      { roll: '1', result: 'Dune vermin spill from a stair crack', type: 'Combat' },
+      { roll: '2', result: 'Bandit scavengers offer information for water', type: 'Social' },
+      { roll: '3', result: 'A sand drift slides across a route', type: 'Hazard' },
+      { roll: '4', result: 'Column shadows reveal a safe path', type: 'Exploration' },
+      { roll: '5', result: 'A sandbound scribe asks someone to copy a warning', type: 'Social' },
+      { roll: '6', result: 'Wind uncovers a hidden inscription for a few breaths', type: 'Puzzle' },
+    ],
+    environmental: [
+      { roll: '1', result: 'A gust fills footprints with sand', type: 'Exploration' },
+      { roll: '2', result: 'A buried threshold groans underfoot', type: 'Hazard' },
+      { roll: '3', result: 'Sunlight catches a carving at the right angle', type: 'Puzzle' },
+      { roll: '4', result: 'Hot sand makes metal painful to hold', type: 'Hazard' },
+      { roll: '5', result: 'A cool draft marks a lower chamber', type: 'Exploration' },
+      { roll: '6', result: 'The ziggurat hums like a struck bowl', type: 'Puzzle' },
+    ],
+    complications: [
+      { roll: '1', result: 'A route becomes half-blocked by fresh sand', type: 'Hazard' },
+      { roll: '2', result: 'Scarabs swarm over exposed treasure', type: 'Combat' },
+      { roll: '3', result: 'A spirit refuses to speak until a false inscription is corrected', type: 'Social' },
+      { roll: '4', result: 'Sand reveals a lower stair and hides another route', type: 'Exploration' },
+      { roll: '5', result: 'A sunbeam activates an old seal', type: 'Puzzle' },
+      { roll: '6', result: 'The guardian speaks through falling sand', type: 'Social' },
+    ],
+  },
+  treasureTable: [
+    { roll: '1', result: 'Bronze stair marker shaped like a tiny ziggurat' },
+    { roll: '2', result: 'Cracked tile showing the sun above a buried eye' },
+    { roll: '3', result: 'Linen-wrapped column cap etched with travel prayers' },
+    { roll: '4', result: 'Gold-dusted plumb weight used by temple builders' },
+    { roll: '5', result: 'Resin tube containing a lower-stair map fragment' },
+    { roll: '6', result: 'Sunburst reliquary seal and copied prophecy warning' },
+  ],
+  gmNotes: [
+    'Let sand change the map fiction without changing the actual route graph.',
+    'Surface areas should feel exposed and hot; lower areas should feel cooler, darker, and more dangerous.',
+    'The hidden crawl rewards careful search at the entrance and gives a non-obvious bypass.',
+    'The twist is that the reliquary protects the world from a prophecy, not treasure from thieves.',
+  ],
+};
+
 export const mockDungeon = finalizeDungeon(mockDungeonDraft);
 const ruinedShrineDungeon = finalizeDungeon(ruinedShrineDungeonDraft);
 const cavernDungeon = finalizeDungeon(cavernDungeonDraft);
@@ -2345,6 +2612,7 @@ const laboratoryDungeon = finalizeDungeon(laboratoryDungeonDraft);
 const forestRuinDungeon = finalizeDungeon(forestRuinDungeonDraft);
 const volcanicForgeDungeon = finalizeDungeon(volcanicForgeDungeonDraft);
 const frozenRuinDungeon = finalizeDungeon(frozenRuinDungeonDraft);
+const desertTempleDungeon = finalizeDungeon(desertTempleDungeonDraft);
 
 export const mockDungeons: Dungeon[] = [
   mockDungeon,
@@ -2356,4 +2624,5 @@ export const mockDungeons: Dungeon[] = [
   forestRuinDungeon,
   volcanicForgeDungeon,
   frozenRuinDungeon,
+  desertTempleDungeon,
 ];

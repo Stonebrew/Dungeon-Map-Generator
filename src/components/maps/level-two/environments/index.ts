@@ -1,6 +1,7 @@
 export { LevelTwoBlackfenRenderer } from './BlackfenMap';
 export { LevelTwoCavernRenderer } from './CavernMap';
 export { LevelTwoCryptRenderer } from './CryptMap';
+export { LevelTwoDesertTempleRenderer } from './DesertTempleMap';
 export { LevelTwoForestRuinRenderer } from './ForestRuinMap';
 export { LevelTwoFrozenRuinRenderer } from './FrozenRuinMap';
 export { LevelTwoLaboratoryRenderer } from './LaboratoryMap';

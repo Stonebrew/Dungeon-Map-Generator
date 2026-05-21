@@ -35,7 +35,7 @@ const hiddenRouteWords = [
 
 const validLayoutGrammarValues = new Set(['constructedHub', 'linearRoute', 'loopedDungeon', 'organicCave', 'openKeyedArea', 'hazardIslands', 'floodedIslands', 'fragmentedVertical', 'branchingShafts', 'manorFloorplan']);
 const validLayoutRoleValues = new Set(['hub', 'branch', 'loop', 'spoke', 'island', 'threshold', 'deadEnd', 'secretPocket', 'landmark', 'objective', 'transition']);
-const validAreaShapeValues = new Set(['rectilinear', 'organic', 'platform', 'clearing', 'chamber', 'shaft', 'bridge', 'fragment', 'hall', 'ledge', 'pool', 'courtyard', 'channel']);
+const validAreaShapeValues = new Set(['rectilinear', 'organic', 'platform', 'clearing', 'chamber', 'shaft', 'bridge', 'fragment', 'hall', 'ledge', 'pool', 'courtyard', 'channel', 'stair']);
 const validAreaScaleValues = new Set(['tiny', 'small', 'medium', 'large', 'huge']);
 const validOpennessValues = new Set(['enclosed', 'semiOpen', 'open', 'exposed', 'platform']);
 const validEnvironmentRoleValues = new Set(['safe', 'hazardAdjacent', 'hazardCrossing', 'flooded', 'elevated', 'collapsed', 'overgrown', 'ritual', 'mechanical', 'natural', 'fortified']);
