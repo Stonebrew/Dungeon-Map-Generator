@@ -1,18 +1,20 @@
 # Daily Dungeon Print And Export Readiness Plan
 
-This document defines what Daily Dungeon needs before printable maps, browser print, PDFs, and adventure packets can become a credible paid feature. It is planning documentation only; no export implementation exists yet.
+This document defines what Daily Dungeon needs before printable maps, browser print, PDFs, and adventure packets can become a credible paid feature. It is planning documentation only; no print, PDF, PNG, SVG download, or backend export implementation exists yet.
+
+The business premise is that a daily dungeon feed may create interest, but paid value probably depends on whether a GM can quickly turn a dungeon into something table-ready: a clean GM packet, a player-safe map, and printable notes that remove prep work.
 
 ## Current Export Readiness
 
 Daily Dungeon already has strong export ingredients:
 
-- 10 validated mock dungeons with stable IDs, ISO dates, structured room exits, encounter tables, treasure tables, GM notes, and player-safe map rules.
+- 10 validated mock dungeon fixtures with stable IDs, ISO dates, structured room exits, encounter tables, treasure tables, GM notes, and player-safe map rules.
 - A shared `Dungeon` contract in `src/types.ts`.
 - `map.connections` as the source of truth for route rendering and exits.
 - Lantern schematic maps plus premium Level 2 maps for Adventurer and Dungeonwright.
 - Distinct GM and player-safe map rendering, with secret routes and GM markers hidden from player maps.
 - Run Mode and GM View surfaces that prove the data is table-usable.
-- Fixture export via `npm run export:fixtures`.
+- Fixture export via `npm run export:fixtures`, producing backend-seed JSON under `fixtures/dungeons/`.
 
 The app is not print/export ready yet because:
 
@@ -21,6 +23,7 @@ The app is not print/export ready yet because:
 - Maps are responsive UI SVGs, not yet tested at letter/A4 print dimensions.
 - There are no page-break rules, headers, footers, compact stat-free room layouts, or ink-friendly variants.
 - There is no export job model, file generation, download handling, or cached export artifact.
+- The current Export PDF action is intentionally mocked and must not be sold as a real export feature.
 
 ## Data Already Enough For Export
 
@@ -34,7 +37,7 @@ The current `Dungeon` payload is enough to create a first printable packet:
 - System-agnostic inhabitant fields: role, threat, durability, damage, tactics, morale, wants, and leverage.
 - Layout metadata and `map.connections` for map consistency.
 
-This is enough for browser print, a one-page summary, a GM reference packet, and separate map pages.
+This is enough for browser print, a one-page summary, a GM reference packet, and separate map pages. It is also enough to test whether GMs prefer printing, saving to PDF from the browser, or running directly from mobile.
 
 ## Data Missing Or Weak For Export
 
@@ -48,6 +51,8 @@ Before export becomes a paid-value feature, the contract likely needs:
 - Image/export asset IDs once maps are generated or cached server-side.
 - Explicit content warnings or tone tags if public generation is added.
 - Version or revision metadata so exported files can be regenerated consistently.
+- Print/export options such as paper size, orientation, color mode, map-only export, and included sections.
+- A clear safe-handout flag or section model so player-facing pages can be generated without accidentally including GM-only content.
 
 These do not need to block a first browser-print prototype, but they matter before charging money.
 
@@ -64,7 +69,7 @@ The first useful printable packet should include:
 7. Treasure table.
 8. Optional player handout page only when safe handout copy exists.
 
-For private playtesting, this can be browser print. For paid export, it should become a polished PDF or export bundle.
+For private playtesting, this can be browser print. For paid export, it should become a polished PDF or export bundle with reliable GM/player-safe separation.
 
 ## Map Export Readiness
 
@@ -91,7 +96,7 @@ Map quality problems that would hurt paid value:
 
 ### Browser Print CSS
 
-Best first step.
+Best first step and the recommended private-playtest export milestone.
 
 Benefits:
 
@@ -109,7 +114,7 @@ Risks:
 
 ### SVG Map Download
 
-Good early map-specific export.
+Good early map-specific export after print packet structure is tested.
 
 Benefits:
 
@@ -125,7 +130,7 @@ Risks:
 
 ### PNG Map Export
 
-Useful for player handouts and sharing.
+Useful for player handouts, sharing, and eventual VTT-adjacent workflows.
 
 Benefits:
 
@@ -140,7 +145,7 @@ Risks:
 
 ### Client-Generated PDF
 
-Useful after print CSS is proven.
+Useful after print CSS is proven, but only if output quality remains high without a large client dependency burden.
 
 Benefits:
 
@@ -155,7 +160,7 @@ Risks:
 
 ### Server-Side PDF
 
-Best paid export milestone.
+Best paid export milestone if export becomes a central subscription feature.
 
 Benefits:
 
@@ -183,6 +188,7 @@ Scope:
 - Keep the current Export PDF button labeled as a print/export preview until real PDF exists.
 - Use existing dungeon data only.
 - Do not add payment or backend export jobs yet.
+- Treat this as a learning tool, not a final paid export product.
 
 Done when:
 
@@ -203,6 +209,7 @@ Before charging for export as a premium value driver, build:
 - Export option model: paper size, include player map, include GM notes, include handouts.
 - QA snapshots for every environment in GM and player-safe export mode.
 - Download error states and retry behavior.
+- Export audit checks that confirm player-safe maps and handouts exclude GM-only data.
 
 Done when:
 
@@ -236,6 +243,7 @@ Questions to validate before payments:
 - Are premium maps enough to drive Adventurer conversion?
 - Would users pay monthly for daily dungeons, or prefer themed packs?
 - Does Dungeonwright need export bundles more than advanced controls?
+- Would a polished printable packet convert users more strongly than daily generation alone?
 
 ## Before Private Playtesting
 
