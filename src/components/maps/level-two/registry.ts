@@ -1,6 +1,6 @@
 import type { MapStyle } from '../../../types';
-import { LevelTwoBlackfenRenderer, LevelTwoCavernRenderer, LevelTwoCryptRenderer, LevelTwoForestRuinRenderer, LevelTwoLaboratoryRenderer, LevelTwoSewerRenderer, LevelTwoShrineRenderer } from './environments';
-import { blackfenTheme, cavernTheme, cryptTheme, forestRuinTheme, laboratoryTheme, sewerTheme, shrineTheme } from './themes';
+import { LevelTwoBlackfenRenderer, LevelTwoCavernRenderer, LevelTwoCryptRenderer, LevelTwoForestRuinRenderer, LevelTwoLaboratoryRenderer, LevelTwoSewerRenderer, LevelTwoShrineRenderer, LevelTwoVolcanicForgeRenderer } from './environments';
+import { blackfenTheme, cavernTheme, cryptTheme, forestRuinTheme, laboratoryTheme, sewerTheme, shrineTheme, volcanicForgeTheme } from './themes';
 import type { LevelTwoEnvironmentDefinition } from './types';
 
 export const levelTwoEnvironmentRegistry: Partial<Record<MapStyle, LevelTwoEnvironmentDefinition>> = {
@@ -65,6 +65,15 @@ export const levelTwoEnvironmentRegistry: Partial<Record<MapStyle, LevelTwoEnvir
     geometryStrategy: 'constructed',
     rendererLevel: 2,
     routeVariant: 'ruin',
+    playerSafe: { hideGmMarkers: true, hideSecretRoutes: true },
+  },
+  volcanicForge: {
+    mapStyle: 'volcanicForge',
+    renderer: LevelTwoVolcanicForgeRenderer,
+    theme: volcanicForgeTheme,
+    geometryStrategy: 'constructed',
+    rendererLevel: 2,
+    routeVariant: 'volcanicForge',
     playerSafe: { hideGmMarkers: true, hideSecretRoutes: true },
   },
 };

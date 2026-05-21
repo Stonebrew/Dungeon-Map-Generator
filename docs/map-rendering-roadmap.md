@@ -92,7 +92,7 @@ Interaction with `map.connections`:
 
 Level 2 would introduce a deterministic map skinning layer using local tile primitives or generated vector/bitmap assets bundled with the app.
 
-In the current prototype, Level 2 should be explored one map style at a time. Shrine/ruins, crypt, sewer, laboratory/workshop, blackfen/original, cavern, and the first post-original environment, enchanted forest ruin, now use the shared Level 2 renderer family. Building each style incrementally keeps the renderer understandable and makes it easier to compare Level 2 quality against the existing enhanced SVG fallback before converting every map style.
+In the current prototype, Level 2 should be explored one map style at a time. Shrine/ruins, crypt, sewer, laboratory/workshop, blackfen/original, cavern, enchanted forest ruin, and volcanic forge ruin now use the shared Level 2 renderer family. Building each style incrementally keeps the renderer understandable and makes it easier to compare Level 2 quality against the existing enhanced SVG fallback before converting every map style.
 
 Benefits:
 
@@ -187,6 +187,8 @@ Current implementation notes:
 - Blackfen-specific Level 2 tokens cover damp old stone, muted wet floors, water stains, moss, weathered masonry, marsh staining, old shrine/tollhouse accents, and dark cracks.
 - Cavern-specific Level 2 tokens cover rough natural stone, darker cave walls, mineral highlights, underground pools, damp rock, fungus, loose stones, natural tunnels, and shadowed cave edges. Cavern remains a specialized organic renderer and uses irregular chamber silhouettes instead of the rectangular `LevelTwoRoomShell`.
 - Enchanted forest ruin uses the `forestRuin` map style and is the first new environment added after the original six. Its Level 2 renderer uses a hybrid organic/constructed strategy, but presents the map as open keyed forest areas rather than enclosed rooms: soft clearings, partial chapel-wall fragments, root-covered thresholds, direct natural trails from `map.connections`, tree clusters, rocks, vine marks, leaf scatter, glowing mushrooms, fey lights, standing stones, mossy stone, grass/earth wash, and natural path tones. It intentionally does not use the standard rectangular `LevelTwoRoomShell` or the standard corridor treatment.
+- Volcanic forge ruin uses the `volcanicForge` map style. Its Level 2 renderer uses a volcanic-rock-first layout grammar rather than the default constructed-room cadence: a large central forge chamber, smaller basalt platforms, narrow service ledges, grate crossings, and lava channels that divide the safe walking surfaces. Lava, cooled crust, rough basalt edges, and hot cracks should shape the playable space, not merely decorate it. Forge elements such as anvils, plates, and ritual marks should read as built features embedded into volcanic stone, and normal `map.connections` routes must remain visually distinct from molten hazards.
+- Future environments should vary room count, keyed-area size, silhouettes, spacing, and route grammar when the environment calls for it. Premium maps should not all resolve to the same left-to-right set of rectangular rooms connected by similar corridors.
 - Future environments should be added by creating a new environment renderer, adding or reusing theme tokens, and registering the style in `level-two/registry.ts`. If a style is not ready for Level 2 yet, it can temporarily route through the fallback renderer while still using `map.connections`.
 
 Level 2 layer order:

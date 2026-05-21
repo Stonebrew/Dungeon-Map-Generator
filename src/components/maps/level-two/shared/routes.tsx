@@ -37,7 +37,9 @@ export function LevelTwoConnectionRoutes({
             ? { shadow: 56, outer: 44, mid: 35, floor: 27, seam: 4.5, highlight: 1.8 }
             : variant === 'cavern'
               ? { shadow: 58, outer: 43, mid: 33, floor: 24, seam: 3.5, highlight: 1.5 }
-        : { shadow: 46, outer: 38, mid: 30, floor: 23, seam: 5, highlight: 2 };
+              : variant === 'volcanicForge'
+                ? { shadow: 58, outer: 46, mid: 36, floor: 27, seam: 5, highlight: 1.8 }
+                : { shadow: 46, outer: 38, mid: 30, floor: 23, seam: 5, highlight: 2 };
 
   return (
     <>
@@ -71,6 +73,12 @@ export function LevelTwoConnectionRoutes({
             <>
               <path d={path} stroke={theme.wallHighlight} strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.3" strokeDasharray="2 13" />
               <path d={path} stroke={theme.runeGlow} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.24" strokeDasharray="10 18" />
+            </>
+          )}
+          {variant === 'volcanicForge' && (
+            <>
+              <path d={path} stroke={theme.metal} strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.38" strokeDasharray="18 12" />
+              <path d={path} stroke={theme.runeGlow} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.24" strokeDasharray="2 18" />
             </>
           )}
         </g>

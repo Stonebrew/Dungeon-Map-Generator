@@ -511,6 +511,17 @@ function ForestRuinDetails({ palette, isPlayer }: { palette: MapPalette; isPlaye
   );
 }
 
+function VolcanicForgeDetails({ palette, isPlayer }: { palette: MapPalette; isPlayer: boolean }) {
+  return (
+    <g opacity={isPlayer ? '0.42' : '0.62'}>
+      <path d="M88 286 C166 252 238 284 312 254 S462 220 568 270" stroke={palette.water} strokeWidth="18" strokeLinecap="round" fill="none" opacity="0.3" />
+      <path d="M422 96 C470 138 484 214 522 264" stroke={palette.water} strokeWidth="10" strokeLinecap="round" fill="none" opacity="0.24" />
+      <path d="M100 210 h42 M520 330 h50 M254 152 h50" stroke={palette.floorLine} strokeWidth="5" strokeLinecap="round" opacity="0.34" />
+      <CrackMarks stroke={palette.floorLine} points={['M246 144 l18 -9 l10 16', 'M520 298 l20 -12 l14 18', 'M146 368 l16 -10 l12 16']} />
+    </g>
+  );
+}
+
 function BlackfenLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
   const roomNumbers = [
     { x: 130, y: 130, label: '1' },
@@ -552,6 +563,49 @@ function BlackfenLayout({ connections, palette, isPlayer, enhanced }: { connecti
           <MapMarker x={174} y={106} label="T" />
           <MapMarker x={508} y={202} label="H" />
           <MapMarker x={633} y={238} label="B" />
+        </>
+      )}
+      <RoomNumbers rooms={roomNumbers} />
+    </>
+  );
+}
+
+function VolcanicForgeLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
+  const roomNumbers = [
+    { x: 92, y: 250, label: '1' },
+    { x: 238, y: 126, label: '2' },
+    { x: 376, y: 228, label: '3' },
+    { x: 568, y: 242, label: '4' },
+    { x: 420, y: 370, label: '5' },
+    { x: 214, y: 370, label: '6' },
+    { x: 548, y: 116, label: '7' },
+    { x: 104, y: 392, label: '8' },
+  ];
+
+  return (
+    <>
+      <path d="M34 210 C76 132 164 160 220 82 C296 44 392 96 462 70 C548 38 642 128 650 232 C704 302 608 370 518 372 C466 458 354 426 282 428 C194 468 68 442 38 362 C8 302 8 246 34 210 Z" fill={palette.featureFill} opacity="0.42" />
+      {enhanced && <VolcanicForgeDetails palette={palette} isPlayer={isPlayer} />}
+      <ConnectionRoutes connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />
+      <MapRoom x={50} y={218} w={84} h={64} label="1" fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <MapRoom x={196} y={92} w={86} h={68} label="2" fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <MapRoom x={300} y={174} w={152} h={108} label="3" fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <MapRoom x={532} y={202} w={76} h={78} label="4" fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <MapRoom x={374} y={338} w={92} h={70} label="5" fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <MapRoom x={166} y={332} w={96} h={76} label="6" fill={palette.finalFill} palette={palette} enhanced={enhanced} />
+      <MapRoom x={508} y={80} w={82} h={72} label="7" fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <MapRoom x={60} y={364} w={88} h={58} label="8" fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      {enhanced && (
+        <g>
+          <RubbleChips chips={[{ x: 226, y: 154 }, { x: 500, y: 346, r: 6 }, { x: 334, y: 282, r: 4 }, { x: 560, y: 142, r: 5 }]} />
+          <CrackMarks stroke={palette.floorLine} points={['M318 198 l18 -10 l12 14', 'M396 356 l18 -9 l13 14', 'M84 392 l16 -10 l12 16']} />
+        </g>
+      )}
+      {!isPlayer && (
+        <>
+          <MapMarker x={306} y={186} label="H" />
+          <MapMarker x={458} y={348} label="T" />
+          <MapMarker x={244} y={344} label="B" />
         </>
       )}
       <RoomNumbers rooms={roomNumbers} />
@@ -830,6 +884,8 @@ export function EnhancedFallbackMap({ mapData, style, palette, isPlayer, enhance
       return <SewerLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'laboratory':
       return <LaboratoryLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
+    case 'volcanicForge':
+      return <VolcanicForgeLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'blackfen':
     default:
       return <BlackfenLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;

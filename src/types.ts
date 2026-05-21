@@ -6,7 +6,7 @@ export type Threat = 'Low' | 'Moderate' | 'High' | 'Severe';
 
 export type EncounterType = 'Combat' | 'Social' | 'Hazard' | 'Puzzle' | 'Exploration';
 
-export type MapStyle = 'blackfen' | 'shrine' | 'cavern' | 'crypt' | 'sewer' | 'laboratory' | 'forestRuin';
+export type MapStyle = 'blackfen' | 'shrine' | 'cavern' | 'crypt' | 'sewer' | 'laboratory' | 'forestRuin' | 'volcanicForge';
 
 export type MapConnection = {
   from: number;
