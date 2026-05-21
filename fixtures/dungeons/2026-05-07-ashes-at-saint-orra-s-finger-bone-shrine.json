@@ -1,0 +1,527 @@
+{
+  "id": "dd-2026-05-07",
+  "dateIso": "2026-05-07",
+  "date": "May 7, 2026",
+  "title": "Ashes at Saint Orra's Finger-Bone Shrine",
+  "theme": "Small ruined shrine occupied by desperate relic-thieves",
+  "difficulty": "Low",
+  "partySize": "2-4 adventurers",
+  "estimatedPlayTime": "60-90 minutes",
+  "hook": "A village healer needs one saintly finger-bone before dawn, but the roadside shrine has gone silent and its votive candles now burn with smoke-black flames.",
+  "background": "The shrine was a quiet stop for travelers until grave-robbers pried open the reliquary. Their leader discovered the relic is not bone at all, but a key to an older vow buried below the altar.",
+  "map": {
+    "style": "shrine",
+    "gmMapId": "ruined-shrine-gm",
+    "playerMapId": "ruined-shrine-player",
+    "connections": [
+      {
+        "routeStyle": "causeway",
+        "routeDifficulty": "clear",
+        "from": 1,
+        "to": 2,
+        "type": "normal",
+        "path": "M220 216 H260"
+      },
+      {
+        "routeStyle": "causeway",
+        "routeDifficulty": "clear",
+        "from": 1,
+        "to": 6,
+        "type": "normal",
+        "path": "M152 262 V318"
+      },
+      {
+        "routeStyle": "corridor",
+        "routeDifficulty": "clear",
+        "from": 2,
+        "to": 3,
+        "type": "normal",
+        "path": "M388 206 H424"
+      },
+      {
+        "routeStyle": "corridor",
+        "routeDifficulty": "clear",
+        "from": 3,
+        "to": 4,
+        "type": "normal",
+        "path": "M480 254 V310"
+      },
+      {
+        "routeStyle": "corridor",
+        "routeDifficulty": "clear",
+        "from": 4,
+        "to": 5,
+        "type": "normal",
+        "path": "M432 348 H388"
+      },
+      {
+        "routeStyle": "corridor",
+        "routeDifficulty": "clear",
+        "from": 5,
+        "to": 6,
+        "type": "normal",
+        "path": "M270 344 H216"
+      },
+      {
+        "routeStyle": "crawl",
+        "routeDifficulty": "hidden",
+        "from": 2,
+        "to": 5,
+        "type": "secret",
+        "note": "Truthful vow hidden stair",
+        "path": "M318 258 C304 284 292 304 274 326"
+      }
+    ],
+    "playerSafe": {
+      "hideSecrets": true,
+      "hideTreasure": true,
+      "hideHazards": true,
+      "hideGmNotes": true
+    },
+    "layout": {
+      "grammar": "constructedHub",
+      "notes": "Compact ruined shrine with threshold, ritual hub, side chambers, and a small objective room."
+    }
+  },
+  "mapStyle": "shrine",
+  "mapPlaceholder": "ruined-shrine-gm",
+  "playerMapPlaceholder": "ruined-shrine-player",
+  "rooms": [
+    {
+      "layoutRole": "threshold",
+      "areaShape": "courtyard",
+      "areaScale": "medium",
+      "openness": "semiOpen",
+      "environmentRole": "collapsed",
+      "number": 1,
+      "name": "Broken Prayer Yard",
+      "readAloud": "A low wall surrounds cracked flagstones and rain-dark votive bowls. The shrine door hangs open, breathing smoke.",
+      "gmNotes": "Fresh wagon ruts end at the wall. A frightened thief hides under the empty alms cart.",
+      "threat": "Low",
+      "tags": [
+        "Entrance",
+        "Tracks",
+        "Social clue"
+      ],
+      "inhabitants": [
+        {
+          "name": "Panicked Relic-Thief",
+          "role": "Scout lookout",
+          "threat": "Low",
+          "durability": "Fragile",
+          "damage": "Light",
+          "tactics": "Hide, lie badly, run toward the road",
+          "morale": "Surrenders if promised protection",
+          "wants": "To leave before the shrine wakes fully",
+          "leverage": "Knows the leader took the relic under the altar"
+        }
+      ],
+      "treasure": "A pouch of pilgrim coins hidden in the alms cart axle.",
+      "secrets": "Old scratch marks show the wall stones can be climbed silently.",
+      "exits": "Door to Room 2, root-split path to Room 6.",
+      "id": "dd-2026-05-07-room-01",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-07-room-01-to-dd-2026-05-07-room-02",
+          "toRoomId": "dd-2026-05-07-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Route to Room 2",
+          "description": "Door to Room 2, root-split path to Room 6."
+        },
+        {
+          "id": "dd-2026-05-07-room-01-to-dd-2026-05-07-room-06",
+          "toRoomId": "dd-2026-05-07-room-06",
+          "toRoomNumber": 6,
+          "type": "normal",
+          "label": "Route to Room 6",
+          "description": "Door to Room 2, root-split path to Room 6."
+        }
+      ]
+    },
+    {
+      "layoutRole": "hub",
+      "areaShape": "chamber",
+      "areaScale": "large",
+      "openness": "enclosed",
+      "environmentRole": "ritual",
+      "number": 2,
+      "name": "Smoke-Black Nave",
+      "readAloud": "Charred benches face a tiny altar. Every candle flame leans toward a crack beneath the saint statue.",
+      "gmNotes": "Speaking a sincere vow causes one candle to burn clean and reveals the altar seam.",
+      "threat": "Moderate",
+      "tags": [
+        "Puzzle",
+        "Ritual",
+        "Smoke"
+      ],
+      "inhabitants": [],
+      "treasure": "A brass votive cup useful to the village healer.",
+      "secrets": "The altar slides aside if a truthful vow is spoken over the cup.",
+      "exits": "Back to Room 1, side arch to Room 3, hidden stair to Room 5.",
+      "id": "dd-2026-05-07-room-02",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-07-room-02-to-dd-2026-05-07-room-01",
+          "toRoomId": "dd-2026-05-07-room-01",
+          "toRoomNumber": 1,
+          "type": "normal",
+          "label": "Route to Room 1",
+          "description": "Back to Room 1, side arch to Room 3, hidden stair to Room 5."
+        },
+        {
+          "id": "dd-2026-05-07-room-02-to-dd-2026-05-07-room-03",
+          "toRoomId": "dd-2026-05-07-room-03",
+          "toRoomNumber": 3,
+          "type": "normal",
+          "label": "Route to Room 3",
+          "description": "Back to Room 1, side arch to Room 3, hidden stair to Room 5."
+        },
+        {
+          "id": "dd-2026-05-07-room-02-to-dd-2026-05-07-room-05",
+          "toRoomId": "dd-2026-05-07-room-05",
+          "toRoomNumber": 5,
+          "type": "secret",
+          "label": "Truthful vow hidden stair",
+          "description": "Back to Room 1, side arch to Room 3, hidden stair to Room 5.",
+          "note": "Truthful vow hidden stair"
+        }
+      ]
+    },
+    {
+      "layoutRole": "branch",
+      "areaShape": "chamber",
+      "areaScale": "small",
+      "openness": "enclosed",
+      "environmentRole": "ritual",
+      "number": 3,
+      "name": "Pilgrim Store",
+      "readAloud": "Shelves of damp blankets, travel bread, and cracked clay icons slump against a bowed wall.",
+      "gmNotes": "A swarm of shrine vermin nests behind the icon shelf and reacts to loud searching.",
+      "threat": "Low",
+      "tags": [
+        "Supplies",
+        "Exploration",
+        "Vermin"
+      ],
+      "inhabitants": [
+        {
+          "name": "Shrine Vermin Swarm",
+          "role": "Swarm scavengers",
+          "threat": "Low",
+          "durability": "Fragile",
+          "damage": "Light",
+          "tactics": "Surge from shelves, scatter when exposed to smoke",
+          "morale": "Disperses if the shelf is overturned",
+          "wants": "Warmth and crumbs",
+          "leverage": "Smoke or food draws them away"
+        }
+      ],
+      "treasure": "Dry lamp oil and a travel cloak marked with the thieves' symbol.",
+      "secrets": "A loose icon hides a message: \"The saint is a door.\"",
+      "exits": "Arch to Room 2, cracked wall to Room 4.",
+      "id": "dd-2026-05-07-room-03",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-07-room-03-to-dd-2026-05-07-room-02",
+          "toRoomId": "dd-2026-05-07-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Route to Room 2",
+          "description": "Arch to Room 2, cracked wall to Room 4."
+        },
+        {
+          "id": "dd-2026-05-07-room-03-to-dd-2026-05-07-room-04",
+          "toRoomId": "dd-2026-05-07-room-04",
+          "toRoomNumber": 4,
+          "type": "normal",
+          "label": "Route to Room 4",
+          "description": "Arch to Room 2, cracked wall to Room 4."
+        }
+      ]
+    },
+    {
+      "layoutRole": "deadEnd",
+      "areaShape": "fragment",
+      "areaScale": "small",
+      "openness": "semiOpen",
+      "environmentRole": "collapsed",
+      "number": 4,
+      "name": "Collapsed Bell Niche",
+      "readAloud": "A cracked bronze handbell rests in rubble beneath a fallen roof beam. Rain taps out a nervous rhythm.",
+      "gmNotes": "Ringing the bell calmly quiets the smoke for a scene; ringing it wildly attracts the thieves.",
+      "threat": "Moderate",
+      "tags": [
+        "Hazard",
+        "Tool",
+        "Unstable roof"
+      ],
+      "inhabitants": [],
+      "treasure": "The cracked bell can be repaired by a village smith as a favor-token.",
+      "secrets": "Under the rubble is a pilgrim badge naming Saint Orra as \"keeper of sealed mercy.\"",
+      "exits": "Cracked wall to Room 3, crawl to Room 5.",
+      "id": "dd-2026-05-07-room-04",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-07-room-04-to-dd-2026-05-07-room-03",
+          "toRoomId": "dd-2026-05-07-room-03",
+          "toRoomNumber": 3,
+          "type": "normal",
+          "label": "Route to Room 3",
+          "description": "Cracked wall to Room 3, crawl to Room 5."
+        },
+        {
+          "id": "dd-2026-05-07-room-04-to-dd-2026-05-07-room-05",
+          "toRoomId": "dd-2026-05-07-room-05",
+          "toRoomNumber": 5,
+          "type": "normal",
+          "label": "Route to Room 5",
+          "description": "Cracked wall to Room 3, crawl to Room 5."
+        }
+      ]
+    },
+    {
+      "layoutRole": "spoke",
+      "areaShape": "hall",
+      "areaScale": "medium",
+      "openness": "enclosed",
+      "environmentRole": "safe",
+      "number": 5,
+      "name": "Vow Cellar",
+      "readAloud": "Roots pierce the cellar walls around hundreds of wax-sealed scraps tied to old string.",
+      "gmNotes": "The scraps are vows. Breaking one releases a whisper that reveals the thief leader's fear.",
+      "threat": "Moderate",
+      "tags": [
+        "Lore",
+        "Secret",
+        "Negotiation"
+      ],
+      "inhabitants": [
+        {
+          "name": "Ashen Vow-Spirit",
+          "role": "Trickster guardian",
+          "threat": "Moderate",
+          "durability": "Standard",
+          "damage": "Light",
+          "tactics": "Ask loaded questions, separate oathbreakers, test sincerity",
+          "morale": "Lets sincere pilgrims pass",
+          "wants": "A broken vow repaired",
+          "leverage": "Accepts a new promise that protects the healer"
+        }
+      ],
+      "treasure": "A saint-thread charm that helps locate the missing relic.",
+      "secrets": "The \"finger-bone\" is a carved key wrapped in bone dust.",
+      "exits": "Hidden stair to Room 2, crawl to Room 4, low passage to Room 6.",
+      "id": "dd-2026-05-07-room-05",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-07-room-05-to-dd-2026-05-07-room-04",
+          "toRoomId": "dd-2026-05-07-room-04",
+          "toRoomNumber": 4,
+          "type": "normal",
+          "label": "Route to Room 4",
+          "description": "Hidden stair to Room 2, crawl to Room 4, low passage to Room 6."
+        },
+        {
+          "id": "dd-2026-05-07-room-05-to-dd-2026-05-07-room-06",
+          "toRoomId": "dd-2026-05-07-room-06",
+          "toRoomNumber": 6,
+          "type": "normal",
+          "label": "Route to Room 6",
+          "description": "Hidden stair to Room 2, crawl to Room 4, low passage to Room 6."
+        },
+        {
+          "id": "dd-2026-05-07-room-05-to-dd-2026-05-07-room-02",
+          "toRoomId": "dd-2026-05-07-room-02",
+          "toRoomNumber": 2,
+          "type": "secret",
+          "label": "Truthful vow hidden stair",
+          "description": "Hidden stair to Room 2, crawl to Room 4, low passage to Room 6.",
+          "note": "Truthful vow hidden stair"
+        }
+      ]
+    },
+    {
+      "layoutRole": "objective",
+      "areaShape": "chamber",
+      "areaScale": "small",
+      "openness": "enclosed",
+      "environmentRole": "ritual",
+      "number": 6,
+      "name": "Reliquary Root",
+      "readAloud": "A root like a bent finger curls around a silver reliquary. A thief captain kneels beside it, whispering apologies.",
+      "gmNotes": "The captain can be fought, exposed, or convinced to give up the key if offered a way to repay the village.",
+      "threat": "High",
+      "tags": [
+        "Finale",
+        "Relic",
+        "Moral choice"
+      ],
+      "inhabitants": [
+        {
+          "name": "Relic-Thief Captain",
+          "role": "Leader duelist",
+          "threat": "Moderate",
+          "durability": "Standard",
+          "damage": "Serious",
+          "tactics": "Guard the reliquary, bargain when cornered, use smoke for cover",
+          "morale": "Yields if the spirit condemns them by name",
+          "wants": "A cure for their sibling and a story that makes the theft forgivable",
+          "leverage": "The healer can use the relic without keeping it"
+        }
+      ],
+      "treasure": "The saint key, a silver reliquary, and a promise of village gratitude.",
+      "secrets": "The relic opens an older shrine elsewhere, setting up a future hook.",
+      "exits": "Low passage to Room 5, root-split path to Room 1 and the prayer yard.",
+      "id": "dd-2026-05-07-room-06",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-07-room-06-to-dd-2026-05-07-room-01",
+          "toRoomId": "dd-2026-05-07-room-01",
+          "toRoomNumber": 1,
+          "type": "normal",
+          "label": "Route to Room 1",
+          "description": "Low passage to Room 5, root-split path to Room 1 and the prayer yard."
+        },
+        {
+          "id": "dd-2026-05-07-room-06-to-dd-2026-05-07-room-05",
+          "toRoomId": "dd-2026-05-07-room-05",
+          "toRoomNumber": 5,
+          "type": "normal",
+          "label": "Route to Room 5",
+          "description": "Low passage to Room 5, root-split path to Room 1 and the prayer yard."
+        }
+      ]
+    }
+  ],
+  "encounterTables": {
+    "wandering": [
+      {
+        "roll": "1",
+        "result": "A thief tries to sneak out with a blanket-wrapped bundle",
+        "type": "Social"
+      },
+      {
+        "roll": "2",
+        "result": "Smoke forms a accusing face near the altar",
+        "type": "Exploration"
+      },
+      {
+        "roll": "3",
+        "result": "Shrine vermin swarm across a dropped pack",
+        "type": "Combat"
+      },
+      {
+        "roll": "4",
+        "result": "A villager arrives asking whether the healer will live",
+        "type": "Social"
+      },
+      {
+        "roll": "5",
+        "result": "The cracked bell rings once by itself",
+        "type": "Puzzle"
+      },
+      {
+        "roll": "6",
+        "result": "Falling roof fragments block the obvious path",
+        "type": "Hazard"
+      }
+    ],
+    "environmental": [
+      {
+        "roll": "1",
+        "result": "Clean flame points toward a secret seam",
+        "type": "Exploration"
+      },
+      {
+        "roll": "2",
+        "result": "A vow scrap sticks to someone's boot",
+        "type": "Puzzle"
+      },
+      {
+        "roll": "3",
+        "result": "Rainwater reveals fresh footprints",
+        "type": "Exploration"
+      },
+      {
+        "roll": "4",
+        "result": "Smoke stings eyes and muffles speech",
+        "type": "Hazard"
+      },
+      {
+        "roll": "5",
+        "result": "The saint statue weeps wax",
+        "type": "Puzzle"
+      },
+      {
+        "roll": "6",
+        "result": "A thief calls for parley from cover",
+        "type": "Social"
+      }
+    ],
+    "complications": [
+      {
+        "roll": "1",
+        "result": "The relic is moved to a new hiding place",
+        "type": "Exploration"
+      },
+      {
+        "roll": "2",
+        "result": "A sincere vow becomes magically binding for the scene",
+        "type": "Puzzle"
+      },
+      {
+        "roll": "3",
+        "result": "A frightened thief points blame at the wrong person",
+        "type": "Social"
+      },
+      {
+        "roll": "4",
+        "result": "Smoke draws a hostile guardian shape",
+        "type": "Combat"
+      },
+      {
+        "roll": "5",
+        "result": "The floor gives way into the cellar crawl",
+        "type": "Hazard"
+      },
+      {
+        "roll": "6",
+        "result": "The healer's messenger begs the party to hurry",
+        "type": "Social"
+      }
+    ]
+  },
+  "treasureTable": [
+    {
+      "roll": "1",
+      "result": "Pilgrim coins in a waxed cloth"
+    },
+    {
+      "roll": "2",
+      "result": "A repaired handbell owed as a future favor"
+    },
+    {
+      "roll": "3",
+      "result": "Saint-thread charm tied to the true relic"
+    },
+    {
+      "roll": "4",
+      "result": "Silver reliquary with village importance"
+    },
+    {
+      "roll": "5",
+      "result": "Lamp oil and clean votive candles"
+    },
+    {
+      "roll": "6",
+      "result": "The carved saint key and a future shrine clue"
+    }
+  ],
+  "gmNotes": [
+    "This dungeon should move quickly; keep pressure on the healer's deadline.",
+    "The thief captain is not cruel, only desperate.",
+    "The twist is that the finger-bone is a key, not a body relic.",
+    "A good ending gets the healer what they need without permanently desecrating the shrine."
+  ]
+}

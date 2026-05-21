@@ -1,0 +1,540 @@
+{
+  "id": "dd-2026-05-12",
+  "dateIso": "2026-05-12",
+  "date": "May 12, 2026",
+  "title": "The Rootbound Chapel of Greenhollow",
+  "theme": "Enchanted forest ruin wrapped around an old stone chapel",
+  "difficulty": "Moderate",
+  "partySize": "3-5 adventurers",
+  "estimatedPlayTime": "2 hours",
+  "hook": "A hunter followed singing lights into Greenhollow and returned with leaves growing from their shadow. The village asks the party to enter the chapel ruin before the next moonrise claims more people.",
+  "background": "The chapel marked a pact between villagers and forest spirits. A woodcutter lord broke the pact by stealing the chapel bell, and now roots, fey signs, beasts, and old stone wards are trying to decide whether the village still deserves mercy.",
+  "map": {
+    "style": "forestRuin",
+    "gmMapId": "forest-ruin-gm",
+    "playerMapId": "forest-ruin-player",
+    "connections": [
+      {
+        "routeStyle": "trail",
+        "routeDifficulty": "clear",
+        "from": 1,
+        "to": 2,
+        "type": "normal",
+        "path": "M182 246 C218 224 236 204 232 190"
+      },
+      {
+        "routeStyle": "trail",
+        "routeDifficulty": "clear",
+        "from": 1,
+        "to": 6,
+        "type": "normal",
+        "path": "M126 290 V322"
+      },
+      {
+        "routeStyle": "trail",
+        "routeDifficulty": "clear",
+        "from": 2,
+        "to": 3,
+        "type": "normal",
+        "path": "M352 190 H420"
+      },
+      {
+        "routeStyle": "trail",
+        "routeDifficulty": "clear",
+        "from": 3,
+        "to": 4,
+        "type": "normal",
+        "path": "M506 232 C530 262 540 292 536 306"
+      },
+      {
+        "routeStyle": "trail",
+        "routeDifficulty": "clear",
+        "from": 4,
+        "to": 5,
+        "type": "normal",
+        "path": "M476 348 H394"
+      },
+      {
+        "routeStyle": "trail",
+        "routeDifficulty": "clear",
+        "from": 5,
+        "to": 6,
+        "type": "normal",
+        "path": "M276 356 H220"
+      },
+      {
+        "routeStyle": "crawl",
+        "routeDifficulty": "hidden",
+        "from": 2,
+        "to": 5,
+        "type": "secret",
+        "note": "Hidden root stair under the choir stones",
+        "path": "M304 234 C312 270 322 294 334 308"
+      }
+    ],
+    "playerSafe": {
+      "hideSecrets": true,
+      "hideTreasure": true,
+      "hideHazards": true,
+      "hideGmNotes": true,
+      "description": "A mossy ruined chapel swallowed by old trees, with visible stone chambers and forest paths but no marked secrets."
+    },
+    "layout": {
+      "grammar": "openKeyedArea",
+      "notes": "Open forest keyed-area map with clearings, landmarks, trails, and overgrown ruin fragments."
+    }
+  },
+  "mapStyle": "forestRuin",
+  "mapPlaceholder": "forest-ruin-gm",
+  "playerMapPlaceholder": "forest-ruin-player",
+  "rooms": [
+    {
+      "layoutRole": "threshold",
+      "areaShape": "clearing",
+      "areaScale": "medium",
+      "openness": "open",
+      "environmentRole": "overgrown",
+      "number": 1,
+      "name": "Briar-Latched Gate",
+      "readAloud": "A leaning stone gate stands in a wall of thorn and ivy. Tiny lights blink between the leaves like watchful eyes.",
+      "gmNotes": "The briars part for anyone who speaks respectfully to the chapel or offers water to the roots.",
+      "threat": "Low",
+      "tags": [
+        "Entrance",
+        "Fey signs",
+        "Negotiation"
+      ],
+      "inhabitants": [
+        {
+          "name": "Thorn-Touched Pixies",
+          "role": "Trickster scouts",
+          "threat": "Low",
+          "durability": "Fragile",
+          "damage": "Light",
+          "tactics": "Distract with lights, tangle packs, retreat into thorns",
+          "morale": "Scatter if treated kindly or if iron is shown",
+          "wants": "Proof the party is not here to cut or burn",
+          "leverage": "They love songs, honey, and promises made aloud"
+        }
+      ],
+      "treasure": "A silver leaf token caught in the gate latch.",
+      "secrets": "The lights repeat the route to the old choir in a three-note pattern.",
+      "exits": "Root path to Room 2, mossy side path to Room 6.",
+      "id": "dd-2026-05-12-room-01",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-12-room-01-to-dd-2026-05-12-room-02",
+          "toRoomId": "dd-2026-05-12-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Route to Room 2",
+          "description": "Root path to Room 2, mossy side path to Room 6."
+        },
+        {
+          "id": "dd-2026-05-12-room-01-to-dd-2026-05-12-room-06",
+          "toRoomId": "dd-2026-05-12-room-06",
+          "toRoomNumber": 6,
+          "type": "normal",
+          "label": "Route to Room 6",
+          "description": "Root path to Room 2, mossy side path to Room 6."
+        }
+      ]
+    },
+    {
+      "layoutRole": "landmark",
+      "areaShape": "fragment",
+      "areaScale": "medium",
+      "openness": "open",
+      "environmentRole": "ritual",
+      "number": 2,
+      "name": "Moon-Moss Narthex",
+      "readAloud": "Broken flagstones glow under a carpet of blue-green moss. Root shadows move even when the wind is still.",
+      "gmNotes": "Stepping only on glowing moss avoids a root snare. The hidden stair to Room 5 opens if the old pact verse is spoken.",
+      "threat": "Moderate",
+      "tags": [
+        "Puzzle",
+        "Hazard",
+        "Secret route"
+      ],
+      "inhabitants": [],
+      "treasure": "A cracked pilgrim bowl that keeps water cool and clean.",
+      "secrets": "A hidden root stair under the choir stones curls down to Room 5.",
+      "exits": "Gate path to Room 1, chapel aisle to Room 3, hidden root stair to Room 5.",
+      "id": "dd-2026-05-12-room-02",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-12-room-02-to-dd-2026-05-12-room-01",
+          "toRoomId": "dd-2026-05-12-room-01",
+          "toRoomNumber": 1,
+          "type": "normal",
+          "label": "Route to Room 1",
+          "description": "Gate path to Room 1, chapel aisle to Room 3, hidden root stair to Room 5."
+        },
+        {
+          "id": "dd-2026-05-12-room-02-to-dd-2026-05-12-room-03",
+          "toRoomId": "dd-2026-05-12-room-03",
+          "toRoomNumber": 3,
+          "type": "normal",
+          "label": "Route to Room 3",
+          "description": "Gate path to Room 1, chapel aisle to Room 3, hidden root stair to Room 5."
+        },
+        {
+          "id": "dd-2026-05-12-room-02-to-dd-2026-05-12-room-05",
+          "toRoomId": "dd-2026-05-12-room-05",
+          "toRoomNumber": 5,
+          "type": "secret",
+          "label": "Hidden root stair under the choir stones",
+          "description": "Gate path to Room 1, chapel aisle to Room 3, hidden root stair to Room 5.",
+          "note": "Hidden root stair under the choir stones"
+        }
+      ]
+    },
+    {
+      "layoutRole": "branch",
+      "areaShape": "clearing",
+      "areaScale": "small",
+      "openness": "open",
+      "environmentRole": "natural",
+      "number": 3,
+      "name": "Fallen Saint Garden",
+      "readAloud": "A toppled statue lies beneath flowering vines. Bees hum inside its hollow chest, and carved saints wear crowns of leaves.",
+      "gmNotes": "The bees are calm unless the statue is struck. The statue remembers who stole the bell, but answers only in plant signs.",
+      "threat": "Moderate",
+      "tags": [
+        "Exploration",
+        "Lore",
+        "Beasts"
+      ],
+      "inhabitants": [
+        {
+          "name": "Honey-Drunk Forest Beasts",
+          "role": "Guardian beasts",
+          "threat": "Moderate",
+          "durability": "Standard",
+          "damage": "Serious",
+          "tactics": "Warn first, charge intruders who harm the garden",
+          "morale": "Calm if fed or if the statue is respected",
+          "wants": "Quiet, flowers, and the bell returned",
+          "leverage": "Fresh fruit or gentle repair earns safe passage"
+        }
+      ],
+      "treasure": "A saint medallion buried in a flower bed.",
+      "secrets": "Pollen on the statue points toward the bell thief family crest.",
+      "exits": "West to Room 2, root-wrapped arch to Room 4.",
+      "id": "dd-2026-05-12-room-03",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-12-room-03-to-dd-2026-05-12-room-02",
+          "toRoomId": "dd-2026-05-12-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Route to Room 2",
+          "description": "West to Room 2, root-wrapped arch to Room 4."
+        },
+        {
+          "id": "dd-2026-05-12-room-03-to-dd-2026-05-12-room-04",
+          "toRoomId": "dd-2026-05-12-room-04",
+          "toRoomNumber": 4,
+          "type": "normal",
+          "label": "Route to Room 4",
+          "description": "West to Room 2, root-wrapped arch to Room 4."
+        }
+      ]
+    },
+    {
+      "layoutRole": "objective",
+      "areaShape": "clearing",
+      "areaScale": "large",
+      "openness": "open",
+      "environmentRole": "ritual",
+      "number": 4,
+      "name": "Bell-Oak Crossing",
+      "readAloud": "A huge oak grows through a collapsed bell tower. Its branches hold a green-bronze bell that tolls without sound.",
+      "gmNotes": "The silent bell reveals the final answer if rung with wood, not metal. A harsh strike calls angry roots.",
+      "threat": "High",
+      "tags": [
+        "Hazard",
+        "Objective",
+        "Vertical ruin"
+      ],
+      "inhabitants": [
+        {
+          "name": "Rootbound Chapel Guardian",
+          "role": "Brute guardian",
+          "threat": "High",
+          "durability": "Tough",
+          "damage": "Serious",
+          "tactics": "Pin intruders with roots, shield the bell, shove foes from broken stairs",
+          "morale": "Stops if the stolen bell story is acknowledged",
+          "wants": "The pact restored and the bell left unharmed",
+          "leverage": "The guardian obeys anyone carrying the silver leaf token"
+        }
+      ],
+      "treasure": "A green-bronze bell tongue wrapped in living bark.",
+      "secrets": "The bell is a witness, not the source of the curse.",
+      "exits": "Root-wrapped arch to Room 3, broken stair to Room 5.",
+      "id": "dd-2026-05-12-room-04",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-12-room-04-to-dd-2026-05-12-room-03",
+          "toRoomId": "dd-2026-05-12-room-03",
+          "toRoomNumber": 3,
+          "type": "normal",
+          "label": "Route to Room 3",
+          "description": "Root-wrapped arch to Room 3, broken stair to Room 5."
+        },
+        {
+          "id": "dd-2026-05-12-room-04-to-dd-2026-05-12-room-05",
+          "toRoomId": "dd-2026-05-12-room-05",
+          "toRoomNumber": 5,
+          "type": "normal",
+          "label": "Route to Room 5",
+          "description": "Root-wrapped arch to Room 3, broken stair to Room 5."
+        }
+      ]
+    },
+    {
+      "layoutRole": "hub",
+      "areaShape": "clearing",
+      "areaScale": "medium",
+      "openness": "open",
+      "environmentRole": "overgrown",
+      "number": 5,
+      "name": "Choir of Listening Roots",
+      "readAloud": "Roots hang from the ceiling like organ pipes. Whispered memories pass through them in voices too old to place.",
+      "gmNotes": "This room can reveal the twist: the village profited from the broken pact and hid the stolen bell in the manor.",
+      "threat": "Moderate",
+      "tags": [
+        "Social",
+        "Secret",
+        "Revelation"
+      ],
+      "inhabitants": [
+        {
+          "name": "Greenhollow Root Chorus",
+          "role": "Social spirits",
+          "threat": "Moderate if mocked",
+          "durability": "Tough",
+          "damage": "Light",
+          "tactics": "Ask binding questions, reveal shameful memories, block exits with roots",
+          "morale": "Listen if the party admits uncertainty",
+          "wants": "A true promise about the stolen bell",
+          "leverage": "They cannot resist a sincerely spoken apology"
+        }
+      ],
+      "treasure": "A seed pearl grown around a chapel note.",
+      "secrets": "The hidden root stair climbs back to Room 2; the roots know the bell was stolen by the woodcutter lord.",
+      "exits": "Broken stair to Room 4, mossy aisle to Room 6, hidden root stair to Room 2.",
+      "id": "dd-2026-05-12-room-05",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-12-room-05-to-dd-2026-05-12-room-04",
+          "toRoomId": "dd-2026-05-12-room-04",
+          "toRoomNumber": 4,
+          "type": "normal",
+          "label": "Route to Room 4",
+          "description": "Broken stair to Room 4, mossy aisle to Room 6, hidden root stair to Room 2."
+        },
+        {
+          "id": "dd-2026-05-12-room-05-to-dd-2026-05-12-room-06",
+          "toRoomId": "dd-2026-05-12-room-06",
+          "toRoomNumber": 6,
+          "type": "normal",
+          "label": "Route to Room 6",
+          "description": "Broken stair to Room 4, mossy aisle to Room 6, hidden root stair to Room 2."
+        },
+        {
+          "id": "dd-2026-05-12-room-05-to-dd-2026-05-12-room-02",
+          "toRoomId": "dd-2026-05-12-room-02",
+          "toRoomNumber": 2,
+          "type": "secret",
+          "label": "Hidden root stair under the choir stones",
+          "description": "Broken stair to Room 4, mossy aisle to Room 6, hidden root stair to Room 2.",
+          "note": "Hidden root stair under the choir stones"
+        }
+      ]
+    },
+    {
+      "layoutRole": "secretPocket",
+      "areaShape": "fragment",
+      "areaScale": "small",
+      "openness": "semiOpen",
+      "environmentRole": "collapsed",
+      "number": 6,
+      "name": "Greenhollow Reliquary",
+      "readAloud": "A roofless reliquary opens to the stars. Ferns grow around an empty bell cradle, and a circle of stones waits in silence.",
+      "gmNotes": "The ending can be combat, bargaining, or oath repair. The forest wants a public promise and the bell returned, not blood.",
+      "threat": "Severe",
+      "tags": [
+        "Finale",
+        "Ritual",
+        "Reward"
+      ],
+      "inhabitants": [
+        {
+          "name": "The Chapel-Wood Spirit",
+          "role": "Leader spirit",
+          "threat": "Severe",
+          "durability": "Very Tough",
+          "damage": "Severe",
+          "tactics": "Split the ground, dim lights, command beasts and roots",
+          "morale": "Accepts a binding vow and proof the bell will be returned",
+          "wants": "Restored pact, truthful memory, and protection for the old trees",
+          "leverage": "It must honor promises made inside the reliquary circle"
+        }
+      ],
+      "treasure": "A blessing of safe passage through Greenhollow, the seed pearl reward, and village gratitude if the truth is carried home.",
+      "secrets": "The reliquary stones show the woodcutter lord receiving the stolen bell from frightened priests.",
+      "exits": "Mossy side path to Room 1, mossy aisle to Room 5, deer trail back to Greenhollow village.",
+      "id": "dd-2026-05-12-room-06",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-12-room-06-to-dd-2026-05-12-room-01",
+          "toRoomId": "dd-2026-05-12-room-01",
+          "toRoomNumber": 1,
+          "type": "normal",
+          "label": "Route to Room 1",
+          "description": "Mossy side path to Room 1, mossy aisle to Room 5, deer trail back to Greenhollow village."
+        },
+        {
+          "id": "dd-2026-05-12-room-06-to-dd-2026-05-12-room-05",
+          "toRoomId": "dd-2026-05-12-room-05",
+          "toRoomNumber": 5,
+          "type": "normal",
+          "label": "Route to Room 5",
+          "description": "Mossy side path to Room 1, mossy aisle to Room 5, deer trail back to Greenhollow village."
+        }
+      ]
+    }
+  ],
+  "encounterTables": {
+    "wandering": [
+      {
+        "roll": "1",
+        "result": "Thorn-touched pixies test the party with a harmless but annoying trick",
+        "type": "Social"
+      },
+      {
+        "roll": "2",
+        "result": "Forest beasts follow at the edge of torchlight",
+        "type": "Exploration"
+      },
+      {
+        "roll": "3",
+        "result": "A root snare tightens across the next doorway",
+        "type": "Hazard"
+      },
+      {
+        "roll": "4",
+        "result": "A lost villager whispers from behind a tree that was not there before",
+        "type": "Social"
+      },
+      {
+        "roll": "5",
+        "result": "Fey lights mark a safe path, then split into two trails",
+        "type": "Puzzle"
+      },
+      {
+        "roll": "6",
+        "result": "The silent bell tolls and every plant leans toward Room 4",
+        "type": "Exploration"
+      }
+    ],
+    "environmental": [
+      {
+        "roll": "1",
+        "result": "Glowing moss reveals recent footprints",
+        "type": "Exploration"
+      },
+      {
+        "roll": "2",
+        "result": "Falling leaves briefly spell a warning",
+        "type": "Puzzle"
+      },
+      {
+        "roll": "3",
+        "result": "A stone shifts underfoot and exposes old roots",
+        "type": "Hazard"
+      },
+      {
+        "roll": "4",
+        "result": "Birdsong repeats something the party just said",
+        "type": "Social"
+      },
+      {
+        "roll": "5",
+        "result": "Moonlight makes hidden carvings visible",
+        "type": "Exploration"
+      },
+      {
+        "roll": "6",
+        "result": "The forest grows quiet before a guardian arrives",
+        "type": "Combat"
+      }
+    ],
+    "complications": [
+      {
+        "roll": "1",
+        "result": "A promise spoken casually begins to bind",
+        "type": "Puzzle"
+      },
+      {
+        "roll": "2",
+        "result": "Roots separate the rear of the group for a scene",
+        "type": "Hazard"
+      },
+      {
+        "roll": "3",
+        "result": "A helpful fey asks for a memory as payment",
+        "type": "Social"
+      },
+      {
+        "roll": "4",
+        "result": "The guardian mistakes the party for bell thieves",
+        "type": "Combat"
+      },
+      {
+        "roll": "5",
+        "result": "A clue grows over with moss unless copied quickly",
+        "type": "Exploration"
+      },
+      {
+        "roll": "6",
+        "result": "The village bell rings far away at the wrong time",
+        "type": "Puzzle"
+      }
+    ]
+  },
+  "treasureTable": [
+    {
+      "roll": "1",
+      "result": "Silver leaf token that opens thorn gates"
+    },
+    {
+      "roll": "2",
+      "result": "Pilgrim bowl that keeps water cool and clean"
+    },
+    {
+      "roll": "3",
+      "result": "Saint medallion wrapped in flowering vine"
+    },
+    {
+      "roll": "4",
+      "result": "Green-bronze bell tongue wrapped in living bark"
+    },
+    {
+      "roll": "5",
+      "result": "Seed pearl grown around a confession note"
+    },
+    {
+      "roll": "6",
+      "result": "Forest blessing and proof of the broken pact"
+    }
+  ],
+  "gmNotes": [
+    "Make the ruin feel watchful rather than hostile at first.",
+    "Most encounters can be softened through respect, gifts, or truthful promises.",
+    "The twist is that the village benefited from the stolen bell and forgot on purpose.",
+    "A strong ending asks the party what promise they are willing to carry back into public."
+  ]
+}

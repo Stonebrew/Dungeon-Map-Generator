@@ -138,3 +138,11 @@ Future generation should create the visual map layout, `map.connections`, visual
 ## Validation
 
 Run `npm run validate:dungeons` to validate all mock dungeons. The script checks room references, duplicate connections, structured exits, room exit consistency, secret route labeling, and required prototype visual route paths.
+
+## Backend Fixture Export
+
+Run `npm run export:fixtures` to export the finalized mock dungeons to `fixtures/dungeons/`.
+
+The export script imports the same finalized `mockDungeons` payload used by the frontend, runs the dungeon validator first, and aborts without writing fixtures if validation fails. On success, it writes one full `Dungeon` JSON file per mock dungeon plus `fixtures/dungeons/index.json`.
+
+The manifest includes each dungeon's `id`, `slug`, `dateIso`, title, theme, difficulty, `mapStyle`, room count, and fixture file name. This is a bridge between the frontend mock data layer and the future `GET /api/dungeons/today` backend endpoint; the frontend still uses the existing mock data flow until a backend adapter is explicitly added.

@@ -230,3 +230,5 @@ Why this first:
 - It creates seed data for the first backend endpoint.
 - It tests whether the frontend `Dungeon` contract is truly serializable.
 - It keeps generation, accounts, and payments out of the first backend slice.
+
+Status: implemented as `npm run export:fixtures`. The script validates finalized mock dungeons first, then writes individual fixture JSON files plus `fixtures/dungeons/index.json`. These fixtures are intended to seed the future `GET /api/dungeons/today` backend endpoint without changing current frontend behavior.

@@ -8,6 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "validate:dungeons": "node scripts/validateDungeons.cjs",
+    "export:fixtures": "node scripts/exportDungeonFixtures.cjs",
     "preview": "vite preview --host 127.0.0.1"
   },
   "dependencies": {

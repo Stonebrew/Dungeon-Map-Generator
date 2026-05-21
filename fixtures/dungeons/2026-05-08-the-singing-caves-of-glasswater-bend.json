@@ -1,0 +1,542 @@
+{
+  "id": "dd-2026-05-08",
+  "dateIso": "2026-05-08",
+  "date": "May 8, 2026",
+  "title": "The Singing Caves of Glasswater Bend",
+  "theme": "Natural cavern where sound, crystal, and hungry creatures reshape the path",
+  "difficulty": "Moderate",
+  "partySize": "3-5 adventurers",
+  "estimatedPlayTime": "2 hours",
+  "hook": "A ferry chain snapped after echoes began singing from the river cliff. The ferryman will lose the crossing unless someone retrieves the chain anchor from the newly opened caves.",
+  "background": "The caves were sealed by a crystal fall. Recent floods exposed them and woke a colony of glass-wing beasts, a stranded prospector, and an old river spirit bound to the anchor stone.",
+  "map": {
+    "style": "cavern",
+    "gmMapId": "cavern-gm",
+    "playerMapId": "cavern-player",
+    "connections": [
+      {
+        "routeStyle": "tunnel",
+        "routeDifficulty": "clear",
+        "from": 1,
+        "to": 2,
+        "type": "normal",
+        "path": "M156 224 C180 208 190 192 218 174"
+      },
+      {
+        "routeStyle": "tunnel",
+        "routeDifficulty": "clear",
+        "from": 1,
+        "to": 3,
+        "type": "normal",
+        "path": "M156 252 C184 276 194 306 222 326"
+      },
+      {
+        "routeStyle": "tunnel",
+        "routeDifficulty": "clear",
+        "from": 2,
+        "to": 4,
+        "type": "normal",
+        "path": "M286 186 C310 196 326 208 352 220"
+      },
+      {
+        "routeStyle": "tunnel",
+        "routeDifficulty": "clear",
+        "from": 3,
+        "to": 6,
+        "type": "normal",
+        "path": "M288 316 C388 350 466 348 548 316"
+      },
+      {
+        "routeStyle": "tunnel",
+        "routeDifficulty": "narrow",
+        "from": 4,
+        "to": 5,
+        "type": "normal",
+        "path": "M424 210 C452 188 470 170 498 154"
+      },
+      {
+        "routeStyle": "tunnel",
+        "routeDifficulty": "narrow",
+        "from": 5,
+        "to": 6,
+        "type": "normal",
+        "path": "M540 198 C568 234 584 264 600 300"
+      },
+      {
+        "routeStyle": "crawl",
+        "routeDifficulty": "hidden",
+        "from": 2,
+        "to": 5,
+        "type": "secret",
+        "note": "Low underwater arch",
+        "path": "M276 166 C344 130 422 118 498 154"
+      },
+      {
+        "routeStyle": "crawl",
+        "routeDifficulty": "hidden",
+        "from": 4,
+        "to": 6,
+        "type": "secret",
+        "note": "Dry chimney hidden in the nest",
+        "path": "M432 200 C466 244 504 268 574 286"
+      }
+    ],
+    "playerSafe": {
+      "hideSecrets": true,
+      "hideTreasure": true,
+      "hideHazards": true,
+      "hideGmNotes": true
+    },
+    "layout": {
+      "grammar": "organicCave",
+      "notes": "Natural chambers connected by tunnels and ledges rather than built corridors."
+    }
+  },
+  "mapStyle": "cavern",
+  "mapPlaceholder": "cavern-gm",
+  "playerMapPlaceholder": "cavern-player",
+  "rooms": [
+    {
+      "layoutRole": "threshold",
+      "areaShape": "organic",
+      "areaScale": "medium",
+      "openness": "semiOpen",
+      "environmentRole": "natural",
+      "number": 1,
+      "name": "River-Mouth Ledge",
+      "readAloud": "Mist blows across a slick stone shelf where broken chain links vanish into a humming cave mouth.",
+      "gmNotes": "The chain can be followed by touch when the cave song becomes disorienting.",
+      "threat": "Low",
+      "tags": [
+        "Entrance",
+        "Slick stone",
+        "Echoes"
+      ],
+      "inhabitants": [],
+      "treasure": "A ferryman's iron token wedged under the chain.",
+      "secrets": "A second, older chain disappears under the river mud.",
+      "exits": "Tunnel to Room 2, narrow shelf to Room 3.",
+      "id": "dd-2026-05-08-room-01",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-08-room-01-to-dd-2026-05-08-room-02",
+          "toRoomId": "dd-2026-05-08-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Route to Room 2",
+          "description": "Tunnel to Room 2, narrow shelf to Room 3."
+        },
+        {
+          "id": "dd-2026-05-08-room-01-to-dd-2026-05-08-room-03",
+          "toRoomId": "dd-2026-05-08-room-03",
+          "toRoomNumber": 3,
+          "type": "normal",
+          "label": "Route to Room 3",
+          "description": "Tunnel to Room 2, narrow shelf to Room 3."
+        }
+      ]
+    },
+    {
+      "layoutRole": "branch",
+      "areaShape": "chamber",
+      "areaScale": "medium",
+      "openness": "enclosed",
+      "environmentRole": "natural",
+      "number": 2,
+      "name": "Glasswater Run",
+      "readAloud": "Clear water races through a waist-high channel. Quartz ribs in the walls ring whenever boots strike stone.",
+      "gmNotes": "Moving quietly keeps the glass-wing beasts in Room 4 asleep.",
+      "threat": "Moderate",
+      "tags": [
+        "Hazard",
+        "Water",
+        "Stealth"
+      ],
+      "inhabitants": [],
+      "treasure": "Bright quartz shards prized by local artisans.",
+      "secrets": "A low underwater arch bypasses Room 4.",
+      "exits": "Back to Room 1, slope to Room 4, underwater arch to Room 5.",
+      "id": "dd-2026-05-08-room-02",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-08-room-02-to-dd-2026-05-08-room-01",
+          "toRoomId": "dd-2026-05-08-room-01",
+          "toRoomNumber": 1,
+          "type": "normal",
+          "label": "Route to Room 1",
+          "description": "Back to Room 1, slope to Room 4, underwater arch to Room 5."
+        },
+        {
+          "id": "dd-2026-05-08-room-02-to-dd-2026-05-08-room-04",
+          "toRoomId": "dd-2026-05-08-room-04",
+          "toRoomNumber": 4,
+          "type": "normal",
+          "label": "Route to Room 4",
+          "description": "Back to Room 1, slope to Room 4, underwater arch to Room 5."
+        },
+        {
+          "id": "dd-2026-05-08-room-02-to-dd-2026-05-08-room-05",
+          "toRoomId": "dd-2026-05-08-room-05",
+          "toRoomNumber": 5,
+          "type": "secret",
+          "label": "Low underwater arch",
+          "description": "Back to Room 1, slope to Room 4, underwater arch to Room 5.",
+          "note": "Low underwater arch"
+        }
+      ]
+    },
+    {
+      "layoutRole": "branch",
+      "areaShape": "pool",
+      "areaScale": "medium",
+      "openness": "semiOpen",
+      "environmentRole": "flooded",
+      "number": 3,
+      "name": "Prospector's Shelf Camp",
+      "readAloud": "A torn canvas shelter clings to the ledge. Someone has arranged pebbles into warning arrows.",
+      "gmNotes": "The prospector is injured and suspicious but knows the song pattern that calms the river spirit.",
+      "threat": "Low",
+      "tags": [
+        "Social",
+        "Rest point",
+        "Clue"
+      ],
+      "inhabitants": [
+        {
+          "name": "Stranded Prospector",
+          "role": "Scout survivor",
+          "threat": "Low",
+          "durability": "Fragile",
+          "damage": "Light",
+          "tactics": "Threaten from cover, bargain with cave knowledge",
+          "morale": "Cooperates if treated kindly",
+          "wants": "A safe way out and credit for discovering the cave",
+          "leverage": "Knows which echoes lead to air pockets"
+        }
+      ],
+      "treasure": "A half-filled gem pan and a dry map case.",
+      "secrets": "The arrows point away from a crystal nest, not toward treasure.",
+      "exits": "Shelf to Room 1, crack to Room 6.",
+      "id": "dd-2026-05-08-room-03",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-08-room-03-to-dd-2026-05-08-room-01",
+          "toRoomId": "dd-2026-05-08-room-01",
+          "toRoomNumber": 1,
+          "type": "normal",
+          "label": "Route to Room 1",
+          "description": "Shelf to Room 1, crack to Room 6."
+        },
+        {
+          "id": "dd-2026-05-08-room-03-to-dd-2026-05-08-room-06",
+          "toRoomId": "dd-2026-05-08-room-06",
+          "toRoomNumber": 6,
+          "type": "normal",
+          "label": "Route to Room 6",
+          "description": "Shelf to Room 1, crack to Room 6."
+        }
+      ]
+    },
+    {
+      "layoutRole": "hub",
+      "areaShape": "chamber",
+      "areaScale": "large",
+      "openness": "semiOpen",
+      "environmentRole": "natural",
+      "number": 4,
+      "name": "Crystal Roost",
+      "readAloud": "Glass-bright wings hang from the ceiling like folded panes. The floor is carpeted with glittering shell fragments.",
+      "gmNotes": "Loud sounds wake the roost. A soft repeated hum makes the creatures hesitate.",
+      "threat": "High",
+      "tags": [
+        "Combat",
+        "Noise",
+        "Nest"
+      ],
+      "inhabitants": [
+        {
+          "name": "Glass-Wing Beasts",
+          "role": "Lurker predators",
+          "threat": "High in the roost",
+          "durability": "Standard",
+          "damage": "Serious",
+          "tactics": "Dive from above, use echoes to mask movement",
+          "morale": "Retreat if the nest is protected rather than threatened",
+          "wants": "Safety for their eggs and quiet",
+          "leverage": "Calm tones and leaving the eggs alone prevent a fight"
+        }
+      ],
+      "treasure": "Shed crystal wing scales that catch lantern light beautifully.",
+      "secrets": "The nest hides a dry chimney to Room 6.",
+      "exits": "Slope to Room 2, narrow passage to Room 5, chimney to Room 6.",
+      "id": "dd-2026-05-08-room-04",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-08-room-04-to-dd-2026-05-08-room-02",
+          "toRoomId": "dd-2026-05-08-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Route to Room 2",
+          "description": "Slope to Room 2, narrow passage to Room 5, chimney to Room 6."
+        },
+        {
+          "id": "dd-2026-05-08-room-04-to-dd-2026-05-08-room-05",
+          "toRoomId": "dd-2026-05-08-room-05",
+          "toRoomNumber": 5,
+          "type": "normal",
+          "label": "Route to Room 5",
+          "description": "Slope to Room 2, narrow passage to Room 5, chimney to Room 6."
+        },
+        {
+          "id": "dd-2026-05-08-room-04-to-dd-2026-05-08-room-06",
+          "toRoomId": "dd-2026-05-08-room-06",
+          "toRoomNumber": 6,
+          "type": "secret",
+          "label": "Dry chimney hidden in the nest",
+          "description": "Slope to Room 2, narrow passage to Room 5, chimney to Room 6.",
+          "note": "Dry chimney hidden in the nest"
+        }
+      ]
+    },
+    {
+      "layoutRole": "spoke",
+      "areaShape": "ledge",
+      "areaScale": "medium",
+      "openness": "exposed",
+      "environmentRole": "elevated",
+      "number": 5,
+      "name": "Anchor Pool",
+      "readAloud": "A black anchor stone rests beneath clear water. The missing ferry chain coils around it like a sleeping serpent.",
+      "gmNotes": "Pulling the chain without speaking to the river spirit causes a dangerous surge.",
+      "threat": "Moderate",
+      "tags": [
+        "Objective",
+        "Spirit",
+        "Water"
+      ],
+      "inhabitants": [
+        {
+          "name": "Bound River Spirit",
+          "role": "Guardian negotiator",
+          "threat": "Moderate",
+          "durability": "Tough",
+          "damage": "Serious",
+          "tactics": "Flood passages, speak through ripples, test promises",
+          "morale": "Allows passage if its old chain is honored",
+          "wants": "The forgotten crossing marked again",
+          "leverage": "Accepts the ferryman's token as renewed respect"
+        }
+      ],
+      "treasure": "The ferry chain anchor and a water-polished memory stone.",
+      "secrets": "The old chain belongs to a vanished village crossing.",
+      "exits": "Underwater arch to Room 2, narrow passage to Room 4, dry rise to Room 6.",
+      "id": "dd-2026-05-08-room-05",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-08-room-05-to-dd-2026-05-08-room-04",
+          "toRoomId": "dd-2026-05-08-room-04",
+          "toRoomNumber": 4,
+          "type": "normal",
+          "label": "Route to Room 4",
+          "description": "Underwater arch to Room 2, narrow passage to Room 4, dry rise to Room 6."
+        },
+        {
+          "id": "dd-2026-05-08-room-05-to-dd-2026-05-08-room-06",
+          "toRoomId": "dd-2026-05-08-room-06",
+          "toRoomNumber": 6,
+          "type": "normal",
+          "label": "Route to Room 6",
+          "description": "Underwater arch to Room 2, narrow passage to Room 4, dry rise to Room 6."
+        },
+        {
+          "id": "dd-2026-05-08-room-05-to-dd-2026-05-08-room-02",
+          "toRoomId": "dd-2026-05-08-room-02",
+          "toRoomNumber": 2,
+          "type": "secret",
+          "label": "Low underwater arch",
+          "description": "Underwater arch to Room 2, narrow passage to Room 4, dry rise to Room 6.",
+          "note": "Low underwater arch"
+        }
+      ]
+    },
+    {
+      "layoutRole": "objective",
+      "areaShape": "chamber",
+      "areaScale": "large",
+      "openness": "enclosed",
+      "environmentRole": "hazardAdjacent",
+      "number": 6,
+      "name": "Echo Crown Gallery",
+      "readAloud": "The cavern opens into a crown of crystals. Every whisper returns as a different voice.",
+      "gmNotes": "The final reveal is that the cave song is a map of safe sounds, not a curse.",
+      "threat": "Moderate",
+      "tags": [
+        "Finale",
+        "Reveal",
+        "Puzzle"
+      ],
+      "inhabitants": [],
+      "treasure": "A crystal tuning fork that can calm the roost once per scene.",
+      "secrets": "One echo repeats the name of the vanished village under the river bend.",
+      "exits": "Crack to Room 3, chimney to Room 4, rise to Room 5.",
+      "id": "dd-2026-05-08-room-06",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-08-room-06-to-dd-2026-05-08-room-03",
+          "toRoomId": "dd-2026-05-08-room-03",
+          "toRoomNumber": 3,
+          "type": "normal",
+          "label": "Route to Room 3",
+          "description": "Crack to Room 3, chimney to Room 4, rise to Room 5."
+        },
+        {
+          "id": "dd-2026-05-08-room-06-to-dd-2026-05-08-room-05",
+          "toRoomId": "dd-2026-05-08-room-05",
+          "toRoomNumber": 5,
+          "type": "normal",
+          "label": "Route to Room 5",
+          "description": "Crack to Room 3, chimney to Room 4, rise to Room 5."
+        },
+        {
+          "id": "dd-2026-05-08-room-06-to-dd-2026-05-08-room-04",
+          "toRoomId": "dd-2026-05-08-room-04",
+          "toRoomNumber": 4,
+          "type": "secret",
+          "label": "Dry chimney hidden in the nest",
+          "description": "Crack to Room 3, chimney to Room 4, rise to Room 5.",
+          "note": "Dry chimney hidden in the nest"
+        }
+      ]
+    }
+  ],
+  "encounterTables": {
+    "wandering": [
+      {
+        "roll": "1",
+        "result": "The prospector calls out from the wrong direction",
+        "type": "Social"
+      },
+      {
+        "roll": "2",
+        "result": "Glass-wing beasts skim the ceiling",
+        "type": "Combat"
+      },
+      {
+        "roll": "3",
+        "result": "A sudden echo suggests a hidden passage",
+        "type": "Exploration"
+      },
+      {
+        "roll": "4",
+        "result": "Water rises around the chain",
+        "type": "Hazard"
+      },
+      {
+        "roll": "5",
+        "result": "The river spirit asks who owns the crossing",
+        "type": "Social"
+      },
+      {
+        "roll": "6",
+        "result": "A crystal note must be matched to open a dry route",
+        "type": "Puzzle"
+      }
+    ],
+    "environmental": [
+      {
+        "roll": "1",
+        "result": "Quartz ribs ring under heavy steps",
+        "type": "Hazard"
+      },
+      {
+        "roll": "2",
+        "result": "Mist reveals handholds on the wall",
+        "type": "Exploration"
+      },
+      {
+        "roll": "3",
+        "result": "Cold current tugs loose gear downstream",
+        "type": "Hazard"
+      },
+      {
+        "roll": "4",
+        "result": "Echoes repeat an old village song",
+        "type": "Puzzle"
+      },
+      {
+        "roll": "5",
+        "result": "A dry air pocket opens briefly",
+        "type": "Exploration"
+      },
+      {
+        "roll": "6",
+        "result": "Crystal dust makes lantern light flare",
+        "type": "Exploration"
+      }
+    ],
+    "complications": [
+      {
+        "roll": "1",
+        "result": "The roost wakes if anyone shouts",
+        "type": "Combat"
+      },
+      {
+        "roll": "2",
+        "result": "The prospector demands first claim on treasure",
+        "type": "Social"
+      },
+      {
+        "roll": "3",
+        "result": "A route floods behind the party",
+        "type": "Hazard"
+      },
+      {
+        "roll": "4",
+        "result": "The chain snags on a hidden root",
+        "type": "Exploration"
+      },
+      {
+        "roll": "5",
+        "result": "An echo imitates a party member",
+        "type": "Puzzle"
+      },
+      {
+        "roll": "6",
+        "result": "The spirit offers help for a public promise",
+        "type": "Social"
+      }
+    ]
+  },
+  "treasureTable": [
+    {
+      "roll": "1",
+      "result": "Ferryman's iron token"
+    },
+    {
+      "roll": "2",
+      "result": "Quartz shards with artisan value"
+    },
+    {
+      "roll": "3",
+      "result": "Prospector's dry map case"
+    },
+    {
+      "roll": "4",
+      "result": "Shed glass-wing scales"
+    },
+    {
+      "roll": "5",
+      "result": "Water-polished memory stone"
+    },
+    {
+      "roll": "6",
+      "result": "Crystal tuning fork"
+    }
+  ],
+  "gmNotes": [
+    "Sound is the main pressure tool: reward careful, quiet play.",
+    "The prospector can become guide, rival, or rescue objective.",
+    "The twist is that the cave song is navigational, not malicious.",
+    "The ending reward is restoring the ferry and earning river-spirit favor."
+  ]
+}
