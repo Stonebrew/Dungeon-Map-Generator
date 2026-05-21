@@ -1,6 +1,7 @@
 import type { MapConnection } from '../../../../types';
 import { forestRuinTheme } from '../themes';
 import { LevelTwoCrack, LevelTwoDebris, LevelTwoFoundation, LevelTwoMarker, LevelTwoMoss, LevelTwoRoomNumbers, LevelTwoRubble, LevelTwoWater } from '../shared';
+import type { LevelTwoRendererProps, MapPresentation } from '../types';
 
 function RootTendril({ x, y, w = 80, rotate = 0 }: { x: number; y: number; w?: number; rotate?: number }) {
   return (
@@ -173,7 +174,8 @@ function ForestKeyedArea({
   );
 }
 
-function ForestTrailRoutes({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
+function ForestTrailRoutes({ connections, secretStroke, isPlayer, presentation = 'screen' }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean; presentation?: MapPresentation }) {
+  const isPrint = presentation === 'print';
   const normalPaths = connections.filter((connection) => connection.type === 'normal' && connection.path).map((connection) => connection.path as string);
   const secretPaths = connections.filter((connection) => connection.type === 'secret' && connection.path).map((connection) => connection.path as string);
 
@@ -191,7 +193,7 @@ function ForestTrailRoutes({ connections, secretStroke, isPlayer }: { connection
       {!isPlayer &&
         secretPaths.map((path) => (
           <g key={`${path}-hidden-game-trail`}>
-            <path d={path} stroke={secretStroke} strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.8" strokeDasharray="8 9" filter="url(#inkRoughen)" />
+            <path d={path} stroke={secretStroke} strokeWidth={isPrint ? '6' : '4.5'} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity={isPrint ? '0.94' : '0.8'} strokeDasharray={isPrint ? '12 7' : '8 9'} filter="url(#inkRoughen)" />
             <path d={path} stroke="#4a2e1e" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.46" strokeDasharray="2 13" />
           </g>
         ))}
@@ -199,7 +201,7 @@ function ForestTrailRoutes({ connections, secretStroke, isPlayer }: { connection
   );
 }
 
-export function LevelTwoForestRuinRenderer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
+export function LevelTwoForestRuinRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 126, y: 246, label: '1' },
     { x: 292, y: 190, label: '2' },
@@ -213,7 +215,7 @@ export function LevelTwoForestRuinRenderer({ connections, secretStroke, isPlayer
 
   return (
     <>
-      <LevelTwoFoundation id="level-two-forest-ruin-footprint" path={footprintPath} theme={forestRuinTheme}>
+      <LevelTwoFoundation id="level-two-forest-ruin-footprint" path={footprintPath} theme={forestRuinTheme} presentation={presentation}>
         <path d="M54 224 C126 148 210 154 286 144 S448 130 560 188 C616 244 614 328 568 378 C486 430 398 398 338 410 C244 438 146 418 82 356 C42 306 34 258 54 224 Z" fill="#496238" opacity="0.28" />
         <path d="M72 220 C150 154 218 160 290 150 S446 128 540 176 M82 382 C164 430 252 402 334 384 S506 414 584 340" stroke={forestRuinTheme.moss} strokeWidth="28" strokeLinecap="round" fill="none" opacity="0.12" />
         <path d="M100 284 C178 248 240 288 310 260 S458 220 548 270" stroke={forestRuinTheme.water} strokeWidth="13" strokeLinecap="round" fill="none" opacity="0.08" />
@@ -227,7 +229,7 @@ export function LevelTwoForestRuinRenderer({ connections, secretStroke, isPlayer
       <TreeCluster x={356} y={96} scale={0.58} />
       <RockCluster x={388} y={248} scale={0.68} />
       <RockCluster x={214} y={392} scale={0.56} />
-      <ForestTrailRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} />
+      <ForestTrailRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} presentation={presentation} />
       <ForestKeyedArea cx={126} cy={246} rx={74} ry={58} seed={1} />
       <ForestKeyedArea cx={292} cy={190} rx={82} ry={62} seed={2} />
       <ForestKeyedArea cx={476} cy={190} rx={76} ry={58} seed={3} />
@@ -273,12 +275,12 @@ export function LevelTwoForestRuinRenderer({ connections, secretStroke, isPlayer
       </g>
       {!isPlayer && (
         <>
-          <LevelTwoMarker x={330} y={164} label="H" />
-          <LevelTwoMarker x={520} y={326} label="T" />
-          <LevelTwoMarker x={188} y={340} label="B" />
+          <LevelTwoMarker x={330} y={164} label="H" presentation={presentation} />
+          <LevelTwoMarker x={520} y={326} label="T" presentation={presentation} />
+          <LevelTwoMarker x={188} y={340} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} />
+      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
     </>
   );
 }

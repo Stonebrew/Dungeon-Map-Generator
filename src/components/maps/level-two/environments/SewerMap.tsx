@@ -1,7 +1,6 @@
-import type { MapConnection } from '../../../../types';
 import { sewerTheme } from '../themes';
 import { LevelTwoConnectionApron, LevelTwoConnectionRoutes, LevelTwoCrack, LevelTwoDebris, LevelTwoFoundation, LevelTwoMarker, LevelTwoMoss, LevelTwoRoomNumbers, LevelTwoRoomShell, LevelTwoRubble } from '../shared';
-import type { LevelTwoMapTheme } from '../types';
+import type { LevelTwoMapTheme, LevelTwoRendererProps } from '../types';
 
 function LevelTwoDrainGrate({ x, y, rotate = 0 }: { x: number; y: number; rotate?: number }) {
   return (
@@ -46,7 +45,7 @@ function LevelTwoRunoffMarks({ x, y, w, vertical = false, theme }: { x: number; 
   );
 }
 
-export function LevelTwoSewerRenderer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
+export function LevelTwoSewerRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 112, y: 238, label: '1' },
     { x: 280, y: 238, label: '2' },
@@ -59,22 +58,22 @@ export function LevelTwoSewerRenderer({ connections, secretStroke, isPlayer }: {
 
   return (
     <>
-      <LevelTwoFoundation id="level-two-sewer-footprint" path={footprintPath} theme={sewerTheme}>
+      <LevelTwoFoundation id="level-two-sewer-footprint" path={footprintPath} theme={sewerTheme} presentation={presentation}>
         <path d="M52 240 H674 M156 84 V286 M280 204 V386 M416 170 V286 M536 254 V410" stroke={sewerTheme.water} strokeWidth="18" strokeLinecap="round" fill="none" opacity="0.12" />
         <path d="M56 220 H672 M156 88 V274 M280 214 V374 M416 180 V280 M536 264 V398" stroke="#92a077" strokeWidth="1.6" strokeLinecap="round" fill="none" opacity="0.22" strokeDasharray="18 16" />
         <path d="M44 186 H230 M230 202 H482 M482 184 H682 M458 312 H634 M42 290 H344" stroke="#151d1a" strokeWidth="6" strokeLinecap="round" opacity="0.12" strokeDasharray="52 26" />
       </LevelTwoFoundation>
-      <LevelTwoConnectionApron connections={connections} theme={sewerTheme} />
+      <LevelTwoConnectionApron connections={connections} theme={sewerTheme} presentation={presentation} />
       <LevelTwoSludgeStain x={78} y={248} w={70} h={24} theme={sewerTheme} />
       <LevelTwoSludgeStain x={236} y={250} w={84} h={22} theme={sewerTheme} />
       <LevelTwoSludgeStain x={468} y={374} w={88} h={24} theme={sewerTheme} />
-      <LevelTwoConnectionRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} theme={sewerTheme} variant="sewer" />
-      <LevelTwoRoomShell x={58} y={196} w={108} h={84} theme={sewerTheme} variant="sewer" />
-      <LevelTwoRoomShell x={220} y={196} w={120} h={84} theme={sewerTheme} variant="sewer" />
-      <LevelTwoRoomShell x={96} y={74} w={120} h={76} theme={sewerTheme} variant="sewer" />
-      <LevelTwoRoomShell x={358} y={194} w={116} h={88} theme={sewerTheme} variant="sewer" />
-      <LevelTwoRoomShell x={468} y={330} w={136} h={82} theme={sewerTheme} variant="sewer" />
-      <LevelTwoRoomShell x={570} y={178} w={112} h={114} theme={sewerTheme} final variant="sewer" />
+      <LevelTwoConnectionRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} theme={sewerTheme} variant="sewer" presentation={presentation} />
+      <LevelTwoRoomShell x={58} y={196} w={108} h={84} theme={sewerTheme} variant="sewer" presentation={presentation} />
+      <LevelTwoRoomShell x={220} y={196} w={120} h={84} theme={sewerTheme} variant="sewer" presentation={presentation} />
+      <LevelTwoRoomShell x={96} y={74} w={120} h={76} theme={sewerTheme} variant="sewer" presentation={presentation} />
+      <LevelTwoRoomShell x={358} y={194} w={116} h={88} theme={sewerTheme} variant="sewer" presentation={presentation} />
+      <LevelTwoRoomShell x={468} y={330} w={136} h={82} theme={sewerTheme} variant="sewer" presentation={presentation} />
+      <LevelTwoRoomShell x={570} y={178} w={112} h={114} theme={sewerTheme} final variant="sewer" presentation={presentation} />
       <g>
         <LevelTwoPipeSegment x={78} y={214} w={62} theme={sewerTheme} />
         <LevelTwoPipeSegment x={242} y={210} w={74} theme={sewerTheme} />
@@ -94,12 +93,12 @@ export function LevelTwoSewerRenderer({ connections, secretStroke, isPlayer }: {
       </g>
       {!isPlayer && (
         <>
-          <LevelTwoMarker x={324} y={214} label="H" />
-          <LevelTwoMarker x={458} y={216} label="T" />
-          <LevelTwoMarker x={660} y={202} label="B" />
+          <LevelTwoMarker x={324} y={214} label="H" presentation={presentation} />
+          <LevelTwoMarker x={458} y={216} label="T" presentation={presentation} />
+          <LevelTwoMarker x={660} y={202} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} />
+      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
     </>
   );
 }

@@ -1,7 +1,6 @@
-import type { MapConnection } from '../../../../types';
 import { cavernTheme } from '../themes';
 import { LevelTwoConnectionApron, LevelTwoConnectionRoutes, LevelTwoCrack, LevelTwoFoundation, LevelTwoMarker, LevelTwoRoomNumbers, LevelTwoRubble } from '../shared';
-import type { LevelTwoMapTheme } from '../types';
+import type { LevelTwoMapTheme, LevelTwoRendererProps } from '../types';
 
 type CavernChamberProps = {
   cx: number;
@@ -100,7 +99,7 @@ function LevelTwoUndergroundPool({ x, y, w, h, theme }: { x: number; y: number; 
   );
 }
 
-export function LevelTwoCavernRenderer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
+export function LevelTwoCavernRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 96, y: 238, label: '1' },
     { x: 218, y: 174, label: '2' },
@@ -113,13 +112,13 @@ export function LevelTwoCavernRenderer({ connections, secretStroke, isPlayer }: 
 
   return (
     <>
-      <LevelTwoFoundation id="level-two-cavern-footprint" path={footprintPath} theme={cavernTheme}>
+      <LevelTwoFoundation id="level-two-cavern-footprint" path={footprintPath} theme={cavernTheme} presentation={presentation}>
         <path d="M52 226 C142 118 196 318 286 194 S440 80 526 188 S612 354 684 278" stroke={cavernTheme.shadow} strokeWidth="46" strokeLinecap="round" fill="none" opacity="0.18" />
         <path d="M66 236 C150 146 202 294 286 212 S438 112 510 198 S598 330 662 282" stroke={cavernTheme.wallHighlight} strokeWidth="4" strokeLinecap="round" fill="none" opacity="0.18" strokeDasharray="3 16" />
         <path d="M118 136 C178 102 250 116 304 150 M438 96 C508 88 568 134 602 196 M108 350 C188 390 282 378 340 330" stroke={cavernTheme.moss} strokeWidth="15" strokeLinecap="round" fill="none" opacity="0.1" />
       </LevelTwoFoundation>
-      <LevelTwoConnectionApron connections={connections} theme={cavernTheme} />
-      <LevelTwoConnectionRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} theme={cavernTheme} variant="cavern" />
+      <LevelTwoConnectionApron connections={connections} theme={cavernTheme} presentation={presentation} />
+      <LevelTwoConnectionRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} theme={cavernTheme} variant="cavern" presentation={presentation} />
       <LevelTwoCavernChamber cx={96} cy={238} rx={68} ry={52} theme={cavernTheme} seed={1} />
       <LevelTwoCavernChamber cx={218} cy={174} rx={72} ry={48} theme={cavernTheme} seed={2} />
       <LevelTwoCavernChamber cx={222} cy={326} rx={68} ry={48} theme={cavernTheme} seed={3} />
@@ -143,12 +142,12 @@ export function LevelTwoCavernRenderer({ connections, secretStroke, isPlayer }: 
       </g>
       {!isPlayer && (
         <>
-          <LevelTwoMarker x={410} y={184} label="H" />
-          <LevelTwoMarker x={270} y={300} label="T" />
-          <LevelTwoMarker x={652} y={276} label="B" />
+          <LevelTwoMarker x={410} y={184} label="H" presentation={presentation} />
+          <LevelTwoMarker x={270} y={300} label="T" presentation={presentation} />
+          <LevelTwoMarker x={652} y={276} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} />
+      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
     </>
   );
 }

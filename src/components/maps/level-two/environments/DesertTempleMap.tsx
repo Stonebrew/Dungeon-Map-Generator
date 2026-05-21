@@ -1,6 +1,7 @@
 import type { MapConnection } from '../../../../types';
 import { desertTempleTheme } from '../themes';
 import { LevelTwoCrack, LevelTwoDebris, LevelTwoFoundation, LevelTwoMarker, LevelTwoRoomNumbers, LevelTwoRubble, LevelTwoRubbleChips } from '../shared';
+import type { LevelTwoRendererProps, MapPresentation } from '../types';
 
 function SandDrift({ path, opacity = 0.62 }: { path: string; opacity?: number }) {
   return (
@@ -12,7 +13,8 @@ function SandDrift({ path, opacity = 0.62 }: { path: string; opacity?: number })
   );
 }
 
-function DuneRouteLayer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
+function DuneRouteLayer({ connections, secretStroke, isPlayer, presentation = 'screen' }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean; presentation?: MapPresentation }) {
+  const isPrint = presentation === 'print';
   const normalConnections = connections.filter((connection) => connection.type === 'normal' && connection.path);
   const secretPaths = connections.filter((connection) => connection.type === 'secret' && connection.path).map((connection) => connection.path as string);
 
@@ -25,10 +27,10 @@ function DuneRouteLayer({ connections, secretStroke, isPlayer }: { connections: 
 
         return (
           <g key={path}>
-            <path d={path} stroke="#2b190d" strokeWidth={isStair ? '36' : '44'} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.16" />
-            <path d={path} stroke={isStair ? '#a8753f' : '#d9b978'} strokeWidth={isStair ? '26' : '34'} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.86" />
-            <path d={path} stroke="#f4dcaa" strokeWidth={isStair ? '17' : '22'} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.72" />
-            <path d={path} stroke="#8d6236" strokeWidth={isStair ? '3.2' : '2'} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.5" strokeDasharray={isStair ? '10 9' : '22 18'} />
+            <path d={path} stroke="#2b190d" strokeWidth={isStair ? '36' : '44'} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity={isPrint ? '0.22' : '0.16'} />
+            <path d={path} stroke={isStair ? '#a8753f' : '#d9b978'} strokeWidth={isStair ? '26' : '34'} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity={isPrint ? '0.98' : '0.86'} />
+            <path d={path} stroke="#f4dcaa" strokeWidth={isStair ? '17' : '22'} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity={isPrint ? '0.55' : '0.72'} />
+            <path d={path} stroke="#8d6236" strokeWidth={isStair ? '3.2' : '2'} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity={isPrint ? '0.38' : '0.5'} strokeDasharray={isStair ? '10 9' : '22 18'} />
             {isNarrow && <path d={path} stroke="#5e3a1f" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.48" strokeDasharray="4 12" />}
           </g>
         );
@@ -37,7 +39,7 @@ function DuneRouteLayer({ connections, secretStroke, isPlayer }: { connections: 
         secretPaths.map((path) => (
           <g key={path}>
             <path d={path} stroke="#3a2413" strokeWidth="11" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.2" />
-            <path d={path} stroke={secretStroke} strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" fill="none" strokeDasharray="9 8" opacity="0.82" />
+            <path d={path} stroke={secretStroke} strokeWidth={isPrint ? '6' : '4.5'} strokeLinecap="round" strokeLinejoin="round" fill="none" strokeDasharray={isPrint ? '12 7' : '9 8'} opacity={isPrint ? '0.95' : '0.82'} />
           </g>
         ))}
     </g>
@@ -105,7 +107,7 @@ function SunSeal({ x, y }: { x: number; y: number }) {
   );
 }
 
-export function LevelTwoDesertTempleRenderer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
+export function LevelTwoDesertTempleRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 94, y: 250, label: '1' },
     { x: 248, y: 178, label: '2' },
@@ -120,13 +122,13 @@ export function LevelTwoDesertTempleRenderer({ connections, secretStroke, isPlay
 
   return (
     <>
-      <LevelTwoFoundation id="level-two-desert-temple-footprint" path={footprintPath} theme={desertTempleTheme}>
+      <LevelTwoFoundation id="level-two-desert-temple-footprint" path={footprintPath} theme={desertTempleTheme} presentation={presentation}>
         <path d="M72 260 C150 190 226 158 304 126 M246 370 C334 330 448 296 596 232" stroke="#8d6236" strokeWidth="44" strokeLinecap="round" fill="none" opacity="0.12" />
         <path d="M70 394 C176 426 290 388 398 410 S568 420 640 342" stroke="#f1d59d" strokeWidth="30" strokeLinecap="round" fill="none" opacity="0.13" />
       </LevelTwoFoundation>
       <WindStreaks />
       <SunkenShadow path="M334 264 C378 236 452 248 486 292 C482 346 430 374 366 354 C328 340 306 294 334 264 Z" />
-      <DuneRouteLayer connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} />
+      <DuneRouteLayer connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} presentation={presentation} />
       <TempleArea path="M46 222 L92 202 L146 226 L152 266 L114 292 L62 282 L36 252 Z" />
       <TempleArea path="M186 140 L250 104 L318 144 L306 208 L238 226 L178 190 Z" />
       <TempleArea path="M348 104 L430 82 L496 128 L480 198 L402 216 L338 170 Z" />
@@ -160,12 +162,12 @@ export function LevelTwoDesertTempleRenderer({ connections, secretStroke, isPlay
       </g>
       {!isPlayer && (
         <>
-          <LevelTwoMarker x={458} y={276} label="H" />
-          <LevelTwoMarker x={536} y={386} label="T" />
-          <LevelTwoMarker x={126} y={374} label="B" />
+          <LevelTwoMarker x={458} y={276} label="H" presentation={presentation} />
+          <LevelTwoMarker x={536} y={386} label="T" presentation={presentation} />
+          <LevelTwoMarker x={126} y={374} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} />
+      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
     </>
   );
 }

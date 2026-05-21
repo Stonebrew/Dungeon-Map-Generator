@@ -1,6 +1,7 @@
 import type { MapConnection } from '../../../../types';
 import { frozenRuinTheme } from '../themes';
 import { LevelTwoCrack, LevelTwoDebris, LevelTwoFoundation, LevelTwoMarker, LevelTwoRoomNumbers, LevelTwoRubble, LevelTwoRubbleChips } from '../shared';
+import type { LevelTwoRendererProps, MapPresentation } from '../types';
 
 function SnowDrift({ path, opacity = 0.62 }: { path: string; opacity?: number }) {
   return (
@@ -34,7 +35,8 @@ function Crevasse({ path, width = 20 }: { path: string; width?: number }) {
   );
 }
 
-function IceRouteLayer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
+function IceRouteLayer({ connections, secretStroke, isPlayer, presentation = 'screen' }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean; presentation?: MapPresentation }) {
+  const isPrint = presentation === 'print';
   const normalConnections = connections.filter((connection) => connection.type === 'normal' && connection.path);
   const secretPaths = connections.filter((connection) => connection.type === 'secret' && connection.path).map((connection) => connection.path as string);
 
@@ -47,9 +49,9 @@ function IceRouteLayer({ connections, secretStroke, isPlayer }: { connections: M
 
         return (
           <g key={path}>
-            <path d={path} stroke="#0d2029" strokeWidth={isBridge ? '30' : '38'} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.28" />
-            <path d={path} stroke={isBridge ? '#9ab9c2' : '#d9edf0'} strokeWidth={isBridge ? '21' : '28'} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.92" />
-            <path d={path} stroke={isBridge ? '#f8ffff' : '#9fc8d2'} strokeWidth={isBridge ? '4' : '6'} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.54" strokeDasharray={isBridge ? '12 10' : '18 13'} />
+            <path d={path} stroke="#0d2029" strokeWidth={isBridge ? '30' : '38'} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity={isPrint ? '0.2' : '0.28'} />
+            <path d={path} stroke={isBridge ? '#9ab9c2' : '#d9edf0'} strokeWidth={isBridge ? '21' : '28'} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity={isPrint ? '1' : '0.92'} />
+            <path d={path} stroke={isBridge ? '#f8ffff' : '#9fc8d2'} strokeWidth={isBridge ? '4' : '6'} strokeLinecap="round" strokeLinejoin="round" fill="none" opacity={isPrint ? '0.38' : '0.54'} strokeDasharray={isBridge ? '12 10' : '18 13'} />
             {isHazardous && <path d={path} stroke="#315565" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.72" strokeDasharray="4 10" />}
           </g>
         );
@@ -58,7 +60,7 @@ function IceRouteLayer({ connections, secretStroke, isPlayer }: { connections: M
         secretPaths.map((path) => (
           <g key={path}>
             <path d={path} stroke="#0b2029" strokeWidth="11" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.22" />
-            <path d={path} stroke={secretStroke} strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" fill="none" strokeDasharray="8 8" opacity="0.86" />
+            <path d={path} stroke={secretStroke} strokeWidth={isPrint ? '6' : '4.5'} strokeLinecap="round" strokeLinejoin="round" fill="none" strokeDasharray={isPrint ? '12 7' : '8 8'} opacity={isPrint ? '0.96' : '0.86'} />
           </g>
         ))}
     </g>
@@ -134,7 +136,7 @@ function WindStreaks() {
   );
 }
 
-export function LevelTwoFrozenRuinRenderer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
+export function LevelTwoFrozenRuinRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 98, y: 250, label: '1' },
     { x: 252, y: 160, label: '2' },
@@ -149,7 +151,7 @@ export function LevelTwoFrozenRuinRenderer({ connections, secretStroke, isPlayer
 
   return (
     <>
-      <LevelTwoFoundation id="level-two-frozen-ruin-footprint" path={footprintPath} theme={frozenRuinTheme}>
+      <LevelTwoFoundation id="level-two-frozen-ruin-footprint" path={footprintPath} theme={frozenRuinTheme} presentation={presentation}>
         <path d="M64 246 C142 178 210 150 270 104 M354 236 C430 178 508 136 592 112 M102 400 C210 430 332 402 456 416" stroke="#f5ffff" strokeWidth="40" strokeLinecap="round" fill="none" opacity="0.18" />
         <path d="M42 300 C124 260 210 304 310 276 S500 226 682 282" stroke="#3f6a7a" strokeWidth="38" strokeLinecap="round" fill="none" opacity="0.14" />
       </LevelTwoFoundation>
@@ -158,7 +160,7 @@ export function LevelTwoFrozenRuinRenderer({ connections, secretStroke, isPlayer
       <Crevasse path="M388 82 C420 158 414 230 390 302 S378 392 450 456" width={12} />
       <FrozenPool cx={382} cy={244} rx={76} ry={48} />
       <FrozenPool cx={560} cy={322} rx={58} ry={38} />
-      <IceRouteLayer connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} />
+      <IceRouteLayer connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} presentation={presentation} />
       <IceArea path="M44 226 L76 204 L122 210 L160 230 L146 262 L108 286 L62 278 L38 252 Z" exposed />
       <IceArea path="M192 118 L226 90 L276 100 L318 132 L304 168 L262 194 L214 184 L178 144 Z" />
       <IceArea path="M306 194 L352 168 L418 174 L468 220 L458 270 L410 306 L350 300 L292 250 Z" exposed />
@@ -197,12 +199,12 @@ export function LevelTwoFrozenRuinRenderer({ connections, secretStroke, isPlayer
       </g>
       {!isPlayer && (
         <>
-          <LevelTwoMarker x={444} y={218} label="H" />
-          <LevelTwoMarker x={494} y={386} label="T" />
-          <LevelTwoMarker x={174} y={364} label="B" />
+          <LevelTwoMarker x={444} y={218} label="H" presentation={presentation} />
+          <LevelTwoMarker x={494} y={386} label="T" presentation={presentation} />
+          <LevelTwoMarker x={174} y={364} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} />
+      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
     </>
   );
 }

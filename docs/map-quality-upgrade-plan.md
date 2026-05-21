@@ -55,6 +55,8 @@ Recommended print map modes:
 - `print-gm`: larger labels, higher contrast, simplified texture, GM markers, secret routes, compact legend.
 - `print-player`: clean presentation, no GM markers, no secret routes, no treasure/hazard markers, minimal legend.
 
+Status: an initial `presentation="print"` mode has been added to `DungeonMap` and the Level 2 renderer path. The Print Packet now uses print presentation for both GM and player-safe maps, while normal in-app maps continue to use screen presentation by default. This first pass improves label backplates, route contrast, secret-route readability, marker contrast, and reduces low-value texture in print mode. Dedicated `print-gm` and `print-player` submodes may still be useful later.
+
 ## GM Map Requirements
 
 GM maps should show:
@@ -362,16 +364,16 @@ Long term:
 
 ## Recommended Next 10 Map Quality Tasks
 
-1. Add a print-specific map presentation prop through `DungeonMap` and Level 2 renderers.
-2. Create a map print QA checklist for all 10 environments: GM map, player map, room number readability, route clarity, and secret hiding.
-3. Improve player-safe print map styling so it feels like an intentional handout.
-4. Add high-contrast print tokens for walls, floor, routes, labels, markers, water, lava, ice, sand, and forest terrain.
-5. Tune the weakest paid-value environments first: laboratory, shrine, and crypt.
-6. Add optional grid/no-grid support as renderer state, defaulting to no-grid for player maps.
-7. Add standalone map-only print sections or presets in the Print Packet view.
-8. Prototype SVG map serialization/download for GM and player-safe maps.
-9. Prototype PNG export from the serialized SVG after style inlining is solved.
-10. Define acceptance screenshots for Adventurer paid-value comparison: Lantern schematic vs premium GM print map vs premium player handout.
+1. Create a map print QA checklist for all 10 environments: GM map, player map, room number readability, route clarity, and secret hiding.
+2. Improve player-safe print map styling so it feels like an intentional handout.
+3. Add high-contrast print tokens for walls, floor, routes, labels, markers, water, lava, ice, sand, and forest terrain.
+4. Tune the weakest paid-value environments first: laboratory, shrine, and crypt.
+5. Add optional grid/no-grid support as renderer state, defaulting to no-grid for player maps.
+6. Add standalone map-only print sections or presets in the Print Packet view.
+7. Prototype SVG map serialization/download for GM and player-safe maps.
+8. Prototype PNG export from the serialized SVG after style inlining is solved.
+9. Define acceptance screenshots for Adventurer paid-value comparison: Lantern schematic vs premium GM print map vs premium player handout.
+10. Decide whether `presentation="print"` should split into explicit `print-gm` and `print-player` modes after QA.
 
 ## Before Private Playtesting
 
@@ -414,11 +416,11 @@ These may become important later, but they should not distract from making the c
 
 ## Recommended Next Technical Task
 
-Add a print-specific map presentation mode to `DungeonMap` and the Level 2 renderer path.
+Create a map print QA checklist and tune the weakest environments against the new print presentation mode.
 
 Why this first:
 
-- It improves the current paid-value blocker directly.
-- It preserves SVG and `map.connections`.
-- It can improve GM and player-safe maps without changing dungeon content.
-- It creates a foundation for SVG/PNG export and server-side PDF later.
+- The print presentation mode now exists; the next risk is whether every environment prints well.
+- Laboratory, shrine, and crypt still need the most visual lift for paid value.
+- QA should verify player-safe hiding before export formats become downloadable files.
+- The results will inform whether `print-gm` and `print-player` need separate renderer branches.

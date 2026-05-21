@@ -89,6 +89,10 @@ select {
     overflow: hidden !important;
   }
 
+  .print-map-card {
+    background: #ffffff !important;
+  }
+
   .print-map-frame svg {
     display: block;
     width: 100% !important;

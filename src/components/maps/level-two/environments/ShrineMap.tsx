@@ -1,6 +1,6 @@
-import type { MapConnection } from '../../../../types';
 import { shrineTheme } from '../themes';
 import { LevelTwoConnectionApron, LevelTwoConnectionRoutes, LevelTwoCrack, LevelTwoDebris, LevelTwoFoundation, LevelTwoMarker, LevelTwoMoss, LevelTwoRoomNumbers, LevelTwoRoomShell, LevelTwoRubble, LevelTwoRubbleChips, LevelTwoWater } from '../shared';
+import type { LevelTwoRendererProps } from '../types';
 
 function LevelTwoStairs({ x, y, w = 58, h = 34 }: { x: number; y: number; w?: number; h?: number }) {
   return (
@@ -53,7 +53,7 @@ function LevelTwoOpenRuinArea({ path, final = false }: { path: string; final?: b
   );
 }
 
-export function LevelTwoShrineRenderer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
+export function LevelTwoShrineRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 154, y: 216, label: '1' },
     { x: 324, y: 204, label: '2' },
@@ -67,21 +67,21 @@ export function LevelTwoShrineRenderer({ connections, secretStroke, isPlayer }: 
 
   return (
     <>
-      <LevelTwoFoundation id="level-two-ruin-footprint" path={footprintPath} theme={shrineTheme}>
+      <LevelTwoFoundation id="level-two-ruin-footprint" path={footprintPath} theme={shrineTheme} presentation={presentation}>
         <path d="M92 172 C156 142 218 150 278 148 M392 140 C470 148 528 174 558 220 M90 378 C150 410 220 400 270 382 M410 420 C478 420 536 398 552 350" stroke="#425f35" strokeWidth="18" strokeLinecap="round" fill="none" opacity="0.1" />
         <path d="M106 286 C176 258 238 292 304 270 S438 250 524 286" stroke={shrineTheme.water} strokeWidth="16" strokeLinecap="round" fill="none" opacity="0.1" />
         <path d="M126 154 C210 124 330 132 420 138 C486 144 536 168 566 218 M82 326 C142 404 238 414 314 390 C390 430 500 414 552 342" stroke="#241c16" strokeWidth="6" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.14" strokeDasharray="42 20 16 24" />
         <path d="M142 160 C222 140 332 146 420 152 M108 342 C178 390 250 392 316 366 M412 404 C474 404 524 380 540 338" stroke="#d6bf8d" strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.14" strokeDasharray="34 28" />
       </LevelTwoFoundation>
       <LevelTwoRubbleChips chips={[{ x: 94, y: 150, r: 7 }, { x: 236, y: 128 }, { x: 540, y: 176, r: 6 }, { x: 566, y: 392 }, { x: 92, y: 414, r: 5 }, { x: 346, y: 430, r: 7 }]} />
-      <LevelTwoConnectionApron connections={connections} theme={shrineTheme} />
+      <LevelTwoConnectionApron connections={connections} theme={shrineTheme} presentation={presentation} />
       <path d="M120 148 C184 126 218 152 268 142 C350 120 432 136 526 166 C552 218 528 272 540 318 C548 366 514 408 440 414 C366 424 322 392 264 402 C204 412 144 398 106 360 C82 304 98 224 120 148 Z" fill="#80633e" opacity="0.1" />
-      <LevelTwoConnectionRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} theme={shrineTheme} />
+      <LevelTwoConnectionRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} theme={shrineTheme} presentation={presentation} />
       <LevelTwoOpenRuinArea path="M88 178 C126 160 188 166 218 194 L210 252 C170 268 116 260 88 230 Z" />
-      <LevelTwoRoomShell x={260} y={150} w={128} h={108} theme={shrineTheme} />
+      <LevelTwoRoomShell x={260} y={150} w={128} h={108} theme={shrineTheme} presentation={presentation} />
       <LevelTwoOpenRuinArea path="M426 176 C456 160 510 168 536 194 L526 248 C492 260 446 250 424 222 Z" />
       <LevelTwoOpenRuinArea path="M436 314 C468 300 528 306 550 334 L534 382 C494 394 450 382 432 354 Z" />
-      <LevelTwoRoomShell x={270} y={302} w={118} h={84} theme={shrineTheme} />
+      <LevelTwoRoomShell x={270} y={302} w={118} h={84} theme={shrineTheme} presentation={presentation} />
       <LevelTwoOpenRuinArea path="M118 326 C146 312 198 318 220 346 L204 390 C168 400 128 384 116 356 Z" final />
       <g>
         <LevelTwoAltarMark x={326} y={205} />
@@ -113,12 +113,12 @@ export function LevelTwoShrineRenderer({ connections, secretStroke, isPlayer }: 
       </g>
       {!isPlayer && (
         <>
-          <LevelTwoMarker x={366} y={172} label="H" />
-          <LevelTwoMarker x={528} y={326} label="T" />
-          <LevelTwoMarker x={202} y={334} label="B" />
+          <LevelTwoMarker x={366} y={172} label="H" presentation={presentation} />
+          <LevelTwoMarker x={528} y={326} label="T" presentation={presentation} />
+          <LevelTwoMarker x={202} y={334} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} />
+      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
     </>
   );
 }

@@ -1,6 +1,7 @@
 import type { MapConnection } from '../../../../types';
 import { volcanicForgeTheme } from '../themes';
 import { LevelTwoCrack, LevelTwoDebris, LevelTwoFoundation, LevelTwoMarker, LevelTwoRoomNumbers, LevelTwoRubble } from '../shared';
+import type { LevelTwoRendererProps, MapPresentation } from '../types';
 
 function LavaChannel({ path, width = 18 }: { path: string; width?: number }) {
   return (
@@ -126,7 +127,8 @@ function MetalGrateBridge({ path }: { path: string }) {
   );
 }
 
-function ForgeRouteLayer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
+function ForgeRouteLayer({ connections, secretStroke, isPlayer, presentation = 'screen' }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean; presentation?: MapPresentation }) {
+  const isPrint = presentation === 'print';
   const normalPaths = connections.filter((connection) => connection.type === 'normal' && connection.path).map((connection) => connection.path as string);
   const secretPaths = connections.filter((connection) => connection.type === 'secret' && connection.path).map((connection) => connection.path as string);
 
@@ -145,14 +147,14 @@ function ForgeRouteLayer({ connections, secretStroke, isPlayer }: { connections:
         secretPaths.map((path) => (
           <g key={path}>
             <path d={path} stroke="#1a100c" strokeWidth="10" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.32" />
-            <path d={path} stroke={secretStroke} strokeWidth="4.5" strokeLinecap="round" strokeLinejoin="round" fill="none" strokeDasharray="9 8" opacity="0.9" />
+            <path d={path} stroke={secretStroke} strokeWidth={isPrint ? '6' : '4.5'} strokeLinecap="round" strokeLinejoin="round" fill="none" strokeDasharray={isPrint ? '12 7' : '9 8'} opacity={isPrint ? '0.96' : '0.9'} />
           </g>
         ))}
     </g>
   );
 }
 
-export function LevelTwoVolcanicForgeRenderer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
+export function LevelTwoVolcanicForgeRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 92, y: 250, label: '1' },
     { x: 238, y: 126, label: '2' },
@@ -167,7 +169,7 @@ export function LevelTwoVolcanicForgeRenderer({ connections, secretStroke, isPla
 
   return (
     <>
-      <LevelTwoFoundation id="level-two-volcanic-forge-footprint" path={footprintPath} theme={volcanicForgeTheme}>
+      <LevelTwoFoundation id="level-two-volcanic-forge-footprint" path={footprintPath} theme={volcanicForgeTheme} presentation={presentation}>
         <path d="M54 246 C144 184 198 132 250 90 M318 186 C402 124 482 122 574 114 M94 404 C216 442 344 398 444 374" stroke="#0e0b09" strokeWidth="42" strokeLinecap="round" fill="none" opacity="0.24" />
         <path d="M318 74 C356 162 348 260 316 352 S282 420 228 448" stroke="#7e1b11" strokeWidth="26" strokeLinecap="round" fill="none" opacity="0.16" />
         <path d="M24 304 C114 252 218 306 322 262 S496 182 690 254" stroke="#32140f" strokeWidth="52" strokeLinecap="round" fill="none" opacity="0.2" />
@@ -178,7 +180,7 @@ export function LevelTwoVolcanicForgeRenderer({ connections, secretStroke, isPla
       <MoltenSeam path="M292 186 C330 196 356 202 392 188" width={3.6} />
       <MoltenSeam path="M430 278 C444 306 458 326 482 342" width={3.4} />
       <MoltenSeam path="M146 376 C178 392 218 404 254 392" width={3.2} />
-      <ForgeRouteLayer connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} />
+      <ForgeRouteLayer connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} presentation={presentation} />
       <MetalGrateBridge path="M530 238 C544 238 554 240 568 242" />
       <MetalGrateBridge path="M392 338 C402 348 410 358 420 370" />
       <ForgePlatform path="M42 230 C62 212 118 214 148 222 L164 246 C152 272 122 286 70 280 C48 274 36 254 42 230 Z" />
@@ -222,12 +224,12 @@ export function LevelTwoVolcanicForgeRenderer({ connections, secretStroke, isPla
       </g>
       {!isPlayer && (
         <>
-          <LevelTwoMarker x={306} y={186} label="H" />
-          <LevelTwoMarker x={458} y={348} label="T" />
-          <LevelTwoMarker x={244} y={344} label="B" />
+          <LevelTwoMarker x={306} y={186} label="H" presentation={presentation} />
+          <LevelTwoMarker x={458} y={348} label="T" presentation={presentation} />
+          <LevelTwoMarker x={244} y={344} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} />
+      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
     </>
   );
 }

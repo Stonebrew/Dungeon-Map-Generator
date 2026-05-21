@@ -4,6 +4,7 @@ import type { MapConnection, MapStyle } from '../../../types';
 export type LevelTwoGeometryStrategy = 'constructed' | 'organic' | 'hybrid';
 export type LevelTwoRendererLevel = 2;
 export type LevelTwoRouteVariant = 'ruin' | 'crypt' | 'sewer' | 'laboratory' | 'blackfen' | 'cavern' | 'volcanicForge' | 'frozenRuin' | 'desertTemple';
+export type MapPresentation = 'screen' | 'print';
 
 export type LevelTwoMapTheme = {
   floorTiles: string[];
@@ -40,6 +41,7 @@ export type LevelTwoRendererProps = {
   connections: MapConnection[];
   secretStroke: string;
   isPlayer: boolean;
+  presentation?: MapPresentation;
 };
 
 export type LevelTwoEnvironmentDefinition = {

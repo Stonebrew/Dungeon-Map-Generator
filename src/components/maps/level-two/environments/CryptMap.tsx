@@ -1,6 +1,6 @@
-import type { MapConnection } from '../../../../types';
 import { cryptTheme } from '../themes';
 import { LevelTwoConnectionRoutes, LevelTwoCrack, LevelTwoDebris, LevelTwoDust, LevelTwoFoundation, LevelTwoMarker, LevelTwoRoomNumbers, LevelTwoRoomShell, LevelTwoRubble } from '../shared';
+import type { LevelTwoRendererProps } from '../types';
 
 function LevelTwoSarcophagus({ x, y, w = 56, h = 24 }: { x: number; y: number; w?: number; h?: number }) {
   return (
@@ -48,7 +48,7 @@ function LevelTwoPinchedPassage({ path }: { path: string }) {
   );
 }
 
-export function LevelTwoCryptRenderer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
+export function LevelTwoCryptRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 360, y: 89, label: '1' },
     { x: 360, y: 215, label: '2' },
@@ -61,25 +61,25 @@ export function LevelTwoCryptRenderer({ connections, secretStroke, isPlayer }: {
 
   return (
     <>
-      <LevelTwoFoundation id="level-two-crypt-footprint" path={footprintPath} theme={cryptTheme}>
+      <LevelTwoFoundation id="level-two-crypt-footprint" path={footprintPath} theme={cryptTheme} presentation={presentation}>
         <path d="M360 44 V416 M82 216 H638 M196 216 V408 M524 216 V408" stroke="#2c2520" strokeWidth="5" strokeLinecap="round" fill="none" opacity="0.18" />
         <path d="M360 58 V398 M104 216 H616 M206 224 V392 M514 224 V392" stroke="#b9aa8d" strokeWidth="1.3" strokeLinecap="round" fill="none" opacity="0.2" strokeDasharray="18 14" />
         <path d="M120 132 H600 M120 300 H600" stroke="#211b17" strokeWidth="8" strokeLinecap="round" fill="none" opacity="0.08" strokeDasharray="48 24" />
       </LevelTwoFoundation>
       <LevelTwoDust x={114} y={128} w={500} h={24} theme={cryptTheme} />
       <LevelTwoDust x={120} y={302} w={486} h={20} theme={cryptTheme} />
-      <LevelTwoConnectionRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} theme={cryptTheme} variant="crypt" />
+      <LevelTwoConnectionRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} theme={cryptTheme} variant="crypt" presentation={presentation} />
       <LevelTwoPinchedPassage path="M360 128 V170" />
       <LevelTwoPinchedPassage path="M210 216 H256" />
       <LevelTwoPinchedPassage path="M464 216 H510" />
       <LevelTwoPinchedPassage path="M206 260 V326" />
       <LevelTwoPinchedPassage path="M514 260 V326" />
-      <LevelTwoRoomShell x={296} y={50} w={128} h={78} theme={cryptTheme} variant="crypt" />
-      <LevelTwoRoomShell x={256} y={170} w={208} h={90} theme={cryptTheme} variant="crypt" />
-      <LevelTwoRoomShell x={88} y={174} w={122} h={86} theme={cryptTheme} variant="crypt" />
-      <LevelTwoRoomShell x={510} y={174} w={122} h={86} theme={cryptTheme} variant="crypt" />
-      <LevelTwoRoomShell x={136} y={326} w={140} h={78} theme={cryptTheme} variant="crypt" />
-      <LevelTwoRoomShell x={444} y={326} w={140} h={78} theme={cryptTheme} final variant="crypt" />
+      <LevelTwoRoomShell x={296} y={50} w={128} h={78} theme={cryptTheme} variant="crypt" presentation={presentation} />
+      <LevelTwoRoomShell x={256} y={170} w={208} h={90} theme={cryptTheme} variant="crypt" presentation={presentation} />
+      <LevelTwoRoomShell x={88} y={174} w={122} h={86} theme={cryptTheme} variant="crypt" presentation={presentation} />
+      <LevelTwoRoomShell x={510} y={174} w={122} h={86} theme={cryptTheme} variant="crypt" presentation={presentation} />
+      <LevelTwoRoomShell x={136} y={326} w={140} h={78} theme={cryptTheme} variant="crypt" presentation={presentation} />
+      <LevelTwoRoomShell x={444} y={326} w={140} h={78} theme={cryptTheme} final variant="crypt" presentation={presentation} />
       <g>
         <LevelTwoSarcophagus x={332} y={103} w={56} h={20} />
         <LevelTwoSarcophagus x={288} y={230} w={52} h={18} />
@@ -105,12 +105,12 @@ export function LevelTwoCryptRenderer({ connections, secretStroke, isPlayer }: {
       </g>
       {!isPlayer && (
         <>
-          <LevelTwoMarker x={190} y={192} label="H" />
-          <LevelTwoMarker x={258} y={346} label="T" />
-          <LevelTwoMarker x={566} y={346} label="B" />
+          <LevelTwoMarker x={190} y={192} label="H" presentation={presentation} />
+          <LevelTwoMarker x={258} y={346} label="T" presentation={presentation} />
+          <LevelTwoMarker x={566} y={346} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} />
+      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
     </>
   );
 }

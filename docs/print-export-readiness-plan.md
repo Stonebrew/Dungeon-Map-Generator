@@ -189,6 +189,7 @@ The prototype Print Packet view uses the currently selected dungeon and includes
 - Encounter tables and treasure table.
 - Browser print CSS that hides app navigation, DevPanel, buttons, tier selectors, and interactive controls.
 - Print-specific room cards, map frames, captions, section labels, and page-break rules for a more usable table packet.
+- Print-specific map presentation mode for GM and player-safe maps, with stronger label contrast, clearer route strokes, reduced decorative texture, and cleaner print framing.
 
 Done when:
 
@@ -206,6 +207,7 @@ Known limitations:
 - There is no cached export artifact or download history.
 - Map print quality still needs manual QA across all 10 environments, especially premium Level 2 maps with subtle color or texture.
 - There are no page numbers, running headers, custom cover pages, or print presets yet.
+- SVG download, PNG export, generated PDF, and server-side export bundles remain future work.
 
 ## Recommended First Export Milestone
 

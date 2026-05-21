@@ -1,7 +1,6 @@
-import type { MapConnection } from '../../../../types';
 import { laboratoryTheme } from '../themes';
 import { LevelTwoConnectionApron, LevelTwoConnectionRoutes, LevelTwoCrack, LevelTwoDebris, LevelTwoFoundation, LevelTwoMarker, LevelTwoRoomNumbers, LevelTwoRoomShell, LevelTwoRubble } from '../shared';
-import type { LevelTwoMapTheme } from '../types';
+import type { LevelTwoMapTheme, LevelTwoRendererProps } from '../types';
 
 function LevelTwoArcaneCircle({ x, y, r = 26, theme }: { x: number; y: number; r?: number; theme: LevelTwoMapTheme }) {
   return (
@@ -86,7 +85,7 @@ function LevelTwoContainmentCell({ x, y, w, h, theme }: { x: number; y: number; 
   );
 }
 
-export function LevelTwoLaboratoryRenderer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
+export function LevelTwoLaboratoryRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 145, y: 133, label: '1' },
     { x: 350, y: 109, label: '2' },
@@ -99,22 +98,22 @@ export function LevelTwoLaboratoryRenderer({ connections, secretStroke, isPlayer
 
   return (
     <>
-      <LevelTwoFoundation id="level-two-laboratory-footprint" path={footprintPath} theme={laboratoryTheme}>
+      <LevelTwoFoundation id="level-two-laboratory-footprint" path={footprintPath} theme={laboratoryTheme} presentation={presentation}>
         <path d="M110 112 H430 M350 72 V394 M510 120 H628 M98 356 H626" stroke={laboratoryTheme.brass} strokeWidth="4" strokeLinecap="round" fill="none" opacity="0.12" strokeDasharray="28 18" />
         <path d="M240 94 C310 58 404 66 484 106 M244 376 C334 414 442 404 536 368" stroke={laboratoryTheme.runeGlow} strokeWidth="2" strokeLinecap="round" fill="none" opacity="0.16" strokeDasharray="5 18" />
         <path d="M72 246 H238 M430 252 H642 M246 180 V390" stroke="#171414" strokeWidth="7" strokeLinecap="round" opacity="0.1" strokeDasharray="42 24" />
       </LevelTwoFoundation>
-      <LevelTwoConnectionApron connections={connections} theme={laboratoryTheme} />
-      <LevelTwoConnectionRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} theme={laboratoryTheme} variant="laboratory" />
+      <LevelTwoConnectionApron connections={connections} theme={laboratoryTheme} presentation={presentation} />
+      <LevelTwoConnectionRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} theme={laboratoryTheme} variant="laboratory" presentation={presentation} />
       <LevelTwoWorkZoneRail path="M146 132 H350 H570" theme={laboratoryTheme} />
       <LevelTwoWorkZoneRail path="M160 332 H370 H586" theme={laboratoryTheme} />
       <LevelTwoWorkZoneRail path="M350 158 C326 226 340 282 370 302" theme={laboratoryTheme} />
-      <LevelTwoRoomShell x={74} y={92} w={142} h={82} theme={laboratoryTheme} variant="laboratory" />
-      <LevelTwoRoomShell x={274} y={60} w={152} h={98} theme={laboratoryTheme} variant="laboratory" />
-      <LevelTwoRoomShell x={506} y={96} w={126} h={110} theme={laboratoryTheme} variant="laboratory" />
-      <LevelTwoRoomShell x={92} y={284} w={136} h={96} theme={laboratoryTheme} variant="laboratory" />
-      <LevelTwoRoomShell x={306} y={302} w={128} h={92} theme={laboratoryTheme} variant="laboratory" />
-      <LevelTwoRoomShell x={520} y={286} w={132} h={116} theme={laboratoryTheme} final variant="laboratory" />
+      <LevelTwoRoomShell x={74} y={92} w={142} h={82} theme={laboratoryTheme} variant="laboratory" presentation={presentation} />
+      <LevelTwoRoomShell x={274} y={60} w={152} h={98} theme={laboratoryTheme} variant="laboratory" presentation={presentation} />
+      <LevelTwoRoomShell x={506} y={96} w={126} h={110} theme={laboratoryTheme} variant="laboratory" presentation={presentation} />
+      <LevelTwoRoomShell x={92} y={284} w={136} h={96} theme={laboratoryTheme} variant="laboratory" presentation={presentation} />
+      <LevelTwoRoomShell x={306} y={302} w={128} h={92} theme={laboratoryTheme} variant="laboratory" presentation={presentation} />
+      <LevelTwoRoomShell x={520} y={286} w={132} h={116} theme={laboratoryTheme} final variant="laboratory" presentation={presentation} />
       <g>
         <LevelTwoWorkbench x={98} y={108} theme={laboratoryTheme} />
         <LevelTwoWorkbench x={106} y={354} w={64} theme={laboratoryTheme} />
@@ -137,12 +136,12 @@ export function LevelTwoLaboratoryRenderer({ connections, secretStroke, isPlayer
       </g>
       {!isPlayer && (
         <>
-          <LevelTwoMarker x={410} y={82} label="H" />
-          <LevelTwoMarker x={420} y={324} label="T" />
-          <LevelTwoMarker x={636} y={314} label="B" />
+          <LevelTwoMarker x={410} y={82} label="H" presentation={presentation} />
+          <LevelTwoMarker x={420} y={324} label="T" presentation={presentation} />
+          <LevelTwoMarker x={636} y={314} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} />
+      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
     </>
   );
 }

@@ -119,7 +119,7 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
 
       <PrintSection title="GM Map" kicker="Page 2" pageBreak>
         <figure className="print-map-frame">
-          <DungeonMap mode="gm" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} showLegend />
+          <DungeonMap mode="gm" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} showLegend presentation="print" />
           <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.12em] text-ink/55">
             GM reference map. Includes keyed areas, GM markers, secret routes, and map legend.
           </figcaption>
@@ -129,7 +129,7 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
       <PrintSection title="Player-Safe Map" kicker="Page 3" pageBreak>
         {dungeon.map.playerSafe.description && <p className="mb-3 text-sm leading-6 text-ink/65">{dungeon.map.playerSafe.description}</p>}
         <figure className="print-map-frame">
-          <DungeonMap mode="player" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} showLegend />
+          <DungeonMap mode="player" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} showLegend presentation="print" />
           <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.12em] text-ink/55">
             Player handout map. GM markers, secret routes, treasure, hazards, and GM-only labels are hidden.
           </figcaption>

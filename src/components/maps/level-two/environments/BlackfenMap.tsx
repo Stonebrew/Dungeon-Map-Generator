@@ -1,7 +1,6 @@
-import type { MapConnection } from '../../../../types';
 import { blackfenTheme } from '../themes';
 import { LevelTwoConnectionApron, LevelTwoConnectionRoutes, LevelTwoCrack, LevelTwoDebris, LevelTwoFoundation, LevelTwoMarker, LevelTwoMoss, LevelTwoRoomNumbers, LevelTwoRoomShell, LevelTwoRubble, LevelTwoWater } from '../shared';
-import type { LevelTwoMapTheme } from '../types';
+import type { LevelTwoMapTheme, LevelTwoRendererProps } from '../types';
 
 function LevelTwoDampPatch({ x, y, w, h, theme }: { x: number; y: number; w: number; h: number; theme: LevelTwoMapTheme }) {
   return (
@@ -44,7 +43,7 @@ function LevelTwoBarrierMark({ x, y, w = 48, rotate = 0, theme }: { x: number; y
   );
 }
 
-export function LevelTwoBlackfenRenderer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
+export function LevelTwoBlackfenRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 130, y: 130, label: '1' },
     { x: 306, y: 122, label: '2' },
@@ -60,25 +59,25 @@ export function LevelTwoBlackfenRenderer({ connections, secretStroke, isPlayer }
 
   return (
     <>
-      <LevelTwoFoundation id="level-two-blackfen-footprint" path={footprintPath} theme={blackfenTheme}>
+      <LevelTwoFoundation id="level-two-blackfen-footprint" path={footprintPath} theme={blackfenTheme} presentation={presentation}>
         <path d="M70 308 C154 282 242 310 314 288 S464 248 554 278" stroke={blackfenTheme.water} strokeWidth="26" strokeLinecap="round" fill="none" opacity="0.13" />
         <path d="M92 158 C132 146 168 156 204 142 M392 102 C440 82 490 92 526 76 M86 408 C138 428 184 420 224 396" stroke={blackfenTheme.moss} strokeWidth="10" strokeDasharray="2 14" strokeLinecap="round" fill="none" opacity="0.18" />
         <path d="M52 76 H204 M244 80 H424 M438 58 H536 M82 350 H214 M374 340 H496 M558 220 H652" stroke="#111612" strokeWidth="6" strokeLinecap="round" fill="none" opacity="0.1" strokeDasharray="38 20" />
       </LevelTwoFoundation>
-      <LevelTwoConnectionApron connections={connections} theme={blackfenTheme} />
+      <LevelTwoConnectionApron connections={connections} theme={blackfenTheme} presentation={presentation} />
       <LevelTwoDampPatch x={86} y={136} w={82} h={22} theme={blackfenTheme} />
       <LevelTwoDampPatch x={98} y={394} w={70} h={18} theme={blackfenTheme} />
       <LevelTwoDampPatch x={408} y={268} w={82} h={24} theme={blackfenTheme} />
-      <LevelTwoConnectionRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} theme={blackfenTheme} variant="blackfen" />
-      <LevelTwoRoomShell x={70} y={88} w={120} h={84} theme={blackfenTheme} variant="blackfen" />
-      <LevelTwoRoomShell x={246} y={78} w={120} h={88} theme={blackfenTheme} variant="blackfen" />
-      <LevelTwoRoomShell x={84} y={222} w={130} h={92} theme={blackfenTheme} variant="blackfen" />
-      <LevelTwoRoomShell x={238} y={224} w={104} h={82} theme={blackfenTheme} variant="blackfen" />
-      <LevelTwoRoomShell x={386} y={186} w={142} h={112} theme={blackfenTheme} variant="blackfen" />
-      <LevelTwoRoomShell x={438} y={58} w={98} h={82} theme={blackfenTheme} variant="blackfen" />
-      <LevelTwoRoomShell x={84} y={350} w={126} h={72} theme={blackfenTheme} variant="blackfen" />
-      <LevelTwoRoomShell x={374} y={340} w={122} h={76} theme={blackfenTheme} variant="blackfen" />
-      <LevelTwoRoomShell x={560} y={220} w={92} h={118} theme={blackfenTheme} final variant="blackfen" />
+      <LevelTwoConnectionRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} theme={blackfenTheme} variant="blackfen" presentation={presentation} />
+      <LevelTwoRoomShell x={70} y={88} w={120} h={84} theme={blackfenTheme} variant="blackfen" presentation={presentation} />
+      <LevelTwoRoomShell x={246} y={78} w={120} h={88} theme={blackfenTheme} variant="blackfen" presentation={presentation} />
+      <LevelTwoRoomShell x={84} y={222} w={130} h={92} theme={blackfenTheme} variant="blackfen" presentation={presentation} />
+      <LevelTwoRoomShell x={238} y={224} w={104} h={82} theme={blackfenTheme} variant="blackfen" presentation={presentation} />
+      <LevelTwoRoomShell x={386} y={186} w={142} h={112} theme={blackfenTheme} variant="blackfen" presentation={presentation} />
+      <LevelTwoRoomShell x={438} y={58} w={98} h={82} theme={blackfenTheme} variant="blackfen" presentation={presentation} />
+      <LevelTwoRoomShell x={84} y={350} w={126} h={72} theme={blackfenTheme} variant="blackfen" presentation={presentation} />
+      <LevelTwoRoomShell x={374} y={340} w={122} h={76} theme={blackfenTheme} variant="blackfen" presentation={presentation} />
+      <LevelTwoRoomShell x={560} y={220} w={92} h={118} theme={blackfenTheme} final variant="blackfen" presentation={presentation} />
       <g>
         <LevelTwoWater x={88} y={140} w={78} h={16} theme={blackfenTheme} />
         <LevelTwoWater x={100} y={394} w={64} h={12} theme={blackfenTheme} />
@@ -97,12 +96,12 @@ export function LevelTwoBlackfenRenderer({ connections, secretStroke, isPlayer }
       </g>
       {!isPlayer && (
         <>
-          <LevelTwoMarker x={174} y={106} label="T" />
-          <LevelTwoMarker x={508} y={202} label="H" />
-          <LevelTwoMarker x={633} y={238} label="B" />
+          <LevelTwoMarker x={174} y={106} label="T" presentation={presentation} />
+          <LevelTwoMarker x={508} y={202} label="H" presentation={presentation} />
+          <LevelTwoMarker x={633} y={238} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} />
+      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
     </>
   );
 }
