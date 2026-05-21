@@ -655,6 +655,49 @@ function ForestRuinLayout({ connections, palette, isPlayer, enhanced }: { connec
   );
 }
 
+function FrozenRuinLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
+  const roomNumbers = [
+    { x: 98, y: 250, label: '1' },
+    { x: 252, y: 160, label: '2' },
+    { x: 392, y: 242, label: '3' },
+    { x: 566, y: 144, label: '4' },
+    { x: 560, y: 322, label: '5' },
+    { x: 338, y: 378, label: '6' },
+    { x: 160, y: 388, label: '7' },
+    { x: 468, y: 410, label: '8' },
+  ];
+
+  return (
+    <>
+      <path d="M36 226 C86 126 178 152 234 84 C312 44 400 124 474 86 C562 34 668 104 670 214 C708 300 632 392 540 388 C476 470 370 436 300 444 C210 468 82 442 42 354 C12 302 10 262 36 226 Z" fill={palette.featureFill} opacity="0.32" />
+      {enhanced && (
+        <g opacity={isPlayer ? '0.42' : '0.62'}>
+          <path d="M30 306 C126 260 226 314 326 276 S504 216 688 286" stroke={palette.water} strokeWidth="22" strokeLinecap="round" fill="none" opacity="0.28" />
+          <path d="M388 82 C420 158 414 230 390 302 S378 392 450 456" stroke={palette.floorLine} strokeWidth="4" strokeLinecap="round" fill="none" opacity="0.36" strokeDasharray="10 10" />
+          <CrackMarks stroke={palette.floorLine} points={['M350 222 l20 -16 l16 22', 'M534 300 l18 -12 l16 18', 'M146 392 l16 -10 l10 16']} />
+        </g>
+      )}
+      <ConnectionRoutes connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />
+      <OvalRoom cx={98} cy={250} rx={58} ry={40} fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <OvalRoom cx={252} cy={160} rx={66} ry={48} fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <OvalRoom cx={392} cy={242} rx={84} ry={58} fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <OvalRoom cx={566} cy={144} rx={72} ry={52} fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <OvalRoom cx={560} cy={322} rx={70} ry={52} fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <OvalRoom cx={338} cy={378} rx={72} ry={50} fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <OvalRoom cx={160} cy={388} rx={62} ry={44} fill={palette.roomFill} palette={palette} enhanced={enhanced} />
+      <OvalRoom cx={468} cy={410} rx={62} ry={42} fill={palette.finalFill} palette={palette} enhanced={enhanced} />
+      {!isPlayer && (
+        <>
+          <MapMarker x={444} y={218} label="H" />
+          <MapMarker x={494} y={386} label="T" />
+          <MapMarker x={174} y={364} label="B" />
+        </>
+      )}
+      <RoomNumbers rooms={roomNumbers} />
+    </>
+  );
+}
+
 function ShrineLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
   const roomNumbers = [
     { x: 154, y: 216, label: '1' },
@@ -880,6 +923,8 @@ export function EnhancedFallbackMap({ mapData, style, palette, isPlayer, enhance
       return <CryptLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'forestRuin':
       return <ForestRuinLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
+    case 'frozenRuin':
+      return <FrozenRuinLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'sewer':
       return <SewerLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
     case 'laboratory':

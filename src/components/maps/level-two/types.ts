@@ -3,7 +3,7 @@ import type { MapConnection, MapStyle } from '../../../types';
 
 export type LevelTwoGeometryStrategy = 'constructed' | 'organic' | 'hybrid';
 export type LevelTwoRendererLevel = 2;
-export type LevelTwoRouteVariant = 'ruin' | 'crypt' | 'sewer' | 'laboratory' | 'blackfen' | 'cavern' | 'volcanicForge';
+export type LevelTwoRouteVariant = 'ruin' | 'crypt' | 'sewer' | 'laboratory' | 'blackfen' | 'cavern' | 'volcanicForge' | 'frozenRuin';
 
 export type LevelTwoMapTheme = {
   floorTiles: string[];

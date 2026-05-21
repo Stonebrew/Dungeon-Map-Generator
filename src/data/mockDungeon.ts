@@ -159,6 +159,10 @@ const mapLayoutGrammarByStyle: Record<MapStyle, NonNullable<Dungeon['map']['layo
     grammar: 'hazardIslands',
     notes: 'Lava-shaped forge complex with basalt platforms, grate crossings, service ledges, and hazard-separated work zones.',
   },
+  frozenRuin: {
+    grammar: ['floodedIslands', 'fragmentedVertical'],
+    notes: 'Frozen ruin/arctic cave with cracked pools, ice bridges, slick ledges, snow-buried stonework, and hazardous under-ice routes.',
+  },
 };
 
 const roomLayoutMetadataByStyle: Record<MapStyle, Record<number, RoomLayoutMetadata>> = {
@@ -231,6 +235,16 @@ const roomLayoutMetadataByStyle: Record<MapStyle, Record<number, RoomLayoutMetad
     7: { layoutRole: 'spoke', areaShape: 'ledge', areaScale: 'small', openness: 'platform', environmentRole: 'elevated' },
     8: { layoutRole: 'secretPocket', areaShape: 'ledge', areaScale: 'small', openness: 'platform', environmentRole: 'collapsed' },
   },
+  frozenRuin: {
+    1: { layoutRole: 'threshold', areaShape: 'ledge', areaScale: 'small', openness: 'exposed', environmentRole: 'natural' },
+    2: { layoutRole: 'branch', areaShape: 'courtyard', areaScale: 'medium', openness: 'open', environmentRole: 'collapsed' },
+    3: { layoutRole: 'hub', areaShape: 'pool', areaScale: 'huge', openness: 'exposed', environmentRole: 'hazardAdjacent' },
+    4: { layoutRole: 'branch', areaShape: 'fragment', areaScale: 'medium', openness: 'semiOpen', environmentRole: 'ritual' },
+    5: { layoutRole: 'transition', areaShape: 'bridge', areaScale: 'medium', openness: 'exposed', environmentRole: 'hazardCrossing' },
+    6: { layoutRole: 'branch', areaShape: 'chamber', areaScale: 'medium', openness: 'enclosed', environmentRole: 'collapsed' },
+    7: { layoutRole: 'secretPocket', areaShape: 'shaft', areaScale: 'small', openness: 'enclosed', environmentRole: 'natural' },
+    8: { layoutRole: 'objective', areaShape: 'chamber', areaScale: 'medium', openness: 'enclosed', environmentRole: 'ritual' },
+  },
 };
 
 function getConnectionLayoutMetadata(style: MapStyle, connection: MapConnection): Pick<MapConnection, 'routeStyle' | 'routeDifficulty'> {
@@ -265,6 +279,12 @@ function getConnectionLayoutMetadata(style: MapStyle, connection: MapConnection)
 
   if (style === 'laboratory') {
     return { routeStyle: 'servicePath', routeDifficulty: 'clear' };
+  }
+
+  if (style === 'frozenRuin') {
+    const bridgePairs = new Set(['3-5', '5-8']);
+    const key = [connection.from, connection.to].sort((a, b) => a - b).join('-');
+    return { routeStyle: bridgePairs.has(key) ? 'bridge' : connection.from === 7 || connection.to === 7 ? 'tunnel' : 'trail', routeDifficulty: bridgePairs.has(key) ? 'hazardous' : 'clear' };
   }
 
   return { routeStyle: 'corridor', routeDifficulty: 'clear' };
@@ -2065,6 +2085,257 @@ const volcanicForgeDungeonDraft: DraftDungeon = {
   ],
 };
 
+const frozenRuinDungeonDraft: DraftDungeon = {
+  id: 'dd-2026-05-14',
+  dateIso: '2026-05-14',
+  date: 'May 14, 2026',
+  title: 'The Frostglass Reliquary',
+  theme: 'Frozen ruin and arctic cave with cracked ice, buried stonework, and wind-scoured relic halls',
+  difficulty: 'Moderate to High',
+  partySize: '3-5 adventurers',
+  estimatedPlayTime: '2-3 hours',
+  hook:
+    'A pale blue light has begun pulsing beneath the glacier after every moonrise. Hunters say the old reliquary bells now ring under the ice, even though the ruin has been buried for centuries.',
+  background:
+    'The reliquary was built around a sainted winter flame that was meant to preserve memory through disaster. The glacier swallowed the site, cracked its wards, and trapped oathbound spirits, ice-fed beasts, and a living frostglass relic beneath unstable frozen floors.',
+  map: {
+    style: 'frozenRuin',
+    gmMapId: 'frozen-ruin-gm',
+    playerMapId: 'frozen-ruin-player',
+    connections: [
+      { from: 1, to: 2, type: 'normal', routeStyle: 'trail', routeDifficulty: 'clear', path: 'M154 232 C184 204 214 178 226 166' },
+      { from: 2, to: 3, type: 'normal', routeStyle: 'causeway', routeDifficulty: 'unstable', path: 'M304 166 C332 188 352 214 366 226' },
+      { from: 3, to: 4, type: 'normal', routeStyle: 'bridge', routeDifficulty: 'hazardous', path: 'M456 220 C496 188 526 160 542 144' },
+      { from: 3, to: 5, type: 'normal', routeStyle: 'bridge', routeDifficulty: 'hazardous', path: 'M464 262 C510 282 540 302 554 322' },
+      { from: 3, to: 6, type: 'normal', routeStyle: 'ledge', routeDifficulty: 'narrow', path: 'M368 300 C354 326 344 352 338 378' },
+      { from: 6, to: 7, type: 'normal', routeStyle: 'tunnel', routeDifficulty: 'narrow', path: 'M284 382 C236 382 198 386 160 388' },
+      { from: 6, to: 8, type: 'normal', routeStyle: 'stair', routeDifficulty: 'clear', path: 'M414 398 C432 402 450 406 468 410' },
+      { from: 5, to: 8, type: 'normal', routeStyle: 'bridge', routeDifficulty: 'hazardous', path: 'M540 360 C520 382 494 398 468 410' },
+      { from: 1, to: 7, type: 'secret', routeStyle: 'crawl', routeDifficulty: 'hidden', note: 'Hidden under-ice crawl beneath wind-packed snow', path: 'M92 284 C96 322 118 360 150 380' },
+    ],
+    playerSafe: {
+      hideSecrets: true,
+      hideTreasure: true,
+      hideHazards: true,
+      hideGmNotes: true,
+      description: 'A frozen reliquary ruin with visible snow paths, ice bridges, buried stone chambers, and dark cracks beneath the ice.',
+    },
+  },
+  mapStyle: 'frozenRuin',
+  mapPlaceholder: 'frozen-ruin-gm',
+  playerMapPlaceholder: 'frozen-ruin-player',
+  rooms: [
+    {
+      number: 1,
+      name: 'Snow-Choked Entry Cleft',
+      readAloud: 'Wind claws through a split in the glacier. Snow has drifted into stair-like shelves, and old stone blocks show beneath the blue ice.',
+      gmNotes: 'The entry is exposed and loud. Careful listening reveals bell tones under the ice whenever someone steps near the buried crawl.',
+      threat: 'Low',
+      tags: ['Entrance', 'Snow', 'Secret route'],
+      inhabitants: [
+        {
+          name: 'Frostbitten Snow Hares',
+          role: 'Scout vermin',
+          threat: 'Low',
+          durability: 'Fragile',
+          damage: 'Light',
+          tactics: 'Scatter through snow shelves, reveal hidden hollows, panic at loud noise',
+          morale: 'Flee from fire or sudden movement',
+          wants: 'Warmth, salt, and shelter',
+          leverage: 'Can be lured toward hidden weak ice with dried fruit or grain',
+        },
+      ],
+      treasure: 'A cracked brass handbell frozen into the entry stones.',
+      secrets: 'A hidden under-ice crawl beneath wind-packed snow leads toward Room 7.',
+      exits: 'Snow trail to Room 2, hidden under-ice crawl to Room 7.',
+    },
+    {
+      number: 2,
+      name: 'Exposed Frost Court',
+      readAloud: 'A roofless courtyard lies open to the sky. Broken pillars poke through snowdrifts like ribs, and frost has sealed old devotional mosaics.',
+      gmNotes: 'Crosswinds can erase tracks quickly. The mosaics hint that the reliquary preserved memories, not wealth.',
+      threat: 'Moderate',
+      tags: ['Open area', 'Clues', 'Wind'],
+      inhabitants: [],
+      treasure: 'A silver-blue mosaic tile showing a flame cupped in snow.',
+      secrets: 'One pillar shadow points toward the safest edge of the cracked pool in Room 3.',
+      exits: 'Snow trail to Room 1, unstable frozen causeway to Room 3.',
+    },
+    {
+      number: 3,
+      name: 'Cracked Frostglass Pool',
+      readAloud: 'A wide frozen pool covers the old reliquary floor. Something dark moves far below, distorted by white cracks and trapped bubbles.',
+      gmNotes: 'This is the layout hub. Ice groans under sudden movement; slow travel is safe, but combat or heavy loads make the route hazardous.',
+      threat: 'High',
+      tags: ['Hub', 'Hazard', 'Frozen pool'],
+      inhabitants: [
+        {
+          name: 'Under-Ice Watchers',
+          role: 'Lurker spirits',
+          threat: 'Moderate',
+          durability: 'Standard',
+          damage: 'Serious',
+          tactics: 'Tap from below, lure travelers onto weak ice, retreat into dark water',
+          morale: 'Fall quiet if a true memory is spoken aloud',
+          wants: 'Names, warmth, and release from the pool',
+          leverage: 'Can be bargained with by offering a remembered story',
+        },
+      ],
+      treasure: 'A frostglass bead that glows when held near a forgotten name.',
+      secrets: 'A bright crack shows that the sealed vault is still powered by a living winter flame.',
+      exits: 'Unstable frozen causeway to Room 2, ice bridge to Room 4, broken ice bridge to Room 5, slick ledge to Room 6.',
+    },
+    {
+      number: 4,
+      name: 'Buried Statue Alcove',
+      readAloud: 'Three frost-coated statues lean together in a half-buried chapel nook. Their faces have been rubbed smooth by windblown ice.',
+      gmNotes: 'The statues can answer one question if brushed clean with bare hands, but doing so numbs the character for a short while.',
+      threat: 'Moderate',
+      tags: ['Social', 'Ritual', 'Statues'],
+      inhabitants: [
+        {
+          name: 'Reliquary Echoes',
+          role: 'Social guardians',
+          threat: 'Moderate if angered',
+          durability: 'Standard',
+          damage: 'Light',
+          tactics: 'Question intruders, freeze lies into visible breath, call wind through cracks',
+          morale: 'Stand down for respectful offerings or remembered names',
+          wants: 'The reliquary purpose restored',
+          leverage: 'Respond to bells, vows, and careful treatment of the dead',
+        },
+      ],
+      treasure: 'A carved ice-lens set into a statue palm.',
+      secrets: 'The rightmost statue is not stone; it is a spirit wearing frost as a shell.',
+      exits: 'Ice bridge to Room 3.',
+    },
+    {
+      number: 5,
+      name: 'Broken Ice Bridge Crossing',
+      readAloud: 'A narrow ice bridge spans a dark crevasse. Old stone railings jut from the ice, but most have snapped away into the blue-black gap.',
+      gmNotes: 'The crossing is passable but hazardous. The bridge can be made safer by anchoring rope to exposed stone railings.',
+      threat: 'Severe',
+      tags: ['Hazard', 'Bridge', 'Crevasse'],
+      inhabitants: [
+        {
+          name: 'Rime-Wing Beasts',
+          role: 'Lurker hunters',
+          threat: 'High near exposed gaps',
+          durability: 'Standard',
+          damage: 'Serious',
+          tactics: 'Swoop across the crevasse, force movement, perch where the bridge narrows',
+          morale: 'Retreat if their nesting ice is cracked open',
+          wants: 'Quiet nesting sites and warm prey',
+          leverage: 'Can be driven off with reflected light or ringing bells',
+        },
+      ],
+      treasure: 'A bundle of old reliquary rope preserved under rime.',
+      secrets: 'A faint glow below the crevasse marks the vault line.',
+      exits: 'Broken ice bridge to Room 3, brittle bridge down to Room 8.',
+    },
+    {
+      number: 6,
+      name: 'Collapsed Frost Chamber',
+      readAloud: 'The ceiling has fallen into a mound of blue ice and broken stone. A sheltered passage curls behind the collapse, rimed with white needles.',
+      gmNotes: 'This chamber gives the party a safer staging point before the vault. Searching the collapse reveals both the route to Room 7 and the stair to Room 8.',
+      threat: 'Moderate',
+      tags: ['Shelter', 'Collapsed', 'Routes'],
+      inhabitants: [
+        {
+          name: 'Icebound Bandits',
+          role: 'Scout scavengers',
+          threat: 'Moderate',
+          durability: 'Standard',
+          damage: 'Light',
+          tactics: 'Hide behind ice slabs, bargain before fighting, flee toward tunnels',
+          morale: 'Surrender if promised warmth and a way out',
+          wants: 'A relic worth carrying and safe passage home',
+          leverage: 'Know which ice sings before it breaks',
+        },
+      ],
+      treasure: 'A pouch of blue-white salt crystals used to grip slick ice.',
+      secrets: 'A shallow chisel mark shows someone recently opened the hidden crawl to Room 7.',
+      exits: 'Slick ledge to Room 3, frozen tunnel to Room 7, ice stair to Room 8.',
+    },
+    {
+      number: 7,
+      name: 'Hidden Under-Ice Passage',
+      readAloud: 'A low tunnel runs between blue ice and buried masonry. Breath comes back as glittering frost, and old handholds vanish under refrozen sheets.',
+      gmNotes: 'The passage is secret from the entry side and narrow enough to make retreat awkward. It lets careful players bypass the central pool.',
+      threat: 'Moderate',
+      tags: ['Secret', 'Tunnel', 'Exploration'],
+      inhabitants: [],
+      treasure: 'A bone-handled ice awl wrapped in oilcloth.',
+      secrets: 'The tunnel was cut by reliquary keepers as an emergency memory-vault escape route.',
+      exits: 'Frozen tunnel to Room 6, hidden under-ice crawl to Room 1.',
+    },
+    {
+      number: 8,
+      name: 'Glowing Sealed Vault',
+      readAloud: 'A round vault door glows through layers of ice. Beyond it, a small blue flame burns without heat, lighting names carved into the walls.',
+      gmNotes: 'The finale can be social, puzzle, or hazard-focused. Opening the vault safely requires a remembered name, the bell from Room 1, or the ice-lens from Room 4.',
+      threat: 'High',
+      tags: ['Finale', 'Vault', 'Negotiation'],
+      inhabitants: [
+        {
+          name: 'The Frostglass Keeper',
+          role: 'Guardian leader',
+          threat: 'High',
+          durability: 'Tough',
+          damage: 'Serious',
+          tactics: 'Locks memories in ice, seals exits with frost, tests whether intruders remember the dead',
+          morale: 'Yields if the reliquary purpose is honored',
+          wants: 'To preserve names from being erased by time',
+          leverage: 'Accepts vows, bells, and honest memories as proof of intent',
+        },
+      ],
+      treasure: 'The frostglass reliquary flame, a ledger of preserved names, and a crystal key that never warms.',
+      secrets: 'The relic is not cursed; it has been freezing the ruin to keep a forgotten plague sealed below.',
+      exits: 'Ice stair to Room 6, brittle bridge to Room 5.',
+    },
+  ],
+  encounterTables: {
+    wandering: [
+      { roll: '1', result: 'Rime-wing beasts circle over an exposed crossing', type: 'Combat' },
+      { roll: '2', result: 'A reliquary echo asks for a forgotten name', type: 'Social' },
+      { roll: '3', result: 'Ice cracks under a careless step', type: 'Hazard' },
+      { roll: '4', result: 'Snow reveals old tracks that vanish into stone', type: 'Exploration' },
+      { roll: '5', result: 'Under-ice watchers tap a warning from below', type: 'Social' },
+      { roll: '6', result: 'A wind gust clears frost from a useful inscription', type: 'Puzzle' },
+    ],
+    environmental: [
+      { roll: '1', result: 'Wind erases fresh tracks within moments', type: 'Exploration' },
+      { roll: '2', result: 'A bridge sings before it shifts', type: 'Hazard' },
+      { roll: '3', result: 'Cold mist hides the far side of a route', type: 'Exploration' },
+      { roll: '4', result: 'Blue light reveals a buried devotional mark', type: 'Puzzle' },
+      { roll: '5', result: 'Snow slides from a broken arch', type: 'Hazard' },
+      { roll: '6', result: 'The reliquary bell rings once under the ice', type: 'Puzzle' },
+    ],
+    complications: [
+      { roll: '1', result: 'A safe route becomes narrow after falling snow', type: 'Hazard' },
+      { roll: '2', result: 'A spirit mistakes the party for forgotten keepers', type: 'Social' },
+      { roll: '3', result: 'A relic freezes to exposed skin', type: 'Hazard' },
+      { roll: '4', result: 'Bandit scavengers ask for warmth before information', type: 'Social' },
+      { roll: '5', result: 'A crack spreads toward treasure', type: 'Exploration' },
+      { roll: '6', result: 'The vault flame shows a memory from someone present', type: 'Puzzle' },
+    ],
+  },
+  treasureTable: [
+    { roll: '1', result: 'Cracked brass handbell frozen into entry stones' },
+    { roll: '2', result: 'Silver-blue mosaic tile showing a flame in snow' },
+    { roll: '3', result: 'Frostglass bead that glows near forgotten names' },
+    { roll: '4', result: 'Carved ice-lens set into a statue palm' },
+    { roll: '5', result: 'Blue-white salt crystals for gripping slick ice' },
+    { roll: '6', result: 'Crystal key that never warms' },
+  ],
+  gmNotes: [
+    'Make safe routes feel cold and tense, but keep them visually distinct from cracks and crevasses.',
+    'This dungeon works best when memory, names, bells, and vows matter as much as fighting.',
+    'The hidden crawl gives cautious players a way around the most dangerous central ice.',
+    'The twist is that the reliquary is preserving a plague seal, not hoarding treasure.',
+  ],
+};
+
 export const mockDungeon = finalizeDungeon(mockDungeonDraft);
 const ruinedShrineDungeon = finalizeDungeon(ruinedShrineDungeonDraft);
 const cavernDungeon = finalizeDungeon(cavernDungeonDraft);
@@ -2073,6 +2344,7 @@ const sewerDungeon = finalizeDungeon(sewerDungeonDraft);
 const laboratoryDungeon = finalizeDungeon(laboratoryDungeonDraft);
 const forestRuinDungeon = finalizeDungeon(forestRuinDungeonDraft);
 const volcanicForgeDungeon = finalizeDungeon(volcanicForgeDungeonDraft);
+const frozenRuinDungeon = finalizeDungeon(frozenRuinDungeonDraft);
 
 export const mockDungeons: Dungeon[] = [
   mockDungeon,
@@ -2083,4 +2355,5 @@ export const mockDungeons: Dungeon[] = [
   laboratoryDungeon,
   forestRuinDungeon,
   volcanicForgeDungeon,
+  frozenRuinDungeon,
 ];
