@@ -42,6 +42,17 @@ function LevelTwoBrokenWallSegment({ x, y, rotate = 0 }: { x: number; y: number;
   );
 }
 
+function LevelTwoOpenRuinArea({ path, final = false }: { path: string; final?: boolean }) {
+  return (
+    <g>
+      <path d={path} fill="#221a14" opacity="0.22" transform="translate(4 7)" />
+      <path d={path} fill={final ? '#bda477' : '#d3bd91'} opacity="0.82" />
+      <path d={path} fill="none" stroke="#31251c" strokeWidth="5" strokeLinejoin="round" opacity="0.42" strokeDasharray="34 18 8 14" />
+      <path d={path} fill="none" stroke="#f6ead1" strokeWidth="2" strokeLinejoin="round" opacity="0.28" strokeDasharray="28 20" />
+    </g>
+  );
+}
+
 export function LevelTwoShrineRenderer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
   const roomNumbers = [
     { x: 154, y: 216, label: '1' },
@@ -66,12 +77,12 @@ export function LevelTwoShrineRenderer({ connections, secretStroke, isPlayer }: 
       <LevelTwoConnectionApron connections={connections} theme={shrineTheme} />
       <path d="M120 148 C184 126 218 152 268 142 C350 120 432 136 526 166 C552 218 528 272 540 318 C548 366 514 408 440 414 C366 424 322 392 264 402 C204 412 144 398 106 360 C82 304 98 224 120 148 Z" fill="#80633e" opacity="0.1" />
       <LevelTwoConnectionRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} theme={shrineTheme} />
-      <LevelTwoRoomShell x={88} y={170} w={132} h={92} theme={shrineTheme} />
+      <LevelTwoOpenRuinArea path="M88 178 C126 160 188 166 218 194 L210 252 C170 268 116 260 88 230 Z" />
       <LevelTwoRoomShell x={260} y={150} w={128} h={108} theme={shrineTheme} />
-      <LevelTwoRoomShell x={424} y={168} w={112} h={86} theme={shrineTheme} />
-      <LevelTwoRoomShell x={432} y={310} w={116} h={76} theme={shrineTheme} />
+      <LevelTwoOpenRuinArea path="M426 176 C456 160 510 168 536 194 L526 248 C492 260 446 250 424 222 Z" />
+      <LevelTwoOpenRuinArea path="M436 314 C468 300 528 306 550 334 L534 382 C494 394 450 382 432 354 Z" />
       <LevelTwoRoomShell x={270} y={302} w={118} h={84} theme={shrineTheme} />
-      <LevelTwoRoomShell x={118} y={318} w={98} h={72} theme={shrineTheme} final />
+      <LevelTwoOpenRuinArea path="M118 326 C146 312 198 318 220 346 L204 390 C168 400 128 384 116 356 Z" final />
       <g>
         <LevelTwoAltarMark x={326} y={205} />
         <LevelTwoPillar x={292} y={184} />
@@ -83,6 +94,10 @@ export function LevelTwoShrineRenderer({ connections, secretStroke, isPlayer }: 
         <LevelTwoRubble x={292} y={354} scale={0.7} theme={shrineTheme} />
         <LevelTwoBrokenWallSegment x={214} y={318} rotate={-14} />
         <LevelTwoBrokenWallSegment x={424} y={166} rotate={8} />
+        <LevelTwoBrokenWallSegment x={96} y={184} rotate={18} />
+        <LevelTwoBrokenWallSegment x={536} y={250} rotate={-18} />
+        <LevelTwoBrokenWallSegment x={438} y={382} rotate={9} />
+        <LevelTwoBrokenWallSegment x={132} y={390} rotate={-8} />
         <LevelTwoWater x={446} y={366} w={72} h={12} theme={shrineTheme} />
         <LevelTwoMoss x={224} y={246} scale={0.52} theme={shrineTheme} />
         <LevelTwoMoss x={386} y={254} scale={0.48} theme={shrineTheme} />

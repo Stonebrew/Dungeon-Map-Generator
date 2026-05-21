@@ -255,6 +255,18 @@ function getConnectionLayoutMetadata(style: MapStyle, connection: MapConnection)
     return { routeStyle: isBridge ? 'grate' : 'ledge', routeDifficulty: isBridge ? 'hazardous' : 'clear' };
   }
 
+  if (style === 'shrine') {
+    return { routeStyle: connection.from === 1 || connection.to === 1 ? 'causeway' : 'corridor', routeDifficulty: 'clear' };
+  }
+
+  if (style === 'crypt') {
+    return { routeStyle: 'corridor', routeDifficulty: connection.from === 5 || connection.to === 5 ? 'narrow' : 'clear' };
+  }
+
+  if (style === 'laboratory') {
+    return { routeStyle: 'servicePath', routeDifficulty: 'clear' };
+  }
+
   return { routeStyle: 'corridor', routeDifficulty: 'clear' };
 }
 

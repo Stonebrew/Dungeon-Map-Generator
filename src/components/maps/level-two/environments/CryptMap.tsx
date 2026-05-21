@@ -21,6 +21,33 @@ function LevelTwoCarvedLine({ x, y, w, vertical = false }: { x: number; y: numbe
   );
 }
 
+function LevelTwoBurialAlcoves({ x, y, count = 4, vertical = false }: { x: number; y: number; count?: number; vertical?: boolean }) {
+  return (
+    <g opacity="0.78">
+      {Array.from({ length: count }).map((_, index) => {
+        const px = vertical ? x : x + index * 28;
+        const py = vertical ? y + index * 24 : y;
+        return (
+          <g key={index}>
+            <rect x={px} y={py} width={vertical ? 18 : 22} height={vertical ? 18 : 16} rx="3" fill="#53483c" stroke="#1d1915" strokeWidth="1.8" />
+            <path d={`M${px + 4} ${py + 5} H${px + (vertical ? 14 : 18)}`} stroke="#c3b493" strokeWidth="1" opacity="0.42" />
+          </g>
+        );
+      })}
+    </g>
+  );
+}
+
+function LevelTwoPinchedPassage({ path }: { path: string }) {
+  return (
+    <g opacity="0.78">
+      <path d={path} stroke="#120f0d" strokeWidth="22" strokeLinecap="round" fill="none" />
+      <path d={path} stroke="#5f5549" strokeWidth="10" strokeLinecap="round" fill="none" />
+      <path d={path} stroke="#c3b493" strokeWidth="1.2" strokeLinecap="round" fill="none" opacity="0.35" strokeDasharray="6 8" />
+    </g>
+  );
+}
+
 export function LevelTwoCryptRenderer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
   const roomNumbers = [
     { x: 360, y: 89, label: '1' },
@@ -42,6 +69,11 @@ export function LevelTwoCryptRenderer({ connections, secretStroke, isPlayer }: {
       <LevelTwoDust x={114} y={128} w={500} h={24} theme={cryptTheme} />
       <LevelTwoDust x={120} y={302} w={486} h={20} theme={cryptTheme} />
       <LevelTwoConnectionRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} theme={cryptTheme} variant="crypt" />
+      <LevelTwoPinchedPassage path="M360 128 V170" />
+      <LevelTwoPinchedPassage path="M210 216 H256" />
+      <LevelTwoPinchedPassage path="M464 216 H510" />
+      <LevelTwoPinchedPassage path="M206 260 V326" />
+      <LevelTwoPinchedPassage path="M514 260 V326" />
       <LevelTwoRoomShell x={296} y={50} w={128} h={78} theme={cryptTheme} variant="crypt" />
       <LevelTwoRoomShell x={256} y={170} w={208} h={90} theme={cryptTheme} variant="crypt" />
       <LevelTwoRoomShell x={88} y={174} w={122} h={86} theme={cryptTheme} variant="crypt" />
@@ -54,6 +86,10 @@ export function LevelTwoCryptRenderer({ connections, secretStroke, isPlayer }: {
         <LevelTwoSarcophagus x={380} y={230} w={52} h={18} />
         <LevelTwoSarcophagus x={168} y={378} w={58} h={18} />
         <LevelTwoSarcophagus x={486} y={378} w={58} h={18} />
+        <LevelTwoBurialAlcoves x={104} y={184} vertical count={3} />
+        <LevelTwoBurialAlcoves x={598} y={184} vertical count={3} />
+        <LevelTwoBurialAlcoves x={148} y={334} count={4} />
+        <LevelTwoBurialAlcoves x={456} y={334} count={4} />
         <LevelTwoCarvedLine x={310} y={205} w={100} />
         <LevelTwoCarvedLine x={360} y={70} w={46} vertical />
         <LevelTwoCarvedLine x={206} y={336} w={44} vertical />

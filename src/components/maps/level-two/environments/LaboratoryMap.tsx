@@ -66,6 +66,26 @@ function LevelTwoBrokenApparatus({ x, y, theme, rotate = 0 }: { x: number; y: nu
   );
 }
 
+function LevelTwoWorkZoneRail({ path, theme }: { path: string; theme: LevelTwoMapTheme }) {
+  return (
+    <g opacity="0.74">
+      <path d={path} stroke="#171414" strokeWidth="14" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path d={path} stroke={theme.metal} strokeWidth="8" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path d={path} stroke={theme.brass} strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" fill="none" opacity="0.62" strokeDasharray="8 9" />
+    </g>
+  );
+}
+
+function LevelTwoContainmentCell({ x, y, w, h, theme }: { x: number; y: number; w: number; h: number; theme: LevelTwoMapTheme }) {
+  return (
+    <g opacity="0.78">
+      <rect x={x} y={y} width={w} height={h} rx="8" fill="none" stroke={theme.runeGlow} strokeWidth="2.2" opacity="0.48" strokeDasharray="10 7" />
+      <rect x={x + 8} y={y + 8} width={w - 16} height={h - 16} rx="5" fill="none" stroke={theme.metal} strokeWidth="2.2" opacity="0.55" />
+      <path d={`M${x + w / 2} ${y + 8} V${y + h - 8} M${x + 8} ${y + h / 2} H${x + w - 8}`} stroke={theme.brass} strokeWidth="1.4" opacity="0.46" />
+    </g>
+  );
+}
+
 export function LevelTwoLaboratoryRenderer({ connections, secretStroke, isPlayer }: { connections: MapConnection[]; secretStroke: string; isPlayer: boolean }) {
   const roomNumbers = [
     { x: 145, y: 133, label: '1' },
@@ -86,6 +106,9 @@ export function LevelTwoLaboratoryRenderer({ connections, secretStroke, isPlayer
       </LevelTwoFoundation>
       <LevelTwoConnectionApron connections={connections} theme={laboratoryTheme} />
       <LevelTwoConnectionRoutes connections={connections} secretStroke={secretStroke} isPlayer={isPlayer} theme={laboratoryTheme} variant="laboratory" />
+      <LevelTwoWorkZoneRail path="M146 132 H350 H570" theme={laboratoryTheme} />
+      <LevelTwoWorkZoneRail path="M160 332 H370 H586" theme={laboratoryTheme} />
+      <LevelTwoWorkZoneRail path="M350 158 C326 226 340 282 370 302" theme={laboratoryTheme} />
       <LevelTwoRoomShell x={74} y={92} w={142} h={82} theme={laboratoryTheme} variant="laboratory" />
       <LevelTwoRoomShell x={274} y={60} w={152} h={98} theme={laboratoryTheme} variant="laboratory" />
       <LevelTwoRoomShell x={506} y={96} w={126} h={110} theme={laboratoryTheme} variant="laboratory" />
@@ -97,6 +120,8 @@ export function LevelTwoLaboratoryRenderer({ connections, secretStroke, isPlayer
         <LevelTwoWorkbench x={106} y={354} w={64} theme={laboratoryTheme} />
         <LevelTwoArcaneCircle x={350} y={110} r={29} theme={laboratoryTheme} />
         <LevelTwoArcaneCircle x={586} y={344} r={31} theme={laboratoryTheme} />
+        <LevelTwoContainmentCell x={530} y={112} w={78} h={74} theme={laboratoryTheme} />
+        <LevelTwoContainmentCell x={546} y={306} w={80} h={72} theme={laboratoryTheme} />
         <LevelTwoGearMark x={582} y={154} theme={laboratoryTheme} />
         <LevelTwoGearMark x={372} y={348} r={13} theme={laboratoryTheme} />
         <LevelTwoConduit x={300} y={82} w={96} theme={laboratoryTheme} />
