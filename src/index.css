@@ -60,10 +60,12 @@ select {
     max-width: none !important;
     color: #211a16;
     background: #ffffff;
+    font-size: 10.5pt;
+    line-height: 1.45;
   }
 
   .print-packet .print-section {
-    margin: 0 0 0.28in;
+    margin: 0 0 0.24in;
   }
 
   .print-page {
@@ -76,8 +78,26 @@ select {
     page-break-inside: avoid;
   }
 
+  .print-map-frame {
+    width: 100%;
+    margin: 0;
+  }
+
+  .print-map-frame > div {
+    border: 1px solid #3a3029 !important;
+    border-radius: 0.08in !important;
+    overflow: hidden !important;
+  }
+
+  .print-map-frame svg {
+    display: block;
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
   .print-packet svg {
-    max-height: 7.25in;
+    max-height: 7.35in;
   }
 
   .print-packet h2,
@@ -91,5 +111,73 @@ select {
   .print-packet li {
     orphans: 3;
     widows: 3;
+  }
+
+  .print-packet h2 {
+    font-size: 20pt !important;
+    line-height: 1.1 !important;
+  }
+
+  .print-packet h3 {
+    font-size: 14pt !important;
+    line-height: 1.15 !important;
+  }
+
+  .print-packet h4,
+  .print-kicker,
+  .print-packet [class*='tracking-'] {
+    letter-spacing: 0.04em !important;
+  }
+
+  .print-hook {
+    background: #fbf5e7 !important;
+    border-color: #9b6b3e !important;
+  }
+
+  .print-room-list {
+    display: block !important;
+  }
+
+  .print-room-card {
+    margin-bottom: 0.18in !important;
+    padding: 0.16in !important;
+    border-color: #6f635a !important;
+    background: #ffffff !important;
+  }
+
+  .print-room-number {
+    background: #211a16 !important;
+    color: #ffffff !important;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .print-field {
+    border-top: 1px solid #e0d5c4;
+    padding-top: 0.08in;
+  }
+
+  .print-read-aloud {
+    font-style: italic;
+  }
+
+  .print-inhabitant {
+    border: 1px solid #e0d5c4;
+    background: #fbf7eb !important;
+  }
+
+  .print-packet .rounded-md {
+    border-radius: 0.07in !important;
+  }
+
+  .print-packet .shadow-tool {
+    box-shadow: none !important;
+  }
+
+  .print-packet .text-white,
+  .print-packet .bg-ember,
+  .print-packet .bg-ink {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
 }

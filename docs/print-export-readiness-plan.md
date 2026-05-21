@@ -177,7 +177,7 @@ Risks:
 
 ## Browser Print Packet Preview
 
-Status: implemented as the first export milestone.
+Status: implemented and lightly polished as the first export milestone.
 
 The prototype Print Packet view uses the currently selected dungeon and includes:
 
@@ -188,6 +188,7 @@ The prototype Print Packet view uses the currently selected dungeon and includes
 - Room/keyed area notes with read-aloud text, GM notes, inhabitants, treasure, secrets, and exits.
 - Encounter tables and treasure table.
 - Browser print CSS that hides app navigation, DevPanel, buttons, tier selectors, and interactive controls.
+- Print-specific room cards, map frames, captions, section labels, and page-break rules for a more usable table packet.
 
 Done when:
 
@@ -203,7 +204,8 @@ Known limitations:
 - PDF generation is still manual through browser print/save-to-PDF.
 - There are no export options for paper size, color mode, included sections, or map-only output.
 - There is no cached export artifact or download history.
-- Map print quality still needs manual QA across all 10 environments.
+- Map print quality still needs manual QA across all 10 environments, especially premium Level 2 maps with subtle color or texture.
+- There are no page numbers, running headers, custom cover pages, or print presets yet.
 
 ## Recommended First Export Milestone
 
@@ -213,7 +215,7 @@ Scope:
 
 - QA the Print Packet view across Lantern locked behavior, Adventurer GM maps, and Adventurer player-safe maps.
 - Add print QA screenshots or a checklist for all 10 environments.
-- Improve page breaks and compact room table density if playtesters print full packets.
+- Improve page numbers, headers/footers, print presets, and compact room density if playtesters print full packets.
 - Add a feedback prompt asking whether GMs printed, saved PDF, or ran from mobile.
 - Do not add payment or backend export jobs yet.
 - Treat this as a learning tool, not a final paid export product.
@@ -301,24 +303,24 @@ Do not charge for a mocked PDF button or export flow that only implies a real fi
 
 ## Recommended Next 10 Tasks
 
-1. Design a print packet information architecture using the existing `Dungeon` contract.
-2. Add a print/export preview route or view, gated as Adventurer placeholder if exposed in product UI.
-3. Add print CSS for letter and A4 with page breaks.
-4. Render GM map and player-safe map as separate print sections.
-5. Create compact room-by-room print cards.
-6. Add printable encounter and treasure table sections.
-7. Add print QA fixtures/screenshots for Lantern, Adventurer GM map, and Adventurer player map.
-8. Add a player-safe export leakage checklist to documentation.
-9. Add export option types for paper size and included sections without implementing PDF generation yet.
-10. Prototype SVG map download for GM and player-safe maps after browser print is validated.
+1. Add print QA screenshots or manual QA notes for all 10 environments.
+2. Add a player-safe export leakage checklist to documentation.
+3. Add export option types for paper size and included sections without implementing PDF generation yet.
+4. Add optional one-line room summaries if playtesters need a denser packet.
+5. Add print presets for GM packet, player map only, and table reference.
+6. Add page numbers and simple running headers/footers.
+7. Prototype SVG map download for GM and player-safe maps after browser print is validated.
+8. Prototype PNG map export after SVG export is reliable.
+9. Decide whether generated PDF should be client-side or server-side based on playtest demand.
+10. Design backend export artifact storage only after the browser-print packet proves valuable.
 
 ## Recommended Next Technical Task
 
-Create a browser-print packet preview using the existing dungeon data and map renderers.
+Add a print QA checklist and player-safe export leakage checklist for the browser-print packet.
 
 Why this first:
 
-- It directly tests whether exported adventure packets are a paid-value driver.
-- It requires no backend or payment implementation.
-- It reuses the current validated dungeon contract.
-- It will reveal map, typography, page-break, and player-safe issues before a PDF service is built.
+- The preview exists; the next risk is whether it prints reliably across every map environment.
+- Player-safe leakage would seriously damage trust in paid exports.
+- QA can happen before adding PDF libraries or backend export jobs.
+- It keeps the work grounded in real browser print output before building heavier export infrastructure.

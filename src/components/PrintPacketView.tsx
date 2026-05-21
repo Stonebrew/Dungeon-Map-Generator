@@ -5,12 +5,32 @@ import { canAccessFeature } from '../lib/entitlements';
 import { DungeonMap } from './DungeonMap';
 import { Badge } from './Badge';
 
-function PrintSection({ title, children, pageBreak = false }: { title: string; children: ReactNode; pageBreak?: boolean }) {
+function PrintSection({
+  title,
+  kicker,
+  children,
+  pageBreak = false,
+}: {
+  title: string;
+  kicker?: string;
+  children: ReactNode;
+  pageBreak?: boolean;
+}) {
   return (
     <section className={`print-section ${pageBreak ? 'print-page' : ''}`}>
+      {kicker && <p className="print-kicker text-xs font-bold uppercase tracking-[0.14em] text-ember">{kicker}</p>}
       <h2 className="font-serif text-2xl font-bold">{title}</h2>
       <div className="mt-3">{children}</div>
     </section>
+  );
+}
+
+function PrintField({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div className="print-field">
+      <h4 className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">{label}</h4>
+      <div className="mt-1 text-sm leading-6 text-ink/75">{children}</div>
+    </div>
   );
 }
 
@@ -58,7 +78,7 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
         </div>
       </div>
 
-      <PrintSection title={dungeon.title}>
+      <PrintSection title={dungeon.title} kicker="Daily Dungeon Packet">
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">Date</p>
@@ -77,7 +97,7 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
             <p className="mt-1 text-sm font-bold">{dungeon.estimatedPlayTime}</p>
           </div>
         </div>
-        <div className="mt-4 rounded-md border border-brass/30 bg-brass/10 p-4">
+        <div className="print-hook mt-4 rounded-md border border-brass/30 bg-brass/10 p-4">
           <p className="text-xs font-bold uppercase tracking-[0.14em] text-brass">Story Hook</p>
           <p className="mt-2 text-sm leading-6 text-ink/75">{dungeon.hook}</p>
         </div>
@@ -97,23 +117,36 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
         </div>
       </PrintSection>
 
-      <PrintSection title="GM Map" pageBreak>
-        <DungeonMap mode="gm" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} showLegend />
+      <PrintSection title="GM Map" kicker="Page 2" pageBreak>
+        <figure className="print-map-frame">
+          <DungeonMap mode="gm" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} showLegend />
+          <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.12em] text-ink/55">
+            GM reference map. Includes keyed areas, GM markers, secret routes, and map legend.
+          </figcaption>
+        </figure>
       </PrintSection>
 
-      <PrintSection title="Player-Safe Map" pageBreak>
+      <PrintSection title="Player-Safe Map" kicker="Page 3" pageBreak>
         {dungeon.map.playerSafe.description && <p className="mb-3 text-sm leading-6 text-ink/65">{dungeon.map.playerSafe.description}</p>}
-        <DungeonMap mode="player" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} showLegend />
+        <figure className="print-map-frame">
+          <DungeonMap mode="player" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} showLegend />
+          <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.12em] text-ink/55">
+            Player handout map. GM markers, secret routes, treasure, hazards, and GM-only labels are hidden.
+          </figcaption>
+        </figure>
       </PrintSection>
 
-      <PrintSection title="Room And Keyed Area Notes" pageBreak>
-        <div className="space-y-4">
+      <PrintSection title="Room And Keyed Area Notes" kicker="GM Packet" pageBreak>
+        <div className="space-y-4 print-room-list">
           {dungeon.rooms.map((room) => (
-            <section key={room.id} className="print-avoid rounded-md border border-ink/10 bg-white p-4">
+            <section key={room.id} className="print-room-card print-avoid rounded-md border border-ink/10 bg-white p-4">
               <div className="flex flex-wrap items-start justify-between gap-2">
-                <div>
-                  <p className="text-xs font-bold uppercase tracking-[0.14em] text-ember">Area {room.number}</p>
+                <div className="flex items-start gap-3">
+                  <span className="print-room-number flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-ink text-lg font-black text-white">{room.number}</span>
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.14em] text-ember">Keyed Area</p>
                   <h3 className="font-serif text-xl font-bold">{room.name}</h3>
+                  </div>
                 </div>
                 <div className="flex flex-wrap gap-1">
                   <Badge tone={room.threat === 'Severe' ? 'danger' : room.threat === 'High' ? 'warning' : room.threat === 'Moderate' ? 'success' : 'neutral'}>
@@ -126,22 +159,19 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
               </div>
 
               <div className="mt-3 grid gap-3 lg:grid-cols-2">
-                <div>
-                  <h4 className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">Read Aloud</h4>
-                  <p className="mt-1 text-sm leading-6 text-ink/75">{room.readAloud}</p>
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">GM Notes</h4>
-                  <p className="mt-1 text-sm leading-6 text-ink/75">{room.gmNotes}</p>
-                </div>
+                <PrintField label="Read Aloud">
+                  <p className="print-read-aloud">{room.readAloud}</p>
+                </PrintField>
+                <PrintField label="GM Notes">
+                  <p>{room.gmNotes}</p>
+                </PrintField>
               </div>
 
               {room.inhabitants.length > 0 && (
-                <div className="mt-3">
-                  <h4 className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">Inhabitants</h4>
+                <PrintField label="Inhabitants">
                   <div className="mt-2 grid gap-2 lg:grid-cols-2">
                     {room.inhabitants.map((inhabitant) => (
-                      <div key={inhabitant.name} className="rounded-md bg-parchment/70 p-3 text-sm leading-6 text-ink/75">
+                      <div key={inhabitant.name} className="print-inhabitant rounded-md bg-parchment/70 p-3 text-sm leading-6 text-ink/75">
                         <p className="font-bold text-ink">{inhabitant.name}</p>
                         <p>Role: {inhabitant.role}</p>
                         <p>Threat: {inhabitant.threat}</p>
@@ -152,29 +182,26 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
                       </div>
                     ))}
                   </div>
-                </div>
+                </PrintField>
               )}
 
               <div className="mt-3 grid gap-3 lg:grid-cols-3">
-                <div>
-                  <h4 className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">Treasure</h4>
-                  <p className="mt-1 text-sm leading-6 text-ink/75">{room.treasure}</p>
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">Secrets / GM Only</h4>
-                  <p className="mt-1 text-sm leading-6 text-ink/75">{room.secrets}</p>
-                </div>
-                <div>
-                  <h4 className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">Exits</h4>
-                  <p className="mt-1 text-sm leading-6 text-ink/75">{room.exits}</p>
-                </div>
+                <PrintField label="Treasure">
+                  <p>{room.treasure}</p>
+                </PrintField>
+                <PrintField label="Secrets / GM Only">
+                  <p>{room.secrets}</p>
+                </PrintField>
+                <PrintField label="Exits">
+                  <p>{room.exits}</p>
+                </PrintField>
               </div>
             </section>
           ))}
         </div>
       </PrintSection>
 
-      <PrintSection title="Encounter Tables" pageBreak>
+      <PrintSection title="Encounter Tables" kicker="Reference Tables" pageBreak>
         <div className="grid gap-4 lg:grid-cols-3">
           <PrintTable title="Wandering Encounters" entries={dungeon.encounterTables.wandering} />
           <PrintTable title="Environmental Events" entries={dungeon.encounterTables.environmental} />
@@ -182,7 +209,7 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
         </div>
       </PrintSection>
 
-      <PrintSection title="Treasure Table">
+      <PrintSection title="Treasure Table" kicker="Rewards">
         <PrintTable title="Treasure" entries={dungeon.treasureTable} />
       </PrintSection>
     </article>
