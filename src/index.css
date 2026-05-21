@@ -21,3 +21,75 @@ button,
 select {
   font: inherit;
 }
+
+@media print {
+  @page {
+    size: letter;
+    margin: 0.55in;
+  }
+
+  :root,
+  body {
+    background: #ffffff;
+    color: #211a16;
+  }
+
+  body {
+    min-width: 0;
+  }
+
+  .no-print,
+  .no-print *,
+  aside,
+  nav,
+  [class*='sticky'],
+  [class*='fixed'] {
+    display: none !important;
+  }
+
+  main,
+  article,
+  section,
+  div {
+    box-shadow: none !important;
+  }
+
+  .print-packet {
+    margin: 0 !important;
+    padding: 0 !important;
+    max-width: none !important;
+    color: #211a16;
+    background: #ffffff;
+  }
+
+  .print-packet .print-section {
+    margin: 0 0 0.28in;
+  }
+
+  .print-page {
+    break-before: page;
+    page-break-before: always;
+  }
+
+  .print-avoid {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+
+  .print-packet svg {
+    max-height: 7.25in;
+  }
+
+  .print-packet h2,
+  .print-packet h3,
+  .print-packet h4 {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+
+  .print-packet p,
+  .print-packet li {
+    orphans: 3;
+    widows: 3;
+  }
+}

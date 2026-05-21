@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
+import { FileDown, Lock } from 'lucide-react';
 import type { Dungeon, TierId } from '../types';
-import { canAccessFeature } from '../lib/entitlements';
+import { canAccessFeature, type FeatureKey } from '../lib/entitlements';
 import { DungeonMap } from './DungeonMap';
 import { EncounterTable, EncounterTablesSection } from './EncounterTable';
 import { Badge, Panel, SectionHeader } from './Badge';
@@ -31,16 +32,21 @@ export function GMView({
   tier,
   partialRefreshRemaining,
   onUsePartialRefresh,
+  onOpenPrint,
+  onLockedFeature,
 }: {
   dungeon: Dungeon;
   tier: TierId;
   partialRefreshRemaining: number;
   onUsePartialRefresh: () => boolean;
+  onOpenPrint: () => void;
+  onLockedFeature: (feature: FeatureKey) => void;
 }) {
   const [activeTab, setActiveTab] = useState<GmTab>('setup');
   const [expandedRoom, setExpandedRoom] = useState<number | undefined>();
   const hasColorMap = canAccessFeature(tier, 'colorMap');
   const canRefreshRooms = canAccessFeature(tier, 'partialRefresh');
+  const canPrintPacket = canAccessFeature(tier, 'pdfExport');
 
   useEffect(() => {
     setExpandedRoom(undefined);
@@ -58,7 +64,19 @@ export function GMView({
 
   return (
     <div className="space-y-5">
-      <SectionHeader eyebrow="Dungeon Detail" title="GM View" text="Complete table-facing notes with system-neutral inhabitants, hazards, treasure, and secrets." />
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <SectionHeader eyebrow="Dungeon Detail" title="GM View" text="Complete table-facing notes with system-neutral inhabitants, hazards, treasure, and secrets." />
+        <button
+          type="button"
+          onClick={() => (canPrintPacket ? onOpenPrint() : onLockedFeature('pdfExport'))}
+          className={`no-print inline-flex shrink-0 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-bold shadow-tool ${
+            canPrintPacket ? 'bg-ember text-white hover:bg-ember/90' : 'bg-ink/10 text-ink/45 hover:bg-ink/15'
+          }`}
+        >
+          {canPrintPacket ? <FileDown className="h-4 w-4" aria-hidden="true" /> : <Lock className="h-4 w-4" aria-hidden="true" />}
+          Print Packet
+        </button>
+      </div>
       <div className="flex gap-2 overflow-x-auto pb-1">
         {gmTabs.map((tab) => (
           <button

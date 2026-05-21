@@ -8,6 +8,7 @@ import { GMView } from './components/GMView';
 import { LockedFeature } from './components/LockedFeature';
 import { PlayerMapView } from './components/PlayerMapView';
 import { PremiumPlans } from './components/PremiumPlans';
+import { PrintPacketView } from './components/PrintPacketView';
 import { RerollPanel } from './components/RerollPanel';
 import { RunMode } from './components/RunMode';
 import { canAccessFeature, tierRank } from './lib/entitlements';
@@ -46,7 +47,6 @@ function App() {
     navigateTo,
     isViewLocked,
     showLockedFeature,
-    showPlaceholderFeature,
     toggleFavorite,
     selectArchivedDungeon,
     consumeRerollResource,
@@ -70,14 +70,16 @@ function App() {
           </div>
 
           <div className="px-4 py-5 sm:px-6 lg:px-8">
-            <DevPanel
-              dungeons={mockDungeons}
-              selectedDungeonId={selectedDungeonId}
-              onDungeonChange={setSelectedDungeonId}
-              plans={plans}
-              selectedTier={selectedTier}
-              onTierChange={handleTierChange}
-            />
+            <div className="no-print">
+              <DevPanel
+                dungeons={mockDungeons}
+                selectedDungeonId={selectedDungeonId}
+                onDungeonChange={setSelectedDungeonId}
+                plans={plans}
+                selectedTier={selectedTier}
+                onTierChange={handleTierChange}
+              />
+            </div>
 
             {view === 'today' && (
               <DungeonSummary
@@ -87,7 +89,6 @@ function App() {
                 onNavigate={navigateTo}
                 onToggleFavorite={() => toggleFavorite(selectedDungeon.id)}
                 onLockedFeature={showLockedFeature}
-                onPlaceholderFeature={showPlaceholderFeature}
               />
             )}
             {view === 'run' && (
@@ -106,6 +107,8 @@ function App() {
                 tier={selectedTier}
                 partialRefreshRemaining={sessionRerollCounts[selectedTier].remainingPartial}
                 onUsePartialRefresh={() => consumeRerollResource('partial')}
+                onOpenPrint={() => navigateTo('print')}
+                onLockedFeature={showLockedFeature}
               />
             )}
             {view === 'player' && <PlayerMapView dungeon={selectedDungeon} premiumUnlocked={canAccessFeature(selectedTier, 'playerMap')} />}
@@ -130,6 +133,7 @@ function App() {
                 onLockedFeature={showLockedFeature}
               />
             )}
+            {view === 'print' && <PrintPacketView dungeon={selectedDungeon} tier={selectedTier} onBack={() => setView('gm')} />}
             {view === 'locked' && lockedFeature && <LockedFeature feature={lockedFeature} onUpgrade={() => setView('upgrade')} />}
             {view === 'placeholder' && placeholderFeature && <PlaceholderFeature feature={placeholderFeature} />}
           </div>

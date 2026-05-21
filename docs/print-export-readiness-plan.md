@@ -16,14 +16,14 @@ Daily Dungeon already has strong export ingredients:
 - Run Mode and GM View surfaces that prove the data is table-usable.
 - Fixture export via `npm run export:fixtures`, producing backend-seed JSON under `fixtures/dungeons/`.
 
-The app is not print/export ready yet because:
+The app is not finished as an export product yet because:
 
-- Export actions are placeholders.
-- There is no print-specific layout.
-- Maps are responsive UI SVGs, not yet tested at letter/A4 print dimensions.
-- There are no page-break rules, headers, footers, compact stat-free room layouts, or ink-friendly variants.
+- Generated PDF, PNG, SVG download, and server-side export actions are still placeholders.
+- The browser-print packet preview is an early prototype, not a final paid export system.
+- Maps are still responsive UI SVGs and need deeper QA at letter/A4 print dimensions.
+- There are basic page-break rules, but no polished headers, footers, page numbers, print option controls, or ink-friendly variants.
 - There is no export job model, file generation, download handling, or cached export artifact.
-- The current Export PDF action is intentionally mocked and must not be sold as a real export feature.
+- The current Print Packet action is a browser-print preview and must not be sold as generated PDF export.
 
 ## Data Already Enough For Export
 
@@ -175,20 +175,19 @@ Risks:
 - More operational cost.
 - Must validate player-safe payloads before rendering.
 
-## Recommended First Export Milestone
+## Browser Print Packet Preview
 
-Build a browser-print packet preview for private playtesting.
+Status: implemented as the first export milestone.
 
-Scope:
+The prototype Print Packet view uses the currently selected dungeon and includes:
 
-- Add a print-only route or view for the selected dungeon.
-- Include GM packet and player-safe map sections.
-- Add print CSS for letter and A4.
-- Add page-break rules for maps, summary, rooms, encounters, and treasure.
-- Keep the current Export PDF button labeled as a print/export preview until real PDF exists.
-- Use existing dungeon data only.
-- Do not add payment or backend export jobs yet.
-- Treat this as a learning tool, not a final paid export product.
+- Dungeon title, date, theme, difficulty, party size, play time, and hook.
+- GM summary and running notes.
+- GM map with room numbers, GM markers, secret routes, and legend.
+- Player-safe map using the existing hidden-data rules.
+- Room/keyed area notes with read-aloud text, GM notes, inhabitants, treasure, secrets, and exits.
+- Encounter tables and treasure table.
+- Browser print CSS that hides app navigation, DevPanel, buttons, tier selectors, and interactive controls.
 
 Done when:
 
@@ -197,6 +196,27 @@ Done when:
 - Player-safe output hides GM-only data.
 - Room notes, encounter tables, and treasure tables are readable on paper.
 - Mobile viewing remains unchanged.
+
+Known limitations:
+
+- Output quality depends on the browser print engine.
+- PDF generation is still manual through browser print/save-to-PDF.
+- There are no export options for paper size, color mode, included sections, or map-only output.
+- There is no cached export artifact or download history.
+- Map print quality still needs manual QA across all 10 environments.
+
+## Recommended First Export Milestone
+
+Next, harden the browser-print packet preview for private playtesting.
+
+Scope:
+
+- QA the Print Packet view across Lantern locked behavior, Adventurer GM maps, and Adventurer player-safe maps.
+- Add print QA screenshots or a checklist for all 10 environments.
+- Improve page breaks and compact room table density if playtesters print full packets.
+- Add a feedback prompt asking whether GMs printed, saved PDF, or ran from mobile.
+- Do not add payment or backend export jobs yet.
+- Treat this as a learning tool, not a final paid export product.
 
 ## Recommended Paid Export Milestone
 

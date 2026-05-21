@@ -48,15 +48,13 @@ export function DungeonSummary({
   onNavigate,
   onToggleFavorite,
   onLockedFeature,
-  onPlaceholderFeature,
 }: {
   dungeon: Dungeon;
   tier: TierId;
   isSaved: boolean;
-  onNavigate: (view: 'run' | 'gm' | 'player' | 'archive' | 'upgrade' | 'rerolls') => void;
+  onNavigate: (view: 'run' | 'gm' | 'player' | 'archive' | 'upgrade' | 'rerolls' | 'print') => void;
   onToggleFavorite: () => void;
   onLockedFeature: (feature: FeatureKey) => void;
-  onPlaceholderFeature: (feature: { name: string; text: string }) => void;
 }) {
   const hasColorMap = canAccessFeature(tier, 'colorMap');
   const hasPlayerMap = canAccessFeature(tier, 'playerMap');
@@ -117,17 +115,10 @@ export function DungeonSummary({
             }
           />
           <ActionButton
-            label="Export PDF"
+            label="Print Packet"
             icon={FileDown}
             locked={!hasPdfExport}
-            onClick={() =>
-              hasPdfExport
-                ? onPlaceholderFeature({
-                    name: 'PDF Export',
-                    text: 'PDF export is available to this mock tier, but real PDF generation is intentionally not implemented in this prototype.',
-                  })
-                : onLockedFeature('pdfExport')
-            }
+            onClick={() => (hasPdfExport ? onNavigate('print') : onLockedFeature('pdfExport'))}
           />
           <ActionButton
             label="Reroll"
