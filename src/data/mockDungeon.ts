@@ -1,4 +1,4 @@
-import type { Dungeon, DungeonRoom, MapConnection, Plan, RerollAllowance, RerollCounts, RoomExit, TierId } from '../types';
+import type { Dungeon, DungeonRoom, MapConnection, MapStyle, Plan, RerollAllowance, RerollCounts, RoomExit, TierId } from '../types';
 
 export const currentTier: TierId = 'lantern';
 
@@ -120,9 +120,142 @@ export const rerollAllowancesByTier: Record<TierId, RerollAllowance> = {
 
 type DraftRoom = Omit<DungeonRoom, 'id' | 'structuredExits'> & Partial<Pick<DungeonRoom, 'id' | 'structuredExits'>>;
 type DraftDungeon = Omit<Dungeon, 'rooms'> & { rooms: DraftRoom[] };
+type RoomLayoutMetadata = Pick<DungeonRoom, 'layoutRole' | 'areaShape' | 'areaScale' | 'openness' | 'environmentRole'>;
 
 function getRoomId(dungeonId: string, roomNumber: number) {
   return `${dungeonId}-room-${String(roomNumber).padStart(2, '0')}`;
+}
+
+const mapLayoutGrammarByStyle: Record<MapStyle, NonNullable<Dungeon['map']['layout']>> = {
+  blackfen: {
+    grammar: ['constructedHub', 'loopedDungeon'],
+    notes: 'Damp tollhouse/shrine complex with fortified thresholds, collapsed rooms, and marsh-adjacent branches.',
+  },
+  shrine: {
+    grammar: 'constructedHub',
+    notes: 'Compact ruined shrine with threshold, ritual hub, side chambers, and a small objective room.',
+  },
+  cavern: {
+    grammar: 'organicCave',
+    notes: 'Natural chambers connected by tunnels and ledges rather than built corridors.',
+  },
+  crypt: {
+    grammar: 'constructedHub',
+    notes: 'Symmetrical tomb layout with ritual chambers, dead ends, and sealed objective space.',
+  },
+  sewer: {
+    grammar: 'linearRoute',
+    notes: 'Drain route with channel rooms, maintenance branches, and flooded service connections.',
+  },
+  laboratory: {
+    grammar: 'loopedDungeon',
+    notes: 'Workshop floorplan with mechanical rooms, ritual work zones, and controlled branch routes.',
+  },
+  forestRuin: {
+    grammar: 'openKeyedArea',
+    notes: 'Open forest keyed-area map with clearings, landmarks, trails, and overgrown ruin fragments.',
+  },
+  volcanicForge: {
+    grammar: 'hazardIslands',
+    notes: 'Lava-shaped forge complex with basalt platforms, grate crossings, service ledges, and hazard-separated work zones.',
+  },
+};
+
+const roomLayoutMetadataByStyle: Record<MapStyle, Record<number, RoomLayoutMetadata>> = {
+  blackfen: {
+    1: { layoutRole: 'threshold', areaShape: 'hall', areaScale: 'medium', openness: 'enclosed', environmentRole: 'fortified' },
+    2: { layoutRole: 'branch', areaShape: 'chamber', areaScale: 'medium', openness: 'enclosed', environmentRole: 'ritual' },
+    3: { layoutRole: 'hub', areaShape: 'chamber', areaScale: 'large', openness: 'semiOpen', environmentRole: 'hazardAdjacent' },
+    4: { layoutRole: 'spoke', areaShape: 'fragment', areaScale: 'small', openness: 'semiOpen', environmentRole: 'collapsed' },
+    5: { layoutRole: 'objective', areaShape: 'chamber', areaScale: 'large', openness: 'enclosed', environmentRole: 'ritual' },
+    6: { layoutRole: 'deadEnd', areaShape: 'chamber', areaScale: 'small', openness: 'enclosed', environmentRole: 'safe' },
+    7: { layoutRole: 'branch', areaShape: 'ledge', areaScale: 'small', openness: 'semiOpen', environmentRole: 'overgrown' },
+    8: { layoutRole: 'secretPocket', areaShape: 'fragment', areaScale: 'small', openness: 'semiOpen', environmentRole: 'collapsed' },
+    9: { layoutRole: 'objective', areaShape: 'chamber', areaScale: 'medium', openness: 'enclosed', environmentRole: 'fortified' },
+  },
+  shrine: {
+    1: { layoutRole: 'threshold', areaShape: 'courtyard', areaScale: 'medium', openness: 'semiOpen', environmentRole: 'collapsed' },
+    2: { layoutRole: 'hub', areaShape: 'chamber', areaScale: 'large', openness: 'enclosed', environmentRole: 'ritual' },
+    3: { layoutRole: 'branch', areaShape: 'chamber', areaScale: 'small', openness: 'enclosed', environmentRole: 'ritual' },
+    4: { layoutRole: 'deadEnd', areaShape: 'fragment', areaScale: 'small', openness: 'semiOpen', environmentRole: 'collapsed' },
+    5: { layoutRole: 'spoke', areaShape: 'hall', areaScale: 'medium', openness: 'enclosed', environmentRole: 'safe' },
+    6: { layoutRole: 'objective', areaShape: 'chamber', areaScale: 'small', openness: 'enclosed', environmentRole: 'ritual' },
+  },
+  cavern: {
+    1: { layoutRole: 'threshold', areaShape: 'organic', areaScale: 'medium', openness: 'semiOpen', environmentRole: 'natural' },
+    2: { layoutRole: 'branch', areaShape: 'chamber', areaScale: 'medium', openness: 'enclosed', environmentRole: 'natural' },
+    3: { layoutRole: 'branch', areaShape: 'pool', areaScale: 'medium', openness: 'semiOpen', environmentRole: 'flooded' },
+    4: { layoutRole: 'hub', areaShape: 'chamber', areaScale: 'large', openness: 'semiOpen', environmentRole: 'natural' },
+    5: { layoutRole: 'spoke', areaShape: 'ledge', areaScale: 'medium', openness: 'exposed', environmentRole: 'elevated' },
+    6: { layoutRole: 'objective', areaShape: 'chamber', areaScale: 'large', openness: 'enclosed', environmentRole: 'hazardAdjacent' },
+  },
+  crypt: {
+    1: { layoutRole: 'threshold', areaShape: 'hall', areaScale: 'medium', openness: 'enclosed', environmentRole: 'ritual' },
+    2: { layoutRole: 'hub', areaShape: 'chamber', areaScale: 'large', openness: 'enclosed', environmentRole: 'ritual' },
+    3: { layoutRole: 'branch', areaShape: 'chamber', areaScale: 'medium', openness: 'enclosed', environmentRole: 'fortified' },
+    4: { layoutRole: 'branch', areaShape: 'chamber', areaScale: 'medium', openness: 'enclosed', environmentRole: 'fortified' },
+    5: { layoutRole: 'deadEnd', areaShape: 'chamber', areaScale: 'medium', openness: 'enclosed', environmentRole: 'collapsed' },
+    6: { layoutRole: 'objective', areaShape: 'chamber', areaScale: 'medium', openness: 'enclosed', environmentRole: 'ritual' },
+  },
+  sewer: {
+    1: { layoutRole: 'threshold', areaShape: 'channel', areaScale: 'medium', openness: 'enclosed', environmentRole: 'flooded' },
+    2: { layoutRole: 'hub', areaShape: 'channel', areaScale: 'medium', openness: 'enclosed', environmentRole: 'mechanical' },
+    3: { layoutRole: 'branch', areaShape: 'shaft', areaScale: 'small', openness: 'enclosed', environmentRole: 'elevated' },
+    4: { layoutRole: 'transition', areaShape: 'hall', areaScale: 'medium', openness: 'enclosed', environmentRole: 'mechanical' },
+    5: { layoutRole: 'branch', areaShape: 'pool', areaScale: 'large', openness: 'semiOpen', environmentRole: 'flooded' },
+    6: { layoutRole: 'objective', areaShape: 'chamber', areaScale: 'large', openness: 'enclosed', environmentRole: 'hazardAdjacent' },
+  },
+  laboratory: {
+    1: { layoutRole: 'threshold', areaShape: 'hall', areaScale: 'medium', openness: 'enclosed', environmentRole: 'mechanical' },
+    2: { layoutRole: 'hub', areaShape: 'chamber', areaScale: 'large', openness: 'enclosed', environmentRole: 'ritual' },
+    3: { layoutRole: 'branch', areaShape: 'chamber', areaScale: 'medium', openness: 'enclosed', environmentRole: 'mechanical' },
+    4: { layoutRole: 'loop', areaShape: 'hall', areaScale: 'medium', openness: 'enclosed', environmentRole: 'safe' },
+    5: { layoutRole: 'spoke', areaShape: 'chamber', areaScale: 'medium', openness: 'enclosed', environmentRole: 'mechanical' },
+    6: { layoutRole: 'objective', areaShape: 'chamber', areaScale: 'large', openness: 'enclosed', environmentRole: 'ritual' },
+  },
+  forestRuin: {
+    1: { layoutRole: 'threshold', areaShape: 'clearing', areaScale: 'medium', openness: 'open', environmentRole: 'overgrown' },
+    2: { layoutRole: 'landmark', areaShape: 'fragment', areaScale: 'medium', openness: 'open', environmentRole: 'ritual' },
+    3: { layoutRole: 'branch', areaShape: 'clearing', areaScale: 'small', openness: 'open', environmentRole: 'natural' },
+    4: { layoutRole: 'objective', areaShape: 'clearing', areaScale: 'large', openness: 'open', environmentRole: 'ritual' },
+    5: { layoutRole: 'hub', areaShape: 'clearing', areaScale: 'medium', openness: 'open', environmentRole: 'overgrown' },
+    6: { layoutRole: 'secretPocket', areaShape: 'fragment', areaScale: 'small', openness: 'semiOpen', environmentRole: 'collapsed' },
+  },
+  volcanicForge: {
+    1: { layoutRole: 'threshold', areaShape: 'platform', areaScale: 'small', openness: 'platform', environmentRole: 'hazardAdjacent' },
+    2: { layoutRole: 'branch', areaShape: 'ledge', areaScale: 'small', openness: 'platform', environmentRole: 'hazardAdjacent' },
+    3: { layoutRole: 'hub', areaShape: 'platform', areaScale: 'huge', openness: 'platform', environmentRole: 'ritual' },
+    4: { layoutRole: 'transition', areaShape: 'bridge', areaScale: 'small', openness: 'exposed', environmentRole: 'hazardCrossing' },
+    5: { layoutRole: 'branch', areaShape: 'pool', areaScale: 'medium', openness: 'semiOpen', environmentRole: 'mechanical' },
+    6: { layoutRole: 'objective', areaShape: 'platform', areaScale: 'large', openness: 'platform', environmentRole: 'hazardAdjacent' },
+    7: { layoutRole: 'spoke', areaShape: 'ledge', areaScale: 'small', openness: 'platform', environmentRole: 'elevated' },
+    8: { layoutRole: 'secretPocket', areaShape: 'ledge', areaScale: 'small', openness: 'platform', environmentRole: 'collapsed' },
+  },
+};
+
+function getConnectionLayoutMetadata(style: MapStyle, connection: MapConnection): Pick<MapConnection, 'routeStyle' | 'routeDifficulty'> {
+  if (connection.type === 'secret') {
+    return { routeStyle: 'crawl', routeDifficulty: 'hidden' };
+  }
+
+  if (style === 'forestRuin') {
+    return { routeStyle: 'trail', routeDifficulty: 'clear' };
+  }
+
+  if (style === 'cavern') {
+    return { routeStyle: 'tunnel', routeDifficulty: connection.from === 5 || connection.to === 5 ? 'narrow' : 'clear' };
+  }
+
+  if (style === 'sewer') {
+    return { routeStyle: connection.from === 5 || connection.to === 5 ? 'channel' : 'servicePath', routeDifficulty: 'narrow' };
+  }
+
+  if (style === 'volcanicForge') {
+    const isBridge = (connection.from === 3 && connection.to === 4) || (connection.from === 4 && connection.to === 7);
+    return { routeStyle: isBridge ? 'grate' : 'ledge', routeDifficulty: isBridge ? 'hazardous' : 'clear' };
+  }
+
+  return { routeStyle: 'corridor', routeDifficulty: 'clear' };
 }
 
 function exitTypeForConnection(connection: MapConnection, roomNumber: number): RoomExit['type'] {
@@ -157,7 +290,16 @@ function buildStructuredExits(dungeon: DraftDungeon, room: DraftRoom): RoomExit[
 function finalizeDungeon(dungeon: DraftDungeon): Dungeon {
   return {
     ...dungeon,
+    map: {
+      ...dungeon.map,
+      layout: dungeon.map.layout ?? mapLayoutGrammarByStyle[dungeon.map.style],
+      connections: dungeon.map.connections?.map((connection) => ({
+        ...getConnectionLayoutMetadata(dungeon.map.style, connection),
+        ...connection,
+      })),
+    },
     rooms: dungeon.rooms.map((room) => ({
+      ...roomLayoutMetadataByStyle[dungeon.map.style][room.number],
       ...room,
       id: room.id ?? getRoomId(dungeon.id, room.number),
       structuredExits: room.structuredExits ?? buildStructuredExits(dungeon, room),

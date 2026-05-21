@@ -202,6 +202,40 @@ Level 2 layer order:
 7. GM markers and secret routes in GM views only.
 8. Room numbers last, so labels remain readable above every visual layer.
 
+Layout grammar metadata:
+
+- Dungeon map data may include optional `map.layout.grammar` metadata. This describes the intended structure of the environment before any renderer-specific styling is applied.
+- Rooms/keyed areas may include optional layout metadata: `layoutRole`, `areaShape`, `areaScale`, `openness`, and `environmentRole`.
+- Connections may include optional route metadata: `routeStyle` and `routeDifficulty`.
+- These fields are advisory, not required. Existing dungeons should remain valid without them, but future generated payloads should use them to avoid simple visual reskins.
+- Renderers should treat this metadata as layout intent. It should help decide whether an area is a chamber, platform, clearing, ledge, shaft, bridge, pool, or courtyard, and whether routes should look like corridors, trails, tunnels, grates, causeways, crawls, or service paths.
+
+Layout grammar templates:
+
+- `constructedHub`: A central room or work area with branches. Useful for shrines, workshops, crypt hubs, and command spaces.
+- `linearRoute`: A traversal-focused map with a clear forward direction. Useful for drains, passes, caravanserais, and gauntlets.
+- `loopedDungeon`: A layout with at least one meaningful loop, alternate path, or tactical return route.
+- `organicCave`: Natural chambers connected by tunnels, ledges, pools, and uneven paths.
+- `openKeyedArea`: An outdoor or semi-outdoor map with landmarks, clearings, ruins, and trails instead of enclosed rooms.
+- `hazardIslands`: Safe platforms or chambers divided by dangerous terrain such as lava, void, acid, deep water, or unstable magic.
+- `floodedIslands`: Playable islands, raised platforms, and causeways shaped by water depth and flooding.
+- `fragmentedVertical`: Broken platforms, stairs, drops, balconies, floating fragments, or multi-level spaces.
+- `branchingShafts`: Mine, quarry, root tunnel, or service network layouts built from shafts, cuts, side tunnels, and dead ends.
+- `manorFloorplan`: Domestic or institutional floorplans with halls, rooms, locked wings, stairs, and reveal-driven navigation.
+
+New Environment Checklist:
+
+- Define a distinct area count range before writing room content.
+- Choose one or two layout grammar templates instead of defaulting to rooms connected by corridors.
+- Define distinct area shapes, area scale patterns, and openness patterns.
+- Define route grammar: corridor, trail, bridge, tunnel, ledge, channel, stair, crawl, service path, causeway, ford, or grate.
+- Explain whether the map is enclosed, open, organic, fragmented, vertical, hazard-shaped, hub-based, or a hybrid.
+- Describe how hazards or terrain affect movement and visibility.
+- Specify how the Player Map differs from the GM Map, especially secrets, hazards, and labels.
+- Name what makes the environment visually different from shrine, crypt, sewer, laboratory, blackfen, cavern, forestRuin, and volcanicForge.
+- List shared Level 2 primitives to reuse before adding new assets.
+- List environment-specific assets needed for the first prototype pass.
+
 ### Level 3: Generated/Illustrated Map Image Pipeline
 
 Level 3 would generate or assemble premium map images through a backend pipeline, likely after the dungeon generation system is stable.

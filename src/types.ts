@@ -8,11 +8,29 @@ export type EncounterType = 'Combat' | 'Social' | 'Hazard' | 'Puzzle' | 'Explora
 
 export type MapStyle = 'blackfen' | 'shrine' | 'cavern' | 'crypt' | 'sewer' | 'laboratory' | 'forestRuin' | 'volcanicForge';
 
+export type LayoutRole = 'hub' | 'branch' | 'loop' | 'spoke' | 'island' | 'threshold' | 'deadEnd' | 'secretPocket' | 'landmark' | 'objective' | 'transition';
+
+export type AreaShape = 'rectilinear' | 'organic' | 'platform' | 'clearing' | 'chamber' | 'shaft' | 'bridge' | 'fragment' | 'hall' | 'ledge' | 'pool' | 'courtyard' | 'channel';
+
+export type AreaScale = 'tiny' | 'small' | 'medium' | 'large' | 'huge';
+
+export type AreaOpenness = 'enclosed' | 'semiOpen' | 'open' | 'exposed' | 'platform';
+
+export type EnvironmentRole = 'safe' | 'hazardAdjacent' | 'hazardCrossing' | 'flooded' | 'elevated' | 'collapsed' | 'overgrown' | 'ritual' | 'mechanical' | 'natural' | 'fortified';
+
+export type RouteStyle = 'corridor' | 'trail' | 'bridge' | 'tunnel' | 'ledge' | 'channel' | 'stair' | 'crawl' | 'servicePath' | 'causeway' | 'ford' | 'grate';
+
+export type RouteDifficulty = 'clear' | 'narrow' | 'unstable' | 'hidden' | 'hazardous' | 'blocked';
+
+export type LayoutGrammar = 'constructedHub' | 'linearRoute' | 'loopedDungeon' | 'organicCave' | 'openKeyedArea' | 'hazardIslands' | 'floodedIslands' | 'fragmentedVertical' | 'branchingShafts' | 'manorFloorplan';
+
 export type MapConnection = {
   from: number;
   to: number;
   type: 'normal' | 'secret';
   note?: string;
+  routeStyle?: RouteStyle;
+  routeDifficulty?: RouteDifficulty;
   // SVG route path used by the prototype renderer. Backend-generated maps should derive this from the same source as room exits.
   path?: string;
   // Reserved for future one-way routes. Current mock validation treats links as bidirectional unless this is set.
@@ -33,6 +51,10 @@ export type RoomExit = {
 
 export type DungeonMapData = {
   style: MapStyle;
+  layout?: {
+    grammar?: LayoutGrammar | LayoutGrammar[];
+    notes?: string;
+  };
   // Deprecated for backend planning: prefer generated map assets or richer geometry metadata.
   gmMapId: string;
   // Deprecated for backend planning: prefer generated player-safe map assets or richer geometry metadata.
@@ -69,6 +91,11 @@ export type DungeonRoom = {
   gmNotes: string;
   threat: Threat;
   tags: string[];
+  layoutRole?: LayoutRole;
+  areaShape?: AreaShape;
+  areaScale?: AreaScale;
+  openness?: AreaOpenness;
+  environmentRole?: EnvironmentRole;
   inhabitants: Inhabitant[];
   treasure: string;
   secrets: string;

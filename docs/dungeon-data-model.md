@@ -31,14 +31,17 @@ The `Dungeon` contract defines the complete ready-to-run dungeon payload the fro
 `DungeonMapData` contains:
 
 - `style`: current placeholder map style key.
+- `layout`: optional layout grammar metadata. This describes the intended map structure, such as `constructedHub`, `organicCave`, `openKeyedArea`, `hazardIslands`, or `branchingShafts`.
 - `gmMapId`: deprecated prototype identifier for the GM-facing map asset or generated map; future payloads may replace this with richer asset metadata.
 - `playerMapId`: deprecated prototype identifier for the player-safe map asset or generated map; future payloads may replace this with richer asset metadata.
-- `connections`: source-of-truth room connectivity metadata. Each connection has `from`, `to`, `type`, optional `note`, and a prototype `path` used for SVG route rendering.
+- `connections`: source-of-truth room connectivity metadata. Each connection has `from`, `to`, `type`, optional `note`, optional route metadata, and a prototype `path` used for SVG route rendering.
 - `playerSafe`: rules for what the player map should hide, including secrets, treasure, hazards, GM notes, and optional player-facing description copy.
 
 The prototype still renders room shapes from local SVG layouts. Visual route rendering is derived from `map.connections`, so normal corridors and GM-only secret routes share the same source of truth as room exit text. A backend map service can later replace `gmMapId` and `playerMapId` with generated asset IDs or URLs, but the visual routes should continue to match `map.connections`.
 
 Connection `type` is currently either `normal` or `secret`. Connections are treated as bidirectional unless a future one-way route flag is intentionally used. Secret connections should be described in room text as hidden, collapsed, concealed, crawlspace, or otherwise GM-only, and should remain hidden from player-safe map views.
+
+Connections may include optional `routeStyle` and `routeDifficulty` metadata. These are advisory renderer hints, not new connectivity rules. Route styles include corridor, trail, bridge, tunnel, ledge, channel, stair, crawl, service path, causeway, ford, and grate. Route difficulty can describe clear, narrow, unstable, hidden, hazardous, or blocked routes.
 
 Example:
 
@@ -65,6 +68,7 @@ Each `DungeonRoom` supports:
 - `gmNotes`: GM-only room notes.
 - `threat`: `Low`, `Moderate`, `High`, or `Severe`.
 - `tags`: scan-friendly labels.
+- Optional layout metadata: `layoutRole`, `areaShape`, `areaScale`, `openness`, and `environmentRole`. These describe whether the keyed area behaves like a hub, branch, clearing, platform, shaft, bridge, pool, courtyard, enclosed room, exposed ledge, hazard-adjacent space, overgrown landmark, mechanical chamber, and so on.
 - `inhabitants`: system-agnostic creature or NPC entries.
 - `treasure`: room treasure text.
 - `secrets`: hidden information.
@@ -94,6 +98,8 @@ structuredExits: [
 ```
 
 The current mock data enriches structured exits from `map.connections` so the prototype remains easy to maintain. Future backend generation should emit structured exits directly rather than relying on prose parsing.
+
+Layout metadata is optional and backward-compatible. The current mock data applies light metadata so renderers can reason about layout grammar without requiring every future backend payload field immediately. Future generated dungeons should emit this metadata when possible to avoid turning new environments into simple visual reskins.
 
 ## System-Agnostic Encounter Labels
 

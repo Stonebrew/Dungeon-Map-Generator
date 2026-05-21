@@ -33,6 +33,35 @@ const hiddenRouteWords = [
   'false',
 ];
 
+const validLayoutGrammarValues = new Set(['constructedHub', 'linearRoute', 'loopedDungeon', 'organicCave', 'openKeyedArea', 'hazardIslands', 'floodedIslands', 'fragmentedVertical', 'branchingShafts', 'manorFloorplan']);
+const validLayoutRoleValues = new Set(['hub', 'branch', 'loop', 'spoke', 'island', 'threshold', 'deadEnd', 'secretPocket', 'landmark', 'objective', 'transition']);
+const validAreaShapeValues = new Set(['rectilinear', 'organic', 'platform', 'clearing', 'chamber', 'shaft', 'bridge', 'fragment', 'hall', 'ledge', 'pool', 'courtyard', 'channel']);
+const validAreaScaleValues = new Set(['tiny', 'small', 'medium', 'large', 'huge']);
+const validOpennessValues = new Set(['enclosed', 'semiOpen', 'open', 'exposed', 'platform']);
+const validEnvironmentRoleValues = new Set(['safe', 'hazardAdjacent', 'hazardCrossing', 'flooded', 'elevated', 'collapsed', 'overgrown', 'ritual', 'mechanical', 'natural', 'fortified']);
+const validRouteStyleValues = new Set(['corridor', 'trail', 'bridge', 'tunnel', 'ledge', 'channel', 'stair', 'crawl', 'servicePath', 'causeway', 'ford', 'grate']);
+const validRouteDifficultyValues = new Set(['clear', 'narrow', 'unstable', 'hidden', 'hazardous', 'blocked']);
+
+function validateOptionalValue(value: string | undefined, validValues: Set<string>, label: string, warnings: DungeonValidationIssue[], roomNumbers?: number[]) {
+  if (value && !validValues.has(value)) {
+    warnings.push({
+      severity: 'warning',
+      message: `${label} uses unknown layout metadata value "${value}".`,
+      roomNumbers,
+    });
+  }
+}
+
+function validateOptionalValues(values: string | string[] | undefined, validValues: Set<string>, label: string, warnings: DungeonValidationIssue[]) {
+  if (!values) {
+    return;
+  }
+
+  for (const value of Array.isArray(values) ? values : [values]) {
+    validateOptionalValue(value, validValues, label, warnings);
+  }
+}
+
 function connectionKey(from: number, to: number) {
   return [from, to].sort((a, b) => a - b).join('-');
 }
@@ -87,6 +116,8 @@ export function validateDungeon(dungeon: Dungeon): DungeonValidationResult {
   const connectedPairs = new Set<string>();
   const connections = dungeon.map.connections ?? [];
 
+  validateOptionalValues(dungeon.map.layout?.grammar, validLayoutGrammarValues, 'Map layout grammar', warnings);
+
   if (connections.length === 0) {
     warnings.push({
       severity: 'warning',
@@ -127,6 +158,9 @@ export function validateDungeon(dungeon: Dungeon): DungeonValidationResult {
         roomNumbers: [connection.from, connection.to],
       });
     }
+
+    validateOptionalValue(connection.routeStyle, validRouteStyleValues, `${connectionLabel(connection)} routeStyle`, warnings, [connection.from, connection.to]);
+    validateOptionalValue(connection.routeDifficulty, validRouteDifficultyValues, `${connectionLabel(connection)} routeDifficulty`, warnings, [connection.from, connection.to]);
 
     if (!fromRoom.structuredExits.some((exit) => exit.toRoomNumber === connection.to)) {
       warnings.push({
@@ -171,6 +205,12 @@ export function validateDungeon(dungeon: Dungeon): DungeonValidationResult {
   }
 
   for (const room of dungeon.rooms) {
+    validateOptionalValue(room.layoutRole, validLayoutRoleValues, `Room ${room.number} layoutRole`, warnings, [room.number]);
+    validateOptionalValue(room.areaShape, validAreaShapeValues, `Room ${room.number} areaShape`, warnings, [room.number]);
+    validateOptionalValue(room.areaScale, validAreaScaleValues, `Room ${room.number} areaScale`, warnings, [room.number]);
+    validateOptionalValue(room.openness, validOpennessValues, `Room ${room.number} openness`, warnings, [room.number]);
+    validateOptionalValue(room.environmentRole, validEnvironmentRoleValues, `Room ${room.number} environmentRole`, warnings, [room.number]);
+
     for (const targetRoomNumber of exitRoomReferences(room)) {
       if (!roomsByNumber.has(targetRoomNumber)) {
         errors.push({
