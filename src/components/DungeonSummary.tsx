@@ -1,4 +1,4 @@
-import { Archive, Bookmark, FileDown, Lock, Map, RefreshCcw, Swords } from 'lucide-react';
+import { Archive, Bookmark, FileDown, Lock, Map, Printer, RefreshCcw, Swords } from 'lucide-react';
 import type { Dungeon, TierId } from '../types';
 import { DungeonMap } from './DungeonMap';
 import { Badge, Panel } from './Badge';
@@ -96,7 +96,8 @@ export function DungeonSummary({
 
       <div className="space-y-2">
         <ActionButton primary label="Run This Dungeon" icon={Swords} onClick={() => onNavigate('run')} />
-        <div className="grid grid-cols-2 gap-2 xl:grid-cols-5">
+        <p className="text-xs font-semibold leading-5 text-ink/55">Preview, print, or save this dungeon as a PDF packet.</p>
+        <div className="grid grid-cols-2 gap-2 xl:grid-cols-6">
           <ActionButton
             label={isSaved ? 'Saved' : 'Save'}
             icon={Bookmark}
@@ -115,7 +116,13 @@ export function DungeonSummary({
             }
           />
           <ActionButton
-            label="Print Packet"
+            label="Print / Export"
+            icon={Printer}
+            locked={!hasPdfExport}
+            onClick={() => (hasPdfExport ? onNavigate('print') : onLockedFeature('pdfExport'))}
+          />
+          <ActionButton
+            label="Save as PDF"
             icon={FileDown}
             locked={!hasPdfExport}
             onClick={() => (hasPdfExport ? onNavigate('print') : onLockedFeature('pdfExport'))}

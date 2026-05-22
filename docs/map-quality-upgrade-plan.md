@@ -335,7 +335,7 @@ Recommended sequence:
 2. Print-optimized maps make the packet feel worth paying for.
 3. SVG map download validates standalone map export.
 4. PNG map export supports sharing and VTT-adjacent use.
-5. Generated PDF/export bundle becomes the paid, reliable packaging layer.
+5. Client-side PDF download bridges the prototype gap, while server-side generated PDF/export bundles become the paid, reliable packaging layer.
 
 If only one thing is built before charging, prioritize a polished printable packet with GM and player-safe maps. Map-only export is valuable, but the adventure packet is closer to the “I need prep now” paid use case.
 
@@ -383,6 +383,7 @@ Improve before private playtesting:
 - Manual QA across all 10 environments.
 - Player-safe leakage checklist.
 - At least one pass on map label, marker, and route contrast in browser print/save-to-PDF.
+- Client-side PDF download QA against the same player-safe leakage checklist.
 - Clear framing in the packet so users understand these are prototype print maps.
 
 Private playtesting can proceed without illustrated map images if the maps are honest, readable, and safe.
@@ -395,6 +396,7 @@ Improve before charging:
 - Player-safe maps must feel like real handouts.
 - The weakest environments need visual upgrades or should be excluded from paid export claims.
 - SVG/PDF output must be reliable enough that users do not need to fight browser quirks.
+- Client-side PDF output must be replaced or backed by a more reliable export path if pagination, SVG capture, or file quality are inconsistent in playtesting.
 - Player-safe leakage must be tested and documented.
 - Export options should be clear: full packet, GM map, player map, maybe ink-light mode.
 

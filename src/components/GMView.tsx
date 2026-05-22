@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FileDown, Lock } from 'lucide-react';
+import { FileDown, Lock, Printer } from 'lucide-react';
 import type { Dungeon, TierId } from '../types';
 import { canAccessFeature, type FeatureKey } from '../lib/entitlements';
 import { DungeonMap } from './DungeonMap';
@@ -66,16 +66,31 @@ export function GMView({
     <div className="space-y-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <SectionHeader eyebrow="Dungeon Detail" title="GM View" text="Complete table-facing notes with system-neutral inhabitants, hazards, treasure, and secrets." />
-        <button
-          type="button"
-          onClick={() => (canPrintPacket ? onOpenPrint() : onLockedFeature('pdfExport'))}
-          className={`no-print inline-flex shrink-0 items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-bold shadow-tool ${
-            canPrintPacket ? 'bg-ember text-white hover:bg-ember/90' : 'bg-ink/10 text-ink/45 hover:bg-ink/15'
-          }`}
-        >
-          {canPrintPacket ? <FileDown className="h-4 w-4" aria-hidden="true" /> : <Lock className="h-4 w-4" aria-hidden="true" />}
-          Print Packet
-        </button>
+        <div className="no-print flex shrink-0 flex-col gap-2 sm:items-end">
+          <p className="max-w-64 text-xs font-semibold leading-5 text-ink/55 sm:text-right">Preview, print, or save this dungeon as a PDF packet.</p>
+          <div className="flex flex-wrap gap-2 sm:justify-end">
+            <button
+              type="button"
+              onClick={() => (canPrintPacket ? onOpenPrint() : onLockedFeature('pdfExport'))}
+              className={`inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-bold shadow-tool ${
+                canPrintPacket ? 'bg-ember text-white hover:bg-ember/90' : 'bg-ink/10 text-ink/45 hover:bg-ink/15'
+              }`}
+            >
+              {canPrintPacket ? <Printer className="h-4 w-4" aria-hidden="true" /> : <Lock className="h-4 w-4" aria-hidden="true" />}
+              Print / Export Packet
+            </button>
+            <button
+              type="button"
+              onClick={() => (canPrintPacket ? onOpenPrint() : onLockedFeature('pdfExport'))}
+              className={`inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-bold shadow-tool ${
+                canPrintPacket ? 'bg-brass text-white hover:bg-brass/90' : 'bg-ink/10 text-ink/45 hover:bg-ink/15'
+              }`}
+            >
+              {canPrintPacket ? <FileDown className="h-4 w-4" aria-hidden="true" /> : <Lock className="h-4 w-4" aria-hidden="true" />}
+              Save as PDF
+            </button>
+          </div>
+        </div>
       </div>
       <div className="flex gap-2 overflow-x-auto pb-1">
         {gmTabs.map((tab) => (

@@ -1,6 +1,6 @@
 # Daily Dungeon Print And Export Readiness Plan
 
-This document defines what Daily Dungeon needs before printable maps, browser print, PDFs, and adventure packets can become a credible paid feature. It is planning documentation only; no print, PDF, PNG, SVG download, or backend export implementation exists yet.
+This document defines what Daily Dungeon needs before printable maps, browser print, PDFs, and adventure packets can become a credible paid feature. Browser print and a prototype client-side PDF download now exist; PNG, SVG download, server-side PDF, and backend export bundles remain future work.
 
 The business premise is that a daily dungeon feed may create interest, but paid value probably depends on whether a GM can quickly turn a dungeon into something table-ready: a clean GM packet, a player-safe map, and printable notes that remove prep work.
 
@@ -18,12 +18,12 @@ Daily Dungeon already has strong export ingredients:
 
 The app is not finished as an export product yet because:
 
-- Generated PDF, PNG, SVG download, and server-side export actions are still placeholders.
-- The browser-print packet preview is an early prototype, not a final paid export system.
+- PNG, SVG download, and server-side export actions are still placeholders.
+- The Print Packet view now supports both browser Print and a direct client-side Save as PDF action, but the PDF path is still a prototype rather than a final server-rendered export system.
 - Maps are still responsive UI SVGs and need deeper QA at letter/A4 print dimensions.
 - There are basic page-break rules, but no polished headers, footers, page numbers, print option controls, or ink-friendly variants.
 - There is no export job model, file generation, download handling, or cached export artifact.
-- The current Print Packet action is a browser-print preview and must not be sold as generated PDF export.
+- The current Save as PDF action captures the printable packet content in the browser. It must not be sold as a final server-generated PDF export until quality, pagination, and artifact reliability are proven.
 
 ## Data Already Enough For Export
 
@@ -145,18 +145,20 @@ Risks:
 
 ### Client-Generated PDF
 
-Useful after print CSS is proven, but only if output quality remains high without a large client dependency burden.
+Implemented as a prototype direct download path in the Print Packet view using `html2pdf.js`.
 
 Benefits:
 
 - Can work without backend jobs.
 - Gives users a direct PDF button.
+- Captures the same printable packet content used by browser print.
 
 Risks:
 
 - Complex layout and pagination.
 - Hard to produce professional typography consistently.
 - Large client bundles if heavy PDF libraries are added.
+- DOM/SVG capture may rasterize content and can differ from native browser print output.
 
 ### Server-Side PDF
 
@@ -188,8 +190,12 @@ The prototype Print Packet view uses the currently selected dungeon and includes
 - Room/keyed area notes with read-aloud text, GM notes, inhabitants, treasure, secrets, and exits.
 - Encounter tables and treasure table.
 - Browser print CSS that hides app navigation, DevPanel, buttons, tier selectors, and interactive controls.
+- A separate Print button that opens the browser print dialog through `window.print()`.
+- A Save as PDF button that captures only the printable packet content, excluding app navigation, DevPanel, buttons, helper text, and other screen-only controls.
+- Today and GM View now surface this feature as Print / Export Packet plus a visible Save as PDF entry point, both leading to the Print Packet view where the direct PDF button is available.
 - Print-specific room cards, map frames, captions, section labels, and page-break rules for a more usable table packet.
 - Print-specific map presentation mode for GM and player-safe maps, with stronger label contrast, clearer route strokes, reduced decorative texture, and cleaner print framing.
+- User-facing helper text explaining that browser print and direct client-side PDF download are available, while server-side PDF, PNG, and SVG exports remain future work.
 
 Done when:
 
@@ -202,12 +208,12 @@ Done when:
 Known limitations:
 
 - Output quality depends on the browser print engine.
-- PDF generation is still manual through browser print/save-to-PDF.
+- Direct PDF download is client-side and may differ from native browser print pagination or rendering.
 - There are no export options for paper size, color mode, included sections, or map-only output.
 - There is no cached export artifact or download history.
 - Map print quality still needs manual QA across all 10 environments, especially premium Level 2 maps with subtle color or texture.
 - There are no page numbers, running headers, custom cover pages, or print presets yet.
-- SVG download, PNG export, generated PDF, and server-side export bundles remain future work.
+- SVG download, PNG export, server-side generated PDF, and server-side export bundles remain future work.
 
 ## Recommended First Export Milestone
 

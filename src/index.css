@@ -22,6 +22,21 @@ select {
   font: inherit;
 }
 
+.export-packet-content {
+  background: #ffffff;
+  color: #211a16;
+}
+
+.export-packet-content .print-page {
+  break-before: page;
+  page-break-before: always;
+}
+
+.export-packet-content .print-avoid {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
 @media print {
   @page {
     size: letter;
