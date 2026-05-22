@@ -1,4 +1,4 @@
-import type { Dungeon, DungeonRoom, MapConnection } from '../types';
+import type { Dungeon, DungeonRoom, MapConnection, PremiumMapImageAsset, PremiumMapMetadata, PremiumMapOverlay } from '../types';
 
 export type DungeonValidationIssue = {
   severity: 'error' | 'warning';
@@ -41,6 +41,9 @@ const validOpennessValues = new Set(['enclosed', 'semiOpen', 'open', 'exposed', 
 const validEnvironmentRoleValues = new Set(['safe', 'hazardAdjacent', 'hazardCrossing', 'flooded', 'elevated', 'collapsed', 'overgrown', 'ritual', 'mechanical', 'natural', 'fortified']);
 const validRouteStyleValues = new Set(['corridor', 'trail', 'bridge', 'tunnel', 'ledge', 'channel', 'stair', 'crawl', 'servicePath', 'causeway', 'ford', 'grate']);
 const validRouteDifficultyValues = new Set(['clear', 'narrow', 'unstable', 'hidden', 'hazardous', 'blocked']);
+const validPremiumMapStatusValues = new Set(['planned', 'available', 'unavailable']);
+const validPrintableMapVariantValues = new Set(['standard', 'inkLight', 'highContrast', 'playerHandout']);
+const validPremiumMapMimeTypes = new Set(['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml']);
 
 function validateOptionalValue(value: string | undefined, validValues: Set<string>, label: string, warnings: DungeonValidationIssue[], roomNumbers?: number[]) {
   if (value && !validValues.has(value)) {
@@ -108,6 +111,145 @@ function roomMarksSecretConnection(room: DungeonRoom, targetRoomNumber: number) 
   return (mentionsTarget && hiddenRouteWords.some((word) => text.includes(word))) || structuredMarksSecret;
 }
 
+function validatePositiveNumber(value: number | undefined, label: string, warnings: DungeonValidationIssue[]) {
+  if (value !== undefined && (!Number.isFinite(value) || value <= 0)) {
+    warnings.push({
+      severity: 'warning',
+      message: `${label} should be a positive number when premium map metadata is present.`,
+    });
+  }
+}
+
+function validateFiniteNumber(value: number | undefined, label: string, warnings: DungeonValidationIssue[]) {
+  if (value !== undefined && !Number.isFinite(value)) {
+    warnings.push({
+      severity: 'warning',
+      message: `${label} should be a finite number when premium map metadata is present.`,
+    });
+  }
+}
+
+function validateViewBox(value: string | undefined, label: string, warnings: DungeonValidationIssue[]) {
+  if (!value) {
+    return;
+  }
+
+  const parts = value.trim().split(/\s+/).map(Number);
+  if (parts.length !== 4 || parts.some((part) => !Number.isFinite(part)) || parts[2] <= 0 || parts[3] <= 0) {
+    warnings.push({
+      severity: 'warning',
+      message: `${label} should be four SVG viewBox numbers with positive width and height.`,
+    });
+  }
+}
+
+function validatePremiumMapAsset(asset: PremiumMapImageAsset | undefined, label: string, warnings: DungeonValidationIssue[]) {
+  if (!asset) {
+    return;
+  }
+
+  if (!asset.id?.trim()) {
+    warnings.push({ severity: 'warning', message: `${label} is missing a stable asset id.` });
+  }
+
+  if (!asset.url?.trim()) {
+    warnings.push({ severity: 'warning', message: `${label} is missing an image URL or path.` });
+  }
+
+  validatePositiveNumber(asset.width, `${label} width`, warnings);
+  validatePositiveNumber(asset.height, `${label} height`, warnings);
+  validatePositiveNumber(asset.dpi, `${label} dpi`, warnings);
+
+  if (asset.mimeType && !validPremiumMapMimeTypes.has(asset.mimeType)) {
+    warnings.push({
+      severity: 'warning',
+      message: `${label} uses unsupported mimeType "${asset.mimeType}".`,
+    });
+  }
+}
+
+function validatePremiumMapOverlay(overlay: PremiumMapOverlay | undefined, label: string, roomsByNumber: Map<number, DungeonRoom>, warnings: DungeonValidationIssue[]) {
+  if (!overlay) {
+    return;
+  }
+
+  validateViewBox(overlay.viewBox, `${label} viewBox`, warnings);
+
+  for (const anchor of overlay.labelAnchors ?? []) {
+    if (!roomsByNumber.has(anchor.roomNumber)) {
+      warnings.push({
+        severity: 'warning',
+        message: `${label} label anchor references missing Room ${anchor.roomNumber}.`,
+        roomNumbers: [anchor.roomNumber],
+      });
+    }
+    validateFiniteNumber(anchor.x, `${label} label anchor x`, warnings);
+    validateFiniteNumber(anchor.y, `${label} label anchor y`, warnings);
+  }
+
+  for (const anchor of overlay.markerAnchors ?? []) {
+    if (!roomsByNumber.has(anchor.roomNumber)) {
+      warnings.push({
+        severity: 'warning',
+        message: `${label} marker anchor references missing Room ${anchor.roomNumber}.`,
+        roomNumbers: [anchor.roomNumber],
+      });
+    }
+    validateFiniteNumber(anchor.x, `${label} marker anchor x`, warnings);
+    validateFiniteNumber(anchor.y, `${label} marker anchor y`, warnings);
+  }
+
+  for (const route of overlay.routeOverlayPaths ?? []) {
+    if (!roomsByNumber.has(route.from) || !roomsByNumber.has(route.to)) {
+      warnings.push({
+        severity: 'warning',
+        message: `${label} route overlay references a missing room number.`,
+        roomNumbers: [route.from, route.to],
+      });
+    }
+    if (!route.path?.trim()) {
+      warnings.push({
+        severity: 'warning',
+        message: `${label} route overlay for Room ${route.from} to Room ${route.to} is missing a path.`,
+        roomNumbers: [route.from, route.to],
+      });
+    }
+  }
+}
+
+function validatePremiumMapMetadata(premiumMap: PremiumMapMetadata | undefined, roomsByNumber: Map<number, DungeonRoom>, warnings: DungeonValidationIssue[]) {
+  if (!premiumMap) {
+    return;
+  }
+
+  validateOptionalValue(premiumMap.status, validPremiumMapStatusValues, 'Premium map status', warnings);
+  validateOptionalValue(premiumMap.printableMapVariant, validPrintableMapVariantValues, 'Premium printableMapVariant', warnings);
+  validatePremiumMapAsset(premiumMap.baseMapImage, 'Premium baseMapImage', warnings);
+  validatePremiumMapAsset(premiumMap.gmBaseMapImage, 'Premium gmBaseMapImage', warnings);
+  validatePremiumMapAsset(premiumMap.playerBaseMapImage, 'Premium playerBaseMapImage', warnings);
+  validatePositiveNumber(premiumMap.imageSize?.width, 'Premium imageSize width', warnings);
+  validatePositiveNumber(premiumMap.imageSize?.height, 'Premium imageSize height', warnings);
+  validateViewBox(premiumMap.overlayViewBox, 'Premium overlayViewBox', warnings);
+  validatePositiveNumber(premiumMap.mapBounds?.width, 'Premium mapBounds width', warnings);
+  validatePositiveNumber(premiumMap.mapBounds?.height, 'Premium mapBounds height', warnings);
+  validatePremiumMapOverlay(premiumMap.gmOverlay, 'Premium gmOverlay', roomsByNumber, warnings);
+  validatePremiumMapOverlay(premiumMap.playerOverlay, 'Premium playerOverlay', roomsByNumber, warnings);
+
+  if (premiumMap.status === 'available' && !premiumMap.baseMapImage && !premiumMap.gmBaseMapImage && !premiumMap.playerBaseMapImage) {
+    warnings.push({
+      severity: 'warning',
+      message: 'Premium map is marked available but does not include a baseMapImage, gmBaseMapImage, or playerBaseMapImage.',
+    });
+  }
+
+  if (premiumMap.playerBaseMapImage && !premiumMap.baseMapImage && !premiumMap.gmBaseMapImage) {
+    warnings.push({
+      severity: 'warning',
+      message: 'Premium playerBaseMapImage is present without a GM/shared illustrated base map.',
+    });
+  }
+}
+
 export function validateDungeon(dungeon: Dungeon): DungeonValidationResult {
   const errors: DungeonValidationIssue[] = [];
   const warnings: DungeonValidationIssue[] = [];
@@ -117,6 +259,7 @@ export function validateDungeon(dungeon: Dungeon): DungeonValidationResult {
   const connections = dungeon.map.connections ?? [];
 
   validateOptionalValues(dungeon.map.layout?.grammar, validLayoutGrammarValues, 'Map layout grammar', warnings);
+  validatePremiumMapMetadata(dungeon.map.premiumMap, roomsByNumber, warnings);
 
   if (connections.length === 0) {
     warnings.push({

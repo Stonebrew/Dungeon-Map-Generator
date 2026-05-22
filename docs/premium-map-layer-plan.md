@@ -332,13 +332,23 @@ Done when generated dungeons can reliably include premium illustrated map assets
 
 Done when premium illustrated maps are reliable enough to be part of paid subscription claims.
 
+## Foundation Status
+
+The first foundation task is now represented in the contract and renderer path:
+
+- `DungeonMapData.premiumMap` is optional and backward-compatible.
+- Premium map metadata can describe shared, GM-specific, and player-safe illustrated base images.
+- The metadata can also describe image size, map bounds, overlay viewBox alignment, GM overlays, player-safe overlays, and print variant notes.
+- `DungeonMap` now has a no-op premium renderer branch that checks for usable premium image metadata before falling back to the current SVG renderers.
+- Existing mock dungeons do not include premium image metadata yet, so current schematic and Level 2 SVG maps remain visually unchanged.
+- Validation only checks premium map metadata when it is present.
+
 ## Recommended First Implementation Task
 
-Add optional premium map asset and overlay metadata types to `src/types.ts`, then create a no-op renderer branch that still falls back to current SVG maps when no premium image is present.
+Add one local prototype illustrated base map fixture for a single dungeon and use it to test overlay alignment, GM/player-safe hiding, print packet rendering, and client-side PDF export.
 
 Why this first:
 
-- It is additive and low risk.
-- It does not require backend generation or real image assets.
-- It lets fixtures and validators evolve before a heavy map-image pipeline exists.
-- It preserves the current data-driven overlay and player-safe rules.
+- The contract and no-op branch now exist.
+- A single controlled fixture will prove whether image bounds, viewBox alignment, room labels, markers, and PDF capture behave correctly.
+- It can happen without backend generation or replacing the current SVG fallback.

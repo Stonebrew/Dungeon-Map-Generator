@@ -37,6 +37,66 @@ export type MapConnection = {
   oneWay?: boolean;
 };
 
+export type PremiumMapImageAsset = {
+  id: string;
+  url: string;
+  width: number;
+  height: number;
+  mimeType?: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/svg+xml';
+  dpi?: number;
+  alt?: string;
+};
+
+export type MapBounds = {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+};
+
+export type PremiumMapOverlayAnchor = {
+  roomNumber: number;
+  x: number;
+  y: number;
+  label?: string;
+};
+
+export type PremiumMapMarkerAnchor = PremiumMapOverlayAnchor & {
+  marker: 'treasure' | 'hazard' | 'secret' | 'boss' | 'objective' | 'custom';
+};
+
+export type PremiumMapRouteOverlay = {
+  from: number;
+  to: number;
+  type?: 'normal' | 'secret';
+  path: string;
+};
+
+export type PremiumMapOverlay = {
+  viewBox?: string;
+  labelAnchors?: PremiumMapOverlayAnchor[];
+  markerAnchors?: PremiumMapMarkerAnchor[];
+  routeOverlayPaths?: PremiumMapRouteOverlay[];
+  notes?: string;
+};
+
+export type PremiumMapMetadata = {
+  status?: 'planned' | 'available' | 'unavailable';
+  baseMapImage?: PremiumMapImageAsset;
+  gmBaseMapImage?: PremiumMapImageAsset;
+  playerBaseMapImage?: PremiumMapImageAsset;
+  printableMapVariant?: 'standard' | 'inkLight' | 'highContrast' | 'playerHandout';
+  mapBounds?: MapBounds;
+  imageSize?: {
+    width: number;
+    height: number;
+  };
+  overlayViewBox?: string;
+  gmOverlay?: PremiumMapOverlay;
+  playerOverlay?: PremiumMapOverlay;
+  printNotes?: string;
+};
+
 export type RoomExitType = 'normal' | 'secret' | 'locked' | 'oneWay';
 
 export type RoomExit = {
@@ -61,6 +121,8 @@ export type DungeonMapData = {
   playerMapId: string;
   // Source of truth for room connectivity; room exit text and visual routes should match these links.
   connections?: MapConnection[];
+  // Optional future illustrated map layer. SVG schematic/Level 2 maps remain the fallback when this is absent.
+  premiumMap?: PremiumMapMetadata;
   playerSafe: {
     hideSecrets: boolean;
     hideTreasure: boolean;

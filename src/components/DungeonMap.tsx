@@ -1,6 +1,8 @@
 import { Badge } from './Badge';
 import { EnhancedFallbackMap, MapDefs, MapTexture, type MapPalette } from './maps/fallback/EnhancedFallbackMap';
 import { getLevelTwoEnvironment } from './maps/LevelTwoMapRenderer';
+import { PremiumMapLayer } from './maps/premium/PremiumMapLayer';
+import { hasPremiumMapAsset } from './maps/premium/premiumMapAssets';
 import { SchematicDungeonMap } from './maps/schematic/SchematicDungeonMap';
 import type { DungeonMapData, MapStyle } from '../types';
 import type { MapPresentation } from './maps/level-two/types';
@@ -31,10 +33,22 @@ function MapContent({ mapData, mapStyle, palette, isPlayer, enhanced, presentati
 
   if (levelTwoEnvironment) {
     const LevelTwoRenderer = levelTwoEnvironment.renderer;
-    return <LevelTwoRenderer connections={mapData?.connections ?? []} secretStroke={palette.secretStroke} isPlayer={isPlayer} presentation={presentation} />;
+    const fallback = <LevelTwoRenderer connections={mapData?.connections ?? []} secretStroke={palette.secretStroke} isPlayer={isPlayer} presentation={presentation} />;
+
+    if (hasPremiumMapAsset(mapData, isPlayer)) {
+      return <PremiumMapLayer mapData={mapData} isPlayer={isPlayer} fallback={fallback} />;
+    }
+
+    return fallback;
   }
 
-  return <EnhancedFallbackMap mapData={mapData} style={mapStyle} palette={palette} isPlayer={isPlayer} enhanced />;
+  const fallback = <EnhancedFallbackMap mapData={mapData} style={mapStyle} palette={palette} isPlayer={isPlayer} enhanced />;
+
+  if (hasPremiumMapAsset(mapData, isPlayer)) {
+    return <PremiumMapLayer mapData={mapData} isPlayer={isPlayer} fallback={fallback} />;
+  }
+
+  return fallback;
 }
 
 export function DungeonMap({

@@ -358,9 +358,10 @@ Medium term:
 
 Long term:
 
-1. Add curated or generated illustrated map image pipeline only after dungeon generation and validation are stable.
-2. Generate GM and player-safe image assets from the same geometry and visibility rules.
-3. Cache export-ready images and PDFs server-side.
+1. Use the optional `map.premiumMap` metadata and premium renderer branch to layer illustrated base images under data-driven overlays.
+2. Add curated or generated illustrated map image pipeline only after dungeon generation and validation are stable.
+3. Generate GM and player-safe image assets from the same geometry and visibility rules.
+4. Cache export-ready images and PDFs server-side.
 
 ## Recommended Next 10 Map Quality Tasks
 

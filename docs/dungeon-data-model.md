@@ -35,6 +35,7 @@ The `Dungeon` contract defines the complete ready-to-run dungeon payload the fro
 - `gmMapId`: deprecated prototype identifier for the GM-facing map asset or generated map; future payloads may replace this with richer asset metadata.
 - `playerMapId`: deprecated prototype identifier for the player-safe map asset or generated map; future payloads may replace this with richer asset metadata.
 - `connections`: source-of-truth room connectivity metadata. Each connection has `from`, `to`, `type`, optional `note`, optional route metadata, and a prototype `path` used for SVG route rendering.
+- `premiumMap`: optional future illustrated map metadata. When absent, the app uses the current schematic or Level 2 SVG maps.
 - `playerSafe`: rules for what the player map should hide, including secrets, treasure, hazards, GM notes, and optional player-facing description copy.
 
 The prototype still renders room shapes from local SVG layouts. Visual route rendering is derived from `map.connections`, so normal corridors and GM-only secret routes share the same source of truth as room exit text. A backend map service can later replace `gmMapId` and `playerMapId` with generated asset IDs or URLs, but the visual routes should continue to match `map.connections`.
@@ -56,6 +57,33 @@ connections: [
 Room `exits` text should match `map.connections`. If the map says Room 4 connects to Room 5, both rooms should normally mention the route. If the room text mentions an exit to Room 5, the map should include that connection. Secret routes can be mentioned in `exits`, `secrets`, or GM notes, but they should use clear language such as hidden, secret, concealed, crawlspace, collapsed, false, or similar.
 
 The current `path` field is prototype SVG data, not a procedural generation API. It prevents hand-drawn corridor paths from silently disagreeing with `map.connections`. Future generated map data can replace it with richer geometry, anchors, or asset coordinates as long as the renderer derives routes from the same connection records.
+
+## Optional Premium Illustrated Map Metadata
+
+`map.premiumMap` is an optional additive layer for future paid printable maps. Existing dungeons remain valid without it.
+
+The current shape supports:
+
+- `baseMapImage`: shared illustrated base map asset.
+- `gmBaseMapImage`: GM-specific illustrated base map asset when the GM version needs baked-in details.
+- `playerBaseMapImage`: player-safe illustrated base map asset when secrets or GM-only details must be removed from the art itself.
+- `imageSize`: source image dimensions.
+- `mapBounds`: coordinate bounds for placing the image inside the map SVG.
+- `overlayViewBox`: SVG coordinate system used by overlays.
+- `gmOverlay`: GM label, marker, and route overlay metadata.
+- `playerOverlay`: player-safe overlay metadata.
+- `printableMapVariant`: optional print-facing variant label such as standard, ink-light, high-contrast, or player handout.
+- `printNotes`: notes about print suitability or limitations.
+
+Premium image assets include a stable `id`, `url`, positive `width` and `height`, optional `mimeType`, optional `dpi`, and optional `alt` text. Large image bytes should not be embedded directly in dungeon JSON.
+
+The renderer path is intentionally additive:
+
+1. If an entitled map view has usable `premiumMap` image metadata, a future illustrated-image branch can render the base image and SVG overlays.
+2. If no premium image exists, the app falls back to the current SVG map renderer.
+3. Lantern schematic maps remain available as reference/fallback maps.
+
+Player-safe rule: secrets must not be baked into player-facing base art. If the GM base image contains hidden doors, secret paths, treasure, trap symbols, or objective markers, the dungeon must provide a separate `playerBaseMapImage` or avoid using that image for player-safe export.
 
 ## Room Fields
 
