@@ -56,8 +56,10 @@ export type MapBounds = {
 
 export type PremiumMapOverlayAnchor = {
   roomNumber: number;
-  x: number;
-  y: number;
+  x?: number;
+  y?: number;
+  xPercent?: number;
+  yPercent?: number;
   label?: string;
 };
 
@@ -94,6 +96,7 @@ export type PremiumMapMetadata = {
   overlayViewBox?: string;
   gmOverlay?: PremiumMapOverlay;
   playerOverlay?: PremiumMapOverlay;
+  showNormalRouteOverlay?: boolean;
   printNotes?: string;
 };
 

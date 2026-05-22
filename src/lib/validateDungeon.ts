@@ -44,6 +44,7 @@ const validRouteDifficultyValues = new Set(['clear', 'narrow', 'unstable', 'hidd
 const validPremiumMapStatusValues = new Set(['planned', 'available', 'unavailable']);
 const validPrintableMapVariantValues = new Set(['standard', 'inkLight', 'highContrast', 'playerHandout']);
 const validPremiumMapMimeTypes = new Set(['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml']);
+const validPremiumMapMarkerValues = new Set(['treasure', 'hazard', 'secret', 'boss', 'objective', 'custom']);
 
 function validateOptionalValue(value: string | undefined, validValues: Set<string>, label: string, warnings: DungeonValidationIssue[], roomNumbers?: number[]) {
   if (value && !validValues.has(value)) {
@@ -143,6 +144,51 @@ function validateViewBox(value: string | undefined, label: string, warnings: Dun
   }
 }
 
+function validatePercentNumber(value: number | undefined, label: string, warnings: DungeonValidationIssue[]) {
+  if (value !== undefined && (!Number.isFinite(value) || value < 0 || value > 100)) {
+    warnings.push({
+      severity: 'warning',
+      message: `${label} should be a number from 0 to 100 when premium percentage anchors are present.`,
+    });
+  }
+}
+
+function validatePremiumAnchorPosition(anchor: { x?: number; y?: number; xPercent?: number; yPercent?: number }, label: string, warnings: DungeonValidationIssue[]) {
+  const hasAbsolutePair = anchor.x !== undefined || anchor.y !== undefined;
+  const hasPercentPair = anchor.xPercent !== undefined || anchor.yPercent !== undefined;
+
+  if (hasAbsolutePair) {
+    validateFiniteNumber(anchor.x, `${label} x`, warnings);
+    validateFiniteNumber(anchor.y, `${label} y`, warnings);
+
+    if (anchor.x === undefined || anchor.y === undefined) {
+      warnings.push({
+        severity: 'warning',
+        message: `${label} should provide both x and y when using absolute premium map anchors.`,
+      });
+    }
+  }
+
+  if (hasPercentPair) {
+    validatePercentNumber(anchor.xPercent, `${label} xPercent`, warnings);
+    validatePercentNumber(anchor.yPercent, `${label} yPercent`, warnings);
+
+    if (anchor.xPercent === undefined || anchor.yPercent === undefined) {
+      warnings.push({
+        severity: 'warning',
+        message: `${label} should provide both xPercent and yPercent when using percentage premium map anchors.`,
+      });
+    }
+  }
+
+  if (!hasAbsolutePair && !hasPercentPair) {
+    warnings.push({
+      severity: 'warning',
+      message: `${label} should provide either x/y or xPercent/yPercent.`,
+    });
+  }
+}
+
 function validatePremiumMapAsset(asset: PremiumMapImageAsset | undefined, label: string, warnings: DungeonValidationIssue[]) {
   if (!asset) {
     return;
@@ -183,8 +229,7 @@ function validatePremiumMapOverlay(overlay: PremiumMapOverlay | undefined, label
         roomNumbers: [anchor.roomNumber],
       });
     }
-    validateFiniteNumber(anchor.x, `${label} label anchor x`, warnings);
-    validateFiniteNumber(anchor.y, `${label} label anchor y`, warnings);
+    validatePremiumAnchorPosition(anchor, `${label} label anchor for Room ${anchor.roomNumber}`, warnings);
   }
 
   for (const anchor of overlay.markerAnchors ?? []) {
@@ -195,8 +240,15 @@ function validatePremiumMapOverlay(overlay: PremiumMapOverlay | undefined, label
         roomNumbers: [anchor.roomNumber],
       });
     }
-    validateFiniteNumber(anchor.x, `${label} marker anchor x`, warnings);
-    validateFiniteNumber(anchor.y, `${label} marker anchor y`, warnings);
+    validatePremiumAnchorPosition(anchor, `${label} marker anchor for Room ${anchor.roomNumber}`, warnings);
+
+    if (!validPremiumMapMarkerValues.has(anchor.marker)) {
+      warnings.push({
+        severity: 'warning',
+        message: `${label} marker anchor for Room ${anchor.roomNumber} uses unsupported marker "${anchor.marker}".`,
+        roomNumbers: [anchor.roomNumber],
+      });
+    }
   }
 
   for (const route of overlay.routeOverlayPaths ?? []) {

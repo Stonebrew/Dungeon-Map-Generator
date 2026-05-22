@@ -73,9 +73,12 @@ The current shape supports:
 - `gmOverlay`: GM label, marker, and route overlay metadata.
 - `playerOverlay`: player-safe overlay metadata.
 - `printableMapVariant`: optional print-facing variant label such as standard, ink-light, high-contrast, or player handout.
+- `showNormalRouteOverlay`: optional flag for future illustrated maps. Normal routes are usually not drawn over illustrated maps because visible paths, bridges, and doors should be part of the base art.
 - `printNotes`: notes about print suitability or limitations.
 
 Premium image assets include a stable `id`, `url`, positive `width` and `height`, optional `mimeType`, optional `dpi`, and optional `alt` text. Large image bytes should not be embedded directly in dungeon JSON.
+
+Premium overlay anchors can use either absolute SVG coordinates (`x`, `y`) or percentage coordinates (`xPercent`, `yPercent`). Percentage coordinates are preferred for illustrated map tests because they align to the rendered image bounds and are easier to retune as image size or print layout changes. Each label or marker anchor should provide either a complete `x`/`y` pair or a complete `xPercent`/`yPercent` pair.
 
 The renderer path is intentionally additive:
 
@@ -84,6 +87,8 @@ The renderer path is intentionally additive:
 3. Lantern schematic maps remain available as reference/fallback maps.
 
 Player-safe rule: secrets must not be baked into player-facing base art. If the GM base image contains hidden doors, secret paths, treasure, trap symbols, or objective markers, the dungeon must provide a separate `playerBaseMapImage` or avoid using that image for player-safe export.
+
+Current map-first proof of concept: `Premium Map POC: The Verdant Watercourt` references `/premium-maps/test-temple-map.png` as a shared `baseMapImage`. Its room content, `map.connections`, exits, GM markers, treasure, hazards, and objective are written around the illustrated map rather than adapted from an unrelated dungeon. Its GM overlay provides percentage-based room labels, GM markers, and a manually aligned secret culvert route. Its player overlay provides only room labels; GM markers and secret routes remain hidden in player-safe mode. If the image fails to load, the app falls back to the existing Level 2 SVG shrine map.
 
 ## Room Fields
 

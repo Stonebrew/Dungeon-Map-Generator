@@ -16,7 +16,7 @@ export function getPremiumMapAsset(mapData: DungeonMapData | undefined, isPlayer
 
 export function getPremiumOverlay(mapData: DungeonMapData | undefined, isPlayer: boolean): PremiumMapOverlay | undefined {
   if (isPlayer) {
-    return mapData?.premiumMap?.playerOverlay;
+    return mapData?.premiumMap?.playerOverlay ?? mapData?.premiumMap?.gmOverlay;
   }
 
   return mapData?.premiumMap?.gmOverlay;

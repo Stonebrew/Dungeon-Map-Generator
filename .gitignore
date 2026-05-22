@@ -19,3 +19,5 @@ pnpm-debug.log*
 .vscode/
 .DS_Store
 Thumbs.db
+# Local-only premium map test assets
+public/premium-maps/

@@ -338,17 +338,34 @@ The first foundation task is now represented in the contract and renderer path:
 
 - `DungeonMapData.premiumMap` is optional and backward-compatible.
 - Premium map metadata can describe shared, GM-specific, and player-safe illustrated base images.
-- The metadata can also describe image size, map bounds, overlay viewBox alignment, GM overlays, player-safe overlays, and print variant notes.
+- The metadata can also describe image size, map bounds, overlay viewBox alignment, percentage or absolute overlay anchors, GM overlays, player-safe overlays, and print variant notes.
 - `DungeonMap` now has a no-op premium renderer branch that checks for usable premium image metadata before falling back to the current SVG renderers.
 - Existing mock dungeons do not include premium image metadata yet, so current schematic and Level 2 SVG maps remain visually unchanged.
 - Validation only checks premium map metadata when it is present.
 
+## Map-First Proof-Of-Concept Status
+
+The first illustrated-map proof of concept is now a separate map-first mock dungeon: `Premium Map POC: The Verdant Watercourt`.
+
+- The dungeon references `/premium-maps/test-temple-map.png` through `map.premiumMap.baseMapImage`.
+- The illustrated map drives room count, room names, exits, `map.connections`, treasure locations, hazards, objective placement, and running notes.
+- The premium image is used as the base layer for Adventurer/Dungeonwright enhanced GM and player-safe map views.
+- GM overlays render room numbers, GM markers, and secret routes above the image.
+- Player-safe overlays render room numbers while hiding GM markers and secret routes.
+- Room labels and GM markers now use premium-map-specific percentage anchors when present, instead of relying on the old SVG map room coordinates.
+- If the image fails to load, the renderer falls back to the existing Level 2 SVG shrine map.
+- Normal route overlays are disabled for this premium map because the visible paths, bridges, and doorways are already part of the illustration.
+- Secret route overlays are manually defined and aligned to the image; player maps hide them.
+- Overlay anchors are still manually tuned. A future visual annotation editor or geometry export step will be needed before adding many premium map images.
+
+The previous attempt to attach the test image to Saint Orra showed an important product rule: illustrated maps should drive dungeon content, not be retrofitted onto unrelated room text.
+
 ## Recommended First Implementation Task
 
-Add one local prototype illustrated base map fixture for a single dungeon and use it to test overlay alignment, GM/player-safe hiding, print packet rendering, and client-side PDF export.
+Add a focused visual QA checklist for the Verdant Watercourt premium map in Today, GM View, Player Map, Print Packet, and Save as PDF output.
 
 Why this first:
 
-- The contract and no-op branch now exist.
-- A single controlled fixture will prove whether image bounds, viewBox alignment, room labels, markers, and PDF capture behave correctly.
-- It can happen without backend generation or replacing the current SVG fallback.
+- The first image fixture is now connected.
+- The next risk is whether the image bounds, labels, markers, and secret routes are readable enough in every surface.
+- It keeps the test narrow before adding more premium images or backend asset delivery.
