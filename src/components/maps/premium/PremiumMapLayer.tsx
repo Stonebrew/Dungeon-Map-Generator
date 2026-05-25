@@ -1,25 +1,8 @@
-import type { DungeonMapData, MapBounds, PremiumMapOverlayAnchor } from '../../../types';
+import type { DungeonMapData } from '../../../types';
 import { useEffect, useState } from 'react';
 import type { ReactElement } from 'react';
+import { DEFAULT_PREMIUM_MAP_BOUNDS, getPremiumAnchorPoint } from './premiumMapGeometry';
 import { getPremiumMapAsset, getPremiumOverlay } from './premiumMapAssets';
-
-function getAnchorPoint(anchor: PremiumMapOverlayAnchor, bounds: MapBounds) {
-  if (Number.isFinite(anchor.xPercent) && Number.isFinite(anchor.yPercent)) {
-    return {
-      x: bounds.x + bounds.width * ((anchor.xPercent as number) / 100),
-      y: bounds.y + bounds.height * ((anchor.yPercent as number) / 100),
-    };
-  }
-
-  if (Number.isFinite(anchor.x) && Number.isFinite(anchor.y)) {
-    return {
-      x: anchor.x as number,
-      y: anchor.y as number,
-    };
-  }
-
-  return undefined;
-}
 
 export function PremiumMapLayer({
   mapData,
@@ -32,7 +15,7 @@ export function PremiumMapLayer({
 }) {
   const asset = getPremiumMapAsset(mapData, isPlayer);
   const overlay = getPremiumOverlay(mapData, isPlayer);
-  const bounds = mapData?.premiumMap?.mapBounds ?? { x: 0, y: 0, width: 720, height: 480 };
+  const bounds = mapData?.premiumMap?.mapBounds ?? DEFAULT_PREMIUM_MAP_BOUNDS;
   const [imageFailed, setImageFailed] = useState(false);
 
   useEffect(() => {
@@ -49,11 +32,11 @@ export function PremiumMapLayer({
 
   const routeOverlayPaths = overlay?.routeOverlayPaths ?? [];
   const markerAnchors = (overlay.markerAnchors ?? []).flatMap((anchor) => {
-    const point = getAnchorPoint(anchor, bounds);
+    const point = getPremiumAnchorPoint(anchor, bounds);
     return point ? [{ ...anchor, point }] : [];
   });
   const labelAnchors = overlay.labelAnchors.flatMap((anchor) => {
-    const point = getAnchorPoint(anchor, bounds);
+    const point = getPremiumAnchorPoint(anchor, bounds);
     return point ? [{ ...anchor, point }] : [];
   });
 

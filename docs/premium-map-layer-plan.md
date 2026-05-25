@@ -389,7 +389,11 @@ Current capabilities:
 
 The annotator supports both blank/new metadata creation and edit-and-copy work on existing premium map dungeons. Loading an existing dungeon does not mutate the source data; it only populates the local annotator state so the updated JSON can be copied back manually after review.
 
-The annotator uses percentage coordinates (`xPercent`, `yPercent`) over the rendered image. This matches the preferred premium overlay workflow and is easier to retune than absolute SVG coordinates. Newly drawn secret route output is converted into the existing 720x480 SVG path coordinate space so it remains compatible with `PremiumMapLayer`. Existing SVG secret route paths are preserved until the route is edited, which prevents a load-and-copy pass from accidentally degrading curved route overlays.
+The annotator uses the same coordinate interpretation as `PremiumMapLayer`: the premium image is rendered into `premiumMap.mapBounds`, currently `0 0 720 480`, with `preserveAspectRatio="xMidYMid slice"`. Room label and GM marker anchors export as `xPercent` / `yPercent` values relative to those bounds. GM-only secret route paths export in the same `720x480` overlay SVG coordinate space. This makes the annotator WYSIWYG with GM Map, Player Map, and Print Packet previews.
+
+`map.connections` remains structural dungeon data. It describes which keyed areas connect and should not be used to place room labels, GM markers, or premium illustrated overlay art.
+
+Existing SVG secret route paths are preserved until the route is edited, which prevents a load-and-copy pass from accidentally degrading curved route overlays.
 
 Limitations:
 

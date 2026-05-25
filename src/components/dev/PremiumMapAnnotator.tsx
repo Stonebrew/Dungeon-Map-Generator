@@ -2,6 +2,7 @@ import { Copy, MousePointer2, Route, Tag, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { MouseEvent, PointerEvent, ReactNode } from 'react';
 import { mockDungeons } from '../../data/mockDungeon';
+import { DEFAULT_PREMIUM_MAP_BOUNDS, getPremiumAnchorPoint, getPremiumPercentPoint } from '../maps/premium/premiumMapGeometry';
 import type { Dungeon, MapConnection, PremiumMapMarkerAnchor, PremiumMapMetadata, PremiumMapOverlayAnchor, PremiumMapRouteOverlay, RouteDifficulty, RouteStyle } from '../../types';
 
 type AnnotatorMode = 'room' | 'marker' | 'route' | 'select';
@@ -71,20 +72,21 @@ function clampPercent(value: number) {
   return roundPercent(Math.min(100, Math.max(0, value)));
 }
 
+function overlayPoint(point: { xPercent?: number; yPercent?: number; x?: number; y?: number }) {
+  return getPremiumAnchorPoint({ roomNumber: 0, ...point }, DEFAULT_PREMIUM_MAP_BOUNDS) ?? { x: DEFAULT_PREMIUM_MAP_BOUNDS.x, y: DEFAULT_PREMIUM_MAP_BOUNDS.y };
+}
+
 function routePath(points: DraftRoute['points']) {
   return points
     .map((point, index) => {
-      const x = roundPercent(point.xPercent * 7.2);
-      const y = roundPercent(point.yPercent * 4.8);
+      const { x, y } = overlayPoint(point);
       return `${index === 0 ? 'M' : 'L'}${x} ${y}`;
     })
     .join(' ');
 }
 
 function routePreviewPath(points: DraftRoute['points']) {
-  return points
-    .map((point, index) => `${index === 0 ? 'M' : 'L'}${point.xPercent} ${point.yPercent}`)
-    .join(' ');
+  return routePath(points);
 }
 
 function routeExportPath(route: DraftRoute) {
@@ -108,10 +110,11 @@ function svgPercentPoint(svg: SVGSVGElement, clientX: number, clientY: number) {
   point.x = clientX;
   point.y = clientY;
   const transformed = point.matrixTransform(svg.getScreenCTM()?.inverse());
+  const percentPoint = getPremiumPercentPoint(transformed.x, transformed.y, DEFAULT_PREMIUM_MAP_BOUNDS);
 
   return {
-    xPercent: clampPercent(transformed.x),
-    yPercent: clampPercent(transformed.y),
+    xPercent: clampPercent(percentPoint.xPercent),
+    yPercent: clampPercent(percentPoint.yPercent),
   };
 }
 
@@ -172,11 +175,8 @@ function formatMetadata(asset: LocalPremiumMapAsset, rooms: PremiumMapOverlayAnc
       width: asset.width,
       height: asset.height,
     },
-    mapBounds: {
-      x: 0,
-      y: 0,
-      width: 720,
-      height: 480,
+      mapBounds: {
+      ...DEFAULT_PREMIUM_MAP_BOUNDS,
     },
     overlayViewBox: '0 0 720 480',
     printableMapVariant: 'standard',
@@ -271,9 +271,10 @@ function routePathToPercentPoints(path: string) {
   const points: DraftRoute['points'] = [];
 
   for (let index = 0; index < numbers.length - 1; index += 2) {
+    const percentPoint = getPremiumPercentPoint(numbers[index], numbers[index + 1], DEFAULT_PREMIUM_MAP_BOUNDS);
     points.push({
-      xPercent: roundPercent(numbers[index] / 7.2),
-      yPercent: roundPercent(numbers[index + 1] / 4.8),
+      xPercent: clampPercent(percentPoint.xPercent),
+      yPercent: clampPercent(percentPoint.yPercent),
     });
   }
 
@@ -662,10 +663,10 @@ export function PremiumMapAnnotator() {
           <main className="rounded-md border border-white/10 bg-black/25 p-3">
             <div className="mb-2 flex items-center justify-between gap-3 text-xs font-semibold text-white/55">
               <span>{asset.url}</span>
-              <span>{activeRoute ? `Drawing route ${activeRoute.from}-${activeRoute.to}` : 'Click the map to annotate'}</span>
+              <span>{activeRoute ? `Drawing route ${activeRoute.from}-${activeRoute.to}` : '720x480 production overlay; anchors export as percent of mapBounds'}</span>
             </div>
             <svg
-              viewBox="0 0 100 100"
+              viewBox="0 0 720 480"
               role="img"
               aria-label="Premium map annotation canvas"
               onClick={handleMapClick}
@@ -675,68 +676,77 @@ export function PremiumMapAnnotator() {
               onPointerLeave={finishDrag}
               className="h-auto w-full cursor-crosshair touch-none rounded-md border border-white/10 bg-black"
             >
-              <image href={asset.url} x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid slice" />
+              <image href={asset.url} x="0" y="0" width="720" height="480" preserveAspectRatio="xMidYMid slice" />
 
               {previewMode === 'gm' &&
                 routes.map((route) => (
                   <g key={route.id}>
                     {!route.edited && route.path?.trim() ? (
-                      <path d={route.path} fill="none" stroke="#f59e0b" strokeDasharray="8 8" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" transform="scale(0.1388889 0.2083333)" />
+                      <path d={route.path} fill="none" stroke="#f59e0b" strokeDasharray="8 8" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" />
                     ) : (
-                      route.points.length > 1 && <path d={routePreviewPath(route.points)} fill="none" stroke="#f59e0b" strokeDasharray="1.8 1.4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="0.75" />
+                      route.points.length > 1 && <path d={routePreviewPath(route.points)} fill="none" stroke="#f59e0b" strokeDasharray="8 8" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" />
                     )}
-                    {route.points.map((point, index) => (
-                      <circle
-                        key={`${route.id}-${index}`}
-                        cx={point.xPercent}
-                        cy={point.yPercent}
-                        r={isSelected(selectedAnnotation, { type: 'routePoint', routeId: route.id, pointIndex: index }) ? '1.35' : '0.95'}
-                        fill="#fef3c7"
-                        stroke={isSelected(selectedAnnotation, { type: 'routePoint', routeId: route.id, pointIndex: index }) ? '#38bdf8' : '#92400e'}
-                        strokeWidth="0.32"
-                        className="cursor-move"
-                        onPointerDown={startDrag({ type: 'routePoint', routeId: route.id, pointIndex: index })}
-                        onClick={(event) => event.stopPropagation()}
-                      />
-                    ))}
+                    {route.points.map((point, index) => {
+                      const handle = overlayPoint(point);
+                      return (
+                        <circle
+                          key={`${route.id}-${index}`}
+                          cx={handle.x}
+                          cy={handle.y}
+                          r={isSelected(selectedAnnotation, { type: 'routePoint', routeId: route.id, pointIndex: index }) ? '8' : '6'}
+                          fill="#fef3c7"
+                          stroke={isSelected(selectedAnnotation, { type: 'routePoint', routeId: route.id, pointIndex: index }) ? '#38bdf8' : '#92400e'}
+                          strokeWidth="2"
+                          className="cursor-move"
+                          onPointerDown={startDrag({ type: 'routePoint', routeId: route.id, pointIndex: index })}
+                          onClick={(event) => event.stopPropagation()}
+                        />
+                      );
+                    })}
                   </g>
                 ))}
 
               {previewMode === 'gm' &&
-                markers.map((marker, index) => (
-                  <g key={`${marker.roomNumber}-${marker.marker}-${index}`} className="cursor-move" onPointerDown={startDrag({ type: 'marker', index })} onClick={(event) => event.stopPropagation()}>
-                    <circle
-                      cx={marker.xPercent}
-                      cy={marker.yPercent}
-                      r={isSelected(selectedAnnotation, { type: 'marker', index }) ? '2.7' : '2.1'}
+                markers.map((marker, index) => {
+                  const point = overlayPoint(marker);
+                  return (
+                    <g key={`${marker.roomNumber}-${marker.marker}-${index}`} className="cursor-move" onPointerDown={startDrag({ type: 'marker', index })} onClick={(event) => event.stopPropagation()}>
+                      <circle
+                        cx={point.x}
+                        cy={point.y}
+                        r={isSelected(selectedAnnotation, { type: 'marker', index }) ? '15' : '12'}
+                        fill="#fff8e8"
+                        stroke={isSelected(selectedAnnotation, { type: 'marker', index }) ? '#38bdf8' : '#7a4d2c'}
+                        strokeWidth="2"
+                      />
+                      <text x={point.x} y={point.y + 4} textAnchor="middle" fontSize="11" fontWeight="900" fill="#7a4d2c">
+                        {(marker.label ?? marker.marker.slice(0, 1)).toUpperCase()}
+                      </text>
+                    </g>
+                  );
+                })}
+
+              {rooms.map((room) => {
+                const point = overlayPoint(room);
+                return (
+                  <g key={room.roomNumber} className="cursor-move" onPointerDown={startDrag({ type: 'room', roomNumber: room.roomNumber })} onClick={(event) => event.stopPropagation()}>
+                    <rect
+                      x={point.x - 14}
+                      y={point.y - 14}
+                      width="28"
+                      height="28"
+                      rx="8"
                       fill="#fff8e8"
-                      stroke={isSelected(selectedAnnotation, { type: 'marker', index }) ? '#38bdf8' : '#92400e'}
-                      strokeWidth="0.5"
+                      stroke={isSelected(selectedAnnotation, { type: 'room', roomNumber: room.roomNumber }) ? '#38bdf8' : 'transparent'}
+                      strokeWidth="3"
+                      opacity="0.94"
                     />
-                    <text x={marker.xPercent} y={(marker.yPercent ?? 0) + 0.9} textAnchor="middle" fontSize="2.1" fontWeight="900" fill="#7c2d12">
-                      {(marker.label ?? marker.marker.slice(0, 1)).toUpperCase()}
+                    <text x={point.x} y={point.y + 6} textAnchor="middle" fontSize="20" fontWeight="900" fill="#211a16">
+                      {room.roomNumber}
                     </text>
                   </g>
-                ))}
-
-              {rooms.map((room) => (
-                <g key={room.roomNumber} className="cursor-move" onPointerDown={startDrag({ type: 'room', roomNumber: room.roomNumber })} onClick={(event) => event.stopPropagation()}>
-                  <rect
-                    x={(room.xPercent ?? 0) - 2.2}
-                    y={(room.yPercent ?? 0) - 2.2}
-                    width="4.4"
-                    height="4.4"
-                    rx="1"
-                    fill="#fff8e8"
-                    stroke={isSelected(selectedAnnotation, { type: 'room', roomNumber: room.roomNumber }) ? '#38bdf8' : 'transparent'}
-                    strokeWidth="0.45"
-                    opacity="0.96"
-                  />
-                  <text x={room.xPercent} y={(room.yPercent ?? 0) + 1.3} textAnchor="middle" fontSize="3.3" fontWeight="900" fill="#211a16">
-                    {room.roomNumber}
-                  </text>
-                </g>
-              ))}
+                );
+              })}
             </svg>
           </main>
 
