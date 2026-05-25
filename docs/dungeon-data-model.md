@@ -80,7 +80,7 @@ Premium image assets include a stable `id`, `url`, positive `width` and `height`
 
 Premium overlay anchors can use either absolute SVG coordinates (`x`, `y`) or percentage coordinates (`xPercent`, `yPercent`). Percentage coordinates are preferred for illustrated map tests because they align to the rendered image bounds and are easier to retune as image size or print layout changes. Each label or marker anchor should provide either a complete `x`/`y` pair or a complete `xPercent`/`yPercent` pair.
 
-Dev workflow: in local development builds, use `/dev/map-annotator` to visually place room anchors, GM marker anchors, and secret route points on known local premium maps. The annotator can start from blank metadata or load an existing mock dungeon with `premiumMap` metadata, including `Premium Map POC: The Verdant Watercourt`. It produces copyable `premiumMap` metadata and draft `map.connections` JSON. It does not save data automatically; generated metadata still needs to be reviewed and pasted into mock data or future backend fixtures.
+Dev workflow: in local development builds, use `/dev/map-annotator` to visually place room anchors, GM marker anchors, and secret route points on known local premium maps. The annotator can start from blank metadata or load an existing mock dungeon with `premiumMap` metadata, including `Premium Map POC: The Verdant Watercourt`. Loaded and newly created room anchors, GM markers, and secret route points can be dragged to update normalized coordinates. It produces copyable `premiumMap` metadata and draft `map.connections` JSON. It does not save data automatically; generated metadata still needs to be reviewed and pasted into mock data or future backend fixtures.
 
 The renderer path is intentionally additive:
 

@@ -1,12 +1,19 @@
 import { Copy, MousePointer2, Route, Tag, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
-import type { MouseEvent, ReactNode } from 'react';
+import type { MouseEvent, PointerEvent, ReactNode } from 'react';
 import { mockDungeons } from '../../data/mockDungeon';
 import type { Dungeon, MapConnection, PremiumMapMarkerAnchor, PremiumMapMetadata, PremiumMapOverlayAnchor, PremiumMapRouteOverlay, RouteDifficulty, RouteStyle } from '../../types';
 
 type AnnotatorMode = 'room' | 'marker' | 'route' | 'select';
 type PreviewMode = 'gm' | 'player';
 type MarkerType = PremiumMapMarkerAnchor['marker'];
+
+type DragTarget =
+  | { type: 'room'; roomNumber: number }
+  | { type: 'marker'; index: number }
+  | { type: 'routePoint'; routeId: string; pointIndex: number };
+
+type SelectedAnnotation = DragTarget | undefined;
 
 type LocalPremiumMapAsset = {
   id: string;
@@ -60,6 +67,10 @@ function roundPercent(value: number) {
   return Number(value.toFixed(2));
 }
 
+function clampPercent(value: number) {
+  return roundPercent(Math.min(100, Math.max(0, value)));
+}
+
 function routePath(points: DraftRoute['points']) {
   return points
     .map((point, index) => {
@@ -90,6 +101,38 @@ function createId(prefix: string) {
 
 function copyText(value: string) {
   void navigator.clipboard?.writeText(value);
+}
+
+function svgPercentPoint(svg: SVGSVGElement, clientX: number, clientY: number) {
+  const point = svg.createSVGPoint();
+  point.x = clientX;
+  point.y = clientY;
+  const transformed = point.matrixTransform(svg.getScreenCTM()?.inverse());
+
+  return {
+    xPercent: clampPercent(transformed.x),
+    yPercent: clampPercent(transformed.y),
+  };
+}
+
+function isSelected(selected: SelectedAnnotation, target: DragTarget) {
+  if (!selected || selected.type !== target.type) {
+    return false;
+  }
+
+  if (selected.type === 'room' && target.type === 'room') {
+    return selected.roomNumber === target.roomNumber;
+  }
+
+  if (selected.type === 'marker' && target.type === 'marker') {
+    return selected.index === target.index;
+  }
+
+  if (selected.type === 'routePoint' && target.type === 'routePoint') {
+    return selected.routeId === target.routeId && selected.pointIndex === target.pointIndex;
+  }
+
+  return false;
 }
 
 function formatMetadata(asset: LocalPremiumMapAsset, rooms: PremiumMapOverlayAnchor[], markers: PremiumMapMarkerAnchor[], routes: DraftRoute[], showNormalRouteOverlay: boolean) {
@@ -272,6 +315,8 @@ export function PremiumMapAnnotator() {
   const [activeRouteId, setActiveRouteId] = useState<string | undefined>();
   const [connections, setConnections] = useState<DraftConnection[]>([]);
   const [showNormalRouteOverlay, setShowNormalRouteOverlay] = useState(false);
+  const [selectedAnnotation, setSelectedAnnotation] = useState<SelectedAnnotation>();
+  const [dragTarget, setDragTarget] = useState<DragTarget>();
   const [connectionFrom, setConnectionFrom] = useState(1);
   const [connectionTo, setConnectionTo] = useState(2);
   const [connectionType, setConnectionType] = useState<'normal' | 'secret'>('normal');
@@ -292,6 +337,8 @@ export function PremiumMapAnnotator() {
     setRoutes([]);
     setConnections([]);
     setShowNormalRouteOverlay(false);
+    setSelectedAnnotation(undefined);
+    setDragTarget(undefined);
     setActiveRouteId(undefined);
     setRoomNumber(1);
     setMarkerRoomNumber(1);
@@ -349,6 +396,8 @@ export function PremiumMapAnnotator() {
     setRoutes(loadedRoutes);
     setConnections(draftConnectionsFromDungeon(dungeon));
     setShowNormalRouteOverlay(Boolean(premiumMap.showNormalRouteOverlay));
+    setSelectedAnnotation(undefined);
+    setDragTarget(undefined);
     setActiveRouteId(undefined);
     setRoomNumber((loadedRooms.at(-1)?.roomNumber ?? 0) + 1);
     setMarkerRoomNumber(loadedRooms[0]?.roomNumber ?? 1);
@@ -359,19 +408,18 @@ export function PremiumMapAnnotator() {
   };
 
   const handleMapClick = (event: MouseEvent<SVGSVGElement>) => {
-    const svg = event.currentTarget;
-    const point = svg.createSVGPoint();
-    point.x = event.clientX;
-    point.y = event.clientY;
-    const transformed = point.matrixTransform(svg.getScreenCTM()?.inverse());
-    const xPercent = roundPercent(Math.min(100, Math.max(0, transformed.x)));
-    const yPercent = roundPercent(Math.min(100, Math.max(0, transformed.y)));
+    if (dragTarget) {
+      return;
+    }
+
+    const { xPercent, yPercent } = svgPercentPoint(event.currentTarget, event.clientX, event.clientY);
 
     if (mode === 'room') {
       setRooms((current) => {
         const next = current.filter((room) => room.roomNumber !== roomNumber);
         return [...next, { roomNumber, xPercent, yPercent }].sort((a, b) => a.roomNumber - b.roomNumber);
       });
+      setSelectedAnnotation({ type: 'room', roomNumber });
       setRoomNumber((current) => current + 1);
     }
 
@@ -386,12 +434,14 @@ export function PremiumMapAnnotator() {
           ...(markerType === 'custom' && customLabel ? { label: customLabel } : {}),
         },
       ]);
+      setSelectedAnnotation({ type: 'marker', index: markers.length });
     }
 
     if (mode === 'route') {
       setRoutes((current) => {
         const existing = current.find((route) => route.id === activeRouteId);
         if (existing) {
+          setSelectedAnnotation({ type: 'routePoint', routeId: existing.id, pointIndex: existing.points.length });
           return current.map((route) => (route.id === existing.id ? { ...route, edited: true, points: [...route.points, { xPercent, yPercent }] } : route));
         }
 
@@ -403,9 +453,62 @@ export function PremiumMapAnnotator() {
           points: [{ xPercent, yPercent }],
         };
         setActiveRouteId(nextRoute.id);
+        setSelectedAnnotation({ type: 'routePoint', routeId: nextRoute.id, pointIndex: 0 });
         return [...current, nextRoute];
       });
     }
+  };
+
+  const moveAnnotation = (target: DragTarget, xPercent: number, yPercent: number) => {
+    if (target.type === 'room') {
+      setRooms((current) => current.map((room) => (room.roomNumber === target.roomNumber ? { ...room, xPercent, yPercent } : room)));
+      return;
+    }
+
+    if (target.type === 'marker') {
+      setMarkers((current) => current.map((marker, index) => (index === target.index ? { ...marker, xPercent, yPercent } : marker)));
+      return;
+    }
+
+    setRoutes((current) =>
+      current.map((route) =>
+        route.id === target.routeId
+          ? {
+              ...route,
+              edited: true,
+              points: route.points.map((point, index) => (index === target.pointIndex ? { xPercent, yPercent } : point)),
+            }
+          : route,
+      ),
+    );
+  };
+
+  const startDrag = (target: DragTarget) => (event: PointerEvent<SVGElement>) => {
+    event.preventDefault();
+    event.stopPropagation();
+    event.currentTarget.setPointerCapture(event.pointerId);
+    const svg = event.currentTarget.ownerSVGElement;
+    if (!svg) {
+      return;
+    }
+    const { xPercent, yPercent } = svgPercentPoint(svg, event.clientX, event.clientY);
+    setSelectedAnnotation(target);
+    setDragTarget(target);
+    moveAnnotation(target, xPercent, yPercent);
+  };
+
+  const handlePointerMove = (event: PointerEvent<SVGSVGElement>) => {
+    if (!dragTarget) {
+      return;
+    }
+
+    event.preventDefault();
+    const { xPercent, yPercent } = svgPercentPoint(event.currentTarget, event.clientX, event.clientY);
+    moveAnnotation(dragTarget, xPercent, yPercent);
+  };
+
+  const finishDrag = () => {
+    setDragTarget(undefined);
   };
 
   const addConnection = () => {
@@ -561,7 +664,17 @@ export function PremiumMapAnnotator() {
               <span>{asset.url}</span>
               <span>{activeRoute ? `Drawing route ${activeRoute.from}-${activeRoute.to}` : 'Click the map to annotate'}</span>
             </div>
-            <svg viewBox="0 0 100 100" role="img" aria-label="Premium map annotation canvas" onClick={handleMapClick} className="h-auto w-full cursor-crosshair rounded-md border border-white/10 bg-black">
+            <svg
+              viewBox="0 0 100 100"
+              role="img"
+              aria-label="Premium map annotation canvas"
+              onClick={handleMapClick}
+              onPointerMove={handlePointerMove}
+              onPointerUp={finishDrag}
+              onPointerCancel={finishDrag}
+              onPointerLeave={finishDrag}
+              className="h-auto w-full cursor-crosshair touch-none rounded-md border border-white/10 bg-black"
+            >
               <image href={asset.url} x="0" y="0" width="100" height="100" preserveAspectRatio="xMidYMid slice" />
 
               {previewMode === 'gm' &&
@@ -573,15 +686,33 @@ export function PremiumMapAnnotator() {
                       route.points.length > 1 && <path d={routePreviewPath(route.points)} fill="none" stroke="#f59e0b" strokeDasharray="1.8 1.4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="0.75" />
                     )}
                     {route.points.map((point, index) => (
-                      <circle key={`${route.id}-${index}`} cx={point.xPercent} cy={point.yPercent} r="0.9" fill="#fef3c7" stroke="#92400e" strokeWidth="0.25" />
+                      <circle
+                        key={`${route.id}-${index}`}
+                        cx={point.xPercent}
+                        cy={point.yPercent}
+                        r={isSelected(selectedAnnotation, { type: 'routePoint', routeId: route.id, pointIndex: index }) ? '1.35' : '0.95'}
+                        fill="#fef3c7"
+                        stroke={isSelected(selectedAnnotation, { type: 'routePoint', routeId: route.id, pointIndex: index }) ? '#38bdf8' : '#92400e'}
+                        strokeWidth="0.32"
+                        className="cursor-move"
+                        onPointerDown={startDrag({ type: 'routePoint', routeId: route.id, pointIndex: index })}
+                        onClick={(event) => event.stopPropagation()}
+                      />
                     ))}
                   </g>
                 ))}
 
               {previewMode === 'gm' &&
                 markers.map((marker, index) => (
-                  <g key={`${marker.roomNumber}-${marker.marker}-${index}`}>
-                    <circle cx={marker.xPercent} cy={marker.yPercent} r="2.1" fill="#fff8e8" stroke="#92400e" strokeWidth="0.5" />
+                  <g key={`${marker.roomNumber}-${marker.marker}-${index}`} className="cursor-move" onPointerDown={startDrag({ type: 'marker', index })} onClick={(event) => event.stopPropagation()}>
+                    <circle
+                      cx={marker.xPercent}
+                      cy={marker.yPercent}
+                      r={isSelected(selectedAnnotation, { type: 'marker', index }) ? '2.7' : '2.1'}
+                      fill="#fff8e8"
+                      stroke={isSelected(selectedAnnotation, { type: 'marker', index }) ? '#38bdf8' : '#92400e'}
+                      strokeWidth="0.5"
+                    />
                     <text x={marker.xPercent} y={(marker.yPercent ?? 0) + 0.9} textAnchor="middle" fontSize="2.1" fontWeight="900" fill="#7c2d12">
                       {(marker.label ?? marker.marker.slice(0, 1)).toUpperCase()}
                     </text>
@@ -589,8 +720,18 @@ export function PremiumMapAnnotator() {
                 ))}
 
               {rooms.map((room) => (
-                <g key={room.roomNumber}>
-                  <rect x={(room.xPercent ?? 0) - 2.2} y={(room.yPercent ?? 0) - 2.2} width="4.4" height="4.4" rx="1" fill="#fff8e8" opacity="0.96" />
+                <g key={room.roomNumber} className="cursor-move" onPointerDown={startDrag({ type: 'room', roomNumber: room.roomNumber })} onClick={(event) => event.stopPropagation()}>
+                  <rect
+                    x={(room.xPercent ?? 0) - 2.2}
+                    y={(room.yPercent ?? 0) - 2.2}
+                    width="4.4"
+                    height="4.4"
+                    rx="1"
+                    fill="#fff8e8"
+                    stroke={isSelected(selectedAnnotation, { type: 'room', roomNumber: room.roomNumber }) ? '#38bdf8' : 'transparent'}
+                    strokeWidth="0.45"
+                    opacity="0.96"
+                  />
                   <text x={room.xPercent} y={(room.yPercent ?? 0) + 1.3} textAnchor="middle" fontSize="3.3" fontWeight="900" fill="#211a16">
                     {room.roomNumber}
                   </text>

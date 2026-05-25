@@ -376,8 +376,11 @@ Current capabilities:
 - Load existing mock dungeons that already include `premiumMap` metadata, starting with `Premium Map POC: The Verdant Watercourt`.
 - Import the selected dungeon's current base map image, room label anchors, GM marker anchors, GM-only secret route overlays, `showNormalRouteOverlay` flag, and draft `map.connections`.
 - Place room number anchors by clicking the image.
+- Drag existing room number anchors to retune their `xPercent` / `yPercent` placement.
 - Place GM marker anchors for treasure, hazard, objective, boss, secret, or custom labels.
+- Drag existing GM marker anchors without changing their room number, marker type, or label.
 - Draw multi-point GM-only secret route overlays.
+- Drag individual secret route points while preserving route identity and point order.
 - Preview GM mode with all overlays.
 - Preview player mode with room labels only, hiding GM markers and secret routes.
 - Delete room anchors, markers, routes, and draft connections from side lists.
@@ -393,13 +396,14 @@ Limitations:
 - It does not save files.
 - It does not update mock data automatically.
 - It does not upload or discover arbitrary image files.
-- It can load existing annotations from mock dungeon payloads, but editing is still basic: room anchors are replaced by clicking, route points can be added/removed, and full drag handles are not implemented.
+- It can load existing annotations from mock dungeon payloads and supports basic visual dragging for room anchors, GM markers, and secret route points.
 - It does not validate room prose, structured exits, or connection bidirectionality while editing.
+- It does not provide Bezier curve handles yet; dragging a loaded curved secret route point converts future export for that route to point-to-point line segments.
 - It is not a polished user-facing feature.
 
 Future improvements:
 
-- Drag existing anchors and route points.
+- Add proper Bezier path editing for curved secret routes.
 - Snap anchors to visible rooms or image landmarks.
 - Generate structured exits from edited `map.connections`.
 - Add image-specific bounds controls for non-square assets.
