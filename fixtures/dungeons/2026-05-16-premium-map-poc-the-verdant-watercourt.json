@@ -124,6 +124,72 @@
       "overlayViewBox": "0 0 720 480",
       "printableMapVariant": "standard",
       "showNormalRouteOverlay": false,
+      "schematicFootprints": [
+        {
+          "roomNumber": 1,
+          "shape": "rect",
+          "xPercent": 15.26,
+          "yPercent": 76.32,
+          "widthPercent": 20,
+          "heightPercent": 15
+        },
+        {
+          "roomNumber": 2,
+          "shape": "rect",
+          "xPercent": 50.29,
+          "yPercent": 38.5,
+          "widthPercent": 25,
+          "heightPercent": 22
+        },
+        {
+          "roomNumber": 3,
+          "shape": "rect",
+          "xPercent": 19.76,
+          "yPercent": 10.5,
+          "widthPercent": 24,
+          "heightPercent": 17
+        },
+        {
+          "roomNumber": 4,
+          "shape": "rect",
+          "xPercent": 49.71,
+          "yPercent": 8.81,
+          "widthPercent": 17,
+          "heightPercent": 14
+        },
+        {
+          "roomNumber": 5,
+          "shape": "rect",
+          "xPercent": 75.5,
+          "yPercent": 44.25,
+          "widthPercent": 21,
+          "heightPercent": 18
+        },
+        {
+          "roomNumber": 6,
+          "shape": "rect",
+          "xPercent": 86.5,
+          "yPercent": 70,
+          "widthPercent": 21,
+          "heightPercent": 17
+        },
+        {
+          "roomNumber": 7,
+          "shape": "rect",
+          "xPercent": 47.95,
+          "yPercent": 83.66,
+          "widthPercent": 22,
+          "heightPercent": 13
+        },
+        {
+          "roomNumber": 8,
+          "shape": "rect",
+          "xPercent": 80.75,
+          "yPercent": 15.5,
+          "widthPercent": 20,
+          "heightPercent": 15
+        }
+      ],
       "gmOverlay": {
         "viewBox": "0 0 720 480",
         "labelAnchors": [
