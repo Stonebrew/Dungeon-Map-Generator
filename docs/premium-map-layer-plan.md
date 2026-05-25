@@ -360,6 +360,48 @@ The first illustrated-map proof of concept is now a separate map-first mock dung
 
 The previous attempt to attach the test image to Saint Orra showed an important product rule: illustrated maps should drive dungeon content, not be retrofitted onto unrelated room text.
 
+## Dev Annotation Tool
+
+A dev-only premium map annotation tool is available at:
+
+```text
+/dev/map-annotator
+```
+
+This route is intentionally hidden from normal product navigation and is gated to Vite development builds with `import.meta.env.DEV`. It is internal prototype tooling for building and tuning `premiumMap` metadata.
+
+Current capabilities:
+
+- Load the known local premium map asset `/premium-maps/test-temple-map.png`.
+- Place room number anchors by clicking the image.
+- Place GM marker anchors for treasure, hazard, objective, boss, secret, or custom labels.
+- Draw multi-point GM-only secret route overlays.
+- Preview GM mode with all overlays.
+- Preview player mode with room labels only, hiding GM markers and secret routes.
+- Delete room anchors, markers, routes, and draft connections from side lists.
+- Draft `map.connections` entries with type, route style, difficulty, and note.
+- Copy generated `premiumMap` metadata and draft `map.connections` JSON for manual paste-back into mock data or future fixtures.
+
+The annotator uses percentage coordinates (`xPercent`, `yPercent`) over the rendered image. This matches the preferred premium overlay workflow and is easier to retune than absolute SVG coordinates. Secret route output is converted into the existing 720x480 SVG path coordinate space so it remains compatible with `PremiumMapLayer`.
+
+Limitations:
+
+- It does not save files.
+- It does not update mock data automatically.
+- It does not upload or discover arbitrary image files.
+- It does not visually edit existing annotations from a dungeon payload yet.
+- It does not validate room prose, structured exits, or connection bidirectionality while editing.
+- It is not a polished user-facing feature.
+
+Future improvements:
+
+- Load annotations from a selected dungeon.
+- Drag existing anchors and route points.
+- Snap anchors to visible rooms or image landmarks.
+- Generate structured exits from edited `map.connections`.
+- Add image-specific bounds controls for non-square assets.
+- Save annotations to fixture JSON through a future backend/dev-only file workflow.
+
 ## Recommended First Implementation Task
 
 Add a focused visual QA checklist for the Verdant Watercourt premium map in Today, GM View, Player Map, Print Packet, and Save as PDF output.

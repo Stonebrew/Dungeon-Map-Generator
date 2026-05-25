@@ -1,3 +1,4 @@
+import { lazy, Suspense } from 'react';
 import { Archive, BookOpen, Crown, Dice5, RefreshCcw, ScrollText, Shield } from 'lucide-react';
 import { ArchiveView } from './components/ArchiveView';
 import { Badge, Panel } from './components/Badge';
@@ -15,7 +16,6 @@ import { canAccessFeature, tierRank } from './lib/entitlements';
 import { useMockDailyDungeonApp, type ViewId } from './hooks/useMockDailyDungeonApp';
 import type { Plan } from './types';
 
-
 const viewItems: { id: ViewId; label: string; icon: typeof BookOpen }[] = [
   { id: 'today', label: 'Today', icon: BookOpen },
   { id: 'gm', label: 'GM View', icon: ScrollText },
@@ -27,6 +27,20 @@ const viewItems: { id: ViewId; label: string; icon: typeof BookOpen }[] = [
 ];
 
 function App() {
+  if (import.meta.env.DEV && window.location.pathname === '/dev/map-annotator') {
+    const PremiumMapAnnotator = lazy(() => import('./components/dev/PremiumMapAnnotator').then((module) => ({ default: module.PremiumMapAnnotator })));
+
+    return (
+      <Suspense fallback={<div className="min-h-screen bg-[#17130f] p-4 text-white">Loading map annotator...</div>}>
+        <PremiumMapAnnotator />
+      </Suspense>
+    );
+  }
+
+  return <DailyDungeonApp />;
+}
+
+function DailyDungeonApp() {
   const appState = useMockDailyDungeonApp();
   const {
     view,

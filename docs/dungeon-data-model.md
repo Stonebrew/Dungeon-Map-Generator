@@ -80,6 +80,8 @@ Premium image assets include a stable `id`, `url`, positive `width` and `height`
 
 Premium overlay anchors can use either absolute SVG coordinates (`x`, `y`) or percentage coordinates (`xPercent`, `yPercent`). Percentage coordinates are preferred for illustrated map tests because they align to the rendered image bounds and are easier to retune as image size or print layout changes. Each label or marker anchor should provide either a complete `x`/`y` pair or a complete `xPercent`/`yPercent` pair.
 
+Dev workflow: in local development builds, use `/dev/map-annotator` to visually place room anchors, GM marker anchors, and secret route points on known local premium maps. The annotator produces copyable `premiumMap` metadata and draft `map.connections` JSON. It does not save data automatically; generated metadata still needs to be reviewed and pasted into mock data or future backend fixtures.
+
 The renderer path is intentionally additive:
 
 1. If an entitled map view has usable `premiumMap` image metadata, a future illustrated-image branch can render the base image and SVG overlays.

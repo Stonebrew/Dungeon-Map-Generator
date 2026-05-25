@@ -365,6 +365,8 @@ Long term:
 
 Status: the first proof-of-concept illustrated base map is connected to `Premium Map POC: The Verdant Watercourt` using `/premium-maps/test-temple-map.png`. This is a map-first mock dungeon: the illustrated watercourt drives room content, `map.connections`, exits, treasure, hazards, objective placement, and GM/player overlays. Normal route overlays are disabled because visible routes are part of the base art; only a manually aligned GM-only secret route overlay is drawn. This is an alignment and rendering test, not final paid-quality map art.
 
+Dev annotation support now exists at `/dev/map-annotator` in local development builds. It is not a user-facing product feature; it is a prototype tool for visually placing room labels, GM markers, secret routes, and draft connections over known local premium map assets. This should reduce coordinate guessing while premium map workflows are still manual.
+
 ## Recommended Next 10 Map Quality Tasks
 
 1. Create a map print QA checklist for all 10 environments: GM map, player map, room number readability, route clarity, and secret hiding.
