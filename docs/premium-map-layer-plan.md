@@ -373,6 +373,8 @@ This route is intentionally hidden from normal product navigation and is gated t
 Current capabilities:
 
 - Load the known local premium map asset `/premium-maps/test-temple-map.png`.
+- Load existing mock dungeons that already include `premiumMap` metadata, starting with `Premium Map POC: The Verdant Watercourt`.
+- Import the selected dungeon's current base map image, room label anchors, GM marker anchors, GM-only secret route overlays, `showNormalRouteOverlay` flag, and draft `map.connections`.
 - Place room number anchors by clicking the image.
 - Place GM marker anchors for treasure, hazard, objective, boss, secret, or custom labels.
 - Draw multi-point GM-only secret route overlays.
@@ -382,20 +384,21 @@ Current capabilities:
 - Draft `map.connections` entries with type, route style, difficulty, and note.
 - Copy generated `premiumMap` metadata and draft `map.connections` JSON for manual paste-back into mock data or future fixtures.
 
-The annotator uses percentage coordinates (`xPercent`, `yPercent`) over the rendered image. This matches the preferred premium overlay workflow and is easier to retune than absolute SVG coordinates. Secret route output is converted into the existing 720x480 SVG path coordinate space so it remains compatible with `PremiumMapLayer`.
+The annotator supports both blank/new metadata creation and edit-and-copy work on existing premium map dungeons. Loading an existing dungeon does not mutate the source data; it only populates the local annotator state so the updated JSON can be copied back manually after review.
+
+The annotator uses percentage coordinates (`xPercent`, `yPercent`) over the rendered image. This matches the preferred premium overlay workflow and is easier to retune than absolute SVG coordinates. Newly drawn secret route output is converted into the existing 720x480 SVG path coordinate space so it remains compatible with `PremiumMapLayer`. Existing SVG secret route paths are preserved until the route is edited, which prevents a load-and-copy pass from accidentally degrading curved route overlays.
 
 Limitations:
 
 - It does not save files.
 - It does not update mock data automatically.
 - It does not upload or discover arbitrary image files.
-- It does not visually edit existing annotations from a dungeon payload yet.
+- It can load existing annotations from mock dungeon payloads, but editing is still basic: room anchors are replaced by clicking, route points can be added/removed, and full drag handles are not implemented.
 - It does not validate room prose, structured exits, or connection bidirectionality while editing.
 - It is not a polished user-facing feature.
 
 Future improvements:
 
-- Load annotations from a selected dungeon.
 - Drag existing anchors and route points.
 - Snap anchors to visible rooms or image landmarks.
 - Generate structured exits from edited `map.connections`.

@@ -1,7 +1,8 @@
 import { Copy, MousePointer2, Route, Tag, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { MouseEvent, ReactNode } from 'react';
-import type { MapConnection, PremiumMapMarkerAnchor, PremiumMapMetadata, PremiumMapOverlayAnchor, PremiumMapRouteOverlay, RouteDifficulty, RouteStyle } from '../../types';
+import { mockDungeons } from '../../data/mockDungeon';
+import type { Dungeon, MapConnection, PremiumMapMarkerAnchor, PremiumMapMetadata, PremiumMapOverlayAnchor, PremiumMapRouteOverlay, RouteDifficulty, RouteStyle } from '../../types';
 
 type AnnotatorMode = 'room' | 'marker' | 'route' | 'select';
 type PreviewMode = 'gm' | 'player';
@@ -13,6 +14,8 @@ type LocalPremiumMapAsset = {
   url: string;
   width: number;
   height: number;
+  mimeType?: 'image/png' | 'image/jpeg' | 'image/webp' | 'image/svg+xml';
+  alt?: string;
 };
 
 type DraftRoute = {
@@ -21,6 +24,8 @@ type DraftRoute = {
   to: number;
   type: 'secret';
   points: { xPercent: number; yPercent: number }[];
+  path?: string;
+  edited?: boolean;
 };
 
 type DraftConnection = {
@@ -31,6 +36,8 @@ type DraftConnection = {
   routeStyle: RouteStyle;
   routeDifficulty: RouteDifficulty;
   note: string;
+  path?: string;
+  oneWay?: boolean;
 };
 
 const localPremiumMapAssets: LocalPremiumMapAsset[] = [
@@ -40,9 +47,11 @@ const localPremiumMapAssets: LocalPremiumMapAsset[] = [
     url: '/premium-maps/test-temple-map.png',
     width: 1254,
     height: 1254,
+    mimeType: 'image/png',
   },
 ];
 
+const premiumMapDungeons = mockDungeons.filter((dungeon) => Boolean(dungeon.map.premiumMap));
 const markerTypes: MarkerType[] = ['treasure', 'hazard', 'objective', 'boss', 'secret', 'custom'];
 const routeStyles: RouteStyle[] = ['corridor', 'trail', 'bridge', 'tunnel', 'ledge', 'channel', 'stair', 'crawl', 'servicePath', 'causeway', 'ford', 'grate'];
 const routeDifficulties: RouteDifficulty[] = ['clear', 'narrow', 'unstable', 'hidden', 'hazardous', 'blocked'];
@@ -67,6 +76,14 @@ function routePreviewPath(points: DraftRoute['points']) {
     .join(' ');
 }
 
+function routeExportPath(route: DraftRoute) {
+  if (!route.edited && route.path?.trim()) {
+    return route.path;
+  }
+
+  return routePath(route.points);
+}
+
 function createId(prefix: string) {
   return `${prefix}-${Date.now()}-${Math.round(Math.random() * 1000)}`;
 }
@@ -75,14 +92,14 @@ function copyText(value: string) {
   void navigator.clipboard?.writeText(value);
 }
 
-function formatMetadata(asset: LocalPremiumMapAsset, rooms: PremiumMapOverlayAnchor[], markers: PremiumMapMarkerAnchor[], routes: DraftRoute[]) {
+function formatMetadata(asset: LocalPremiumMapAsset, rooms: PremiumMapOverlayAnchor[], markers: PremiumMapMarkerAnchor[], routes: DraftRoute[], showNormalRouteOverlay: boolean) {
   const routeOverlayPaths: PremiumMapRouteOverlay[] = routes
-    .filter((route) => route.points.length > 1)
+    .filter((route) => route.path?.trim() || route.points.length > 1)
     .map((route) => ({
       from: route.from,
       to: route.to,
       type: 'secret',
-      path: routePath(route.points),
+      path: routeExportPath(route),
     }));
 
   const gmOverlay = {
@@ -105,7 +122,8 @@ function formatMetadata(asset: LocalPremiumMapAsset, rooms: PremiumMapOverlayAnc
       url: asset.url,
       width: asset.width,
       height: asset.height,
-      mimeType: 'image/png',
+      ...(asset.mimeType ? { mimeType: asset.mimeType } : {}),
+      ...(asset.alt ? { alt: asset.alt } : {}),
     },
     imageSize: {
       width: asset.width,
@@ -119,7 +137,7 @@ function formatMetadata(asset: LocalPremiumMapAsset, rooms: PremiumMapOverlayAnc
     },
     overlayViewBox: '0 0 720 480',
     printableMapVariant: 'standard',
-    showNormalRouteOverlay: false,
+    showNormalRouteOverlay,
     gmOverlay,
     playerOverlay,
     printNotes: 'Generated from the dev-only premium map annotator.',
@@ -136,6 +154,8 @@ function formatConnections(connections: DraftConnection[]) {
     routeStyle: connection.routeStyle,
     routeDifficulty: connection.routeDifficulty,
     ...(connection.note ? { note: connection.note } : {}),
+    ...(connection.path ? { path: connection.path } : {}),
+    ...(connection.oneWay ? { oneWay: connection.oneWay } : {}),
   }));
 
   return JSON.stringify(
@@ -146,14 +166,98 @@ function formatConnections(connections: DraftConnection[]) {
       routeStyle: connection.routeStyle,
       routeDifficulty: connection.routeDifficulty,
       ...(connection.note ? { note: connection.note } : {}),
+      ...(connection.path ? { path: connection.path } : {}),
+      ...(connection.oneWay ? { oneWay: connection.oneWay } : {}),
     })),
     null,
     2,
   );
 }
 
+function assetFromPremiumMap(premiumMap: PremiumMapMetadata | undefined): LocalPremiumMapAsset | undefined {
+  const asset = premiumMap?.baseMapImage ?? premiumMap?.gmBaseMapImage ?? premiumMap?.playerBaseMapImage;
+
+  if (!asset) {
+    return undefined;
+  }
+
+  return {
+    id: asset.id,
+    name: asset.alt ?? asset.id,
+    url: asset.url,
+    width: asset.width,
+    height: asset.height,
+    mimeType: asset.mimeType,
+    alt: asset.alt,
+  };
+}
+
+function uniqueAssets(assets: LocalPremiumMapAsset[]) {
+  const seen = new Set<string>();
+
+  return assets.filter((asset) => {
+    const key = `${asset.id}:${asset.url}`;
+    if (seen.has(key)) {
+      return false;
+    }
+    seen.add(key);
+    return true;
+  });
+}
+
+function anchorToPercent(anchor: PremiumMapOverlayAnchor, bounds = { x: 0, y: 0, width: 720, height: 480 }) {
+  if (Number.isFinite(anchor.xPercent) && Number.isFinite(anchor.yPercent)) {
+    return {
+      xPercent: roundPercent(anchor.xPercent as number),
+      yPercent: roundPercent(anchor.yPercent as number),
+    };
+  }
+
+  if (Number.isFinite(anchor.x) && Number.isFinite(anchor.y)) {
+    return {
+      xPercent: roundPercent((((anchor.x as number) - bounds.x) / bounds.width) * 100),
+      yPercent: roundPercent((((anchor.y as number) - bounds.y) / bounds.height) * 100),
+    };
+  }
+
+  return undefined;
+}
+
+function routePathToPercentPoints(path: string) {
+  const numbers = path.match(/-?\d+(?:\.\d+)?/g)?.map(Number) ?? [];
+  const points: DraftRoute['points'] = [];
+
+  for (let index = 0; index < numbers.length - 1; index += 2) {
+    points.push({
+      xPercent: roundPercent(numbers[index] / 7.2),
+      yPercent: roundPercent(numbers[index + 1] / 4.8),
+    });
+  }
+
+  return points;
+}
+
+function draftConnectionsFromDungeon(dungeon: Dungeon): DraftConnection[] {
+  return (dungeon.map.connections ?? []).map((connection, index) => ({
+    id: createId(`connection-${index}`),
+    from: connection.from,
+    to: connection.to,
+    type: connection.type,
+    routeStyle: connection.routeStyle ?? (connection.type === 'secret' ? 'crawl' : 'trail'),
+    routeDifficulty: connection.routeDifficulty ?? (connection.type === 'secret' ? 'hidden' : 'clear'),
+    note: connection.note ?? '',
+    path: connection.path,
+    oneWay: connection.oneWay,
+  }));
+}
+
 export function PremiumMapAnnotator() {
-  const [assetId, setAssetId] = useState(localPremiumMapAssets[0].id);
+  const availableAssets = useMemo(
+    () => uniqueAssets([...localPremiumMapAssets, ...premiumMapDungeons.flatMap((dungeon) => assetFromPremiumMap(dungeon.map.premiumMap) ?? [])]),
+    [],
+  );
+  const [assetId, setAssetId] = useState(availableAssets[0].id);
+  const [selectedDungeonId, setSelectedDungeonId] = useState('blank');
   const [mode, setMode] = useState<AnnotatorMode>('room');
   const [previewMode, setPreviewMode] = useState<PreviewMode>('gm');
   const [roomNumber, setRoomNumber] = useState(1);
@@ -167,6 +271,7 @@ export function PremiumMapAnnotator() {
   const [routes, setRoutes] = useState<DraftRoute[]>([]);
   const [activeRouteId, setActiveRouteId] = useState<string | undefined>();
   const [connections, setConnections] = useState<DraftConnection[]>([]);
+  const [showNormalRouteOverlay, setShowNormalRouteOverlay] = useState(false);
   const [connectionFrom, setConnectionFrom] = useState(1);
   const [connectionTo, setConnectionTo] = useState(2);
   const [connectionType, setConnectionType] = useState<'normal' | 'secret'>('normal');
@@ -174,10 +279,84 @@ export function PremiumMapAnnotator() {
   const [connectionDifficulty, setConnectionDifficulty] = useState<RouteDifficulty>('clear');
   const [connectionNote, setConnectionNote] = useState('');
 
-  const asset = localPremiumMapAssets.find((item) => item.id === assetId) ?? localPremiumMapAssets[0];
-  const metadataOutput = useMemo(() => formatMetadata(asset, rooms, markers, routes), [asset, markers, rooms, routes]);
+  const asset = availableAssets.find((item) => item.id === assetId) ?? availableAssets[0];
+  const metadataOutput = useMemo(() => formatMetadata(asset, rooms, markers, routes, showNormalRouteOverlay), [asset, markers, rooms, routes, showNormalRouteOverlay]);
   const connectionsOutput = useMemo(() => formatConnections(connections), [connections]);
   const activeRoute = routes.find((route) => route.id === activeRouteId);
+
+  const resetToBlank = () => {
+    setSelectedDungeonId('blank');
+    setAssetId(availableAssets[0].id);
+    setRooms([]);
+    setMarkers([]);
+    setRoutes([]);
+    setConnections([]);
+    setShowNormalRouteOverlay(false);
+    setActiveRouteId(undefined);
+    setRoomNumber(1);
+    setMarkerRoomNumber(1);
+    setRouteFrom(1);
+    setRouteTo(2);
+    setConnectionFrom(1);
+    setConnectionTo(2);
+    setConnectionType('normal');
+    setConnectionRouteStyle('trail');
+    setConnectionDifficulty('clear');
+    setConnectionNote('');
+  };
+
+  const loadDungeon = (dungeonId: string) => {
+    if (dungeonId === 'blank') {
+      resetToBlank();
+      return;
+    }
+
+    const dungeon = premiumMapDungeons.find((item) => item.id === dungeonId);
+    const premiumMap = dungeon?.map.premiumMap;
+    const loadedAsset = assetFromPremiumMap(premiumMap);
+
+    if (!dungeon || !premiumMap || !loadedAsset) {
+      return;
+    }
+
+    const bounds = premiumMap.mapBounds ?? { x: 0, y: 0, width: 720, height: 480 };
+    const gmOverlay = premiumMap.gmOverlay;
+    const loadedRooms = (premiumMap.playerOverlay?.labelAnchors ?? gmOverlay?.labelAnchors ?? [])
+      .flatMap((anchor) => {
+        const point = anchorToPercent(anchor, bounds);
+        return point ? [{ roomNumber: anchor.roomNumber, label: anchor.label, ...point }] : [];
+      })
+      .sort((a, b) => a.roomNumber - b.roomNumber);
+    const loadedMarkers = (gmOverlay?.markerAnchors ?? []).flatMap((anchor) => {
+      const point = anchorToPercent(anchor, bounds);
+      return point ? [{ roomNumber: anchor.roomNumber, marker: anchor.marker, label: anchor.label, ...point }] : [];
+    });
+    const loadedRoutes = (gmOverlay?.routeOverlayPaths ?? [])
+      .filter((route) => route.type === 'secret' && route.path?.trim())
+      .map((route, index) => ({
+        id: createId(`route-${index}`),
+        from: route.from,
+        to: route.to,
+        type: 'secret' as const,
+        path: route.path,
+        points: routePathToPercentPoints(route.path),
+      }));
+
+    setSelectedDungeonId(dungeon.id);
+    setAssetId(loadedAsset.id);
+    setRooms(loadedRooms);
+    setMarkers(loadedMarkers);
+    setRoutes(loadedRoutes);
+    setConnections(draftConnectionsFromDungeon(dungeon));
+    setShowNormalRouteOverlay(Boolean(premiumMap.showNormalRouteOverlay));
+    setActiveRouteId(undefined);
+    setRoomNumber((loadedRooms.at(-1)?.roomNumber ?? 0) + 1);
+    setMarkerRoomNumber(loadedRooms[0]?.roomNumber ?? 1);
+    setRouteFrom(loadedRoutes[0]?.from ?? 1);
+    setRouteTo(loadedRoutes[0]?.to ?? 2);
+    setConnectionFrom(dungeon.map.connections?.at(-1)?.to ?? 1);
+    setConnectionTo((dungeon.map.connections?.at(-1)?.to ?? 1) + 1);
+  };
 
   const handleMapClick = (event: MouseEvent<SVGSVGElement>) => {
     const svg = event.currentTarget;
@@ -213,7 +392,7 @@ export function PremiumMapAnnotator() {
       setRoutes((current) => {
         const existing = current.find((route) => route.id === activeRouteId);
         if (existing) {
-          return current.map((route) => (route.id === existing.id ? { ...route, points: [...route.points, { xPercent, yPercent }] } : route));
+          return current.map((route) => (route.id === existing.id ? { ...route, edited: true, points: [...route.points, { xPercent, yPercent }] } : route));
         }
 
         const nextRoute = {
@@ -260,16 +439,37 @@ export function PremiumMapAnnotator() {
 
         <div className="grid gap-4 lg:grid-cols-[300px_1fr_360px]">
           <aside className="space-y-3 rounded-md border border-white/10 bg-white/8 p-3">
+            <label className="block text-xs font-bold uppercase tracking-[0.14em] text-white/50" htmlFor="dungeon-source">
+              Existing dungeon
+            </label>
+            <select id="dungeon-source" value={selectedDungeonId} onChange={(event) => loadDungeon(event.target.value)} className="w-full rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-white">
+              <option value="blank">Blank new metadata</option>
+              {premiumMapDungeons.map((dungeon) => (
+                <option key={dungeon.id} value={dungeon.id}>
+                  {dungeon.title}
+                </option>
+              ))}
+            </select>
+            <p className="text-xs leading-5 text-white/50">Loading a dungeon imports its current premiumMap overlays and map.connections into this copy-only editor.</p>
+
             <label className="block text-xs font-bold uppercase tracking-[0.14em] text-white/50" htmlFor="asset">
               Premium map
             </label>
             <select id="asset" value={assetId} onChange={(event) => setAssetId(event.target.value)} className="w-full rounded-md border border-white/10 bg-black/40 px-3 py-2 text-sm text-white">
-              {localPremiumMapAssets.map((item) => (
+              {availableAssets.map((item) => (
                 <option key={item.id} value={item.id}>
                   {item.name}
                 </option>
               ))}
             </select>
+
+            <label className="flex items-start gap-2 rounded-md border border-white/10 bg-black/20 p-2 text-xs leading-5 text-white/60">
+              <input type="checkbox" checked={showNormalRouteOverlay} onChange={(event) => setShowNormalRouteOverlay(event.target.checked)} className="mt-1" />
+              <span>
+                Export normal route overlays
+                <span className="block text-white/40">Usually off for illustrated maps because visible paths belong in the art.</span>
+              </span>
+            </label>
 
             <div>
               <p className="mb-2 text-xs font-bold uppercase tracking-[0.14em] text-white/50">Mode</p>
@@ -328,7 +528,7 @@ export function PremiumMapAnnotator() {
                     type="button"
                     onClick={() => {
                       if (!activeRouteId) return;
-                      setRoutes((current) => current.map((route) => (route.id === activeRouteId ? { ...route, points: route.points.slice(0, -1) } : route)));
+                      setRoutes((current) => current.map((route) => (route.id === activeRouteId ? { ...route, edited: true, points: route.points.slice(0, -1) } : route)));
                     }}
                     className="rounded-md bg-white/10 px-2 py-1.5 text-xs font-bold"
                   >
@@ -367,7 +567,11 @@ export function PremiumMapAnnotator() {
               {previewMode === 'gm' &&
                 routes.map((route) => (
                   <g key={route.id}>
-                    {route.points.length > 1 && <path d={routePreviewPath(route.points)} fill="none" stroke="#f59e0b" strokeDasharray="1.8 1.4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="0.75" />}
+                    {!route.edited && route.path?.trim() ? (
+                      <path d={route.path} fill="none" stroke="#f59e0b" strokeDasharray="8 8" strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" transform="scale(0.1388889 0.2083333)" />
+                    ) : (
+                      route.points.length > 1 && <path d={routePreviewPath(route.points)} fill="none" stroke="#f59e0b" strokeDasharray="1.8 1.4" strokeLinecap="round" strokeLinejoin="round" strokeWidth="0.75" />
+                    )}
                     {route.points.map((point, index) => (
                       <circle key={`${route.id}-${index}`} cx={point.xPercent} cy={point.yPercent} r="0.9" fill="#fef3c7" stroke="#92400e" strokeWidth="0.25" />
                     ))}
