@@ -84,6 +84,10 @@ Dev workflow: in local development builds, use `/dev/map-annotator` to visually 
 
 `map.connections` remains the source of truth for dungeon connectivity only. It should not be used to position premium illustrated room labels, GM markers, or hand-aligned secret route overlays.
 
+Lantern/free schematic maps must still stay synchronized with dungeon content. For premium map-first dungeons, the simplified schematic view should derive keyed labels from the dungeon's premium label anchors, GM marker badges from `gmOverlay.markerAnchors` in GM mode, and route structure from `map.connections`, rather than falling back to a fixed environment template that may contain a different room count. Player mode must continue hiding GM markers and secret routes.
+
+Premium map-first dungeons may also define `premiumMap.schematicFootprints` for Lantern/free schematic maps. These footprints are simplified black-and-white room/area shapes that keep large illustrated areas, platforms, ledges, and clearings spatially representative without exposing premium art. Keep footprints clean and conservative: simple rectangles, capsules, or ovals with comfortable margins usually read better than highly rotated or oversized blobs. GM marker anchors should fall inside or clearly attach to the relevant footprint; player-safe schematic maps must still hide GM markers and secret routes.
+
 The renderer path is intentionally additive:
 
 1. If an entitled map view has usable `premiumMap` image metadata, a future illustrated-image branch can render the base image and SVG overlays.

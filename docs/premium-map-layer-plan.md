@@ -360,6 +360,15 @@ The first illustrated-map proof of concept is now a separate map-first mock dung
 
 The previous attempt to attach the test image to Saint Orra showed an important product rule: illustrated maps should drive dungeon content, not be retrofitted onto unrelated room text.
 
+The second illustrated-map proof of concept is also map-first: `Premium Map POC: The Ashen Crucible`.
+
+- The dungeon references `/premium-maps/volcanic-ruin-1.png` through `map.premiumMap.baseMapImage`.
+- It uses annotator-created premium overlay metadata and a draft `map.connections` graph to define a volcanic ruin play surface.
+- The local image remains ignored under `public/premium-maps/`; only metadata and mock dungeon content are tracked.
+- Normal route overlays are disabled because visible stairs, bridges, ledges, and platforms belong to the illustrated base map.
+- Lantern/free schematic views for map-first premium dungeons use the dungeon's actual premium label anchors, GM marker anchors in GM mode, and `map.connections` so the free reference map does not invent rooms that are absent from the content. Player-safe schematic views continue hiding GM markers and secret routes.
+- The free schematic can use `premiumMap.schematicFootprints` to draw simplified black-and-white area shapes around premium anchors. These should be clean, conservative shapes rather than rough blobs. This avoids reducing large illustrated rooms to tiny node circles and helps GM marker badges remain inside the room or area they describe.
+
 ## Dev Annotation Tool
 
 A dev-only premium map annotation tool is available at:

@@ -74,6 +74,17 @@ export type PremiumMapRouteOverlay = {
   path: string;
 };
 
+export type PremiumMapSchematicFootprint = {
+  roomNumber: number;
+  shape?: 'ellipse' | 'rect';
+  xPercent: number;
+  yPercent: number;
+  widthPercent: number;
+  heightPercent: number;
+  rotation?: number;
+  label?: string;
+};
+
 export type PremiumMapOverlay = {
   viewBox?: string;
   labelAnchors?: PremiumMapOverlayAnchor[];
@@ -96,6 +107,7 @@ export type PremiumMapMetadata = {
   overlayViewBox?: string;
   gmOverlay?: PremiumMapOverlay;
   playerOverlay?: PremiumMapOverlay;
+  schematicFootprints?: PremiumMapSchematicFootprint[];
   showNormalRouteOverlay?: boolean;
   printNotes?: string;
 };

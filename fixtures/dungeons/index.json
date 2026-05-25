@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-05-25T04:11:24.514Z",
+  "generatedAt": "2026-05-25T09:28:05.910Z",
   "source": "src/data/mockDungeon.ts",
   "contract": "Dungeon",
-  "count": 11,
+  "count": 12,
   "dungeons": [
     {
       "id": "dd-2026-05-06",
@@ -36,6 +36,17 @@
       "difficulty": "Moderate",
       "mapStyle": "shrine",
       "roomCount": 8
+    },
+    {
+      "id": "dd-2026-05-17-premium-volcanic-map-poc",
+      "slug": "premium-map-poc-the-ashen-crucible",
+      "file": "2026-05-17-premium-map-poc-the-ashen-crucible.json",
+      "dateIso": "2026-05-17",
+      "title": "Premium Map POC: The Ashen Crucible",
+      "theme": "Illustrated volcanic ruin built map-first around basalt stairs, broken bridges, and a fire-temple objective",
+      "difficulty": "High",
+      "mapStyle": "volcanicForge",
+      "roomCount": 7
     },
     {
       "id": "dd-2026-05-08",

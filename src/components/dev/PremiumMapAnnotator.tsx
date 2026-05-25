@@ -57,6 +57,14 @@ const localPremiumMapAssets: LocalPremiumMapAsset[] = [
     height: 1254,
     mimeType: 'image/png',
   },
+  {
+    id: 'premium-volcanic-ruin-1',
+    name: 'Volcanic Ruins Test 1',
+    url: '/premium-maps/volcanic-ruin-1.png',
+    width: 1448,
+    height: 1086,
+    mimeType: 'image/png',
+  },
 ];
 
 const premiumMapDungeons = mockDungeons.filter((dungeon) => Boolean(dungeon.map.premiumMap));

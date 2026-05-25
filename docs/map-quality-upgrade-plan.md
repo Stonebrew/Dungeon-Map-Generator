@@ -367,6 +367,8 @@ Status: the first proof-of-concept illustrated base map is connected to `Premium
 
 Dev annotation support now exists at `/dev/map-annotator` in local development builds. It is not a user-facing product feature; it is a prototype tool for visually placing room labels, GM markers, secret routes, and draft connections over known local premium map assets. It can also load existing premium map mock dungeons, such as the Verdant Watercourt, for edit-and-copy overlay tuning, with draggable room anchors, GM markers, and secret route points. The annotator now uses the same `720x480` premium map bounds and anchor conversion helper as the production premium map renderer, so overlay placement should match the GM Map, Player Map, and Print Packet previews. `map.connections` remains structural connectivity data and does not control premium label or marker placement. This should reduce coordinate guessing while premium map workflows are still manual.
 
+Premium map-first dungeons can define `premiumMap.schematicFootprints` so Lantern/free maps become simplified spatial schematics instead of abstract node graphs. These footprints are especially important when premium illustrated areas are large enough to contain multiple GM markers; the free map should still show room/area size relationships, GM markers in GM mode, and player-safe hiding in Player mode without exposing illustrated art. Footprints should be tidy diagram shapes with restrained size and rotation so Lantern remains useful rather than looking like an unfinished trace of the illustrated map.
+
 ## Recommended Next 10 Map Quality Tasks
 
 1. Create a map print QA checklist for all 10 environments: GM map, player map, room number readability, route clarity, and secret hiding.

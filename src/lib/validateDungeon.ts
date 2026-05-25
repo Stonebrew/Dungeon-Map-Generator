@@ -45,6 +45,7 @@ const validPremiumMapStatusValues = new Set(['planned', 'available', 'unavailabl
 const validPrintableMapVariantValues = new Set(['standard', 'inkLight', 'highContrast', 'playerHandout']);
 const validPremiumMapMimeTypes = new Set(['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml']);
 const validPremiumMapMarkerValues = new Set(['treasure', 'hazard', 'secret', 'boss', 'objective', 'custom']);
+const validPremiumMapSchematicFootprintShapes = new Set(['ellipse', 'rect']);
 
 function validateOptionalValue(value: string | undefined, validValues: Set<string>, label: string, warnings: DungeonValidationIssue[], roomNumbers?: number[]) {
   if (value && !validValues.has(value)) {
@@ -269,6 +270,42 @@ function validatePremiumMapOverlay(overlay: PremiumMapOverlay | undefined, label
   }
 }
 
+function validatePremiumMapLabelCoverage(overlay: PremiumMapOverlay | undefined, label: string, roomsByNumber: Map<number, DungeonRoom>, warnings: DungeonValidationIssue[]) {
+  if (!overlay?.labelAnchors?.length) {
+    return;
+  }
+
+  const anchoredRooms = new Set(overlay.labelAnchors.map((anchor) => anchor.roomNumber));
+  const missingRoomNumbers = [...roomsByNumber.keys()].filter((roomNumber) => !anchoredRooms.has(roomNumber));
+
+  if (missingRoomNumbers.length) {
+    warnings.push({
+      severity: 'warning',
+      message: `${label} label anchors are missing room numbers that exist in dungeon content: ${missingRoomNumbers.join(', ')}.`,
+      roomNumbers: missingRoomNumbers,
+    });
+  }
+}
+
+function validatePremiumMapSchematicFootprints(premiumMap: PremiumMapMetadata, roomsByNumber: Map<number, DungeonRoom>, warnings: DungeonValidationIssue[]) {
+  const footprints = premiumMap.schematicFootprints ?? [];
+  for (const footprint of footprints) {
+    if (!roomsByNumber.has(footprint.roomNumber)) {
+      warnings.push({
+        severity: 'warning',
+        message: `Premium schematic footprint references missing Room ${footprint.roomNumber}.`,
+        roomNumbers: [footprint.roomNumber],
+      });
+    }
+
+    validateOptionalValue(footprint.shape, validPremiumMapSchematicFootprintShapes, `Premium schematic footprint shape for Room ${footprint.roomNumber}`, warnings, [footprint.roomNumber]);
+    validatePremiumAnchorPosition(footprint, `Premium schematic footprint for Room ${footprint.roomNumber}`, warnings);
+    validatePercentNumber(footprint.widthPercent, `Premium schematic footprint widthPercent for Room ${footprint.roomNumber}`, warnings);
+    validatePercentNumber(footprint.heightPercent, `Premium schematic footprint heightPercent for Room ${footprint.roomNumber}`, warnings);
+    validateFiniteNumber(footprint.rotation, `Premium schematic footprint rotation for Room ${footprint.roomNumber}`, warnings);
+  }
+}
+
 function validatePremiumMapMetadata(premiumMap: PremiumMapMetadata | undefined, roomsByNumber: Map<number, DungeonRoom>, warnings: DungeonValidationIssue[]) {
   if (!premiumMap) {
     return;
@@ -286,6 +323,9 @@ function validatePremiumMapMetadata(premiumMap: PremiumMapMetadata | undefined, 
   validatePositiveNumber(premiumMap.mapBounds?.height, 'Premium mapBounds height', warnings);
   validatePremiumMapOverlay(premiumMap.gmOverlay, 'Premium gmOverlay', roomsByNumber, warnings);
   validatePremiumMapOverlay(premiumMap.playerOverlay, 'Premium playerOverlay', roomsByNumber, warnings);
+  validatePremiumMapLabelCoverage(premiumMap.gmOverlay, 'Premium gmOverlay', roomsByNumber, warnings);
+  validatePremiumMapLabelCoverage(premiumMap.playerOverlay, 'Premium playerOverlay', roomsByNumber, warnings);
+  validatePremiumMapSchematicFootprints(premiumMap, roomsByNumber, warnings);
 
   if (premiumMap.status === 'available' && !premiumMap.baseMapImage && !premiumMap.gmBaseMapImage && !premiumMap.playerBaseMapImage) {
     warnings.push({
