@@ -109,6 +109,25 @@ function createId(prefix: string) {
   return `${prefix}-${Date.now()}-${Math.round(Math.random() * 1000)}`;
 }
 
+function slugifyAssetId(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 64);
+}
+
+function mimeTypeFromPath(path: string): LocalPremiumMapAsset['mimeType'] | undefined {
+  const normalizedPath = path.toLowerCase();
+
+  if (normalizedPath.endsWith('.png')) return 'image/png';
+  if (normalizedPath.endsWith('.jpg') || normalizedPath.endsWith('.jpeg')) return 'image/jpeg';
+  if (normalizedPath.endsWith('.webp')) return 'image/webp';
+  if (normalizedPath.endsWith('.svg')) return 'image/svg+xml';
+
+  return undefined;
+}
+
 function copyText(value: string) {
   void navigator.clipboard?.writeText(value);
 }
@@ -304,12 +323,17 @@ function draftConnectionsFromDungeon(dungeon: Dungeon): DraftConnection[] {
 }
 
 export function PremiumMapAnnotator() {
+  const [customAssets, setCustomAssets] = useState<LocalPremiumMapAsset[]>([]);
   const availableAssets = useMemo(
-    () => uniqueAssets([...localPremiumMapAssets, ...premiumMapDungeons.flatMap((dungeon) => assetFromPremiumMap(dungeon.map.premiumMap) ?? [])]),
-    [],
+    () => uniqueAssets([...localPremiumMapAssets, ...customAssets, ...premiumMapDungeons.flatMap((dungeon) => assetFromPremiumMap(dungeon.map.premiumMap) ?? [])]),
+    [customAssets],
   );
-  const [assetId, setAssetId] = useState(availableAssets[0].id);
+  const [assetId, setAssetId] = useState(localPremiumMapAssets[0].id);
   const [selectedDungeonId, setSelectedDungeonId] = useState('blank');
+  const [customImageName, setCustomImageName] = useState('');
+  const [customImagePath, setCustomImagePath] = useState('');
+  const [customImageStatus, setCustomImageStatus] = useState<string | undefined>();
+  const [isLoadingCustomImage, setIsLoadingCustomImage] = useState(false);
   const [mode, setMode] = useState<AnnotatorMode>('room');
   const [previewMode, setPreviewMode] = useState<PreviewMode>('gm');
   const [roomNumber, setRoomNumber] = useState(1);
@@ -338,9 +362,7 @@ export function PremiumMapAnnotator() {
   const connectionsOutput = useMemo(() => formatConnections(connections), [connections]);
   const activeRoute = routes.find((route) => route.id === activeRouteId);
 
-  const resetToBlank = () => {
-    setSelectedDungeonId('blank');
-    setAssetId(availableAssets[0].id);
+  const clearAnnotations = () => {
     setRooms([]);
     setMarkers([]);
     setRoutes([]);
@@ -359,6 +381,50 @@ export function PremiumMapAnnotator() {
     setConnectionRouteStyle('trail');
     setConnectionDifficulty('clear');
     setConnectionNote('');
+  };
+
+  const resetToBlank = () => {
+    setSelectedDungeonId('blank');
+    setAssetId(availableAssets[0].id);
+    clearAnnotations();
+  };
+
+  const loadCustomImage = () => {
+    const trimmedPath = customImagePath.trim();
+    const trimmedName = customImageName.trim();
+
+    if (!trimmedPath.startsWith('/premium-maps/')) {
+      setCustomImageStatus('Could not load image. Check that the file exists in public/premium-maps/ and that the path starts with /premium-maps/.');
+      return;
+    }
+
+    setIsLoadingCustomImage(true);
+    setCustomImageStatus('Loading custom image...');
+
+    const image = new Image();
+    image.onload = () => {
+      const idBase = trimmedName || trimmedPath.split('/').pop()?.replace(/\.[^.]+$/, '') || 'custom-premium-map';
+      const customAsset: LocalPremiumMapAsset = {
+        id: `custom-${slugifyAssetId(idBase) || 'premium-map'}`,
+        name: trimmedName || idBase,
+        url: trimmedPath,
+        width: image.naturalWidth,
+        height: image.naturalHeight,
+        mimeType: mimeTypeFromPath(trimmedPath),
+      };
+
+      setCustomAssets((current) => uniqueAssets([...current.filter((asset) => asset.url !== customAsset.url), customAsset]));
+      setSelectedDungeonId('blank');
+      setAssetId(customAsset.id);
+      clearAnnotations();
+      setCustomImageStatus(`Loaded ${customAsset.name} (${customAsset.width}x${customAsset.height}).`);
+      setIsLoadingCustomImage(false);
+    };
+    image.onerror = () => {
+      setCustomImageStatus('Could not load image. Check that the file exists in public/premium-maps/ and that the path starts with /premium-maps/.');
+      setIsLoadingCustomImage(false);
+    };
+    image.src = trimmedPath;
   };
 
   const loadDungeon = (dungeonId: string) => {
@@ -574,6 +640,22 @@ export function PremiumMapAnnotator() {
                 </option>
               ))}
             </select>
+
+            <ControlGroup title="Custom Local Image">
+              <label className="block text-xs font-semibold text-white/70">
+                Display name
+                <input value={customImageName} onChange={(event) => setCustomImageName(event.target.value)} placeholder="My New Map" className="mt-1 w-full rounded-md border border-white/10 bg-black/40 px-2 py-1.5 text-white placeholder:text-white/25" />
+              </label>
+              <label className="block text-xs font-semibold text-white/70">
+                Image path
+                <input value={customImagePath} onChange={(event) => setCustomImagePath(event.target.value)} placeholder="/premium-maps/my-new-map.png" className="mt-1 w-full rounded-md border border-white/10 bg-black/40 px-2 py-1.5 text-white placeholder:text-white/25" />
+              </label>
+              <button type="button" onClick={loadCustomImage} disabled={isLoadingCustomImage} className="w-full rounded-md bg-emerald-400 px-3 py-2 text-sm font-bold text-black disabled:cursor-not-allowed disabled:opacity-60">
+                {isLoadingCustomImage ? 'Loading image...' : 'Load Custom Image'}
+              </button>
+              {customImageStatus && <p className="text-xs leading-5 text-white/55">{customImageStatus}</p>}
+              <p className="text-xs leading-5 text-white/45">Put the file in public/premium-maps/, then enter the public path. Dimensions are detected automatically.</p>
+            </ControlGroup>
 
             <label className="flex items-start gap-2 rounded-md border border-white/10 bg-black/20 p-2 text-xs leading-5 text-white/60">
               <input type="checkbox" checked={showNormalRouteOverlay} onChange={(event) => setShowNormalRouteOverlay(event.target.checked)} className="mt-1" />

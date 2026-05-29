@@ -382,6 +382,8 @@ This route is intentionally hidden from normal product navigation and is gated t
 Current capabilities:
 
 - Load the known local premium map asset `/premium-maps/test-temple-map.png`.
+- Load a custom local premium map image by entering a display name and a path such as `/premium-maps/my-new-map.png`.
+- Detect custom image natural width and height for exported `premiumMap.baseMapImage` and `imageSize` metadata.
 - Load existing mock dungeons that already include `premiumMap` metadata, starting with `Premium Map POC: The Verdant Watercourt`.
 - Import the selected dungeon's current base map image, room label anchors, GM marker anchors, GM-only secret route overlays, `showNormalRouteOverlay` flag, and draft `map.connections`.
 - Place room number anchors by clicking the image.
@@ -396,7 +398,7 @@ Current capabilities:
 - Draft `map.connections` entries with type, route style, difficulty, and note.
 - Copy generated `premiumMap` metadata and draft `map.connections` JSON for manual paste-back into mock data or future fixtures.
 
-The annotator supports both blank/new metadata creation and edit-and-copy work on existing premium map dungeons. Loading an existing dungeon does not mutate the source data; it only populates the local annotator state so the updated JSON can be copied back manually after review.
+The annotator supports both blank/new metadata creation and edit-and-copy work on existing premium map dungeons. For a new local image, put the file in `public/premium-maps/`, open `/dev/map-annotator`, enter the public path, click `Load Custom Image`, annotate, then copy the generated `premiumMap` and `map.connections` JSON back into mock data manually. Loading an existing dungeon does not mutate the source data; it only populates the local annotator state so the updated JSON can be copied back manually after review.
 
 The annotator uses the same coordinate interpretation as `PremiumMapLayer`: the premium image is rendered into `premiumMap.mapBounds`, currently `0 0 720 480`, with `preserveAspectRatio="xMidYMid slice"`. Room label and GM marker anchors export as `xPercent` / `yPercent` values relative to those bounds. GM-only secret route paths export in the same `720x480` overlay SVG coordinate space. This makes the annotator WYSIWYG with GM Map, Player Map, and Print Packet previews.
 
@@ -408,7 +410,7 @@ Limitations:
 
 - It does not save files.
 - It does not update mock data automatically.
-- It does not upload or discover arbitrary image files.
+- It does not upload, write, or auto-discover image files; custom local images must already exist under `public/premium-maps/`.
 - It can load existing annotations from mock dungeon payloads and supports basic visual dragging for room anchors, GM markers, and secret route points.
 - It does not validate room prose, structured exits, or connection bidirectionality while editing.
 - It does not provide Bezier curve handles yet; dragging a loaded curved secret route point converts future export for that route to point-to-point line segments.
