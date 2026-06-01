@@ -136,7 +136,7 @@ function WindStreaks() {
   );
 }
 
-export function LevelTwoFrozenRuinRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
+export function LevelTwoFrozenRuinRenderer({ connections, secretStroke, isPlayer, presentation = 'screen', showLabels = true }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 98, y: 250, label: '1' },
     { x: 252, y: 160, label: '2' },
@@ -204,7 +204,8 @@ export function LevelTwoFrozenRuinRenderer({ connections, secretStroke, isPlayer
           <LevelTwoMarker x={174} y={364} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
+      {showLabels && <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />}
     </>
   );
 }
+

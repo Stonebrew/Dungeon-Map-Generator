@@ -107,7 +107,7 @@ function SunSeal({ x, y }: { x: number; y: number }) {
   );
 }
 
-export function LevelTwoDesertTempleRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
+export function LevelTwoDesertTempleRenderer({ connections, secretStroke, isPlayer, presentation = 'screen', showLabels = true }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 94, y: 250, label: '1' },
     { x: 248, y: 178, label: '2' },
@@ -167,7 +167,8 @@ export function LevelTwoDesertTempleRenderer({ connections, secretStroke, isPlay
           <LevelTwoMarker x={126} y={374} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
+      {showLabels && <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />}
     </>
   );
 }
+

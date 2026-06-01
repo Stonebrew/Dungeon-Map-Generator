@@ -42,6 +42,7 @@ export type LevelTwoRendererProps = {
   secretStroke: string;
   isPlayer: boolean;
   presentation?: MapPresentation;
+  showLabels?: boolean;
 };
 
 export type LevelTwoEnvironmentDefinition = {

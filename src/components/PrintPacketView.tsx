@@ -74,6 +74,7 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
   const packetContentRef = useRef<HTMLDivElement | null>(null);
   const [isCreatingPdf, setIsCreatingPdf] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
+  const [showPlayerRoomNumbers, setShowPlayerRoomNumbers] = useState(true);
 
   const handleSavePdf = async () => {
     if (!packetContentRef.current || isCreatingPdf) {
@@ -129,6 +130,15 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
               {pdfError}
             </p>
           )}
+          <label className="mt-3 inline-flex items-center gap-3 rounded-md border border-ink/10 bg-parchment/60 px-3 py-2 text-sm font-bold text-ink">
+            <input
+              type="checkbox"
+              checked={showPlayerRoomNumbers}
+              onChange={(event) => setShowPlayerRoomNumbers(event.target.checked)}
+              className="h-4 w-4 accent-ember"
+            />
+            Include room numbers on player map
+          </label>
         </div>
         <div className="flex flex-wrap gap-2">
           <button type="button" onClick={onBack} className="inline-flex items-center gap-2 rounded-md bg-ink px-3 py-2 text-sm font-bold text-white">
@@ -203,9 +213,11 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
         <PrintSection title="Player-Safe Map" kicker="Page 3" pageBreak>
           {dungeon.map.playerSafe.description && <p className="mb-3 text-sm leading-6 text-ink/65">{dungeon.map.playerSafe.description}</p>}
           <figure className="print-map-frame">
-            <DungeonMap mode="player" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} showLegend presentation="print" />
+            <DungeonMap mode="player" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} showLegend presentation="print" playerLabelsVisible={showPlayerRoomNumbers} />
             <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.12em] text-ink/55">
-              Player handout map. GM markers, secret routes, treasure, hazards, and GM-only labels are hidden.
+              {showPlayerRoomNumbers
+                ? 'Player handout map with room numbers. GM markers, secret routes, treasure, hazards, and GM-only labels are hidden.'
+                : 'Clean player handout map. Room numbers, GM markers, secret routes, treasure, hazards, and GM-only labels are hidden.'}
             </figcaption>
           </figure>
         </PrintSection>

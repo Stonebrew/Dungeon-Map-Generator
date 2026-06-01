@@ -99,7 +99,7 @@ function LevelTwoUndergroundPool({ x, y, w, h, theme }: { x: number; y: number; 
   );
 }
 
-export function LevelTwoCavernRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
+export function LevelTwoCavernRenderer({ connections, secretStroke, isPlayer, presentation = 'screen', showLabels = true }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 96, y: 238, label: '1' },
     { x: 218, y: 174, label: '2' },
@@ -147,7 +147,8 @@ export function LevelTwoCavernRenderer({ connections, secretStroke, isPlayer, pr
           <LevelTwoMarker x={652} y={276} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
+      {showLabels && <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />}
     </>
   );
 }
+

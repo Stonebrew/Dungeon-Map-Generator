@@ -201,7 +201,7 @@ function ForestTrailRoutes({ connections, secretStroke, isPlayer, presentation =
   );
 }
 
-export function LevelTwoForestRuinRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
+export function LevelTwoForestRuinRenderer({ connections, secretStroke, isPlayer, presentation = 'screen', showLabels = true }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 126, y: 246, label: '1' },
     { x: 292, y: 190, label: '2' },
@@ -280,7 +280,8 @@ export function LevelTwoForestRuinRenderer({ connections, secretStroke, isPlayer
           <LevelTwoMarker x={188} y={340} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
+      {showLabels && <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />}
     </>
   );
 }
+

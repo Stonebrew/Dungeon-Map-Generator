@@ -81,7 +81,7 @@ function SchematicFootprint({
   return <ellipse cx={footprint.point.x} cy={footprint.point.y} rx={footprint.width / 2} ry={footprint.height / 2} fill={palette.roomFill} stroke={palette.wallStroke} strokeWidth="4" transform={transform} opacity="0.98" />;
 }
 
-function PremiumSchematicMap({ mapData, palette, isPlayer }: { mapData?: DungeonMapData; palette: MapPalette; isPlayer: boolean }) {
+function PremiumSchematicMap({ mapData, palette, isPlayer, showLabels = true }: { mapData?: DungeonMapData; palette: MapPalette; isPlayer: boolean; showLabels?: boolean }) {
   const anchors = getSchematicPremiumAnchors(mapData);
   const markers = isPlayer ? [] : getSchematicPremiumMarkers(mapData);
   const footprints = getSchematicPremiumFootprints(mapData);
@@ -148,25 +148,26 @@ function PremiumSchematicMap({ mapData, palette, isPlayer }: { mapData?: Dungeon
         </g>
       ))}
 
-      {anchors.map((anchor) => (
-        <g key={anchorKey(anchor)}>
-          {!footprintsByRoom.has(anchor.roomNumber) && <circle cx={anchor.point.x} cy={anchor.point.y} r="28" fill="#f8f8f8" stroke="#171717" strokeWidth="6" />}
-          <rect x={anchor.point.x - 20} y={anchor.point.y - 20} width="40" height="40" rx="10" fill="#fff8ef" opacity="0.9" />
-          <text x={anchor.point.x} y={anchor.point.y + 9} textAnchor="middle" fontSize="34" fontWeight="900" fill="#211a16" paintOrder="stroke" stroke="#fff8ef" strokeWidth="4">
-            {anchor.label ?? anchor.roomNumber}
-          </text>
-        </g>
-      ))}
+      {showLabels &&
+        anchors.map((anchor) => (
+          <g key={anchorKey(anchor)}>
+            {!footprintsByRoom.has(anchor.roomNumber) && <circle cx={anchor.point.x} cy={anchor.point.y} r="28" fill="#f8f8f8" stroke="#171717" strokeWidth="6" />}
+            <rect x={anchor.point.x - 20} y={anchor.point.y - 20} width="40" height="40" rx="10" fill="#fff8ef" opacity="0.9" />
+            <text x={anchor.point.x} y={anchor.point.y + 9} textAnchor="middle" fontSize="34" fontWeight="900" fill="#211a16" paintOrder="stroke" stroke="#fff8ef" strokeWidth="4">
+              {anchor.label ?? anchor.roomNumber}
+            </text>
+          </g>
+        ))}
     </g>
   );
 }
 
-export function SchematicDungeonMap({ mapData, mapStyle, palette, isPlayer }: { mapData?: DungeonMapData; mapStyle: MapStyle; palette: MapPalette; isPlayer: boolean }) {
-  const premiumSchematic = <PremiumSchematicMap mapData={mapData} palette={palette} isPlayer={isPlayer} />;
+export function SchematicDungeonMap({ mapData, mapStyle, palette, isPlayer, showLabels = true }: { mapData?: DungeonMapData; mapStyle: MapStyle; palette: MapPalette; isPlayer: boolean; showLabels?: boolean }) {
+  const premiumSchematic = <PremiumSchematicMap mapData={mapData} palette={palette} isPlayer={isPlayer} showLabels={showLabels} />;
 
   if (mapData?.premiumMap && getSchematicPremiumAnchors(mapData).length) {
     return premiumSchematic;
   }
 
-  return <EnhancedFallbackMap mapData={mapData} style={mapStyle} palette={palette} isPlayer={isPlayer} enhanced={false} />;
+  return <EnhancedFallbackMap mapData={mapData} style={mapStyle} palette={palette} isPlayer={isPlayer} enhanced={false} showLabels={showLabels} />;
 }

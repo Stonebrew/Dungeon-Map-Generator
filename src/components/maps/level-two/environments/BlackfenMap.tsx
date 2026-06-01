@@ -43,7 +43,7 @@ function LevelTwoBarrierMark({ x, y, w = 48, rotate = 0, theme }: { x: number; y
   );
 }
 
-export function LevelTwoBlackfenRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
+export function LevelTwoBlackfenRenderer({ connections, secretStroke, isPlayer, presentation = 'screen', showLabels = true }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 130, y: 130, label: '1' },
     { x: 306, y: 122, label: '2' },
@@ -101,7 +101,8 @@ export function LevelTwoBlackfenRenderer({ connections, secretStroke, isPlayer, 
           <LevelTwoMarker x={633} y={238} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
+      {showLabels && <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />}
     </>
   );
 }
+

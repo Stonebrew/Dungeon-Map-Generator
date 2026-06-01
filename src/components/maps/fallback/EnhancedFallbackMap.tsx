@@ -522,7 +522,7 @@ function VolcanicForgeDetails({ palette, isPlayer }: { palette: MapPalette; isPl
   );
 }
 
-function BlackfenLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
+function BlackfenLayout({ connections, palette, isPlayer, enhanced, showLabels }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean; showLabels: boolean }) {
   const roomNumbers = [
     { x: 130, y: 130, label: '1' },
     { x: 306, y: 122, label: '2' },
@@ -565,12 +565,12 @@ function BlackfenLayout({ connections, palette, isPlayer, enhanced }: { connecti
           <MapMarker x={633} y={238} label="B" />
         </>
       )}
-      <RoomNumbers rooms={roomNumbers} />
+      {showLabels && <RoomNumbers rooms={roomNumbers} />}
     </>
   );
 }
 
-function VolcanicForgeLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
+function VolcanicForgeLayout({ connections, palette, isPlayer, enhanced, showLabels }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean; showLabels: boolean }) {
   const roomNumbers = [
     { x: 92, y: 250, label: '1' },
     { x: 238, y: 126, label: '2' },
@@ -608,12 +608,12 @@ function VolcanicForgeLayout({ connections, palette, isPlayer, enhanced }: { con
           <MapMarker x={244} y={344} label="B" />
         </>
       )}
-      <RoomNumbers rooms={roomNumbers} />
+      {showLabels && <RoomNumbers rooms={roomNumbers} />}
     </>
   );
 }
 
-function ForestRuinLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
+function ForestRuinLayout({ connections, palette, isPlayer, enhanced, showLabels }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean; showLabels: boolean }) {
   const roomNumbers = [
     { x: 126, y: 246, label: '1' },
     { x: 292, y: 190, label: '2' },
@@ -650,12 +650,12 @@ function ForestRuinLayout({ connections, palette, isPlayer, enhanced }: { connec
           <MapMarker x={188} y={340} label="B" />
         </>
       )}
-      <RoomNumbers rooms={roomNumbers} />
+      {showLabels && <RoomNumbers rooms={roomNumbers} />}
     </>
   );
 }
 
-function FrozenRuinLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
+function FrozenRuinLayout({ connections, palette, isPlayer, enhanced, showLabels }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean; showLabels: boolean }) {
   const roomNumbers = [
     { x: 98, y: 250, label: '1' },
     { x: 252, y: 160, label: '2' },
@@ -693,12 +693,12 @@ function FrozenRuinLayout({ connections, palette, isPlayer, enhanced }: { connec
           <MapMarker x={174} y={364} label="B" />
         </>
       )}
-      <RoomNumbers rooms={roomNumbers} />
+      {showLabels && <RoomNumbers rooms={roomNumbers} />}
     </>
   );
 }
 
-function DesertTempleLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
+function DesertTempleLayout({ connections, palette, isPlayer, enhanced, showLabels }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean; showLabels: boolean }) {
   const roomNumbers = [
     { x: 94, y: 250, label: '1' },
     { x: 248, y: 178, label: '2' },
@@ -736,12 +736,12 @@ function DesertTempleLayout({ connections, palette, isPlayer, enhanced }: { conn
           <MapMarker x={126} y={374} label="B" />
         </>
       )}
-      <RoomNumbers rooms={roomNumbers} />
+      {showLabels && <RoomNumbers rooms={roomNumbers} />}
     </>
   );
 }
 
-function ShrineLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
+function ShrineLayout({ connections, palette, isPlayer, enhanced, showLabels }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean; showLabels: boolean }) {
   const roomNumbers = [
     { x: 154, y: 216, label: '1' },
     { x: 324, y: 204, label: '2' },
@@ -778,12 +778,12 @@ function ShrineLayout({ connections, palette, isPlayer, enhanced }: { connection
           <MapMarker x={202} y={334} label="B" />
         </>
       )}
-      <RoomNumbers rooms={roomNumbers} />
+      {showLabels && <RoomNumbers rooms={roomNumbers} />}
     </>
   );
 }
 
-function CavernLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
+function CavernLayout({ connections, palette, isPlayer, enhanced, showLabels }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean; showLabels: boolean }) {
   const roomNumbers = [
     { x: 96, y: 238, label: '1' },
     { x: 218, y: 174, label: '2' },
@@ -819,12 +819,12 @@ function CavernLayout({ connections, palette, isPlayer, enhanced }: { connection
           <MapMarker x={652} y={276} label="B" />
         </>
       )}
-      <RoomNumbers rooms={roomNumbers} />
+      {showLabels && <RoomNumbers rooms={roomNumbers} />}
     </>
   );
 }
 
-function CryptLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
+function CryptLayout({ connections, palette, isPlayer, enhanced, showLabels }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean; showLabels: boolean }) {
   const roomNumbers = [
     { x: 360, y: 89, label: '1' },
     { x: 360, y: 215, label: '2' },
@@ -863,12 +863,12 @@ function CryptLayout({ connections, palette, isPlayer, enhanced }: { connections
           <MapMarker x={566} y={346} label="B" />
         </>
       )}
-      <RoomNumbers rooms={roomNumbers} />
+      {showLabels && <RoomNumbers rooms={roomNumbers} />}
     </>
   );
 }
 
-function SewerLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
+function SewerLayout({ connections, palette, isPlayer, enhanced, showLabels }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean; showLabels: boolean }) {
   const roomNumbers = [
     { x: 112, y: 238, label: '1' },
     { x: 280, y: 238, label: '2' },
@@ -906,12 +906,12 @@ function SewerLayout({ connections, palette, isPlayer, enhanced }: { connections
           <MapMarker x={660} y={202} label="B" />
         </>
       )}
-      <RoomNumbers rooms={roomNumbers} />
+      {showLabels && <RoomNumbers rooms={roomNumbers} />}
     </>
   );
 }
 
-function LaboratoryLayout({ connections, palette, isPlayer, enhanced }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
+function LaboratoryLayout({ connections, palette, isPlayer, enhanced, showLabels }: { connections: MapConnection[]; palette: MapPalette; isPlayer: boolean; enhanced: boolean; showLabels: boolean }) {
   const roomNumbers = [
     { x: 145, y: 133, label: '1' },
     { x: 350, y: 109, label: '2' },
@@ -949,35 +949,35 @@ function LaboratoryLayout({ connections, palette, isPlayer, enhanced }: { connec
           <MapMarker x={636} y={314} label="B" />
         </>
       )}
-      <RoomNumbers rooms={roomNumbers} />
+      {showLabels && <RoomNumbers rooms={roomNumbers} />}
     </>
   );
 }
 
-export function EnhancedFallbackMap({ mapData, style, palette, isPlayer, enhanced }: { mapData?: DungeonMapData; style: MapStyle; palette: MapPalette; isPlayer: boolean; enhanced: boolean }) {
+export function EnhancedFallbackMap({ mapData, style, palette, isPlayer, enhanced, showLabels = true }: { mapData?: DungeonMapData; style: MapStyle; palette: MapPalette; isPlayer: boolean; enhanced: boolean; showLabels?: boolean }) {
   const connections = mapData?.connections ?? [];
 
   switch (style) {
     case 'shrine':
-      return <ShrineLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
+      return <ShrineLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} showLabels={showLabels} />;
     case 'cavern':
-      return <CavernLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
+      return <CavernLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} showLabels={showLabels} />;
     case 'crypt':
-      return <CryptLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
+      return <CryptLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} showLabels={showLabels} />;
     case 'desertTemple':
-      return <DesertTempleLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
+      return <DesertTempleLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} showLabels={showLabels} />;
     case 'forestRuin':
-      return <ForestRuinLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
+      return <ForestRuinLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} showLabels={showLabels} />;
     case 'frozenRuin':
-      return <FrozenRuinLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
+      return <FrozenRuinLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} showLabels={showLabels} />;
     case 'sewer':
-      return <SewerLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
+      return <SewerLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} showLabels={showLabels} />;
     case 'laboratory':
-      return <LaboratoryLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
+      return <LaboratoryLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} showLabels={showLabels} />;
     case 'volcanicForge':
-      return <VolcanicForgeLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
+      return <VolcanicForgeLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} showLabels={showLabels} />;
     case 'blackfen':
     default:
-      return <BlackfenLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} />;
+      return <BlackfenLayout connections={connections} palette={palette} isPlayer={isPlayer} enhanced={enhanced} showLabels={showLabels} />;
   }
 }

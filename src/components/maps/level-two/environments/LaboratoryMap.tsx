@@ -85,7 +85,7 @@ function LevelTwoContainmentCell({ x, y, w, h, theme }: { x: number; y: number; 
   );
 }
 
-export function LevelTwoLaboratoryRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
+export function LevelTwoLaboratoryRenderer({ connections, secretStroke, isPlayer, presentation = 'screen', showLabels = true }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 145, y: 133, label: '1' },
     { x: 350, y: 109, label: '2' },
@@ -141,7 +141,8 @@ export function LevelTwoLaboratoryRenderer({ connections, secretStroke, isPlayer
           <LevelTwoMarker x={636} y={314} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
+      {showLabels && <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />}
     </>
   );
 }
+

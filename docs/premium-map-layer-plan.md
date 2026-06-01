@@ -98,6 +98,8 @@ Player-safe maps must hide:
 
 If the illustrated base image itself includes hidden doors, trap symbols, treasure, or secret paths, a separate `playerBaseMapImage` is required. Player-safe safety cannot rely only on hiding overlays if the base art leaks secrets.
 
+Player maps now support two presentation choices. A Player Labeled Map shows player-safe room/keyed-area numbers while still hiding GM markers, secret routes, and GM-only labels. A Player Clean Map hides those room/keyed-area numbers as well, leaving the illustrated base map or schematic structure without overlays that identify rooms. Grid lines, bridges, paths, or terrain baked into uploaded premium images are not toggled by this setting.
+
 ## 7. Print Packet Selection Rules
 
 The Print Packet should choose maps in this order:

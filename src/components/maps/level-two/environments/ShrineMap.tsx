@@ -53,7 +53,7 @@ function LevelTwoOpenRuinArea({ path, final = false }: { path: string; final?: b
   );
 }
 
-export function LevelTwoShrineRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
+export function LevelTwoShrineRenderer({ connections, secretStroke, isPlayer, presentation = 'screen', showLabels = true }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 154, y: 216, label: '1' },
     { x: 324, y: 204, label: '2' },
@@ -118,7 +118,8 @@ export function LevelTwoShrineRenderer({ connections, secretStroke, isPlayer, pr
           <LevelTwoMarker x={202} y={334} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
+      {showLabels && <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />}
     </>
   );
 }
+

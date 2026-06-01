@@ -322,6 +322,7 @@ Player print maps:
 - No GM-only marker vocabulary.
 - Slightly more scenic presentation.
 - Fewer explicit labels if they feel spoilery.
+- A clean player-map option that hides room numbers entirely for handouts.
 
 Player-safe maps should be designed as handouts, not just GM maps with hidden layers.
 

@@ -154,7 +154,7 @@ function ForgeRouteLayer({ connections, secretStroke, isPlayer, presentation = '
   );
 }
 
-export function LevelTwoVolcanicForgeRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
+export function LevelTwoVolcanicForgeRenderer({ connections, secretStroke, isPlayer, presentation = 'screen', showLabels = true }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 92, y: 250, label: '1' },
     { x: 238, y: 126, label: '2' },
@@ -229,7 +229,8 @@ export function LevelTwoVolcanicForgeRenderer({ connections, secretStroke, isPla
           <LevelTwoMarker x={244} y={344} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
+      {showLabels && <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />}
     </>
   );
 }
+

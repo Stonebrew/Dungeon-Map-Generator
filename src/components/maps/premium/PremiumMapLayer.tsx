@@ -8,10 +8,12 @@ export function PremiumMapLayer({
   mapData,
   isPlayer,
   fallback,
+  showLabels = true,
 }: {
   mapData: DungeonMapData | undefined;
   isPlayer: boolean;
   fallback: ReactElement;
+  showLabels?: boolean;
 }) {
   const asset = getPremiumMapAsset(mapData, isPlayer);
   const overlay = getPremiumOverlay(mapData, isPlayer);
@@ -26,16 +28,16 @@ export function PremiumMapLayer({
     return fallback;
   }
 
-  if (!overlay?.labelAnchors?.length) {
+  if (showLabels && !overlay?.labelAnchors?.length) {
     return fallback;
   }
 
   const routeOverlayPaths = overlay?.routeOverlayPaths ?? [];
-  const markerAnchors = (overlay.markerAnchors ?? []).flatMap((anchor) => {
+  const markerAnchors = (overlay?.markerAnchors ?? []).flatMap((anchor) => {
     const point = getPremiumAnchorPoint(anchor, bounds);
     return point ? [{ ...anchor, point }] : [];
   });
-  const labelAnchors = overlay.labelAnchors.flatMap((anchor) => {
+  const labelAnchors = (overlay?.labelAnchors ?? []).flatMap((anchor) => {
     const point = getPremiumAnchorPoint(anchor, bounds);
     return point ? [{ ...anchor, point }] : [];
   });
@@ -77,14 +79,15 @@ export function PremiumMapLayer({
           </g>
         ))}
 
-      {labelAnchors.map((anchor) => (
-        <g key={`${anchor.roomNumber}-${anchor.point.x}-${anchor.point.y}`}>
-          <rect x={anchor.point.x - 14} y={anchor.point.y - 14} width="28" height="28" rx="8" fill="#fff8e8" opacity="0.94" />
-          <text x={anchor.point.x} y={anchor.point.y + 6} textAnchor="middle" fontSize="20" fontWeight="900" fill="#211a16">
-            {anchor.label ?? anchor.roomNumber}
-          </text>
-        </g>
-      ))}
+      {showLabels &&
+        labelAnchors.map((anchor) => (
+          <g key={`${anchor.roomNumber}-${anchor.point.x}-${anchor.point.y}`}>
+            <rect x={anchor.point.x - 14} y={anchor.point.y - 14} width="28" height="28" rx="8" fill="#fff8e8" opacity="0.94" />
+            <text x={anchor.point.x} y={anchor.point.y + 6} textAnchor="middle" fontSize="20" fontWeight="900" fill="#211a16">
+              {anchor.label ?? anchor.roomNumber}
+            </text>
+          </g>
+        ))}
     </g>
   );
 }

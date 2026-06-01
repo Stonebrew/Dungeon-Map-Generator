@@ -45,7 +45,7 @@ function LevelTwoRunoffMarks({ x, y, w, vertical = false, theme }: { x: number; 
   );
 }
 
-export function LevelTwoSewerRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
+export function LevelTwoSewerRenderer({ connections, secretStroke, isPlayer, presentation = 'screen', showLabels = true }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 112, y: 238, label: '1' },
     { x: 280, y: 238, label: '2' },
@@ -98,7 +98,8 @@ export function LevelTwoSewerRenderer({ connections, secretStroke, isPlayer, pre
           <LevelTwoMarker x={660} y={202} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
+      {showLabels && <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />}
     </>
   );
 }
+

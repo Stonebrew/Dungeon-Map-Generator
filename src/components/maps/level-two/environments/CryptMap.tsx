@@ -48,7 +48,7 @@ function LevelTwoPinchedPassage({ path }: { path: string }) {
   );
 }
 
-export function LevelTwoCryptRenderer({ connections, secretStroke, isPlayer, presentation = 'screen' }: LevelTwoRendererProps) {
+export function LevelTwoCryptRenderer({ connections, secretStroke, isPlayer, presentation = 'screen', showLabels = true }: LevelTwoRendererProps) {
   const roomNumbers = [
     { x: 360, y: 89, label: '1' },
     { x: 360, y: 215, label: '2' },
@@ -110,7 +110,8 @@ export function LevelTwoCryptRenderer({ connections, secretStroke, isPlayer, pre
           <LevelTwoMarker x={566} y={346} label="B" presentation={presentation} />
         </>
       )}
-      <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />
+      {showLabels && <LevelTwoRoomNumbers rooms={roomNumbers} presentation={presentation} />}
     </>
   );
 }
+
