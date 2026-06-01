@@ -3,12 +3,12 @@
   "dateIso": "2026-05-17",
   "date": "May 17, 2026",
   "title": "Premium Map POC: The Ashen Crucible",
-  "theme": "Illustrated volcanic ruin built map-first around basalt stairs, broken bridges, and a fire-temple objective",
+  "theme": "Volcanic fire-temple ruin with basalt stairs, broken bridges, and a dangerous cinder relic",
   "difficulty": "High",
   "partySize": "3-5 adventurers",
   "estimatedPlayTime": "2-3 hours",
   "hook": "The smoke above an abandoned fire temple has begun pulsing like a signal. A nearby caravan hires the party to recover the Cinder Lens before the old vents open under the trade road.",
-  "background": "This proof-of-concept dungeon is written from the illustrated volcanic map first. The visible basalt platforms, stair runs, broken bridge spans, ash-blackened chambers, and molten scars define the keyed areas, routes, hazards, treasure, and objective.",
+  "background": "The Ashen Crucible was built to control a line of volcanic vents beneath the pass. Its bridge-spans have cracked, its forge platforms hang above old heat wells, and the Cinder Lens has started focusing smoke toward the trade road again. The party must reach the eastern ledge, secure or cover the lens, and decide whether to appease the Brand-Keeper before the temple vents reopen.",
   "map": {
     "style": "volcanicForge",
     "gmMapId": "premium-ashen-crucible-gm",
@@ -764,7 +764,7 @@
     }
   ],
   "gmNotes": [
-    "This dungeon is intentionally map-first: use the illustrated basalt platforms, stairs, bridges, and vents as the play surface.",
+    "Use the visible basalt platforms, stairs, bridges, and vents as the play surface; heat, height, and broken crossings should shape choices.",
     "Normal route overlays are disabled on the premium map because the art already shows the visible routes.",
     "The bridge from Room 2 to Room 3 is structurally blocked, but remains a known normal connection for table play and problem solving.",
     "The secret route between Rooms 5 and 6 is described in room text and structured exits, but has no separate visible route overlay in the pasted premiumMap metadata."

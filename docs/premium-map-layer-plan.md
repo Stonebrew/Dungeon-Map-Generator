@@ -360,6 +360,8 @@ The first illustrated-map proof of concept is now a separate map-first mock dung
 
 The previous attempt to attach the test image to Saint Orra showed an important product rule: illustrated maps should drive dungeon content, not be retrofitted onto unrelated room text.
 
+Content quality rule: map-first is a production workflow, not table-facing adventure text. Final mock dungeons may be created from illustrated maps, but GM-facing fields such as `theme`, `hook`, `background`, room notes, and packet notes should read as in-world adventure material rather than process notes, prototype labels, or explanations of how the dungeon was authored.
+
 The second illustrated-map proof of concept is also map-first: `Premium Map POC: The Ashen Crucible`.
 
 - The dungeon references `/premium-maps/volcanic-ruin-1.png` through `map.premiumMap.baseMapImage`.

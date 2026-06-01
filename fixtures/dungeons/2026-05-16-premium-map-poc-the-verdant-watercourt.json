@@ -3,12 +3,12 @@
   "dateIso": "2026-05-16",
   "date": "May 16, 2026",
   "title": "Premium Map POC: The Verdant Watercourt",
-  "theme": "Illustrated ruined temple water garden built map-first",
+  "theme": "Overgrown ruined temple water garden with reversed flow, hidden culverts, and a restless shrine custodian",
   "difficulty": "Moderate",
   "partySize": "3-5 adventurers",
   "estimatedPlayTime": "2 hours",
   "hook": "A moonlit spring has begun flowing backward through an overgrown temple court. The village asks the party to recover the old water seal before the channels flood the lower road.",
-  "background": "This proof-of-concept dungeon is written from the illustrated map first. The visible temple courts, water channels, garden walks, and side chambers define the keyed areas, routes, hazards, treasure, and objective.",
+  "background": "The Verdant Watercourt once kept the lower road dry by binding spring water into a sequence of shrine channels. Now the flow has reversed, dragging silt uphill, flooding old garden walks, and waking a custodian bound to protect the court from theft. The party must recover the missing bronze water seal, learn where it belongs, and restore the high apse before the channels burst into the village road.",
   "map": {
     "style": "shrine",
     "gmMapId": "premium-watercourt-gm",
@@ -816,7 +816,7 @@
     }
   ],
   "gmNotes": [
-    "This dungeon is intentionally map-first: use the visible illustrated routes, rooms, water, and bridges as the play surface.",
+    "Use the visible routes, rooms, water channels, and bridges as the play surface; the shrine is open enough that sound and movement carry across the court.",
     "Normal route overlays are disabled on the premium map because the art already shows the paths.",
     "The secret route is the only route overlay because the submerged culvert is not obvious in the art.",
     "The goal is to restore the water seal, not loot every reliquary vessel."

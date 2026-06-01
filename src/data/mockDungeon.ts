@@ -853,14 +853,14 @@ const premiumMapPocDungeonDraft: DraftDungeon = {
   dateIso: '2026-05-16',
   date: 'May 16, 2026',
   title: 'Premium Map POC: The Verdant Watercourt',
-  theme: 'Illustrated ruined temple water garden built map-first',
+  theme: 'Overgrown ruined temple water garden with reversed flow, hidden culverts, and a restless shrine custodian',
   difficulty: 'Moderate',
   partySize: '3-5 adventurers',
   estimatedPlayTime: '2 hours',
   hook:
     'A moonlit spring has begun flowing backward through an overgrown temple court. The village asks the party to recover the old water seal before the channels flood the lower road.',
   background:
-    'This proof-of-concept dungeon is written from the illustrated map first. The visible temple courts, water channels, garden walks, and side chambers define the keyed areas, routes, hazards, treasure, and objective.',
+    'The Verdant Watercourt once kept the lower road dry by binding spring water into a sequence of shrine channels. Now the flow has reversed, dragging silt uphill, flooding old garden walks, and waking a custodian bound to protect the court from theft. The party must recover the missing bronze water seal, learn where it belongs, and restore the high apse before the channels burst into the village road.',
   map: {
     style: 'shrine',
     gmMapId: 'premium-watercourt-gm',
@@ -1174,7 +1174,7 @@ const premiumMapPocDungeonDraft: DraftDungeon = {
     { roll: '6', result: 'Bronze water seal needed to restore the high apse' },
   ],
   gmNotes: [
-    'This dungeon is intentionally map-first: use the visible illustrated routes, rooms, water, and bridges as the play surface.',
+    'Use the visible routes, rooms, water channels, and bridges as the play surface; the shrine is open enough that sound and movement carry across the court.',
     'Normal route overlays are disabled on the premium map because the art already shows the paths.',
     'The secret route is the only route overlay because the submerged culvert is not obvious in the art.',
     'The goal is to restore the water seal, not loot every reliquary vessel.',
@@ -1186,14 +1186,14 @@ const volcanicPremiumMapPocDungeonDraft: DraftDungeon = {
   dateIso: '2026-05-17',
   date: 'May 17, 2026',
   title: 'Premium Map POC: The Ashen Crucible',
-  theme: 'Illustrated volcanic ruin built map-first around basalt stairs, broken bridges, and a fire-temple objective',
+  theme: 'Volcanic fire-temple ruin with basalt stairs, broken bridges, and a dangerous cinder relic',
   difficulty: 'High',
   partySize: '3-5 adventurers',
   estimatedPlayTime: '2-3 hours',
   hook:
     'The smoke above an abandoned fire temple has begun pulsing like a signal. A nearby caravan hires the party to recover the Cinder Lens before the old vents open under the trade road.',
   background:
-    'This proof-of-concept dungeon is written from the illustrated volcanic map first. The visible basalt platforms, stair runs, broken bridge spans, ash-blackened chambers, and molten scars define the keyed areas, routes, hazards, treasure, and objective.',
+    'The Ashen Crucible was built to control a line of volcanic vents beneath the pass. Its bridge-spans have cracked, its forge platforms hang above old heat wells, and the Cinder Lens has started focusing smoke toward the trade road again. The party must reach the eastern ledge, secure or cover the lens, and decide whether to appease the Brand-Keeper before the temple vents reopen.',
   map: {
     style: 'volcanicForge',
     gmMapId: 'premium-ashen-crucible-gm',
@@ -1470,7 +1470,7 @@ const volcanicPremiumMapPocDungeonDraft: DraftDungeon = {
     { roll: '6', result: 'The Cinder Lens, if safely covered and carried out' },
   ],
   gmNotes: [
-    'This dungeon is intentionally map-first: use the illustrated basalt platforms, stairs, bridges, and vents as the play surface.',
+    'Use the visible basalt platforms, stairs, bridges, and vents as the play surface; heat, height, and broken crossings should shape choices.',
     'Normal route overlays are disabled on the premium map because the art already shows the visible routes.',
     'The bridge from Room 2 to Room 3 is structurally blocked, but remains a known normal connection for table play and problem solving.',
     'The secret route between Rooms 5 and 6 is described in room text and structured exits, but has no separate visible route overlay in the pasted premiumMap metadata.',
@@ -1482,14 +1482,14 @@ const arcticTemplePremiumMapPocDungeonDraft: DraftDungeon = {
   dateIso: '2026-05-18',
   date: 'May 18, 2026',
   title: 'Premium Map POC: The Frostwake Spire',
-  theme: 'Illustrated arctic temple built map-first around ice bridges, frozen side courts, and a central awakening chamber',
+  theme: 'Arctic temple of ice bridges, frozen side courts, and a central awakening chamber',
   difficulty: 'High',
   partySize: '3-5 adventurers',
   estimatedPlayTime: '2-3 hours',
   hook:
     'A cold blue light has begun pulsing from an abandoned temple beyond the snowline. The local guides fear the old star-bell is waking under the ice and ask the party to silence it before the pass freezes shut.',
   background:
-    'This proof-of-concept dungeon is written from the illustrated arctic temple map first. The central ice court, frozen bridges, side shrines, hazardous snow trails, and upper spire define the keyed areas, routes, hazards, treasure, and delayed boss encounter.',
+    'The Frostwake Spire was raised around a star-bell said to hold winter in balance. For generations it slept beneath the central nave, but a blue pulse now beats through the ice, freezing pack animals in their traces and sealing the mountain pass a little more each night.\n\nThe party enters to silence or soothe the star-bell before the next storm locks the road until spring. The temple is still passable, but its bridges are brittle, its side courts hold half-buried offerings, and old frost signs stir when disturbed.\n\nThe central nave is quiet at first. After the party visits the outer signs in Rooms 3, 5, 6, and 8, returning to the nave awakens the Frostwake Warden, which tests whether the party has come to restore the old vows or steal the bell outright.',
   map: {
     style: 'frozenRuin',
     gmMapId: 'premium-frostwake-spire-gm',
@@ -1795,7 +1795,7 @@ const arcticTemplePremiumMapPocDungeonDraft: DraftDungeon = {
     { roll: '6', result: 'The sleeping star-bell, if safely silenced before removal' },
   ],
   gmNotes: [
-    'This dungeon is intentionally map-first: use the illustrated arctic temple, bridges, side courts, and upper dais as the play surface.',
+    'Use the visible arctic temple, bridges, side courts, and upper dais as the play surface; cold, exposure, and brittle crossings should matter.',
     'Normal route overlays are disabled on the premium map because visible bridges, stairs, and snow paths belong to the art.',
     'The duplicated 2-5 and 2-8 draft routes were consolidated into single structural connections with notes about the hazardous alternate trails so validation stays unambiguous.',
     'The Frostwake Warden appears in Room 2 only after the party visits Rooms 3, 5, 6, and 8 and then returns to the central nave.',

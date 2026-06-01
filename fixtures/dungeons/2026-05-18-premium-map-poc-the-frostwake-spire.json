@@ -3,12 +3,12 @@
   "dateIso": "2026-05-18",
   "date": "May 18, 2026",
   "title": "Premium Map POC: The Frostwake Spire",
-  "theme": "Illustrated arctic temple built map-first around ice bridges, frozen side courts, and a central awakening chamber",
+  "theme": "Arctic temple of ice bridges, frozen side courts, and a central awakening chamber",
   "difficulty": "High",
   "partySize": "3-5 adventurers",
   "estimatedPlayTime": "2-3 hours",
   "hook": "A cold blue light has begun pulsing from an abandoned temple beyond the snowline. The local guides fear the old star-bell is waking under the ice and ask the party to silence it before the pass freezes shut.",
-  "background": "This proof-of-concept dungeon is written from the illustrated arctic temple map first. The central ice court, frozen bridges, side shrines, hazardous snow trails, and upper spire define the keyed areas, routes, hazards, treasure, and delayed boss encounter.",
+  "background": "The Frostwake Spire was raised around a star-bell said to hold winter in balance. For generations it slept beneath the central nave, but a blue pulse now beats through the ice, freezing pack animals in their traces and sealing the mountain pass a little more each night.\n\nThe party enters to silence or soothe the star-bell before the next storm locks the road until spring. The temple is still passable, but its bridges are brittle, its side courts hold half-buried offerings, and old frost signs stir when disturbed.\n\nThe central nave is quiet at first. After the party visits the outer signs in Rooms 3, 5, 6, and 8, returning to the nave awakens the Frostwake Warden, which tests whether the party has come to restore the old vows or steal the bell outright.",
   "map": {
     "style": "frozenRuin",
     "gmMapId": "premium-frostwake-spire-gm",
@@ -848,7 +848,7 @@
     }
   ],
   "gmNotes": [
-    "This dungeon is intentionally map-first: use the illustrated arctic temple, bridges, side courts, and upper dais as the play surface.",
+    "Use the visible arctic temple, bridges, side courts, and upper dais as the play surface; cold, exposure, and brittle crossings should matter.",
     "Normal route overlays are disabled on the premium map because visible bridges, stairs, and snow paths belong to the art.",
     "The duplicated 2-5 and 2-8 draft routes were consolidated into single structural connections with notes about the hazardous alternate trails so validation stays unambiguous.",
     "The Frostwake Warden appears in Room 2 only after the party visits Rooms 3, 5, 6, and 8 and then returns to the central nave."
