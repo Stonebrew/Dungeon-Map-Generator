@@ -1,0 +1,856 @@
+{
+  "id": "dd-2026-05-18-premium-arctic-temple-map-poc",
+  "dateIso": "2026-05-18",
+  "date": "May 18, 2026",
+  "title": "Premium Map POC: The Frostwake Spire",
+  "theme": "Illustrated arctic temple built map-first around ice bridges, frozen side courts, and a central awakening chamber",
+  "difficulty": "High",
+  "partySize": "3-5 adventurers",
+  "estimatedPlayTime": "2-3 hours",
+  "hook": "A cold blue light has begun pulsing from an abandoned temple beyond the snowline. The local guides fear the old star-bell is waking under the ice and ask the party to silence it before the pass freezes shut.",
+  "background": "This proof-of-concept dungeon is written from the illustrated arctic temple map first. The central ice court, frozen bridges, side shrines, hazardous snow trails, and upper spire define the keyed areas, routes, hazards, treasure, and delayed boss encounter.",
+  "map": {
+    "style": "frozenRuin",
+    "gmMapId": "premium-frostwake-spire-gm",
+    "playerMapId": "premium-frostwake-spire-player",
+    "layout": {
+      "grammar": [
+        "floodedIslands",
+        "constructedHub"
+      ],
+      "notes": "Map-first illustrated arctic temple: a central frozen nave connects to side platforms by bridges, stairs, and hazardous snow trails. The boss manifests in Room 2 after the party visits Rooms 3, 5, 6, and 8, then returns."
+    },
+    "connections": [
+      {
+        "routeStyle": "stair",
+        "routeDifficulty": "clear",
+        "from": 1,
+        "to": 2,
+        "type": "normal",
+        "path": "M356.47 421.3 L353.66 214.18"
+      },
+      {
+        "routeStyle": "bridge",
+        "routeDifficulty": "clear",
+        "from": 2,
+        "to": 3,
+        "type": "normal",
+        "path": "M353.66 214.18 L104.26 291.7"
+      },
+      {
+        "routeStyle": "stair",
+        "routeDifficulty": "clear",
+        "from": 2,
+        "to": 4,
+        "type": "normal",
+        "path": "M353.66 214.18 L125.42 435.4"
+      },
+      {
+        "routeStyle": "bridge",
+        "routeDifficulty": "clear",
+        "from": 2,
+        "to": 5,
+        "type": "normal",
+        "note": "Clear ice bridge with a hazardous wind-scoured side trail nearby.",
+        "path": "M353.66 214.18 L635.47 312.8"
+      },
+      {
+        "routeStyle": "bridge",
+        "routeDifficulty": "clear",
+        "from": 2,
+        "to": 6,
+        "type": "normal",
+        "path": "M353.66 214.18 L627.05 121.2"
+      },
+      {
+        "routeStyle": "bridge",
+        "routeDifficulty": "clear",
+        "from": 2,
+        "to": 7,
+        "type": "normal",
+        "path": "M353.66 214.18 L505.87 64.8"
+      },
+      {
+        "routeStyle": "bridge",
+        "routeDifficulty": "clear",
+        "from": 2,
+        "to": 8,
+        "type": "normal",
+        "note": "Clear bridge with a hazardous frost trail visible along the broken outer wall.",
+        "path": "M353.66 214.18 L121.18 101.47"
+      },
+      {
+        "routeStyle": "stair",
+        "routeDifficulty": "clear",
+        "from": 2,
+        "to": 9,
+        "type": "normal",
+        "path": "M353.66 214.18 L356.47 64.8"
+      },
+      {
+        "routeStyle": "trail",
+        "routeDifficulty": "clear",
+        "from": 3,
+        "to": 8,
+        "type": "normal",
+        "path": "M104.26 291.7 L121.18 101.47"
+      }
+    ],
+    "playerSafe": {
+      "hideSecrets": true,
+      "hideTreasure": true,
+      "hideHazards": true,
+      "hideGmNotes": true,
+      "description": "A player-safe illustrated arctic temple map. Keyed numbers remain visible, but GM treasure, hazard, and boss markers are hidden."
+    },
+    "premiumMap": {
+      "status": "available",
+      "baseMapImage": {
+        "id": "custom-arctic-temple-1",
+        "url": "/premium-maps/arctic-temple-1.png",
+        "width": 1448,
+        "height": 1086,
+        "mimeType": "image/png"
+      },
+      "imageSize": {
+        "width": 1448,
+        "height": 1086
+      },
+      "mapBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 720,
+        "height": 480
+      },
+      "overlayViewBox": "0 0 720 480",
+      "printableMapVariant": "standard",
+      "showNormalRouteOverlay": false,
+      "schematicFootprints": [
+        {
+          "roomNumber": 1,
+          "shape": "rect",
+          "xPercent": 49.51,
+          "yPercent": 87.77,
+          "widthPercent": 18,
+          "heightPercent": 13
+        },
+        {
+          "roomNumber": 2,
+          "shape": "rect",
+          "xPercent": 49.12,
+          "yPercent": 50,
+          "widthPercent": 29,
+          "heightPercent": 33
+        },
+        {
+          "roomNumber": 3,
+          "shape": "rect",
+          "xPercent": 14.48,
+          "yPercent": 62,
+          "widthPercent": 22,
+          "heightPercent": 18
+        },
+        {
+          "roomNumber": 4,
+          "shape": "rect",
+          "xPercent": 17.42,
+          "yPercent": 90.71,
+          "widthPercent": 18,
+          "heightPercent": 13
+        },
+        {
+          "roomNumber": 5,
+          "shape": "rect",
+          "xPercent": 82.5,
+          "yPercent": 72,
+          "widthPercent": 27,
+          "heightPercent": 24
+        },
+        {
+          "roomNumber": 6,
+          "shape": "rect",
+          "xPercent": 87.09,
+          "yPercent": 25.25,
+          "widthPercent": 18,
+          "heightPercent": 17
+        },
+        {
+          "roomNumber": 7,
+          "shape": "rect",
+          "xPercent": 70.26,
+          "yPercent": 13.5,
+          "widthPercent": 18,
+          "heightPercent": 14
+        },
+        {
+          "roomNumber": 8,
+          "shape": "rect",
+          "xPercent": 18,
+          "yPercent": 28,
+          "widthPercent": 23,
+          "heightPercent": 31
+        },
+        {
+          "roomNumber": 9,
+          "shape": "rect",
+          "xPercent": 49.51,
+          "yPercent": 13.5,
+          "widthPercent": 20,
+          "heightPercent": 15
+        }
+      ],
+      "gmOverlay": {
+        "viewBox": "0 0 720 480",
+        "labelAnchors": [
+          {
+            "roomNumber": 1,
+            "xPercent": 49.51,
+            "yPercent": 87.77
+          },
+          {
+            "roomNumber": 2,
+            "xPercent": 49.12,
+            "yPercent": 44.62
+          },
+          {
+            "roomNumber": 3,
+            "xPercent": 14.48,
+            "yPercent": 60.77
+          },
+          {
+            "roomNumber": 4,
+            "xPercent": 17.42,
+            "yPercent": 90.71
+          },
+          {
+            "roomNumber": 5,
+            "xPercent": 88.26,
+            "yPercent": 65.17
+          },
+          {
+            "roomNumber": 6,
+            "xPercent": 87.09,
+            "yPercent": 25.25
+          },
+          {
+            "roomNumber": 7,
+            "xPercent": 70.26,
+            "yPercent": 13.5
+          },
+          {
+            "roomNumber": 8,
+            "xPercent": 16.83,
+            "yPercent": 21.14
+          },
+          {
+            "roomNumber": 9,
+            "xPercent": 49.51,
+            "yPercent": 13.5
+          }
+        ],
+        "markerAnchors": [
+          {
+            "roomNumber": 3,
+            "marker": "treasure",
+            "xPercent": 12.52,
+            "yPercent": 65.17
+          },
+          {
+            "roomNumber": 8,
+            "marker": "hazard",
+            "xPercent": 22.9,
+            "yPercent": 35.52
+          },
+          {
+            "roomNumber": 5,
+            "marker": "hazard",
+            "xPercent": 75.93,
+            "yPercent": 80.73
+          },
+          {
+            "roomNumber": 2,
+            "marker": "boss",
+            "xPercent": 46.18,
+            "yPercent": 49.61
+          },
+          {
+            "roomNumber": 2,
+            "marker": "treasure",
+            "xPercent": 40.51,
+            "yPercent": 75.74
+          },
+          {
+            "roomNumber": 2,
+            "marker": "treasure",
+            "xPercent": 57.73,
+            "yPercent": 76.32
+          }
+        ],
+        "routeOverlayPaths": [],
+        "notes": "Generated by the dev-only premium map annotator. Review alignment before committing."
+      },
+      "playerOverlay": {
+        "viewBox": "0 0 720 480",
+        "labelAnchors": [
+          {
+            "roomNumber": 1,
+            "xPercent": 49.51,
+            "yPercent": 87.77
+          },
+          {
+            "roomNumber": 2,
+            "xPercent": 49.12,
+            "yPercent": 44.62
+          },
+          {
+            "roomNumber": 3,
+            "xPercent": 14.48,
+            "yPercent": 60.77
+          },
+          {
+            "roomNumber": 4,
+            "xPercent": 17.42,
+            "yPercent": 90.71
+          },
+          {
+            "roomNumber": 5,
+            "xPercent": 88.26,
+            "yPercent": 65.17
+          },
+          {
+            "roomNumber": 6,
+            "xPercent": 87.09,
+            "yPercent": 25.25
+          },
+          {
+            "roomNumber": 7,
+            "xPercent": 70.26,
+            "yPercent": 13.5
+          },
+          {
+            "roomNumber": 8,
+            "xPercent": 16.83,
+            "yPercent": 21.14
+          },
+          {
+            "roomNumber": 9,
+            "xPercent": 49.51,
+            "yPercent": 13.5
+          }
+        ]
+      },
+      "printNotes": "Generated from the dev-only premium map annotator."
+    }
+  },
+  "mapStyle": "frozenRuin",
+  "mapPlaceholder": "premium-frostwake-spire-gm",
+  "playerMapPlaceholder": "premium-frostwake-spire-player",
+  "rooms": [
+    {
+      "layoutRole": "threshold",
+      "areaShape": "stair",
+      "areaScale": "medium",
+      "openness": "exposed",
+      "environmentRole": "safe",
+      "number": 1,
+      "name": "Snow-Buried Lower Stair",
+      "readAloud": "A stair of pale stone climbs from a trough of wind-packed snow. Frost has sealed old lantern niches along both sides.",
+      "gmNotes": "This is the obvious entry. The cold is natural here, but boot prints show repeated travel toward the central ice court.",
+      "threat": "Low",
+      "tags": [
+        "Entrance",
+        "Stairs",
+        "Snow"
+      ],
+      "inhabitants": [],
+      "treasure": "A cracked ivory way-token is frozen under the lowest exposed step.",
+      "secrets": "The lantern niches hum faintly when the four outer frost signs in Rooms 3, 5, 6, and 8 have all been disturbed.",
+      "exits": "Up the clear stair to Room 2.",
+      "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-01",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-01-to-dd-2026-05-18-premium-arctic-temple-map-poc-room-02",
+          "toRoomId": "dd-2026-05-18-premium-arctic-temple-map-poc-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Route to Room 2",
+          "description": "Up the clear stair to Room 2."
+        }
+      ]
+    },
+    {
+      "layoutRole": "hub",
+      "areaShape": "courtyard",
+      "areaScale": "huge",
+      "openness": "open",
+      "environmentRole": "ritual",
+      "number": 2,
+      "name": "Frostwake Nave",
+      "readAloud": "A broad central court lies under a skin of blue-white ice. Bridges, stairs, and broken snow trails radiate from a sunken star symbol at the center.",
+      "gmNotes": "The boss marker belongs here, but the Frostwake Warden appears only after the party visits Rooms 3, 5, 6, and 8, then returns to this chamber. Treasure markers here indicate paired offerings frozen into the nave floor.",
+      "threat": "Severe",
+      "tags": [
+        "Hub",
+        "Boss trigger",
+        "Treasure"
+      ],
+      "inhabitants": [
+        {
+          "name": "Frostwake Warden",
+          "role": "Delayed temple guardian",
+          "threat": "High",
+          "durability": "Very Tough",
+          "damage": "Serious",
+          "tactics": "Manifests at the star symbol after four outer signs are visited, then divides the nave with walls of rime",
+          "morale": "Stands down if the party returns the three frost-vows instead of forcing open the spire",
+          "wants": "Keep the star-bell asleep until the thaw rite is completed",
+          "leverage": "It obeys old temple vows, careful offerings, and proof that the pass is in danger"
+        }
+      ],
+      "treasure": "Two paired moon-silver offering bowls are sealed in ice at opposite sides of the nave.",
+      "secrets": "The star symbol brightens one point at a time after Rooms 3, 5, 6, and 8 are visited; all four points awaken the warden on return.",
+      "exits": "Stair to Room 1, clear bridge to Room 3, stair to Room 4, bridge to Room 5, bridge to Room 6, bridge to Room 7, bridge and hazardous frost trail to Room 8, and stair to Room 9.",
+      "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-02",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-02-to-dd-2026-05-18-premium-arctic-temple-map-poc-room-01",
+          "toRoomId": "dd-2026-05-18-premium-arctic-temple-map-poc-room-01",
+          "toRoomNumber": 1,
+          "type": "normal",
+          "label": "Route to Room 1",
+          "description": "Stair to Room 1, clear bridge to Room 3, stair to Room 4, bridge to Room 5, bridge to Room 6, bridge to Room 7, bridge and hazardous frost trail to Room 8, and stair to Room 9."
+        },
+        {
+          "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-02-to-dd-2026-05-18-premium-arctic-temple-map-poc-room-03",
+          "toRoomId": "dd-2026-05-18-premium-arctic-temple-map-poc-room-03",
+          "toRoomNumber": 3,
+          "type": "normal",
+          "label": "Route to Room 3",
+          "description": "Stair to Room 1, clear bridge to Room 3, stair to Room 4, bridge to Room 5, bridge to Room 6, bridge to Room 7, bridge and hazardous frost trail to Room 8, and stair to Room 9."
+        },
+        {
+          "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-02-to-dd-2026-05-18-premium-arctic-temple-map-poc-room-04",
+          "toRoomId": "dd-2026-05-18-premium-arctic-temple-map-poc-room-04",
+          "toRoomNumber": 4,
+          "type": "normal",
+          "label": "Route to Room 4",
+          "description": "Stair to Room 1, clear bridge to Room 3, stair to Room 4, bridge to Room 5, bridge to Room 6, bridge to Room 7, bridge and hazardous frost trail to Room 8, and stair to Room 9."
+        },
+        {
+          "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-02-to-dd-2026-05-18-premium-arctic-temple-map-poc-room-05",
+          "toRoomId": "dd-2026-05-18-premium-arctic-temple-map-poc-room-05",
+          "toRoomNumber": 5,
+          "type": "normal",
+          "label": "Clear ice bridge with a hazardous wind-scoured side trail nearby.",
+          "description": "Stair to Room 1, clear bridge to Room 3, stair to Room 4, bridge to Room 5, bridge to Room 6, bridge to Room 7, bridge and hazardous frost trail to Room 8, and stair to Room 9.",
+          "note": "Clear ice bridge with a hazardous wind-scoured side trail nearby."
+        },
+        {
+          "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-02-to-dd-2026-05-18-premium-arctic-temple-map-poc-room-06",
+          "toRoomId": "dd-2026-05-18-premium-arctic-temple-map-poc-room-06",
+          "toRoomNumber": 6,
+          "type": "normal",
+          "label": "Route to Room 6",
+          "description": "Stair to Room 1, clear bridge to Room 3, stair to Room 4, bridge to Room 5, bridge to Room 6, bridge to Room 7, bridge and hazardous frost trail to Room 8, and stair to Room 9."
+        },
+        {
+          "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-02-to-dd-2026-05-18-premium-arctic-temple-map-poc-room-07",
+          "toRoomId": "dd-2026-05-18-premium-arctic-temple-map-poc-room-07",
+          "toRoomNumber": 7,
+          "type": "normal",
+          "label": "Route to Room 7",
+          "description": "Stair to Room 1, clear bridge to Room 3, stair to Room 4, bridge to Room 5, bridge to Room 6, bridge to Room 7, bridge and hazardous frost trail to Room 8, and stair to Room 9."
+        },
+        {
+          "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-02-to-dd-2026-05-18-premium-arctic-temple-map-poc-room-08",
+          "toRoomId": "dd-2026-05-18-premium-arctic-temple-map-poc-room-08",
+          "toRoomNumber": 8,
+          "type": "normal",
+          "label": "Clear bridge with a hazardous frost trail visible along the broken outer wall.",
+          "description": "Stair to Room 1, clear bridge to Room 3, stair to Room 4, bridge to Room 5, bridge to Room 6, bridge to Room 7, bridge and hazardous frost trail to Room 8, and stair to Room 9.",
+          "note": "Clear bridge with a hazardous frost trail visible along the broken outer wall."
+        },
+        {
+          "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-02-to-dd-2026-05-18-premium-arctic-temple-map-poc-room-09",
+          "toRoomId": "dd-2026-05-18-premium-arctic-temple-map-poc-room-09",
+          "toRoomNumber": 9,
+          "type": "normal",
+          "label": "Route to Room 9",
+          "description": "Stair to Room 1, clear bridge to Room 3, stair to Room 4, bridge to Room 5, bridge to Room 6, bridge to Room 7, bridge and hazardous frost trail to Room 8, and stair to Room 9."
+        }
+      ]
+    },
+    {
+      "layoutRole": "branch",
+      "areaShape": "ledge",
+      "areaScale": "large",
+      "openness": "semiOpen",
+      "environmentRole": "ritual",
+      "number": 3,
+      "name": "Western Reliquary Shelf",
+      "readAloud": "A low shelf of ice-crusted stone holds cracked reliquary boxes. Snow has blown through a collapsed arch and gathered in small drifts.",
+      "gmNotes": "This treasure room is one of the four outer signs needed to trigger the warden when the party returns to Room 2.",
+      "threat": "Moderate",
+      "tags": [
+        "Treasure",
+        "Reliquary",
+        "Outer sign"
+      ],
+      "inhabitants": [],
+      "treasure": "A frostglass reliquary cap, two silver finger rings, and a waxed prayer strip remain intact.",
+      "secrets": "A carved sign under the largest reliquary shows the same star point found in Room 2.",
+      "exits": "Clear bridge to Room 2, or trail along the western snow shelf to Room 8.",
+      "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-03",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-03-to-dd-2026-05-18-premium-arctic-temple-map-poc-room-02",
+          "toRoomId": "dd-2026-05-18-premium-arctic-temple-map-poc-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Route to Room 2",
+          "description": "Clear bridge to Room 2, or trail along the western snow shelf to Room 8."
+        },
+        {
+          "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-03-to-dd-2026-05-18-premium-arctic-temple-map-poc-room-08",
+          "toRoomId": "dd-2026-05-18-premium-arctic-temple-map-poc-room-08",
+          "toRoomNumber": 8,
+          "type": "normal",
+          "label": "Route to Room 8",
+          "description": "Clear bridge to Room 2, or trail along the western snow shelf to Room 8."
+        }
+      ]
+    },
+    {
+      "layoutRole": "deadEnd",
+      "areaShape": "pool",
+      "areaScale": "small",
+      "openness": "semiOpen",
+      "environmentRole": "safe",
+      "number": 4,
+      "name": "Collapsed South Font",
+      "readAloud": "A broken basin sits half-buried below the main court. Its frozen water is full of trapped leaves that should not survive this high in the pass.",
+      "gmNotes": "This side platform is quiet and useful for regrouping, but the basin echoes any loud plan into Room 2.",
+      "threat": "Low",
+      "tags": [
+        "Font",
+        "Rest point",
+        "Echo"
+      ],
+      "inhabitants": [],
+      "treasure": "A pale stone stopper from the old font can be sold to temple collectors.",
+      "secrets": "The trapped leaves point toward the latest room visited by the party.",
+      "exits": "Stair back to Room 2.",
+      "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-04",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-04-to-dd-2026-05-18-premium-arctic-temple-map-poc-room-02",
+          "toRoomId": "dd-2026-05-18-premium-arctic-temple-map-poc-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Route to Room 2",
+          "description": "Stair back to Room 2."
+        }
+      ]
+    },
+    {
+      "layoutRole": "spoke",
+      "areaShape": "bridge",
+      "areaScale": "large",
+      "openness": "exposed",
+      "environmentRole": "hazardCrossing",
+      "number": 5,
+      "name": "Eastern Wind Bridge",
+      "readAloud": "An exposed bridge crosses a blue crevasse toward a storm-polished platform. Snow streams sideways across the stones.",
+      "gmNotes": "The hazard marker belongs to the lower wind-scoured edge. This is one of the four outer signs needed to trigger the Room 2 warden.",
+      "threat": "High",
+      "tags": [
+        "Hazard",
+        "Bridge",
+        "Outer sign"
+      ],
+      "inhabitants": [],
+      "treasure": "A broken bronze bell-clapper is wedged into ice near the safe side of the bridge.",
+      "secrets": "The hazardous side trail beside the bridge is older than the temple stairs and leads back toward Room 2.",
+      "exits": "Clear bridge to Room 2; a hazardous frost trail also skirts back toward the same central court.",
+      "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-05",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-05-to-dd-2026-05-18-premium-arctic-temple-map-poc-room-02",
+          "toRoomId": "dd-2026-05-18-premium-arctic-temple-map-poc-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Clear ice bridge with a hazardous wind-scoured side trail nearby.",
+          "description": "Clear bridge to Room 2; a hazardous frost trail also skirts back toward the same central court.",
+          "note": "Clear ice bridge with a hazardous wind-scoured side trail nearby."
+        }
+      ]
+    },
+    {
+      "layoutRole": "branch",
+      "areaShape": "hall",
+      "areaScale": "medium",
+      "openness": "open",
+      "environmentRole": "ritual",
+      "number": 6,
+      "name": "High Mirror Gallery",
+      "readAloud": "Polished ice mirrors lean in a roofless gallery. They reflect the sky even when the clouds close overhead.",
+      "gmNotes": "Visiting this gallery marks another outer sign for the delayed boss trigger. The mirrors show Room 2 with one extra shadow after the second outer sign is disturbed.",
+      "threat": "Moderate",
+      "tags": [
+        "Mirrors",
+        "Clue",
+        "Outer sign"
+      ],
+      "inhabitants": [],
+      "treasure": "A hand mirror backed with blue enamel is hidden behind a cracked ice slab.",
+      "secrets": "The mirrors reflect the safe order for returning frost-vows to the nave.",
+      "exits": "Clear bridge to Room 2.",
+      "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-06",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-06-to-dd-2026-05-18-premium-arctic-temple-map-poc-room-02",
+          "toRoomId": "dd-2026-05-18-premium-arctic-temple-map-poc-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Route to Room 2",
+          "description": "Clear bridge to Room 2."
+        }
+      ]
+    },
+    {
+      "layoutRole": "transition",
+      "areaShape": "stair",
+      "areaScale": "medium",
+      "openness": "exposed",
+      "environmentRole": "elevated",
+      "number": 7,
+      "name": "North Bell Stair",
+      "readAloud": "A narrow stair climbs toward a stone bell frame rimed in frost. The bell is missing, but the air trembles as if it has just rung.",
+      "gmNotes": "This room points to the objective in Room 9. It is connected to Room 2 by a clear but exposed bridge.",
+      "threat": "Moderate",
+      "tags": [
+        "Stair",
+        "Bell frame",
+        "Objective clue"
+      ],
+      "inhabitants": [],
+      "treasure": "A frost-cracked bell inscription can be copied for a reward from mountain archivists.",
+      "secrets": "The missing bell was not stolen; it is sealed below the star dais in Room 9.",
+      "exits": "Clear bridge to Room 2.",
+      "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-07",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-07-to-dd-2026-05-18-premium-arctic-temple-map-poc-room-02",
+          "toRoomId": "dd-2026-05-18-premium-arctic-temple-map-poc-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Route to Room 2",
+          "description": "Clear bridge to Room 2."
+        }
+      ]
+    },
+    {
+      "layoutRole": "branch",
+      "areaShape": "courtyard",
+      "areaScale": "large",
+      "openness": "exposed",
+      "environmentRole": "hazardAdjacent",
+      "number": 8,
+      "name": "Left-Hand Rime Court",
+      "readAloud": "A side court is packed with brittle snow, and a broken wall exposes dark ice beneath the ruin. The cold here has teeth.",
+      "gmNotes": "The hazard marker belongs here. This is one of the four outer signs needed to trigger the Room 2 warden, and it also links by trail to Room 3.",
+      "threat": "High",
+      "tags": [
+        "Hazard",
+        "Snow trail",
+        "Outer sign"
+      ],
+      "inhabitants": [],
+      "treasure": "A pouch of old blue salt is frozen into the broken wall.",
+      "secrets": "A hazardous frost trail runs beside the clear bridge back to Room 2, and the safer snow shelf reaches Room 3.",
+      "exits": "Clear bridge and hazardous frost trail to Room 2, or clear trail along the western shelf to Room 3.",
+      "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-08",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-08-to-dd-2026-05-18-premium-arctic-temple-map-poc-room-02",
+          "toRoomId": "dd-2026-05-18-premium-arctic-temple-map-poc-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Clear bridge with a hazardous frost trail visible along the broken outer wall.",
+          "description": "Clear bridge and hazardous frost trail to Room 2, or clear trail along the western shelf to Room 3.",
+          "note": "Clear bridge with a hazardous frost trail visible along the broken outer wall."
+        },
+        {
+          "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-08-to-dd-2026-05-18-premium-arctic-temple-map-poc-room-03",
+          "toRoomId": "dd-2026-05-18-premium-arctic-temple-map-poc-room-03",
+          "toRoomNumber": 3,
+          "type": "normal",
+          "label": "Route to Room 3",
+          "description": "Clear bridge and hazardous frost trail to Room 2, or clear trail along the western shelf to Room 3."
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "name": "Star-Bell Dais",
+      "readAloud": "At the highest point of the temple, a circular dais holds a sealed star-shaped cover. Beneath it, something rings without sound.",
+      "gmNotes": "This is the objective area. Opening it before resolving the Room 2 warden releases a freezing pulse through every bridge.",
+      "threat": "High",
+      "tags": [
+        "Objective",
+        "Dais",
+        "Sealed bell"
+      ],
+      "layoutRole": "objective",
+      "areaShape": "chamber",
+      "areaScale": "large",
+      "openness": "semiOpen",
+      "environmentRole": "ritual",
+      "inhabitants": [],
+      "treasure": "The sleeping star-bell can be silenced with the restored frost-vows or carried away at great risk.",
+      "secrets": "The bell calms if the party returns with offerings from Rooms 3, 5, 6, and 8 and speaks them in Room 2 before opening the dais.",
+      "exits": "Stair down to Room 2.",
+      "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-09",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-18-premium-arctic-temple-map-poc-room-09-to-dd-2026-05-18-premium-arctic-temple-map-poc-room-02",
+          "toRoomId": "dd-2026-05-18-premium-arctic-temple-map-poc-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Route to Room 2",
+          "description": "Stair down to Room 2."
+        }
+      ]
+    }
+  ],
+  "encounterTables": {
+    "wandering": [
+      {
+        "roll": "1",
+        "result": "A ribbon of wind sweeps snow across a bridge",
+        "type": "Hazard"
+      },
+      {
+        "roll": "2",
+        "result": "A frost echo repeats the party's last promise",
+        "type": "Social"
+      },
+      {
+        "roll": "3",
+        "result": "Ice-masked scavengers approach from the lower stair",
+        "type": "Social"
+      },
+      {
+        "roll": "4",
+        "result": "The temple mirrors flash with a false route",
+        "type": "Puzzle"
+      },
+      {
+        "roll": "5",
+        "result": "A brittle snow shelf cracks near the nearest outer sign",
+        "type": "Hazard"
+      },
+      {
+        "roll": "6",
+        "result": "The star-bell rings silently and chills every metal object",
+        "type": "Exploration"
+      }
+    ],
+    "environmental": [
+      {
+        "roll": "1",
+        "result": "Blue cracks spread through one nearby ice bridge",
+        "type": "Hazard"
+      },
+      {
+        "roll": "2",
+        "result": "A hidden inscription appears under fresh frost",
+        "type": "Exploration"
+      },
+      {
+        "roll": "3",
+        "result": "The central star symbol gains another point of light",
+        "type": "Puzzle"
+      },
+      {
+        "roll": "4",
+        "result": "Snow briefly reveals the safer edge of a hazardous trail",
+        "type": "Exploration"
+      },
+      {
+        "roll": "5",
+        "result": "The mirror gallery shows the party one room in the future",
+        "type": "Puzzle"
+      },
+      {
+        "roll": "6",
+        "result": "A cold gust extinguishes open flames but not covered lamps",
+        "type": "Hazard"
+      }
+    ],
+    "complications": [
+      {
+        "roll": "1",
+        "result": "The Frostwake Warden manifests early as a warning shadow",
+        "type": "Social"
+      },
+      {
+        "roll": "2",
+        "result": "A treasure freezes harder into place unless warmed carefully",
+        "type": "Hazard"
+      },
+      {
+        "roll": "3",
+        "result": "The clear bridge to one side room becomes slick and narrow",
+        "type": "Hazard"
+      },
+      {
+        "roll": "4",
+        "result": "A guide mark points toward the hazardous version of a route",
+        "type": "Exploration"
+      },
+      {
+        "roll": "5",
+        "result": "An outer sign must be revisited before the star-bell can be calmed",
+        "type": "Puzzle"
+      },
+      {
+        "roll": "6",
+        "result": "The warden offers a bargain instead of a fight",
+        "type": "Social"
+      }
+    ]
+  },
+  "treasureTable": [
+    {
+      "roll": "1",
+      "result": "Ivory way-token from the lower stair"
+    },
+    {
+      "roll": "2",
+      "result": "Moon-silver offering bowl from the Frostwake Nave"
+    },
+    {
+      "roll": "3",
+      "result": "Frostglass reliquary cap and silver rings"
+    },
+    {
+      "roll": "4",
+      "result": "Blue enamel hand mirror from the high gallery"
+    },
+    {
+      "roll": "5",
+      "result": "Pouch of old blue salt from the rime court"
+    },
+    {
+      "roll": "6",
+      "result": "The sleeping star-bell, if safely silenced before removal"
+    }
+  ],
+  "gmNotes": [
+    "This dungeon is intentionally map-first: use the illustrated arctic temple, bridges, side courts, and upper dais as the play surface.",
+    "Normal route overlays are disabled on the premium map because visible bridges, stairs, and snow paths belong to the art.",
+    "The duplicated 2-5 and 2-8 draft routes were consolidated into single structural connections with notes about the hazardous alternate trails so validation stays unambiguous.",
+    "The Frostwake Warden appears in Room 2 only after the party visits Rooms 3, 5, 6, and 8 and then returns to the central nave."
+  ]
+}
