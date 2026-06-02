@@ -1814,7 +1814,7 @@ const enchantedVillagePremiumMapDungeonDraft: DraftDungeon = {
   hook:
     'A forest village that should have hosted the spring moot has vanished behind a curtain of singing leaves. The road still reaches its gate, but every traveler who enters returns with a different memory of what they promised inside.',
   background:
-    'Bramblebell was once a meeting place where mortal villagers, forest spirits, and wandering folk settled disputes beneath the old moon-bough. Three promise-tokens have been stolen from the moot table, leaving the village trapped in a playful but dangerous loop of false welcomes, talking signs, and overgrown bargains. The party must find the missing tokens, decide which villagers or spirits can be trusted, and ring the Bramblebell before the village forgets the outside world entirely.',
+    'Bramblebell was once a meeting place where mortal villagers, forest spirits, and wandering folk settled disputes beneath the old moon-bough. Now the spring moot never begins: signs lie, paths loop, and guests leave with promises they do not remember making.\n\nThree promise-tokens have been stolen from the moot table, and without them the village cannot tell fair bargains from tricks. The party must find the tokens, learn who is twisting the old customs, and ring the Bramblebell before the village forgets the outside world entirely.',
   map: {
     style: 'forestRuin',
     gmMapId: 'premium-bramblebell-moot-gm',
@@ -2064,7 +2064,7 @@ const enchantedVillagePremiumMapDungeonDraft: DraftDungeon = {
       environmentRole: 'natural',
       inhabitants: [],
       treasure: 'A silver drinking cup rests on the inner lip, etched with the village motto: Guests before grudges.',
-      secrets: 'A dreamer sees the second promise-token being carried toward the upper roost in Room 11.',
+      secrets: 'A dreamer sees promise-starlings in Room 11 repeating the exact words that can expose the false signs in Room 14.',
       exits: 'Stepped garden walk back to Room 4.',
     },
     {
@@ -2204,7 +2204,7 @@ const enchantedVillagePremiumMapDungeonDraft: DraftDungeon = {
       number: 11,
       name: 'Starling Roost',
       readAloud: 'The upper branches open into a roost of woven twigs and colored thread. Starlings repeat overheard promises in dozens of bright voices.',
-      gmNotes: 'The secret marker belongs here. The birds have the second promise-token, but they will not give it to anyone who grabs at the nest.',
+      gmNotes: 'The secret marker belongs here. The birds know the exact words needed to expose the false signs, but they will not help anyone who grabs at the nest.',
       threat: 'Low',
       tags: ['Secret', 'Birds', 'Upper room'],
       layoutRole: 'deadEnd',
