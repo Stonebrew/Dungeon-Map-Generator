@@ -1,0 +1,1453 @@
+{
+  "id": "dd-2026-05-19-premium-enchanted-village",
+  "dateIso": "2026-05-19",
+  "date": "May 19, 2026",
+  "title": "The Bramblebell Moot",
+  "theme": "Enchanted forest village of talking paths, hidden bargains, and fey-lit cottages",
+  "difficulty": "Moderate",
+  "partySize": "3-5 adventurers",
+  "estimatedPlayTime": "3-4 hours",
+  "hook": "A forest village that should have hosted the spring moot has vanished behind a curtain of singing leaves. The road still reaches its gate, but every traveler who enters returns with a different memory of what they promised inside.",
+  "background": "Bramblebell was once a meeting place where mortal villagers, forest spirits, and wandering folk settled disputes beneath the old moon-bough. Three promise-tokens have been stolen from the moot table, leaving the village trapped in a playful but dangerous loop of false welcomes, talking signs, and overgrown bargains. The party must find the missing tokens, decide which villagers or spirits can be trusted, and ring the Bramblebell before the village forgets the outside world entirely.",
+  "map": {
+    "style": "forestRuin",
+    "gmMapId": "premium-bramblebell-moot-gm",
+    "playerMapId": "premium-bramblebell-moot-player",
+    "layout": {
+      "grammar": [
+        "openKeyedArea",
+        "constructedHub"
+      ],
+      "notes": "Enchanted forest village with a central green, branching garden paths, cottage clusters, bridges, side shrines, and an upper moot hall."
+    },
+    "connections": [
+      {
+        "routeStyle": "stair",
+        "routeDifficulty": "clear",
+        "from": 1,
+        "to": 2,
+        "type": "normal",
+        "path": "M360.72 432.58 L363.53 177.55"
+      },
+      {
+        "routeStyle": "trail",
+        "routeDifficulty": "clear",
+        "from": 2,
+        "to": 3,
+        "type": "normal",
+        "path": "M363.53 177.55 C310 260 248 350 173.3 433.97"
+      },
+      {
+        "routeStyle": "trail",
+        "routeDifficulty": "clear",
+        "from": 1,
+        "to": 3,
+        "type": "normal",
+        "path": "M360.72 432.58 C300 438 234 438 173.3 433.97"
+      },
+      {
+        "routeStyle": "trail",
+        "routeDifficulty": "clear",
+        "from": 2,
+        "to": 4,
+        "type": "normal",
+        "path": "M363.53 177.55 C278 220 190 260 118.37 300.14"
+      },
+      {
+        "routeStyle": "trail",
+        "routeDifficulty": "clear",
+        "from": 2,
+        "to": 6,
+        "type": "normal",
+        "path": "M363.53 177.55 C280 178 212 182 145.15 184.61"
+      },
+      {
+        "routeStyle": "bridge",
+        "routeDifficulty": "clear",
+        "from": 2,
+        "to": 9,
+        "type": "normal",
+        "note": "Raised root bridge with a worn garden trail beside it",
+        "path": "M363.53 177.55 C305 118 258 64 208.51 39.46"
+      },
+      {
+        "routeStyle": "corridor",
+        "routeDifficulty": "clear",
+        "from": 2,
+        "to": 10,
+        "type": "normal",
+        "path": "M363.53 177.55 L366.34 50.74"
+      },
+      {
+        "routeStyle": "bridge",
+        "routeDifficulty": "clear",
+        "from": 2,
+        "to": 14,
+        "type": "normal",
+        "path": "M363.53 177.55 C448 210 524 240 597.46 267.7"
+      },
+      {
+        "routeStyle": "stair",
+        "routeDifficulty": "clear",
+        "from": 2,
+        "to": 15,
+        "type": "normal",
+        "path": "M363.53 177.55 C430 260 510 332 580.54 388.9"
+      },
+      {
+        "routeStyle": "trail",
+        "routeDifficulty": "clear",
+        "from": 3,
+        "to": 4,
+        "type": "normal",
+        "path": "M173.3 433.97 C154 386 134 342 118.37 300.14"
+      },
+      {
+        "routeStyle": "stair",
+        "routeDifficulty": "clear",
+        "from": 4,
+        "to": 5,
+        "type": "normal",
+        "path": "M118.37 300.14 L88.78 350.83"
+      },
+      {
+        "routeStyle": "stair",
+        "routeDifficulty": "clear",
+        "from": 6,
+        "to": 7,
+        "type": "normal",
+        "path": "M145.15 184.61 L67.61 84.53"
+      },
+      {
+        "routeStyle": "trail",
+        "routeDifficulty": "clear",
+        "from": 7,
+        "to": 8,
+        "type": "normal",
+        "path": "M67.61 84.53 C48 132 42 196 46.51 252.24"
+      },
+      {
+        "routeStyle": "trail",
+        "routeDifficulty": "clear",
+        "from": 6,
+        "to": 9,
+        "type": "normal",
+        "path": "M145.15 184.61 C164 130 185 82 208.51 39.46"
+      },
+      {
+        "routeStyle": "bridge",
+        "routeDifficulty": "clear",
+        "from": 9,
+        "to": 10,
+        "type": "normal",
+        "path": "M208.51 39.46 C264 38 316 42 366.34 50.74"
+      },
+      {
+        "routeStyle": "stair",
+        "routeDifficulty": "clear",
+        "from": 10,
+        "to": 11,
+        "type": "normal",
+        "path": "M366.34 50.74 C418 60 468 70 508.68 83.14"
+      },
+      {
+        "routeStyle": "trail",
+        "routeDifficulty": "clear",
+        "from": 12,
+        "to": 14,
+        "type": "normal",
+        "path": "M641.09 107.09 C632 164 614 220 597.46 267.7"
+      },
+      {
+        "routeStyle": "trail",
+        "routeDifficulty": "clear",
+        "from": 13,
+        "to": 14,
+        "type": "normal",
+        "path": "M681.98 276.1 L597.46 267.7"
+      },
+      {
+        "routeStyle": "bridge",
+        "routeDifficulty": "clear",
+        "from": 14,
+        "to": 15,
+        "type": "normal",
+        "path": "M597.46 267.7 C598 320 594 360 580.54 388.9"
+      }
+    ],
+    "playerSafe": {
+      "hideSecrets": true,
+      "hideTreasure": true,
+      "hideHazards": true,
+      "hideGmNotes": true,
+      "description": "A player-safe illustrated enchanted village map. Keyed numbers may remain visible when labels are enabled, but GM markers and hidden information are not shown."
+    },
+    "premiumMap": {
+      "status": "available",
+      "baseMapImage": {
+        "id": "custom-enchanted-forest-village-1",
+        "url": "/premium-maps/enchanted-forest-village-1.png",
+        "width": 1536,
+        "height": 1024,
+        "mimeType": "image/png"
+      },
+      "imageSize": {
+        "width": 1536,
+        "height": 1024
+      },
+      "mapBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 720,
+        "height": 480
+      },
+      "overlayViewBox": "0 0 720 480",
+      "printableMapVariant": "standard",
+      "showNormalRouteOverlay": false,
+      "schematicFootprints": [
+        {
+          "roomNumber": 1,
+          "shape": "rect",
+          "xPercent": 50.1,
+          "yPercent": 90.12,
+          "widthPercent": 18,
+          "heightPercent": 11
+        },
+        {
+          "roomNumber": 2,
+          "shape": "rect",
+          "xPercent": 50.49,
+          "yPercent": 36.99,
+          "widthPercent": 26,
+          "heightPercent": 21
+        },
+        {
+          "roomNumber": 3,
+          "shape": "rect",
+          "xPercent": 24.07,
+          "yPercent": 90.41,
+          "widthPercent": 19,
+          "heightPercent": 10
+        },
+        {
+          "roomNumber": 4,
+          "shape": "rect",
+          "xPercent": 16.44,
+          "yPercent": 62.53,
+          "widthPercent": 15,
+          "heightPercent": 14
+        },
+        {
+          "roomNumber": 5,
+          "shape": "ellipse",
+          "xPercent": 12.33,
+          "yPercent": 73.09,
+          "widthPercent": 13,
+          "heightPercent": 10
+        },
+        {
+          "roomNumber": 6,
+          "shape": "rect",
+          "xPercent": 20.16,
+          "yPercent": 38.46,
+          "widthPercent": 17,
+          "heightPercent": 13
+        },
+        {
+          "roomNumber": 7,
+          "shape": "ellipse",
+          "xPercent": 9.39,
+          "yPercent": 17.61,
+          "widthPercent": 14,
+          "heightPercent": 12
+        },
+        {
+          "roomNumber": 8,
+          "shape": "ellipse",
+          "xPercent": 6.46,
+          "yPercent": 52.55,
+          "widthPercent": 12,
+          "heightPercent": 13
+        },
+        {
+          "roomNumber": 9,
+          "shape": "rect",
+          "xPercent": 28.96,
+          "yPercent": 8.22,
+          "widthPercent": 17,
+          "heightPercent": 10
+        },
+        {
+          "roomNumber": 10,
+          "shape": "rect",
+          "xPercent": 50.88,
+          "yPercent": 10.57,
+          "widthPercent": 20,
+          "heightPercent": 13
+        },
+        {
+          "roomNumber": 11,
+          "shape": "ellipse",
+          "xPercent": 70.65,
+          "yPercent": 17.32,
+          "widthPercent": 16,
+          "heightPercent": 12
+        },
+        {
+          "roomNumber": 12,
+          "shape": "ellipse",
+          "xPercent": 89.04,
+          "yPercent": 22.31,
+          "widthPercent": 15,
+          "heightPercent": 12
+        },
+        {
+          "roomNumber": 13,
+          "shape": "ellipse",
+          "xPercent": 94.72,
+          "yPercent": 57.54,
+          "widthPercent": 10,
+          "heightPercent": 13
+        },
+        {
+          "roomNumber": 14,
+          "shape": "rect",
+          "xPercent": 82.98,
+          "yPercent": 55.77,
+          "widthPercent": 21,
+          "heightPercent": 17
+        },
+        {
+          "roomNumber": 15,
+          "shape": "ellipse",
+          "xPercent": 80.63,
+          "yPercent": 81.02,
+          "widthPercent": 17,
+          "heightPercent": 14
+        }
+      ],
+      "gmOverlay": {
+        "viewBox": "0 0 720 480",
+        "labelAnchors": [
+          {
+            "roomNumber": 1,
+            "xPercent": 50.1,
+            "yPercent": 90.12
+          },
+          {
+            "roomNumber": 2,
+            "xPercent": 50.49,
+            "yPercent": 36.99
+          },
+          {
+            "roomNumber": 3,
+            "xPercent": 24.07,
+            "yPercent": 90.41
+          },
+          {
+            "roomNumber": 4,
+            "xPercent": 16.44,
+            "yPercent": 62.53
+          },
+          {
+            "roomNumber": 5,
+            "xPercent": 12.33,
+            "yPercent": 73.09
+          },
+          {
+            "roomNumber": 6,
+            "xPercent": 20.16,
+            "yPercent": 38.46
+          },
+          {
+            "roomNumber": 7,
+            "xPercent": 9.39,
+            "yPercent": 17.61
+          },
+          {
+            "roomNumber": 8,
+            "xPercent": 6.46,
+            "yPercent": 52.55
+          },
+          {
+            "roomNumber": 9,
+            "xPercent": 28.96,
+            "yPercent": 8.22
+          },
+          {
+            "roomNumber": 10,
+            "xPercent": 50.88,
+            "yPercent": 10.57
+          },
+          {
+            "roomNumber": 11,
+            "xPercent": 70.65,
+            "yPercent": 17.32
+          },
+          {
+            "roomNumber": 12,
+            "xPercent": 89.04,
+            "yPercent": 22.31
+          },
+          {
+            "roomNumber": 13,
+            "xPercent": 94.72,
+            "yPercent": 57.54
+          },
+          {
+            "roomNumber": 14,
+            "xPercent": 82.98,
+            "yPercent": 55.77
+          },
+          {
+            "roomNumber": 15,
+            "xPercent": 80.63,
+            "yPercent": 81.02
+          }
+        ],
+        "markerAnchors": [
+          {
+            "roomNumber": 7,
+            "marker": "treasure",
+            "xPercent": 12.52,
+            "yPercent": 16.44
+          },
+          {
+            "roomNumber": 12,
+            "marker": "treasure",
+            "xPercent": 86.69,
+            "yPercent": 18.49
+          },
+          {
+            "roomNumber": 13,
+            "marker": "treasure",
+            "xPercent": 92.17,
+            "yPercent": 53.72
+          },
+          {
+            "roomNumber": 11,
+            "marker": "secret",
+            "xPercent": 76.13,
+            "yPercent": 19.37
+          },
+          {
+            "roomNumber": 2,
+            "marker": "secret",
+            "xPercent": 47.75,
+            "yPercent": 40.51
+          },
+          {
+            "roomNumber": 3,
+            "marker": "secret",
+            "xPercent": 22.31,
+            "yPercent": 87.18
+          }
+        ],
+        "routeOverlayPaths": [],
+        "notes": "Generated by the dev-only premium map annotator. Review alignment before committing."
+      },
+      "playerOverlay": {
+        "viewBox": "0 0 720 480",
+        "labelAnchors": [
+          {
+            "roomNumber": 1,
+            "xPercent": 50.1,
+            "yPercent": 90.12
+          },
+          {
+            "roomNumber": 2,
+            "xPercent": 50.49,
+            "yPercent": 36.99
+          },
+          {
+            "roomNumber": 3,
+            "xPercent": 24.07,
+            "yPercent": 90.41
+          },
+          {
+            "roomNumber": 4,
+            "xPercent": 16.44,
+            "yPercent": 62.53
+          },
+          {
+            "roomNumber": 5,
+            "xPercent": 12.33,
+            "yPercent": 73.09
+          },
+          {
+            "roomNumber": 6,
+            "xPercent": 20.16,
+            "yPercent": 38.46
+          },
+          {
+            "roomNumber": 7,
+            "xPercent": 9.39,
+            "yPercent": 17.61
+          },
+          {
+            "roomNumber": 8,
+            "xPercent": 6.46,
+            "yPercent": 52.55
+          },
+          {
+            "roomNumber": 9,
+            "xPercent": 28.96,
+            "yPercent": 8.22
+          },
+          {
+            "roomNumber": 10,
+            "xPercent": 50.88,
+            "yPercent": 10.57
+          },
+          {
+            "roomNumber": 11,
+            "xPercent": 70.65,
+            "yPercent": 17.32
+          },
+          {
+            "roomNumber": 12,
+            "xPercent": 89.04,
+            "yPercent": 22.31
+          },
+          {
+            "roomNumber": 13,
+            "xPercent": 94.72,
+            "yPercent": 57.54
+          },
+          {
+            "roomNumber": 14,
+            "xPercent": 82.98,
+            "yPercent": 55.77
+          },
+          {
+            "roomNumber": 15,
+            "xPercent": 80.63,
+            "yPercent": 81.02
+          }
+        ]
+      },
+      "printNotes": "Generated from the dev-only premium map annotator."
+    }
+  },
+  "mapStyle": "forestRuin",
+  "mapPlaceholder": "premium-bramblebell-moot-gm",
+  "playerMapPlaceholder": "premium-bramblebell-moot-player",
+  "rooms": [
+    {
+      "layoutRole": "threshold",
+      "areaShape": "stair",
+      "areaScale": "medium",
+      "openness": "open",
+      "environmentRole": "safe",
+      "number": 1,
+      "name": "Root-Gate Steps",
+      "readAloud": "Stone steps climb between roots braided into an arch. Small bells hang from the branches, ringing different names for the same village.",
+      "gmNotes": "This is the main entry. The bells greet honest arrivals warmly and repeat lies in a childlike voice.",
+      "threat": "Low",
+      "tags": [
+        "Entrance",
+        "Bells",
+        "Forest path"
+      ],
+      "inhabitants": [],
+      "treasure": "A fallen bell of green bronze is tucked under the right root. It rings only when someone speaks a promise they mean to keep.",
+      "secrets": "The bells know that three promise-tokens are missing, but they reveal this only if politely asked for the village by its old name.",
+      "exits": "Up the root stair to Room 2, or along the lower left garden trail to Room 3.",
+      "id": "dd-2026-05-19-premium-enchanted-village-room-01",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-01-to-dd-2026-05-19-premium-enchanted-village-room-02",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Route to Room 2",
+          "description": "Up the root stair to Room 2, or along the lower left garden trail to Room 3."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-01-to-dd-2026-05-19-premium-enchanted-village-room-03",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-03",
+          "toRoomNumber": 3,
+          "type": "normal",
+          "label": "Route to Room 3",
+          "description": "Up the root stair to Room 2, or along the lower left garden trail to Room 3."
+        }
+      ]
+    },
+    {
+      "layoutRole": "hub",
+      "areaShape": "clearing",
+      "areaScale": "huge",
+      "openness": "open",
+      "environmentRole": "safe",
+      "number": 2,
+      "name": "Moon-Bough Green",
+      "readAloud": "The village green opens beneath a vast silver-leafed tree. Paths, bridges, cottage walks, and carved thresholds radiate from a round moot table.",
+      "gmNotes": "This is the social hub. The secret marker represents a hollow beneath the moot table where one promise-token was hidden by a frightened villager.",
+      "threat": "Moderate",
+      "tags": [
+        "Hub",
+        "Social",
+        "Secret"
+      ],
+      "inhabitants": [
+        {
+          "name": "Nettlecap Speaker",
+          "role": "Fey village mediator",
+          "threat": "Moderate",
+          "durability": "Standard",
+          "damage": "Light",
+          "tactics": "Offers riddling bargains, calls nearby sprites for help, and tries to split impatient visitors from careful ones",
+          "morale": "Cooperates if the party returns one promise-token or exposes the false signposts",
+          "wants": "The moot restored without admitting the village elders made a mistake",
+          "leverage": "Likes courtesy, music, public apologies, and anyone who refuses an obviously unfair bargain"
+        }
+      ],
+      "treasure": "A moon-bough leaf pressed under the table can be traded for safe lodging in friendly forest settlements.",
+      "secrets": "A loose table root hides the first promise-token, marked with the word Welcome.",
+      "exits": "Root stair to Room 1, trail to Room 3, trail to Room 4, trail to Room 6, raised root bridge with a worn garden trail to Room 9, corridor-threshold to Room 10, bridge to Room 14, and stair to Room 15.",
+      "id": "dd-2026-05-19-premium-enchanted-village-room-02",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-02-to-dd-2026-05-19-premium-enchanted-village-room-01",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-01",
+          "toRoomNumber": 1,
+          "type": "normal",
+          "label": "Route to Room 1",
+          "description": "Root stair to Room 1, trail to Room 3, trail to Room 4, trail to Room 6, raised root bridge with a worn garden trail to Room 9, corridor-threshold to Room 10, bridge to Room 14, and stair to Room 15."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-02-to-dd-2026-05-19-premium-enchanted-village-room-03",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-03",
+          "toRoomNumber": 3,
+          "type": "normal",
+          "label": "Route to Room 3",
+          "description": "Root stair to Room 1, trail to Room 3, trail to Room 4, trail to Room 6, raised root bridge with a worn garden trail to Room 9, corridor-threshold to Room 10, bridge to Room 14, and stair to Room 15."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-02-to-dd-2026-05-19-premium-enchanted-village-room-04",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-04",
+          "toRoomNumber": 4,
+          "type": "normal",
+          "label": "Route to Room 4",
+          "description": "Root stair to Room 1, trail to Room 3, trail to Room 4, trail to Room 6, raised root bridge with a worn garden trail to Room 9, corridor-threshold to Room 10, bridge to Room 14, and stair to Room 15."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-02-to-dd-2026-05-19-premium-enchanted-village-room-06",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-06",
+          "toRoomNumber": 6,
+          "type": "normal",
+          "label": "Route to Room 6",
+          "description": "Root stair to Room 1, trail to Room 3, trail to Room 4, trail to Room 6, raised root bridge with a worn garden trail to Room 9, corridor-threshold to Room 10, bridge to Room 14, and stair to Room 15."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-02-to-dd-2026-05-19-premium-enchanted-village-room-09",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-09",
+          "toRoomNumber": 9,
+          "type": "normal",
+          "label": "Raised root bridge with a worn garden trail beside it",
+          "description": "Root stair to Room 1, trail to Room 3, trail to Room 4, trail to Room 6, raised root bridge with a worn garden trail to Room 9, corridor-threshold to Room 10, bridge to Room 14, and stair to Room 15.",
+          "note": "Raised root bridge with a worn garden trail beside it"
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-02-to-dd-2026-05-19-premium-enchanted-village-room-10",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-10",
+          "toRoomNumber": 10,
+          "type": "normal",
+          "label": "Route to Room 10",
+          "description": "Root stair to Room 1, trail to Room 3, trail to Room 4, trail to Room 6, raised root bridge with a worn garden trail to Room 9, corridor-threshold to Room 10, bridge to Room 14, and stair to Room 15."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-02-to-dd-2026-05-19-premium-enchanted-village-room-14",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-14",
+          "toRoomNumber": 14,
+          "type": "normal",
+          "label": "Route to Room 14",
+          "description": "Root stair to Room 1, trail to Room 3, trail to Room 4, trail to Room 6, raised root bridge with a worn garden trail to Room 9, corridor-threshold to Room 10, bridge to Room 14, and stair to Room 15."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-02-to-dd-2026-05-19-premium-enchanted-village-room-15",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-15",
+          "toRoomNumber": 15,
+          "type": "normal",
+          "label": "Route to Room 15",
+          "description": "Root stair to Room 1, trail to Room 3, trail to Room 4, trail to Room 6, raised root bridge with a worn garden trail to Room 9, corridor-threshold to Room 10, bridge to Room 14, and stair to Room 15."
+        }
+      ]
+    },
+    {
+      "layoutRole": "branch",
+      "areaShape": "courtyard",
+      "areaScale": "large",
+      "openness": "semiOpen",
+      "environmentRole": "overgrown",
+      "number": 3,
+      "name": "Candlecap Cottages",
+      "readAloud": "A cluster of tiny cottages glows with mushroom lamps. Their doors are open, but the shadows inside move as if someone just ducked away.",
+      "gmNotes": "This room favors investigation and conversation. The secret marker belongs to a cottage floorboard with scratched names underneath.",
+      "threat": "Low",
+      "tags": [
+        "Cottages",
+        "Clue",
+        "Secret"
+      ],
+      "inhabitants": [],
+      "treasure": "A packet of sleep-saffron tea, valuable to herbalists and dangerous if brewed too strong.",
+      "secrets": "The scratched names identify who last touched the promise-token hidden under the moot table in Room 2.",
+      "exits": "Trail to Room 2, lower garden trail to Room 1, and path through foxglove hedges to Room 4.",
+      "id": "dd-2026-05-19-premium-enchanted-village-room-03",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-03-to-dd-2026-05-19-premium-enchanted-village-room-02",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Route to Room 2",
+          "description": "Trail to Room 2, lower garden trail to Room 1, and path through foxglove hedges to Room 4."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-03-to-dd-2026-05-19-premium-enchanted-village-room-01",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-01",
+          "toRoomNumber": 1,
+          "type": "normal",
+          "label": "Route to Room 1",
+          "description": "Trail to Room 2, lower garden trail to Room 1, and path through foxglove hedges to Room 4."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-03-to-dd-2026-05-19-premium-enchanted-village-room-04",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-04",
+          "toRoomNumber": 4,
+          "type": "normal",
+          "label": "Route to Room 4",
+          "description": "Trail to Room 2, lower garden trail to Room 1, and path through foxglove hedges to Room 4."
+        }
+      ]
+    },
+    {
+      "layoutRole": "branch",
+      "areaShape": "hall",
+      "areaScale": "medium",
+      "openness": "open",
+      "environmentRole": "overgrown",
+      "number": 4,
+      "name": "Foxglove Market Walk",
+      "readAloud": "Empty stalls lean under purple flowers. Wooden price tags list impossible trades: one laugh, two secrets, a memory of rain.",
+      "gmNotes": "Use this as a playful negotiation space. A fair trade at any stall makes the path to Room 5 easier to notice.",
+      "threat": "Moderate",
+      "tags": [
+        "Market",
+        "Social",
+        "Bargains"
+      ],
+      "inhabitants": [
+        {
+          "name": "Foxglove Tally-Keeper",
+          "role": "Market spirit",
+          "threat": "Low",
+          "durability": "Fragile",
+          "damage": "Light",
+          "tactics": "Marks unfair traders with glowing pollen and calls thorny vines if robbed",
+          "morale": "Stays cheerful unless someone cheats a child, guest, or hungry creature",
+          "wants": "Every trade named clearly and paid honestly",
+          "leverage": "Accepts songs, apologies, useful rumors, or amusing but harmless objects"
+        }
+      ],
+      "treasure": "A jar of star-honey sits behind a stall labeled For brave apologies only.",
+      "secrets": "One price tag is written in the same hand as the false signposts scattered through the village.",
+      "exits": "Trail to Room 2, path to Room 3, and stepped garden walk to Room 5.",
+      "id": "dd-2026-05-19-premium-enchanted-village-room-04",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-04-to-dd-2026-05-19-premium-enchanted-village-room-02",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Route to Room 2",
+          "description": "Trail to Room 2, path to Room 3, and stepped garden walk to Room 5."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-04-to-dd-2026-05-19-premium-enchanted-village-room-03",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-03",
+          "toRoomNumber": 3,
+          "type": "normal",
+          "label": "Route to Room 3",
+          "description": "Trail to Room 2, path to Room 3, and stepped garden walk to Room 5."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-04-to-dd-2026-05-19-premium-enchanted-village-room-05",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-05",
+          "toRoomNumber": 5,
+          "type": "normal",
+          "label": "Route to Room 5",
+          "description": "Trail to Room 2, path to Room 3, and stepped garden walk to Room 5."
+        }
+      ]
+    },
+    {
+      "layoutRole": "deadEnd",
+      "areaShape": "pool",
+      "areaScale": "small",
+      "openness": "open",
+      "environmentRole": "natural",
+      "number": 5,
+      "name": "Sleepy Well Of Petals",
+      "readAloud": "A round well is choked with pale petals. Each petal drifts upward instead of down, carrying whispered dreams out of the water.",
+      "gmNotes": "This is a quiet hazard and clue room. Falling asleep near the well shows the route to one missing token, but leaves the dreamer vulnerable.",
+      "threat": "Moderate",
+      "tags": [
+        "Well",
+        "Dream hazard",
+        "Clue"
+      ],
+      "inhabitants": [],
+      "treasure": "A silver drinking cup rests on the inner lip, etched with the village motto: Guests before grudges.",
+      "secrets": "A dreamer sees the second promise-token being carried toward the upper roost in Room 11.",
+      "exits": "Stepped garden walk back to Room 4.",
+      "id": "dd-2026-05-19-premium-enchanted-village-room-05",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-05-to-dd-2026-05-19-premium-enchanted-village-room-04",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-04",
+          "toRoomNumber": 4,
+          "type": "normal",
+          "label": "Route to Room 4",
+          "description": "Stepped garden walk back to Room 4."
+        }
+      ]
+    },
+    {
+      "layoutRole": "transition",
+      "areaShape": "clearing",
+      "areaScale": "medium",
+      "openness": "open",
+      "environmentRole": "natural",
+      "number": 6,
+      "name": "Whisper-Wood Yard",
+      "readAloud": "Carved posts and low fences surround a yard where the trees whisper over each other. The path changes whenever no one is looking at it.",
+      "gmNotes": "The party can calm the shifting paths by naming where they intend to go before moving.",
+      "threat": "Moderate",
+      "tags": [
+        "Shifting path",
+        "Puzzle",
+        "Trees"
+      ],
+      "inhabitants": [
+        {
+          "name": "Whisper-Wood Saplings",
+          "role": "Living path wardens",
+          "threat": "Moderate",
+          "durability": "Standard",
+          "damage": "Light",
+          "tactics": "Move paths behind intruders, separate noisy groups, and tangle anyone who mocks the forest",
+          "morale": "Settle if addressed as sentries rather than obstacles",
+          "wants": "Clear intentions spoken aloud",
+          "leverage": "They respect names, patient navigation, and repaired fence posts"
+        }
+      ],
+      "treasure": "A carved wayfinder peg points to the last place its holder spoke truthfully.",
+      "secrets": "The trees know a shortcut to Room 9, but only reveal it after someone repairs a broken fence rail.",
+      "exits": "Trail to Room 2, stair through roots to Room 7, and north trail to Room 9.",
+      "id": "dd-2026-05-19-premium-enchanted-village-room-06",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-06-to-dd-2026-05-19-premium-enchanted-village-room-02",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Route to Room 2",
+          "description": "Trail to Room 2, stair through roots to Room 7, and north trail to Room 9."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-06-to-dd-2026-05-19-premium-enchanted-village-room-07",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-07",
+          "toRoomNumber": 7,
+          "type": "normal",
+          "label": "Route to Room 7",
+          "description": "Trail to Room 2, stair through roots to Room 7, and north trail to Room 9."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-06-to-dd-2026-05-19-premium-enchanted-village-room-09",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-09",
+          "toRoomNumber": 9,
+          "type": "normal",
+          "label": "Route to Room 9",
+          "description": "Trail to Room 2, stair through roots to Room 7, and north trail to Room 9."
+        }
+      ]
+    },
+    {
+      "number": 7,
+      "name": "Acorn Tollhouse",
+      "readAloud": "A miniature tollhouse sits between two roots. Its windows are bright, and a line of acorns waits politely outside the door.",
+      "gmNotes": "The treasure marker belongs here. The tollhouse is guarded by etiquette, not locks.",
+      "threat": "Low",
+      "tags": [
+        "Treasure",
+        "Tollhouse",
+        "Social"
+      ],
+      "layoutRole": "branch",
+      "areaShape": "chamber",
+      "areaScale": "small",
+      "openness": "semiOpen",
+      "environmentRole": "safe",
+      "inhabitants": [
+        {
+          "name": "Acorn Clerk",
+          "role": "Tiny toll collector",
+          "threat": "Low",
+          "durability": "Fragile",
+          "damage": "Light",
+          "tactics": "Stamps ankles, redirects rude guests, and calls birds to carry off shiny stolen things",
+          "morale": "Very brave while inside the tollhouse, very sensible outside it",
+          "wants": "One proper toll from every traveler",
+          "leverage": "Accepts compliments, breadcrumbs, useful stamps, or a promise to return lost acorns"
+        }
+      ],
+      "treasure": "The toll chest contains a promise-token marked Fair Passage, plus a handful of pearl acorns.",
+      "secrets": "The clerk saw a laughing shadow pass toward Room 8 after stealing the third token.",
+      "exits": "Root stair back to Room 6, or trail along the old boundary hedge to Room 8.",
+      "id": "dd-2026-05-19-premium-enchanted-village-room-07",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-07-to-dd-2026-05-19-premium-enchanted-village-room-06",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-06",
+          "toRoomNumber": 6,
+          "type": "normal",
+          "label": "Route to Room 6",
+          "description": "Root stair back to Room 6, or trail along the old boundary hedge to Room 8."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-07-to-dd-2026-05-19-premium-enchanted-village-room-08",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-08",
+          "toRoomNumber": 8,
+          "type": "normal",
+          "label": "Route to Room 8",
+          "description": "Root stair back to Room 6, or trail along the old boundary hedge to Room 8."
+        }
+      ]
+    },
+    {
+      "number": 8,
+      "name": "Hollow Hedge Playhouse",
+      "readAloud": "A hedge has grown into the shape of a little theater. Leaf masks hang over the stage, smiling too widely.",
+      "gmNotes": "This area is playful until the party refuses to play any role. Then the masks become an active obstacle.",
+      "threat": "Moderate",
+      "tags": [
+        "Theater",
+        "Masks",
+        "Roleplay"
+      ],
+      "layoutRole": "deadEnd",
+      "areaShape": "chamber",
+      "areaScale": "small",
+      "openness": "semiOpen",
+      "environmentRole": "overgrown",
+      "inhabitants": [
+        {
+          "name": "Leaf-Mask Players",
+          "role": "Mischievous performers",
+          "threat": "Moderate",
+          "durability": "Standard",
+          "damage": "Light",
+          "tactics": "Swap voices, force comic misunderstandings, and flee through the hedge when cornered",
+          "morale": "Surrender if the party finishes a scene with kindness instead of force",
+          "wants": "A performance that admits what the village is afraid to say",
+          "leverage": "They cannot resist a sincere improvised apology"
+        }
+      ],
+      "treasure": "One mask becomes a harmless disguise if its role is played to a fair ending.",
+      "secrets": "The laughing shadow hid behind the mayor role and carried the third promise-token toward the east orchard.",
+      "exits": "Boundary hedge trail back to Room 7.",
+      "id": "dd-2026-05-19-premium-enchanted-village-room-08",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-08-to-dd-2026-05-19-premium-enchanted-village-room-07",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-07",
+          "toRoomNumber": 7,
+          "type": "normal",
+          "label": "Route to Room 7",
+          "description": "Boundary hedge trail back to Room 7."
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "name": "Lantern-Moss Garden",
+      "readAloud": "Blue-green moss lanterns float above a stepping path. Their light gathers in pools that show places the viewer has promised to visit.",
+      "gmNotes": "This is a strong clue room and a visual crossroads between the west paths and the upper hall.",
+      "threat": "Low",
+      "tags": [
+        "Garden",
+        "Clue",
+        "Bridge"
+      ],
+      "layoutRole": "branch",
+      "areaShape": "clearing",
+      "areaScale": "medium",
+      "openness": "open",
+      "environmentRole": "natural",
+      "inhabitants": [],
+      "treasure": "A moss lantern can be coaxed into a covered jar; it shines toward broken promises.",
+      "secrets": "The garden reveals the raised root bridge and worn trail both lead back to the Moon-Bough Green in Room 2.",
+      "exits": "Raised root bridge and worn garden trail to Room 2, trail to Room 6, and bridge to Room 10.",
+      "id": "dd-2026-05-19-premium-enchanted-village-room-09",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-09-to-dd-2026-05-19-premium-enchanted-village-room-02",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Raised root bridge with a worn garden trail beside it",
+          "description": "Raised root bridge and worn garden trail to Room 2, trail to Room 6, and bridge to Room 10.",
+          "note": "Raised root bridge with a worn garden trail beside it"
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-09-to-dd-2026-05-19-premium-enchanted-village-room-06",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-06",
+          "toRoomNumber": 6,
+          "type": "normal",
+          "label": "Route to Room 6",
+          "description": "Raised root bridge and worn garden trail to Room 2, trail to Room 6, and bridge to Room 10."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-09-to-dd-2026-05-19-premium-enchanted-village-room-10",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-10",
+          "toRoomNumber": 10,
+          "type": "normal",
+          "label": "Route to Room 10",
+          "description": "Raised root bridge and worn garden trail to Room 2, trail to Room 6, and bridge to Room 10."
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "name": "Elderleaf Hall",
+      "readAloud": "A long hall of living branches forms a green roof overhead. Benches have grown from the floor, each bearing a different family mark.",
+      "gmNotes": "The village elders are absent, but their old judgments are recorded in the bench marks.",
+      "threat": "Moderate",
+      "tags": [
+        "Hall",
+        "Lore",
+        "Judgment"
+      ],
+      "layoutRole": "objective",
+      "areaShape": "hall",
+      "areaScale": "large",
+      "openness": "semiOpen",
+      "environmentRole": "ritual",
+      "inhabitants": [
+        {
+          "name": "Benchmark Echoes",
+          "role": "Judgment memories",
+          "threat": "Moderate",
+          "durability": "Standard",
+          "damage": "Light",
+          "tactics": "Ask loaded questions, close branch doors, and repeat any contradiction",
+          "morale": "Fade after a fair judgment is spoken aloud",
+          "wants": "The moot restored through truth rather than victory",
+          "leverage": "They must honor balanced testimony from at least two sides"
+        }
+      ],
+      "treasure": "A family mark carved from amber is loose beneath the central bench.",
+      "secrets": "The elders once hid promises to avoid offending the forest spirits; the current crisis began as a cover-up.",
+      "exits": "Corridor-threshold to Room 2, bridge to Room 9, and stair up through the branches to Room 11.",
+      "id": "dd-2026-05-19-premium-enchanted-village-room-10",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-10-to-dd-2026-05-19-premium-enchanted-village-room-02",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Route to Room 2",
+          "description": "Corridor-threshold to Room 2, bridge to Room 9, and stair up through the branches to Room 11."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-10-to-dd-2026-05-19-premium-enchanted-village-room-09",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-09",
+          "toRoomNumber": 9,
+          "type": "normal",
+          "label": "Route to Room 9",
+          "description": "Corridor-threshold to Room 2, bridge to Room 9, and stair up through the branches to Room 11."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-10-to-dd-2026-05-19-premium-enchanted-village-room-11",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-11",
+          "toRoomNumber": 11,
+          "type": "normal",
+          "label": "Route to Room 11",
+          "description": "Corridor-threshold to Room 2, bridge to Room 9, and stair up through the branches to Room 11."
+        }
+      ]
+    },
+    {
+      "number": 11,
+      "name": "Starling Roost",
+      "readAloud": "The upper branches open into a roost of woven twigs and colored thread. Starlings repeat overheard promises in dozens of bright voices.",
+      "gmNotes": "The secret marker belongs here. The birds have the second promise-token, but they will not give it to anyone who grabs at the nest.",
+      "threat": "Low",
+      "tags": [
+        "Secret",
+        "Birds",
+        "Upper room"
+      ],
+      "layoutRole": "deadEnd",
+      "areaShape": "ledge",
+      "areaScale": "medium",
+      "openness": "exposed",
+      "environmentRole": "elevated",
+      "inhabitants": [
+        {
+          "name": "Promise-Starlings",
+          "role": "Witness flock",
+          "threat": "Low",
+          "durability": "Fragile",
+          "damage": "Light",
+          "tactics": "Mob thieves, shout embarrassing truths, and scatter clues to safer listeners",
+          "morale": "Keep their distance unless offered bright thread or patient questions",
+          "wants": "All promises repeated accurately",
+          "leverage": "They trade information for colorful thread, seed, or a funny true story"
+        }
+      ],
+      "treasure": "The nest holds several beads of sky-blue glass and a ribbon that never knots when tied honestly.",
+      "secrets": "A starling can repeat the exact words needed to silence the false signs near Room 14.",
+      "exits": "Branch stair back to Room 10.",
+      "id": "dd-2026-05-19-premium-enchanted-village-room-11",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-11-to-dd-2026-05-19-premium-enchanted-village-room-10",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-10",
+          "toRoomNumber": 10,
+          "type": "normal",
+          "label": "Route to Room 10",
+          "description": "Branch stair back to Room 10."
+        }
+      ]
+    },
+    {
+      "number": 12,
+      "name": "Sunberry Apiary",
+      "readAloud": "Golden hives hang from bent trees. Bees the size of thumbs drift between flowers, each leaving a thread of warm light behind it.",
+      "gmNotes": "The treasure marker belongs here. The bees are not hostile unless someone smokes, swats, or steals without asking.",
+      "threat": "Moderate",
+      "tags": [
+        "Treasure",
+        "Bees",
+        "Garden"
+      ],
+      "layoutRole": "branch",
+      "areaShape": "clearing",
+      "areaScale": "medium",
+      "openness": "open",
+      "environmentRole": "natural",
+      "inhabitants": [
+        {
+          "name": "Sunberry Bees",
+          "role": "Territorial pollinators",
+          "threat": "Moderate",
+          "durability": "Standard",
+          "damage": "Light",
+          "tactics": "Drive intruders toward thorny brush, swarm exposed hands, and ignore anyone carrying flowers calmly",
+          "morale": "Return to the hives once their queen is safe",
+          "wants": "The hives kept whole and the orchard unburned",
+          "leverage": "They accept pollen offerings, slow movement, and songs in a low voice"
+        }
+      ],
+      "treasure": "A comb of sunberry honey glows warmly and can calm frightened forest creatures.",
+      "secrets": "Honey poured onto a false sign makes the lie run off like ink.",
+      "exits": "Garden trail to Room 14.",
+      "id": "dd-2026-05-19-premium-enchanted-village-room-12",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-12-to-dd-2026-05-19-premium-enchanted-village-room-14",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-14",
+          "toRoomNumber": 14,
+          "type": "normal",
+          "label": "Route to Room 14",
+          "description": "Garden trail to Room 14."
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "name": "Moonroot Pantry",
+      "readAloud": "A crooked pantry leans over a patch of pale roots. Clay jars hum softly, and every shelf smells like a different season.",
+      "gmNotes": "The treasure marker belongs here. The best treasure is useful at the table rather than raw wealth.",
+      "threat": "Low",
+      "tags": [
+        "Treasure",
+        "Supplies",
+        "Side room"
+      ],
+      "layoutRole": "deadEnd",
+      "areaShape": "chamber",
+      "areaScale": "small",
+      "openness": "semiOpen",
+      "environmentRole": "safe",
+      "inhabitants": [],
+      "treasure": "Three moonroot loaves, one jar of winter jam, and a spoon that points toward the nearest honest meal.",
+      "secrets": "A pantry shelf bears the same false handwriting seen in Room 4, proving someone forged the village bargains.",
+      "exits": "Pantry path to Room 14.",
+      "id": "dd-2026-05-19-premium-enchanted-village-room-13",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-13-to-dd-2026-05-19-premium-enchanted-village-room-14",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-14",
+          "toRoomNumber": 14,
+          "type": "normal",
+          "label": "Route to Room 14",
+          "description": "Pantry path to Room 14."
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "name": "Orchard Bridge Yard",
+      "readAloud": "A bridge yard spans a bright stream between fruit trees. Half the fruit is ripe, half is carved from painted wood, and both halves sway in the same wind.",
+      "gmNotes": "This is the east-side junction. The false signposts here try to send the party in circles unless contradicted with the starlings' exact words from Room 11.",
+      "threat": "Moderate",
+      "tags": [
+        "Bridge",
+        "False signs",
+        "Junction"
+      ],
+      "layoutRole": "hub",
+      "areaShape": "courtyard",
+      "areaScale": "large",
+      "openness": "open",
+      "environmentRole": "overgrown",
+      "inhabitants": [
+        {
+          "name": "Painted-Fruit Imps",
+          "role": "Prankish ambushers",
+          "threat": "Moderate",
+          "durability": "Standard",
+          "damage": "Light",
+          "tactics": "Throw wooden fruit, swap signs, and lure pursuers toward the stream bridge",
+          "morale": "Scatter if one of their false signs is publicly corrected",
+          "wants": "Keep the moot confused so nobody asks who stole the tokens",
+          "leverage": "They brag under pressure and fear the promise-starlings in Room 11"
+        }
+      ],
+      "treasure": "A wooden pear opens to reveal the third promise-token marked Good Guest.",
+      "secrets": "The imps were hired by a laughing shadow that cannot cross the stream unless invited by name.",
+      "exits": "Bridge to Room 2, garden trail to Room 12, pantry path to Room 13, and bridge to Room 15.",
+      "id": "dd-2026-05-19-premium-enchanted-village-room-14",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-14-to-dd-2026-05-19-premium-enchanted-village-room-02",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Route to Room 2",
+          "description": "Bridge to Room 2, garden trail to Room 12, pantry path to Room 13, and bridge to Room 15."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-14-to-dd-2026-05-19-premium-enchanted-village-room-12",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-12",
+          "toRoomNumber": 12,
+          "type": "normal",
+          "label": "Route to Room 12",
+          "description": "Bridge to Room 2, garden trail to Room 12, pantry path to Room 13, and bridge to Room 15."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-14-to-dd-2026-05-19-premium-enchanted-village-room-13",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-13",
+          "toRoomNumber": 13,
+          "type": "normal",
+          "label": "Route to Room 13",
+          "description": "Bridge to Room 2, garden trail to Room 12, pantry path to Room 13, and bridge to Room 15."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-14-to-dd-2026-05-19-premium-enchanted-village-room-15",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-15",
+          "toRoomNumber": 15,
+          "type": "normal",
+          "label": "Route to Room 15",
+          "description": "Bridge to Room 2, garden trail to Room 12, pantry path to Room 13, and bridge to Room 15."
+        }
+      ]
+    },
+    {
+      "number": 15,
+      "name": "Bellflower Watch",
+      "readAloud": "A raised watch platform looks back over the whole village. Bellflowers grow along the rail, their petals shaped like tiny ringing mouths.",
+      "gmNotes": "This is the best finale room if the party has recovered the three promise-tokens. Ringing the Bramblebell from here ends the village loop.",
+      "threat": "High",
+      "tags": [
+        "Finale",
+        "Watch",
+        "Bell"
+      ],
+      "layoutRole": "objective",
+      "areaShape": "ledge",
+      "areaScale": "medium",
+      "openness": "exposed",
+      "environmentRole": "elevated",
+      "inhabitants": [
+        {
+          "name": "Laughing Shadow",
+          "role": "Bargain thief",
+          "threat": "High",
+          "durability": "Tough",
+          "damage": "Serious",
+          "tactics": "Uses stolen voices, flees across bridges, and turns promises against anyone who speaks carelessly",
+          "morale": "Runs if all three promise-tokens are set into the bell frame",
+          "wants": "Keep Bramblebell entertaining, forgetful, and unable to hold a true moot",
+          "leverage": "It cannot refuse a clearly worded bargain witnessed by the whole village"
+        }
+      ],
+      "treasure": "Restoring the Bramblebell earns the party a village favor and a bellflower charm that rings near broken bargains.",
+      "secrets": "The shadow was first invited by an elder who wanted one embarrassing promise forgotten.",
+      "exits": "Stair to Room 2, or bridge to Room 14.",
+      "id": "dd-2026-05-19-premium-enchanted-village-room-15",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-15-to-dd-2026-05-19-premium-enchanted-village-room-02",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-02",
+          "toRoomNumber": 2,
+          "type": "normal",
+          "label": "Route to Room 2",
+          "description": "Stair to Room 2, or bridge to Room 14."
+        },
+        {
+          "id": "dd-2026-05-19-premium-enchanted-village-room-15-to-dd-2026-05-19-premium-enchanted-village-room-14",
+          "toRoomId": "dd-2026-05-19-premium-enchanted-village-room-14",
+          "toRoomNumber": 14,
+          "type": "normal",
+          "label": "Route to Room 14",
+          "description": "Stair to Room 2, or bridge to Room 14."
+        }
+      ]
+    }
+  ],
+  "encounterTables": {
+    "wandering": [
+      {
+        "roll": "1",
+        "result": "A pair of leaf-mask players challenge the party to finish a scene honestly",
+        "type": "Social"
+      },
+      {
+        "roll": "2",
+        "result": "Painted-fruit imps throw harmless fruit until someone chases them toward a real hazard",
+        "type": "Combat"
+      },
+      {
+        "roll": "3",
+        "result": "Promise-starlings repeat a useful secret mixed with three embarrassing lies",
+        "type": "Exploration"
+      },
+      {
+        "roll": "4",
+        "result": "A whisper-wood path quietly swaps two visible destinations",
+        "type": "Puzzle"
+      },
+      {
+        "roll": "5",
+        "result": "The Nettlecap Speaker asks what promise the party is least willing to make",
+        "type": "Social"
+      },
+      {
+        "roll": "6",
+        "result": "Bellflowers ring from the direction of the nearest missing promise-token",
+        "type": "Exploration"
+      }
+    ],
+    "environmental": [
+      {
+        "roll": "1",
+        "result": "A false sign changes while someone is reading it",
+        "type": "Puzzle"
+      },
+      {
+        "roll": "2",
+        "result": "Pollen makes everyone speak in rhyme until they drink or apologize",
+        "type": "Hazard"
+      },
+      {
+        "roll": "3",
+        "result": "A moon-bough leaf falls and points toward a broken promise",
+        "type": "Exploration"
+      },
+      {
+        "roll": "4",
+        "result": "The stream near Room 14 briefly reflects the wrong season",
+        "type": "Exploration"
+      },
+      {
+        "roll": "5",
+        "result": "A cottage door opens onto the sound of a conversation from another room",
+        "type": "Puzzle"
+      },
+      {
+        "roll": "6",
+        "result": "The village loop tightens; the next rude shortcut returns to Room 2",
+        "type": "Hazard"
+      }
+    ],
+    "complications": [
+      {
+        "roll": "1",
+        "result": "A fair bargain becomes unfair because one side forgot the exact words",
+        "type": "Social"
+      },
+      {
+        "roll": "2",
+        "result": "A recovered promise-token starts ringing loudly enough to draw attention",
+        "type": "Exploration"
+      },
+      {
+        "roll": "3",
+        "result": "The laughing shadow imitates a trusted voice from across a bridge",
+        "type": "Social"
+      },
+      {
+        "roll": "4",
+        "result": "The market tally marks someone as unpaid until they settle a small debt",
+        "type": "Puzzle"
+      },
+      {
+        "roll": "5",
+        "result": "A swarm from the apiary blocks a route until soothed or bypassed",
+        "type": "Hazard"
+      },
+      {
+        "roll": "6",
+        "result": "A kind act opens a direct path for one scene, then closes behind the party",
+        "type": "Exploration"
+      }
+    ]
+  },
+  "treasureTable": [
+    {
+      "roll": "1",
+      "result": "Green bronze root-gate bell that rings for sincere promises"
+    },
+    {
+      "roll": "2",
+      "result": "Promise-token marked Welcome from beneath the moot table"
+    },
+    {
+      "roll": "3",
+      "result": "Promise-token marked Fair Passage from the acorn tollhouse"
+    },
+    {
+      "roll": "4",
+      "result": "Promise-token marked Good Guest from the orchard bridge yard"
+    },
+    {
+      "roll": "5",
+      "result": "Sunberry honeycomb that calms frightened forest creatures"
+    },
+    {
+      "roll": "6",
+      "result": "Bellflower charm that rings near broken bargains after the moot is restored"
+    }
+  ],
+  "gmNotes": [
+    "Lean into exploration and social play first; most inhabitants prefer bargains, jokes, or public honesty before violence.",
+    "The three key tokens are hidden in Rooms 2, 7, and 14. Room 11 provides the exact words needed to expose the false signs without a fight.",
+    "The laughing shadow is dangerous because it steals exact wording, not because it is stronger than the whole village.",
+    "If the party restores the Bramblebell from Room 15, the village becomes safe passage and a recurring ally."
+  ]
+}

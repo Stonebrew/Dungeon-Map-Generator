@@ -1,8 +1,8 @@
 {
-  "generatedAt": "2026-06-02T06:02:06.855Z",
+  "generatedAt": "2026-06-02T07:44:37.550Z",
   "source": "src/data/mockDungeon.ts",
   "contract": "Dungeon",
-  "count": 13,
+  "count": 14,
   "dungeons": [
     {
       "id": "dd-2026-05-06",
@@ -58,6 +58,17 @@
       "difficulty": "High",
       "mapStyle": "frozenRuin",
       "roomCount": 9
+    },
+    {
+      "id": "dd-2026-05-19-premium-enchanted-village",
+      "slug": "the-bramblebell-moot",
+      "file": "2026-05-19-the-bramblebell-moot.json",
+      "dateIso": "2026-05-19",
+      "title": "The Bramblebell Moot",
+      "theme": "Enchanted forest village of talking paths, hidden bargains, and fey-lit cottages",
+      "difficulty": "Moderate",
+      "mapStyle": "forestRuin",
+      "roomCount": 15
     },
     {
       "id": "dd-2026-05-08",
