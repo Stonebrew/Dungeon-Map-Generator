@@ -192,6 +192,9 @@ The prototype Print Packet view uses the currently selected dungeon and includes
 - Browser print CSS that hides app navigation, DevPanel, buttons, tier selectors, and interactive controls.
 - A separate Print button that opens the browser print dialog through `window.print()`.
 - A Save as PDF button that captures only the printable packet content, excluding app navigation, DevPanel, buttons, helper text, and other screen-only controls.
+- Save as PDF temporarily replaces each complete printable map section in place with a compact PNG-backed export section before capture, after inlining any illustrated base-map image references inside the cloned SVG. This gives the PDF renderer a capture-safe map section with the base art and overlays already combined, without leaving a blank live map card in the packet flow.
+- Print Packet controls for portrait or landscape page orientation. Landscape is the default practical choice for wide premium illustrated maps.
+- Print Packet controls for Player Labeled Map or Player Clean Map. Labeled player maps keep player-safe room numbers; clean player maps hide room numbers as well as GM markers and hidden routes.
 - Today and GM View now surface this feature as Print / Export Packet plus a visible Save as PDF entry point, both leading to the Print Packet view where the direct PDF button is available.
 - Print-specific room cards, map frames, captions, section labels, and page-break rules for a more usable table packet.
 - Print-specific map presentation mode for GM and player-safe maps, with stronger label contrast, clearer route strokes, reduced decorative texture, and cleaner print framing.
@@ -209,7 +212,10 @@ Known limitations:
 
 - Output quality depends on the browser print engine.
 - Direct PDF download is client-side and may differ from native browser print pagination or rendering.
-- There are no export options for paper size, color mode, included sections, or map-only output.
+- Browser support for CSS print orientation can vary. The direct Save as PDF path passes the selected portrait/landscape orientation directly to the client PDF generator.
+- Premium map images must be reachable from the browser at export time. Local `public/premium-maps/` assets work for development, but missing local files still cannot be embedded into the PDF.
+- Map sections are marked to avoid page splitting, and Save as PDF uses in-place flattened map section snapshots to reduce html2canvas/SVG pagination failures, separated headings, and blank duplicate map frames.
+- There are no export options for paper size, color mode, included sections, map-only output, grid toggles, or route toggles. Uploaded premium-map grids, paths, and terrain remain part of the base image.
 - There is no cached export artifact or download history.
 - Map print quality still needs manual QA across all 10 environments, especially premium Level 2 maps with subtle color or texture.
 - There are no page numbers, running headers, custom cover pages, or print presets yet.

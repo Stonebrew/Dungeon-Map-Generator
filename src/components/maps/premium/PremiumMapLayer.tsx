@@ -45,7 +45,9 @@ export function PremiumMapLayer({
   return (
     <g data-renderer="premium-illustrated-map">
       <image
+        data-premium-map-base="true"
         href={asset.url}
+        crossOrigin="anonymous"
         x={bounds.x}
         y={bounds.y}
         width={bounds.width}

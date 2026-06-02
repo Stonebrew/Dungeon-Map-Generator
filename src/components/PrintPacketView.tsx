@@ -10,14 +10,16 @@ function PrintSection({
   kicker,
   children,
   pageBreak = false,
+  className = '',
 }: {
   title: string;
   kicker?: string;
   children: ReactNode;
   pageBreak?: boolean;
+  className?: string;
 }) {
   return (
-    <section className={`print-section ${pageBreak ? 'print-page' : ''}`}>
+    <section className={`print-section ${pageBreak ? 'print-page' : ''} ${className}`}>
       {kicker && <p className="print-kicker text-xs font-bold uppercase tracking-[0.14em] text-ember">{kicker}</p>}
       <h2 className="font-serif text-2xl font-bold">{title}</h2>
       <div className="mt-3">{children}</div>
@@ -69,11 +71,209 @@ function getDungeonPdfFilename(dungeon: Dungeon) {
   return `daily-dungeon-${title}-${date}.pdf`;
 }
 
+type PrintOrientation = 'portrait' | 'landscape';
+
+function blobToDataUrl(blob: Blob) {
+  return new Promise<string>((resolve, reject) => {
+    const reader = new FileReader();
+    reader.addEventListener('load', () => {
+      if (typeof reader.result === 'string') {
+        resolve(reader.result);
+      } else {
+        reject(new Error('Could not read premium map image data.'));
+      }
+    });
+    reader.addEventListener('error', () => reject(reader.error ?? new Error('Could not read premium map image data.')));
+    reader.readAsDataURL(blob);
+  });
+}
+
+async function inlinePremiumMapImagesForPdf(root: ParentNode) {
+  const imageNodes = Array.from(root.querySelectorAll<SVGImageElement>('image'));
+
+  await Promise.all(
+    imageNodes.map(async (image) => {
+      const originalHref = image.getAttribute('href') ?? image.getAttribute('xlink:href');
+
+      if (!originalHref || originalHref.startsWith('data:')) {
+        return;
+      }
+
+      const response = await fetch(new URL(originalHref, window.location.href), { cache: 'force-cache' });
+
+      if (!response.ok) {
+        throw new Error(`Could not load premium map image for PDF export: ${originalHref}`);
+      }
+
+      const dataUrl = await blobToDataUrl(await response.blob());
+      image.setAttribute('href', dataUrl);
+      image.setAttribute('xlink:href', dataUrl);
+    }),
+  );
+}
+
+function getSvgRenderSize(svg: SVGSVGElement) {
+  const viewBox = svg.viewBox.baseVal;
+
+  if (viewBox.width > 0 && viewBox.height > 0) {
+    return { width: viewBox.width, height: viewBox.height };
+  }
+
+  return {
+    width: svg.width.baseVal.value || svg.clientWidth || 720,
+    height: svg.height.baseVal.value || svg.clientHeight || 480,
+  };
+}
+
+function waitForImageLoad(image: HTMLImageElement) {
+  if (image.complete && image.naturalWidth > 0) {
+    return Promise.resolve();
+  }
+
+  return new Promise<void>((resolve, reject) => {
+    const timeoutId = window.setTimeout(() => reject(new Error('Timed out rendering map snapshot for PDF export.')), 8000);
+
+    image.addEventListener(
+      'load',
+      () => {
+        window.clearTimeout(timeoutId);
+        resolve();
+      },
+      { once: true },
+    );
+    image.addEventListener(
+      'error',
+      () => {
+        window.clearTimeout(timeoutId);
+        reject(new Error('Could not render map snapshot for PDF export.'));
+      },
+      { once: true },
+    );
+  });
+}
+
+async function renderSvgToPngDataUrl(svg: SVGSVGElement) {
+  await document.fonts?.ready;
+
+  const clone = svg.cloneNode(true) as SVGSVGElement;
+  clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+  clone.setAttribute('xmlns:xlink', 'http://www.w3.org/1999/xlink');
+  await inlinePremiumMapImagesForPdf(clone);
+
+  const { width, height } = getSvgRenderSize(svg);
+  const svgText = new XMLSerializer().serializeToString(clone);
+  const svgUrl = URL.createObjectURL(new Blob([svgText], { type: 'image/svg+xml;charset=utf-8' }));
+  const image = new Image();
+
+  try {
+    image.src = svgUrl;
+    await waitForImageLoad(image);
+
+    const scale = 2;
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.ceil(width * scale);
+    canvas.height = Math.ceil(height * scale);
+
+    const context = canvas.getContext('2d');
+
+    if (!context) {
+      throw new Error('Could not create map snapshot canvas for PDF export.');
+    }
+
+    context.fillStyle = '#ffffff';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+    return canvas.toDataURL('image/png');
+  } finally {
+    URL.revokeObjectURL(svgUrl);
+  }
+}
+
+function createTextElement(tagName: 'p' | 'h2' | 'figcaption', className: string, textContent: string | null | undefined) {
+  const element = document.createElement(tagName);
+  element.className = className;
+  element.textContent = textContent ?? '';
+  return element;
+}
+
+async function flattenMapSectionsForPdf(root: HTMLElement) {
+  const mapSections = Array.from(root.querySelectorAll<HTMLElement>('.pdf-map-section'));
+  const restoreCallbacks: Array<() => void> = [];
+
+  if (import.meta.env.DEV) {
+    console.info(`[PrintPacket] Flattening ${mapSections.length} map section(s) for PDF export.`);
+  }
+
+  await Promise.all(
+    mapSections.map(async (section, index) => {
+      const svg = section.querySelector<SVGSVGElement>('.print-map-frame svg');
+
+      if (!svg) {
+        throw new Error('Could not find map SVG for PDF export.');
+      }
+
+      const dataUrl = await renderSvgToPngDataUrl(svg);
+      const replacement = document.createElement('section');
+      const snapshot = document.createElement('img');
+      const kicker = section.querySelector('.print-kicker')?.textContent;
+      const title = section.querySelector('h2')?.textContent;
+      const description = section.querySelector('.pdf-map-description')?.textContent;
+      const caption = section.querySelector('figcaption')?.textContent;
+
+      replacement.className = 'print-section print-page print-avoid pdf-map-section-snapshot';
+      if (kicker) {
+        replacement.appendChild(createTextElement('p', 'print-kicker pdf-map-kicker', kicker));
+      }
+      replacement.appendChild(createTextElement('h2', 'pdf-map-title', title));
+      if (description) {
+        replacement.appendChild(createTextElement('p', 'pdf-map-description', description));
+      }
+
+      const figure = document.createElement('figure');
+      figure.className = 'pdf-map-frame';
+
+      snapshot.src = dataUrl;
+      snapshot.alt = title ? `${title} map` : `Printable dungeon map ${index + 1}`;
+      snapshot.className = 'pdf-map-snapshot';
+      await snapshot.decode?.().catch(() => undefined);
+      figure.appendChild(snapshot);
+
+      if (caption) {
+        figure.appendChild(createTextElement('figcaption', 'pdf-map-caption', caption));
+      }
+      replacement.appendChild(figure);
+
+      const parent = section.parentNode;
+
+      if (!parent) {
+        throw new Error('Could not replace map section for PDF export.');
+      }
+
+      parent.replaceChild(replacement, section);
+      restoreCallbacks.push(() => {
+        if (replacement.parentNode) {
+          replacement.parentNode.replaceChild(section, replacement);
+        }
+      });
+
+      if (import.meta.env.DEV) {
+        console.info(`[PrintPacket] Map section ${index + 1} flattened for PDF export.`);
+      }
+    }),
+  );
+
+  return () => {
+    restoreCallbacks.forEach((restore) => restore());
+  };
+}
+
 export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; tier: TierId; onBack: () => void }) {
   const hasColorMap = canAccessFeature(tier, 'colorMap');
   const packetContentRef = useRef<HTMLDivElement | null>(null);
   const [isCreatingPdf, setIsCreatingPdf] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
+  const [printOrientation, setPrintOrientation] = useState<PrintOrientation>('landscape');
   const [showPlayerRoomNumbers, setShowPlayerRoomNumbers] = useState(true);
 
   const handleSavePdf = async () => {
@@ -84,8 +284,12 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
     setIsCreatingPdf(true);
     setPdfError(null);
 
+    let restoreMapSnapshots: (() => void) | undefined;
+
     try {
       const { default: html2pdf } = await import('html2pdf.js');
+      restoreMapSnapshots = await flattenMapSectionsForPdf(packetContentRef.current);
+
       const pdfOptions = {
         filename: getDungeonPdfFilename(dungeon),
         margin: [0.45, 0.45, 0.45, 0.45] as [number, number, number, number],
@@ -95,10 +299,10 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
           logging: false,
           scale: 2,
           useCORS: true,
-          windowWidth: 1120,
+          windowWidth: printOrientation === 'landscape' ? 1440 : 1120,
         },
-        jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' as const },
-        pagebreak: { mode: ['css', 'legacy'], before: '.print-page', avoid: '.print-avoid' },
+        jsPDF: { unit: 'in', format: 'letter', orientation: printOrientation },
+        pagebreak: { mode: ['css', 'legacy'], before: '.print-page', avoid: ['.print-avoid', '.pdf-map-section-snapshot', '.pdf-map-frame', '.pdf-map-snapshot', '.print-map-frame', '.print-map-card'] },
       };
 
       await html2pdf()
@@ -109,12 +313,13 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
       console.error('PDF export failed', error);
       setPdfError('Could not create the PDF. Try Print instead, or try again in a moment.');
     } finally {
+      restoreMapSnapshots?.();
       setIsCreatingPdf(false);
     }
   };
 
   return (
-    <article className="print-packet space-y-6">
+    <article className={`print-packet print-orientation-${printOrientation} space-y-6`}>
       <div className="no-print flex flex-col gap-3 rounded-md border border-ink/10 bg-white p-4 shadow-tool sm:flex-row sm:items-center sm:justify-between">
         <div>
           <Badge tone="warning">Prototype print preview</Badge>
@@ -130,15 +335,51 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
               {pdfError}
             </p>
           )}
-          <label className="mt-3 inline-flex items-center gap-3 rounded-md border border-ink/10 bg-parchment/60 px-3 py-2 text-sm font-bold text-ink">
-            <input
-              type="checkbox"
-              checked={showPlayerRoomNumbers}
-              onChange={(event) => setShowPlayerRoomNumbers(event.target.checked)}
-              className="h-4 w-4 accent-ember"
-            />
-            Include room numbers on player map
-          </label>
+          <div className="mt-3 grid max-w-2xl gap-3 rounded-md border border-ink/10 bg-parchment/60 p-3 text-sm text-ink sm:grid-cols-2">
+            <fieldset>
+              <legend className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">Page Orientation</legend>
+              <div className="mt-2 flex flex-wrap gap-2">
+                {(['landscape', 'portrait'] as const).map((orientation) => (
+                  <label key={orientation} className={`inline-flex items-center gap-2 rounded-md border px-3 py-2 font-bold capitalize ${printOrientation === orientation ? 'border-ember bg-white text-ember' : 'border-ink/10 bg-white/70 text-ink'}`}>
+                    <input
+                      type="radio"
+                      name="print-orientation"
+                      value={orientation}
+                      checked={printOrientation === orientation}
+                      onChange={() => setPrintOrientation(orientation)}
+                      className="h-4 w-4 accent-ember"
+                    />
+                    {orientation}
+                  </label>
+                ))}
+              </div>
+            </fieldset>
+            <fieldset>
+              <legend className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">Player Map</legend>
+              <div className="mt-2 flex flex-wrap gap-2">
+                <label className={`inline-flex items-center gap-2 rounded-md border px-3 py-2 font-bold ${showPlayerRoomNumbers ? 'border-ember bg-white text-ember' : 'border-ink/10 bg-white/70 text-ink'}`}>
+                  <input
+                    type="radio"
+                    name="player-map-labels"
+                    checked={showPlayerRoomNumbers}
+                    onChange={() => setShowPlayerRoomNumbers(true)}
+                    className="h-4 w-4 accent-ember"
+                  />
+                  Labeled
+                </label>
+                <label className={`inline-flex items-center gap-2 rounded-md border px-3 py-2 font-bold ${!showPlayerRoomNumbers ? 'border-ember bg-white text-ember' : 'border-ink/10 bg-white/70 text-ink'}`}>
+                  <input
+                    type="radio"
+                    name="player-map-labels"
+                    checked={!showPlayerRoomNumbers}
+                    onChange={() => setShowPlayerRoomNumbers(false)}
+                    className="h-4 w-4 accent-ember"
+                  />
+                  Clean
+                </label>
+              </div>
+            </fieldset>
+          </div>
         </div>
         <div className="flex flex-wrap gap-2">
           <button type="button" onClick={onBack} className="inline-flex items-center gap-2 rounded-md bg-ink px-3 py-2 text-sm font-bold text-white">
@@ -161,7 +402,7 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
         </div>
       </div>
 
-      <div ref={packetContentRef} className="export-packet-content space-y-6 bg-white text-ink">
+      <div ref={packetContentRef} className={`export-packet-content export-packet-${printOrientation} space-y-6 bg-white text-ink`}>
         <PrintSection title={dungeon.title} kicker="Daily Dungeon Packet">
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <div>
@@ -201,7 +442,7 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
           </div>
         </PrintSection>
 
-        <PrintSection title="GM Map" kicker="Page 2" pageBreak>
+        <PrintSection title="GM Map" kicker="Page 2" pageBreak className="pdf-map-section">
           <figure className="print-map-frame">
             <DungeonMap mode="gm" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} showLegend presentation="print" />
             <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.12em] text-ink/55">
@@ -210,14 +451,14 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
           </figure>
         </PrintSection>
 
-        <PrintSection title="Player-Safe Map" kicker="Page 3" pageBreak>
-          {dungeon.map.playerSafe.description && <p className="mb-3 text-sm leading-6 text-ink/65">{dungeon.map.playerSafe.description}</p>}
+        <PrintSection title="Player-Safe Map" kicker="Page 3" pageBreak className="pdf-map-section">
+          {dungeon.map.playerSafe.description && <p className="pdf-map-description mb-3 text-sm leading-6 text-ink/65">{dungeon.map.playerSafe.description}</p>}
           <figure className="print-map-frame">
             <DungeonMap mode="player" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} showLegend presentation="print" playerLabelsVisible={showPlayerRoomNumbers} />
             <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.12em] text-ink/55">
               {showPlayerRoomNumbers
-                ? 'Player handout map with room numbers. GM markers, secret routes, treasure, hazards, and GM-only labels are hidden.'
-                : 'Clean player handout map. Room numbers, GM markers, secret routes, treasure, hazards, and GM-only labels are hidden.'}
+                ? 'Player-safe map. Keyed numbers remain visible, but GM markers, hidden routes, treasure, hazards, and GM-only labels are not shown.'
+                : 'Clean player-safe map. Room numbers, GM markers, hidden routes, treasure, hazards, and GM-only labels are not shown.'}
             </figcaption>
           </figure>
         </PrintSection>
@@ -295,7 +536,7 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
           </div>
         </PrintSection>
 
-        <PrintSection title="Treasure Table" kicker="Rewards">
+        <PrintSection title="Treasure Table" kicker="Rewards" className="print-avoid">
           <PrintTable title="Treasure" entries={dungeon.treasureTable} />
         </PrintSection>
       </div>
