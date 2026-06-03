@@ -23,27 +23,27 @@ function ResourceCard({
     <div className="rounded-md border border-ink/10 bg-white p-4 shadow-tool">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-xs font-bold uppercase tracking-[0.14em] text-ink/45">{label}</p>
+          <p className="ledger-label text-xs font-bold uppercase text-ink/45">{label}</p>
           <p className="mt-1 text-sm leading-6 text-ink/65">{note}</p>
         </div>
         <Badge tone={dailyLimit > 0 ? 'success' : 'neutral'}>{dailyLimit > 0 ? 'Available' : 'Locked'}</Badge>
       </div>
       <dl className="mt-4 grid grid-cols-2 gap-3">
         <div className="rounded-md bg-parchment p-3">
-          <dt className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">Daily limit</dt>
-          <dd className="mt-1 font-serif text-3xl font-bold">{dailyLimit}</dd>
+          <dt className="ledger-label text-xs font-bold uppercase text-ink/45">Daily limit</dt>
+          <dd className="survey-title mt-1 font-serif text-3xl font-bold">{dailyLimit}</dd>
         </div>
         <div className="rounded-md bg-parchment p-3">
-          <dt className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">Remaining</dt>
-          <dd className="mt-1 font-serif text-3xl font-bold">{remaining}</dd>
+          <dt className="ledger-label text-xs font-bold uppercase text-ink/45">Remaining</dt>
+          <dd className="survey-title mt-1 font-serif text-3xl font-bold">{remaining}</dd>
         </div>
         <div className="rounded-md bg-parchment p-3">
-          <dt className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">Stored</dt>
-          <dd className="mt-1 font-serif text-3xl font-bold">{stored}</dd>
+          <dt className="ledger-label text-xs font-bold uppercase text-ink/45">Stored</dt>
+          <dd className="survey-title mt-1 font-serif text-3xl font-bold">{stored}</dd>
         </div>
         <div className="rounded-md bg-parchment p-3">
-          <dt className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">Stored cap</dt>
-          <dd className="mt-1 font-serif text-3xl font-bold">{storedCap}</dd>
+          <dt className="ledger-label text-xs font-bold uppercase text-ink/45">Stored cap</dt>
+          <dd className="survey-title mt-1 font-serif text-3xl font-bold">{storedCap}</dd>
         </div>
       </dl>
     </div>
@@ -72,11 +72,11 @@ function RerollTypeCard({
   return (
     <article className={`rounded-md border p-4 shadow-tool ${disabled ? 'border-ink/10 bg-ink/5 text-ink/45' : 'border-ember bg-white'}`}>
       <div className="flex items-start justify-between gap-3">
-        <h3 className="font-serif text-xl font-bold">{title}</h3>
+        <h3 className="survey-title font-serif text-xl font-bold">{title}</h3>
         {disabled && <Lock className="h-5 w-5" aria-hidden="true" />}
       </div>
       <p className="mt-2 text-sm leading-6">{text}</p>
-      <p className="mt-3 text-xs font-bold uppercase tracking-[0.14em] text-ink/45">{depleted && !locked ? 'No mock uses remaining today' : poolLabel}</p>
+      <p className="ledger-label mt-3 text-xs font-bold uppercase text-ink/45">{depleted && !locked ? 'No mock uses remaining today' : poolLabel}</p>
       <button type="button" disabled={disabled} onClick={onUse} className="mt-4 w-full rounded-md bg-ember px-3 py-2 text-sm font-bold text-white disabled:bg-ink/10 disabled:text-ink/40">
         {buttonLabel}
       </button>
@@ -107,7 +107,7 @@ function PremiumControl({
         onClick={() => onLockedFeature(feature)}
         title={getFeatureDescription(feature)}
       >
-        <span className="flex items-center justify-between gap-2 text-xs font-bold uppercase tracking-[0.14em]">
+        <span className="ledger-label flex items-center justify-between gap-2 text-xs font-bold uppercase">
           {label}
           <Lock className="h-4 w-4" aria-hidden="true" />
         </span>
@@ -118,7 +118,7 @@ function PremiumControl({
 
   return (
     <label className={controlClasses}>
-      <span className="flex items-center justify-between gap-2 text-xs font-bold uppercase tracking-[0.14em]">
+      <span className="ledger-label flex items-center justify-between gap-2 text-xs font-bold uppercase">
         {label}
       </span>
       <select className="mt-2 w-full rounded-md border border-ink/10 bg-white px-3 py-2 text-sm font-semibold">
@@ -228,7 +228,7 @@ export function RerollPanel({
       </div>
 
       <Panel>
-        <h3 className="font-serif text-2xl font-bold">Mock Generation Controls</h3>
+        <h3 className="survey-title font-serif text-2xl font-bold">Mock Generation Controls</h3>
         <p className="mt-2 text-sm leading-6 text-ink/65">Unused rerolls and refreshes carry over up to double the daily limit in the tier model.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {controls.map((control) => (

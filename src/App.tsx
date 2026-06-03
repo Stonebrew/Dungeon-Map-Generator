@@ -67,9 +67,9 @@ function DailyDungeonApp() {
   } = appState;
 
   return (
-    <div className="min-h-screen bg-parchment text-ink">
+    <div className="min-h-screen text-ink">
       <div className="mx-auto flex min-h-screen w-full max-w-6xl flex-col lg:flex-row">
-        <aside className="hidden border-r border-ink/10 bg-white/45 p-4 lg:block lg:w-64">
+        <aside className="app-chrome hidden border-r border-[#334145] p-4 shadow-[12px_0_34px_rgba(17,27,30,0.28)] lg:block lg:w-64">
           <AppHeader currentPlan={currentPlan} />
           <nav className="mt-6 space-y-1">
             {viewItems.map((item) => (
@@ -79,11 +79,11 @@ function DailyDungeonApp() {
         </aside>
 
         <main className="flex-1 pb-24 lg:pb-6">
-          <div className="sticky top-0 z-20 border-b border-ink/10 bg-parchment/95 px-4 py-3 backdrop-blur lg:hidden">
+          <div className="sticky top-0 z-20 border-b border-[#334145] bg-[#1d2b2f]/95 px-4 py-3 text-[#f3ecdd] shadow-tool backdrop-blur lg:hidden">
             <AppHeader compact currentPlan={currentPlan} />
           </div>
 
-          <div className="px-4 py-5 sm:px-6 lg:px-8">
+          <div className="px-4 py-5 sm:px-6 lg:px-8 lg:py-7">
             <div className="no-print">
               <DevPanel
                 dungeons={mockDungeons}
@@ -153,7 +153,7 @@ function DailyDungeonApp() {
           </div>
         </main>
 
-        <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-7 border-t border-ink/10 bg-white/95 px-1 py-2 shadow-tool backdrop-blur lg:hidden">
+        <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-7 border-t border-[#334145] bg-[#172326]/95 px-1 py-2 shadow-[0_-12px_35px_rgba(17,27,30,0.32)] backdrop-blur lg:hidden">
           {viewItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -161,8 +161,8 @@ function DailyDungeonApp() {
                 key={item.id}
                 type="button"
                 onClick={() => navigateTo(item.id)}
-                className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-md px-1 text-[11px] font-semibold ${
-                  view === item.id ? 'bg-ember text-white' : isViewLocked(item.id) ? 'text-ink/35' : 'text-ink/65'
+                className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-md border px-1 text-[11px] font-semibold transition ${
+                  view === item.id ? 'border-[#c18453] bg-[#a65335] text-white shadow-tool' : isViewLocked(item.id) ? 'border-transparent text-[#b8afa0]/45' : 'border-transparent text-[#f3ecdd]/75 hover:bg-[#223236]'
                 }`}
                 title={item.label}
               >
@@ -181,7 +181,7 @@ function PlaceholderFeature({ feature }: { feature: { name: string; text: string
   return (
     <Panel className="border-brass/35">
       <Badge tone="warning">Prototype placeholder</Badge>
-      <h2 className="mt-3 font-serif text-3xl font-bold">{feature.name}</h2>
+      <h2 className="survey-title mt-3 font-serif text-3xl font-bold">{feature.name}</h2>
       <p className="mt-3 max-w-2xl text-sm leading-6 text-ink/70">{feature.text}</p>
     </Panel>
   );
@@ -190,11 +190,16 @@ function PlaceholderFeature({ feature }: { feature: { name: string; text: string
 function AppHeader({ compact = false, currentPlan }: { compact?: boolean; currentPlan?: Plan }) {
   return (
     <header className={compact ? 'flex items-center justify-between gap-3' : ''}>
-      <div>
-        <p className="text-xs font-bold uppercase tracking-[0.18em] text-ember">Daily Dungeon</p>
-        <h1 className={`${compact ? 'text-lg' : 'mt-1 text-3xl'} font-serif font-bold`}>Ready for the table</h1>
+      <div className="flex min-w-0 items-center gap-3">
+        <span className={`brand-mark ${compact ? 'h-10 w-10 text-[11px]' : 'h-14 w-14 text-xs'} flex shrink-0 items-center justify-center rounded-md border border-[#f3ecdd]/20 font-label font-black tracking-[0.16em] text-[#f3ecdd]`}>
+          DD
+        </span>
+        <div className="min-w-0">
+          <p className="ledger-label text-xs font-bold uppercase text-current opacity-70">Daily Dungeon</p>
+          <h1 className={`survey-title ${compact ? 'text-lg' : 'mt-1 text-2xl'} font-serif font-bold leading-tight`}>Field Notes & Maps</h1>
+        </div>
       </div>
-      <span className="rounded-md border border-brass/40 bg-brass/10 px-2.5 py-1 text-xs font-bold text-brass">
+      <span className="catalog-tag rounded-md border border-[#c18453]/35 bg-[#c18453]/10 px-2.5 py-1 text-xs font-bold text-current shadow-sm">
         {currentPlan?.name}
       </span>
     </header>
@@ -217,8 +222,12 @@ function NavButton({
     <button
       type="button"
       onClick={onClick}
-      className={`flex w-full items-center gap-3 rounded-md px-3 py-2.5 text-left text-sm font-bold ${
-        active ? 'bg-ember text-white shadow-tool' : locked ? 'text-ink/35 hover:bg-white/70' : 'text-ink/70 hover:bg-white/70'
+      className={`flex w-full items-center gap-3 rounded-md border px-3 py-2.5 text-left text-sm font-bold transition ${
+        active
+          ? 'border-[#c18453] bg-[#a65335] text-white shadow-tool'
+          : locked
+            ? 'border-transparent text-[#b8afa0]/45 hover:bg-[#223236]'
+            : 'border-transparent text-[#f3ecdd]/78 hover:border-[#334145] hover:bg-[#223236]'
       }`}
     >
       <Icon className="h-4 w-4" aria-hidden="true" />

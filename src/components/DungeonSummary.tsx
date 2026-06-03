@@ -6,8 +6,8 @@ import { canAccessFeature, type FeatureKey } from '../lib/entitlements';
 
 function InfoChip({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-md border border-ink/10 bg-white px-3 py-2">
-      <dt className="text-[11px] font-bold uppercase tracking-[0.12em] text-ink/45">{label}</dt>
+    <div className="rounded-md border border-[#cdbfa9] bg-[#fff9ec] px-3 py-2 shadow-sm">
+      <dt className="ledger-label text-[11px] font-bold uppercase text-ink/45">{label}</dt>
       <dd className="mt-0.5 text-sm font-bold leading-5">{value}</dd>
     </div>
   );
@@ -30,9 +30,14 @@ function ActionButton({
     <button
       type="button"
       onClick={onClick}
-      className={`flex items-center justify-center gap-2 rounded-md px-3 text-sm font-bold shadow-tool ${
+      className={`flex items-center justify-center gap-2 rounded-md border px-3 text-sm font-bold shadow-tool transition ${
         primary ? 'min-h-14 py-3.5 text-base' : 'min-h-11 py-2.5'
-      } ${locked ? 'bg-ink/10 text-ink/45 hover:bg-ink/15' : primary ? 'bg-ember text-white hover:bg-ember/90' : 'bg-ink text-white hover:bg-ink/90'
+      } ${
+        locked
+          ? 'border-ink/10 bg-ink/10 text-ink/45 hover:bg-ink/15'
+          : primary
+            ? 'border-ember bg-ember text-white hover:bg-ember/90'
+            : 'border-ink bg-ink text-white hover:bg-slatewood'
       }`}
     >
       {locked ? <Lock className="h-4 w-4" aria-hidden="true" /> : <Icon className="h-4 w-4" aria-hidden="true" />}
@@ -73,12 +78,12 @@ export function DungeonSummary({
 
   return (
     <div className="space-y-4">
-      <section className="space-y-3">
+      <section className="paper-panel field-corner rounded-md border border-[#cdbfa9] p-4 shadow-tool sm:p-5">
         <div className="flex flex-wrap items-center gap-2">
           <Badge tone="accent">Today</Badge>
-          <span className="text-xs font-bold uppercase tracking-[0.16em] text-ink/45">{dungeon.date}</span>
+          <span className="ledger-label text-xs font-bold uppercase text-ink/45">{dungeon.date}</span>
         </div>
-        <h2 className="font-serif text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl">{dungeon.title}</h2>
+        <h2 className="survey-title font-serif text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl">{dungeon.title}</h2>
         <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
           <InfoChip label="Theme" value={dungeon.theme} />
           <InfoChip label="Difficulty" value={dungeon.difficulty} />
@@ -87,8 +92,8 @@ export function DungeonSummary({
         </div>
       </section>
 
-      <div className="rounded-md border border-brass/30 bg-white px-3 py-3 shadow-tool">
-        <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-brass">Story hook</p>
+      <div className="field-corner rounded-md border border-[#cdbfa9] bg-[#fff9ec] px-3 py-3 shadow-tool">
+        <p className="ledger-label text-[11px] font-bold uppercase text-slatewood">Story hook</p>
         <p className="mt-1 text-sm leading-6 text-ink/75">{dungeon.hook}</p>
       </div>
 
@@ -147,14 +152,14 @@ export function DungeonSummary({
         </div>
       </div>
 
-      <Panel className="border-brass/35 p-3">
+      <Panel className="border-slatewood/25 p-3">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <Badge tone="warning">Premium</Badge>
-            <h2 className="mt-2 font-serif text-xl font-bold">Unlock player maps, archive access, and rerolls.</h2>
+            <h2 className="survey-title mt-2 font-serif text-xl font-bold">Unlock player maps, archive access, and rerolls.</h2>
             <p className="mt-1 text-sm leading-6 text-ink/65">Adventurer adds the tools most useful during live play.</p>
           </div>
-          <button type="button" onClick={() => onNavigate('upgrade')} className="rounded-md bg-brass px-3 py-2 text-sm font-bold text-white">
+          <button type="button" onClick={() => onNavigate('upgrade')} className="rounded-md border border-slatewood bg-slatewood px-3 py-2 text-sm font-bold text-white shadow-tool transition hover:bg-slatewood/90">
             View Plans
           </button>
         </div>

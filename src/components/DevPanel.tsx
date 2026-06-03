@@ -27,7 +27,7 @@ export function DevPanel({
     <section className="mb-4 rounded-md border border-dashed border-ink/20 bg-white/45 p-3 text-sm">
       <button type="button" onClick={() => setOpen((current) => !current)} className="flex w-full items-center justify-between gap-3 text-left">
         <span>
-          <span className="block text-[11px] font-bold uppercase tracking-[0.14em] text-ink/45">Prototype Dev Panel</span>
+          <span className="ledger-label block text-[11px] font-bold uppercase text-ink/45">Prototype Dev Panel</span>
           <span className="text-xs text-ink/55">Temporary mock dungeon and tier controls</span>
         </span>
         <span className="rounded-md bg-ink/10 px-2 py-1 text-xs font-bold text-ink/60">{open ? 'Hide' : 'Show'}</span>
@@ -36,7 +36,7 @@ export function DevPanel({
       {open && (
         <div className="mt-3 grid gap-3 lg:grid-cols-[1fr_16rem]">
           <label className="block">
-            <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-ink/45">Mock Dungeon Selector</span>
+            <span className="ledger-label text-[11px] font-bold uppercase text-ink/45">Mock Dungeon Selector</span>
             <select
               value={selectedDungeonId}
               onChange={(event) => onDungeonChange(event.target.value)}
@@ -51,7 +51,7 @@ export function DevPanel({
           </label>
 
           <label className="block">
-            <span className="text-[11px] font-bold uppercase tracking-[0.14em] text-ink/45">Mock User Tier</span>
+            <span className="ledger-label text-[11px] font-bold uppercase text-ink/45">Mock User Tier</span>
             <select
               value={selectedTier}
               onChange={(event) => onTierChange(event.target.value as TierId)}
@@ -72,7 +72,7 @@ export function DevPanel({
           <div className="rounded-md border border-ink/10 bg-white p-3 lg:col-span-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.14em] text-ink/45">Map Consistency Validation</p>
+                <p className="ledger-label text-[11px] font-bold uppercase text-ink/45">Map Consistency Validation</p>
                 <p className="mt-1 text-xs text-ink/55">Dev-only check against map.connections and room exits.</p>
               </div>
               <span className={`rounded-md px-2.5 py-1 text-xs font-bold ${selectedIssueCount === 0 ? 'bg-moss/15 text-moss' : 'bg-brass/15 text-brass'}`}>

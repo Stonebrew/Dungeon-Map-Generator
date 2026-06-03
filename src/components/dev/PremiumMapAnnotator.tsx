@@ -1,4 +1,4 @@
-import { Copy, MousePointer2, Route, Tag, Trash2 } from 'lucide-react';
+import { Copy, Download, MousePointer2, Route, Tag, Trash2 } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { MouseEvent, PointerEvent, ReactNode } from 'react';
 import { mockDungeons } from '../../data/mockDungeon';
@@ -46,6 +46,16 @@ type DraftConnection = {
   note: string;
   path?: string;
   oneWay?: boolean;
+};
+
+type AnnotationDraftInfo = {
+  proposedTitle: string;
+  theme: string;
+  tone: string;
+  difficulty: string;
+  partySize: string;
+  estimatedPlayTime: string;
+  creativeNotes: string;
 };
 
 const localPremiumMapAssets: LocalPremiumMapAsset[] = [
@@ -132,6 +142,15 @@ function copyText(value: string) {
   void navigator.clipboard?.writeText(value);
 }
 
+function downloadTextFile(filename: string, value: string) {
+  const url = URL.createObjectURL(new Blob([value], { type: 'application/json' }));
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 function svgPercentPoint(svg: SVGSVGElement, clientX: number, clientY: number) {
   const point = svg.createSVGPoint();
   point.x = clientX;
@@ -165,7 +184,7 @@ function isSelected(selected: SelectedAnnotation, target: DragTarget) {
   return false;
 }
 
-function formatMetadata(asset: LocalPremiumMapAsset, rooms: PremiumMapOverlayAnchor[], markers: PremiumMapMarkerAnchor[], routes: DraftRoute[], showNormalRouteOverlay: boolean) {
+function buildPremiumMapMetadata(asset: LocalPremiumMapAsset, rooms: PremiumMapOverlayAnchor[], markers: PremiumMapMarkerAnchor[], routes: DraftRoute[], showNormalRouteOverlay: boolean) {
   const routeOverlayPaths: PremiumMapRouteOverlay[] = routes
     .filter((route) => route.path?.trim() || route.points.length > 1)
     .map((route) => ({
@@ -202,7 +221,7 @@ function formatMetadata(asset: LocalPremiumMapAsset, rooms: PremiumMapOverlayAnc
       width: asset.width,
       height: asset.height,
     },
-      mapBounds: {
+    mapBounds: {
       ...DEFAULT_PREMIUM_MAP_BOUNDS,
     },
     overlayViewBox: '0 0 720 480',
@@ -213,11 +232,17 @@ function formatMetadata(asset: LocalPremiumMapAsset, rooms: PremiumMapOverlayAnc
     printNotes: 'Generated from the dev-only premium map annotator.',
   };
 
+  return premiumMap;
+}
+
+function formatMetadata(asset: LocalPremiumMapAsset, rooms: PremiumMapOverlayAnchor[], markers: PremiumMapMarkerAnchor[], routes: DraftRoute[], showNormalRouteOverlay: boolean) {
+  const premiumMap = buildPremiumMapMetadata(asset, rooms, markers, routes, showNormalRouteOverlay);
+
   return JSON.stringify(premiumMap, null, 2);
 }
 
-function formatConnections(connections: DraftConnection[]) {
-  const mapConnections: MapConnection[] = connections.map((connection) => ({
+function buildMapConnections(connections: DraftConnection[]) {
+  return connections.map<MapConnection>((connection) => ({
     from: connection.from,
     to: connection.to,
     type: connection.type,
@@ -227,6 +252,10 @@ function formatConnections(connections: DraftConnection[]) {
     ...(connection.path ? { path: connection.path } : {}),
     ...(connection.oneWay ? { oneWay: connection.oneWay } : {}),
   }));
+}
+
+function formatConnections(connections: DraftConnection[]) {
+  const mapConnections = buildMapConnections(connections);
 
   return JSON.stringify(
     mapConnections.map((connection) => ({
@@ -242,6 +271,52 @@ function formatConnections(connections: DraftConnection[]) {
     null,
     2,
   );
+}
+
+function safePackageFilename(draftInfo: AnnotationDraftInfo, asset: LocalPremiumMapAsset) {
+  const source = draftInfo.proposedTitle.trim() || asset.name || asset.id || 'premium-map-annotation';
+
+  return `${slugifyAssetId(source) || 'premium-map-annotation'}.annotation.json`;
+}
+
+function formatAnnotationPackage({
+  createdAt,
+  draftInfo,
+  asset,
+  rooms,
+  markers,
+  routes,
+  connections,
+  showNormalRouteOverlay,
+}: {
+  createdAt: string;
+  draftInfo: AnnotationDraftInfo;
+  asset: LocalPremiumMapAsset;
+  rooms: PremiumMapOverlayAnchor[];
+  markers: PremiumMapMarkerAnchor[];
+  routes: DraftRoute[];
+  connections: DraftConnection[];
+  showNormalRouteOverlay: boolean;
+}) {
+  const packageJson = {
+    schemaVersion: 1,
+    kind: 'premium-map-annotation-package',
+    createdAt,
+    draftInfo,
+    image: {
+      id: asset.id,
+      displayName: asset.name,
+      path: asset.url,
+      width: asset.width,
+      height: asset.height,
+      ...(asset.mimeType ? { mimeType: asset.mimeType } : {}),
+      ...(asset.alt ? { alt: asset.alt } : {}),
+    },
+    premiumMap: buildPremiumMapMetadata(asset, rooms, markers, routes, showNormalRouteOverlay),
+    connections: buildMapConnections(connections),
+  };
+
+  return JSON.stringify(packageJson, null, 2);
 }
 
 function assetFromPremiumMap(premiumMap: PremiumMapMetadata | undefined): LocalPremiumMapAsset | undefined {
@@ -356,10 +431,35 @@ export function PremiumMapAnnotator() {
   const [connectionRouteStyle, setConnectionRouteStyle] = useState<RouteStyle>('trail');
   const [connectionDifficulty, setConnectionDifficulty] = useState<RouteDifficulty>('clear');
   const [connectionNote, setConnectionNote] = useState('');
+  const [packageCreatedAt] = useState(() => new Date().toISOString());
+  const [draftInfo, setDraftInfo] = useState<AnnotationDraftInfo>({
+    proposedTitle: '',
+    theme: '',
+    tone: '',
+    difficulty: '',
+    partySize: '',
+    estimatedPlayTime: '',
+    creativeNotes: '',
+  });
 
   const asset = availableAssets.find((item) => item.id === assetId) ?? availableAssets[0];
   const metadataOutput = useMemo(() => formatMetadata(asset, rooms, markers, routes, showNormalRouteOverlay), [asset, markers, rooms, routes, showNormalRouteOverlay]);
   const connectionsOutput = useMemo(() => formatConnections(connections), [connections]);
+  const packageOutput = useMemo(
+    () =>
+      formatAnnotationPackage({
+        createdAt: packageCreatedAt,
+        draftInfo,
+        asset,
+        rooms,
+        markers,
+        routes,
+        connections,
+        showNormalRouteOverlay,
+      }),
+    [asset, connections, draftInfo, markers, packageCreatedAt, rooms, routes, showNormalRouteOverlay],
+  );
+  const packageFilename = useMemo(() => safePackageFilename(draftInfo, asset), [asset, draftInfo]);
   const activeRoute = routes.find((route) => route.id === activeRouteId);
 
   const clearAnnotations = () => {
@@ -383,9 +483,22 @@ export function PremiumMapAnnotator() {
     setConnectionNote('');
   };
 
+  const updateDraftInfo = (field: keyof AnnotationDraftInfo, value: string) => {
+    setDraftInfo((current) => ({ ...current, [field]: value }));
+  };
+
   const resetToBlank = () => {
     setSelectedDungeonId('blank');
     setAssetId(availableAssets[0].id);
+    setDraftInfo({
+      proposedTitle: '',
+      theme: '',
+      tone: '',
+      difficulty: '',
+      partySize: '',
+      estimatedPlayTime: '',
+      creativeNotes: '',
+    });
     clearAnnotations();
   };
 
@@ -416,6 +529,10 @@ export function PremiumMapAnnotator() {
       setCustomAssets((current) => uniqueAssets([...current.filter((asset) => asset.url !== customAsset.url), customAsset]));
       setSelectedDungeonId('blank');
       setAssetId(customAsset.id);
+      setDraftInfo((current) => ({
+        ...current,
+        proposedTitle: current.proposedTitle || customAsset.name,
+      }));
       clearAnnotations();
       setCustomImageStatus(`Loaded ${customAsset.name} (${customAsset.width}x${customAsset.height}).`);
       setIsLoadingCustomImage(false);
@@ -466,6 +583,15 @@ export function PremiumMapAnnotator() {
 
     setSelectedDungeonId(dungeon.id);
     setAssetId(loadedAsset.id);
+    setDraftInfo({
+      proposedTitle: dungeon.title,
+      theme: dungeon.theme,
+      tone: dungeon.rooms.flatMap((room) => room.tags).slice(0, 4).join(', '),
+      difficulty: dungeon.difficulty,
+      partySize: dungeon.partySize,
+      estimatedPlayTime: dungeon.estimatedPlayTime,
+      creativeNotes: dungeon.hook,
+    });
     setRooms(loadedRooms);
     setMarkers(loadedMarkers);
     setRoutes(loadedRoutes);
@@ -655,6 +781,40 @@ export function PremiumMapAnnotator() {
               </button>
               {customImageStatus && <p className="text-xs leading-5 text-white/55">{customImageStatus}</p>}
               <p className="text-xs leading-5 text-white/45">Put the file in public/premium-maps/, then enter the public path. Dimensions are detected automatically.</p>
+            </ControlGroup>
+
+            <ControlGroup title="Annotation Package">
+              <label className="block text-xs font-semibold text-white/70">
+                Proposed dungeon title
+                <input value={draftInfo.proposedTitle} onChange={(event) => updateDraftInfo('proposedTitle', event.target.value)} placeholder="The Frostwake Spire" className="mt-1 w-full rounded-md border border-white/10 bg-black/40 px-2 py-1.5 text-white placeholder:text-white/25" />
+              </label>
+              <label className="block text-xs font-semibold text-white/70">
+                Theme / environment
+                <input value={draftInfo.theme} onChange={(event) => updateDraftInfo('theme', event.target.value)} placeholder="Frozen ruin / arctic temple" className="mt-1 w-full rounded-md border border-white/10 bg-black/40 px-2 py-1.5 text-white placeholder:text-white/25" />
+              </label>
+              <label className="block text-xs font-semibold text-white/70">
+                Tone
+                <input value={draftInfo.tone} onChange={(event) => updateDraftInfo('tone', event.target.value)} placeholder="Haunted, austere, dangerous" className="mt-1 w-full rounded-md border border-white/10 bg-black/40 px-2 py-1.5 text-white placeholder:text-white/25" />
+              </label>
+              <div className="grid grid-cols-2 gap-2">
+                <label className="block text-xs font-semibold text-white/70">
+                  Difficulty
+                  <input value={draftInfo.difficulty} onChange={(event) => updateDraftInfo('difficulty', event.target.value)} placeholder="Moderate" className="mt-1 w-full rounded-md border border-white/10 bg-black/40 px-2 py-1.5 text-white placeholder:text-white/25" />
+                </label>
+                <label className="block text-xs font-semibold text-white/70">
+                  Party size
+                  <input value={draftInfo.partySize} onChange={(event) => updateDraftInfo('partySize', event.target.value)} placeholder="3-5" className="mt-1 w-full rounded-md border border-white/10 bg-black/40 px-2 py-1.5 text-white placeholder:text-white/25" />
+                </label>
+              </div>
+              <label className="block text-xs font-semibold text-white/70">
+                Estimated play time
+                <input value={draftInfo.estimatedPlayTime} onChange={(event) => updateDraftInfo('estimatedPlayTime', event.target.value)} placeholder="2-3 hours" className="mt-1 w-full rounded-md border border-white/10 bg-black/40 px-2 py-1.5 text-white placeholder:text-white/25" />
+              </label>
+              <label className="block text-xs font-semibold text-white/70">
+                Creative notes
+                <textarea value={draftInfo.creativeNotes} onChange={(event) => updateDraftInfo('creativeNotes', event.target.value)} placeholder="Boss trigger, key hazards, room concept notes, desired faction or objective..." className="mt-1 h-24 w-full resize-y rounded-md border border-white/10 bg-black/40 px-2 py-1.5 text-white placeholder:text-white/25" />
+              </label>
+              <p className="text-xs leading-5 text-white/45">These notes are included in the combined JSON package for Codex handoff. They do not change the map metadata.</p>
             </ControlGroup>
 
             <label className="flex items-start gap-2 rounded-md border border-white/10 bg-black/20 p-2 text-xs leading-5 text-white/60">
@@ -865,6 +1025,7 @@ export function PremiumMapAnnotator() {
               ))}
             </AnnotationList>
 
+            <PackageOutputBox title="annotation package" value={packageOutput} filename={packageFilename} />
             <OutputBox title="premiumMap metadata" value={metadataOutput} />
             <OutputBox title="map.connections draft" value={connectionsOutput} />
           </aside>
@@ -950,6 +1111,30 @@ function OutputBox({ title, value }: { title: string; value: string }) {
         </button>
       </div>
       <textarea readOnly value={value} className="mt-2 h-56 w-full resize-y rounded-md border border-white/10 bg-black/50 p-2 font-mono text-xs leading-5 text-white/75" />
+    </section>
+  );
+}
+
+function PackageOutputBox({ title, value, filename }: { title: string; value: string; filename: string }) {
+  return (
+    <section className="rounded-md border border-amber-400/30 bg-amber-400/10 p-3">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <div>
+          <h2 className="text-sm font-black uppercase tracking-[0.12em] text-amber-200">{title}</h2>
+          <p className="mt-1 text-xs leading-5 text-white/55">Complete Codex handoff JSON: draft info, image info, premiumMap, and map.connections.</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <button type="button" onClick={() => copyText(value)} className="inline-flex items-center gap-1 rounded-md bg-amber-500 px-2 py-1 text-xs font-bold text-black">
+            <Copy className="h-3.5 w-3.5" aria-hidden="true" />
+            Copy Package
+          </button>
+          <button type="button" onClick={() => downloadTextFile(filename, value)} className="inline-flex items-center gap-1 rounded-md bg-emerald-400 px-2 py-1 text-xs font-bold text-black">
+            <Download className="h-3.5 w-3.5" aria-hidden="true" />
+            Download
+          </button>
+        </div>
+      </div>
+      <textarea readOnly value={value} className="mt-2 h-72 w-full resize-y rounded-md border border-white/10 bg-black/50 p-2 font-mono text-xs leading-5 text-white/75" />
     </section>
   );
 }

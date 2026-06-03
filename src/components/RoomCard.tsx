@@ -18,7 +18,7 @@ function previewText(text: string) {
 function DetailSection({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section>
-      <h4 className="text-xs font-bold uppercase tracking-[0.14em] text-ink/45">{title}</h4>
+      <h4 className="ledger-label text-xs font-bold uppercase text-ink/45">{title}</h4>
       <div className="mt-1">{children}</div>
     </section>
   );
@@ -60,12 +60,12 @@ export function RoomCard({
   };
 
   return (
-    <article id={`room-${room.number}`} className={`scroll-mt-36 rounded-md border bg-white p-4 shadow-tool ${expanded ? 'border-ember/50' : 'border-ink/10'}`}>
+    <article id={`room-${room.number}`} className={`paper-panel field-corner scroll-mt-36 rounded-md border p-4 shadow-tool ${expanded ? 'border-ember/50 ring-1 ring-ember/15' : 'border-slatewood/20'}`}>
       <button type="button" onClick={onToggle} className="w-full text-left">
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
-            <p className="text-xs font-bold uppercase tracking-[0.16em] text-ember">Room {room.number}</p>
-            <h3 className="font-serif text-2xl font-bold leading-tight">{room.name}</h3>
+            <p className="ledger-label text-xs font-bold uppercase text-ember">Room {room.number}</p>
+            <h3 className="survey-title font-serif text-2xl font-bold leading-tight">{room.name}</h3>
           </div>
           <div className="flex shrink-0 items-center gap-2">
             <Badge tone={threatTone(room.threat)}>{room.threat}</Badge>
@@ -83,9 +83,9 @@ export function RoomCard({
       </button>
 
       {expanded && (
-        <div className="mt-4 space-y-4 border-t border-ink/10 pt-4">
+        <div className="mt-4 space-y-4 border-t border-slatewood/20 pt-4">
           <DetailSection title="Read Aloud">
-            <p className="border-l-4 border-brass/50 pl-3 text-sm leading-6 text-ink/75">{room.readAloud}</p>
+            <p className="border-l-4 border-slatewood/35 pl-3 text-sm leading-6 text-ink/75">{room.readAloud}</p>
           </DetailSection>
 
           <DetailSection title="GM Notes">
@@ -96,7 +96,7 @@ export function RoomCard({
             {room.inhabitants.length > 0 ? (
               <div className="space-y-3">
                 {room.inhabitants.map((inhabitant) => (
-                  <div key={inhabitant.name} className="rounded-md border border-ink/10 bg-parchment/55 p-3">
+                  <div key={inhabitant.name} className="rounded-md border border-slatewood/20 bg-[#fbfaf5] p-3">
                     <h5 className="font-bold">{inhabitant.name}</h5>
                     <div className="mt-2 grid gap-2 text-sm text-ink/75 sm:grid-cols-2">
                       <Field compact label="Role" value={inhabitant.role} />
@@ -133,7 +133,7 @@ export function RoomCard({
             disabled={refreshDisabled}
             onClick={handleRefresh}
             className={`flex w-full items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-bold ${
-              !refreshDisabled ? 'border-ember bg-ember text-white' : 'border-ink/10 bg-ink/5 text-ink/45'
+              !refreshDisabled ? 'border-ember bg-ember text-white shadow-tool' : 'border-ink/10 bg-ink/5 text-ink/45'
             }`}
           >
             {refreshDisabled && <Lock className="h-4 w-4" aria-hidden="true" />}

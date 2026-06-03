@@ -4,19 +4,23 @@ export default {
   theme: {
     extend: {
       colors: {
-        parchment: '#f4efe5',
-        ink: '#211a16',
-        ember: '#b85c38',
-        moss: '#64745a',
-        brass: '#a7833f',
-        slatewood: '#3f4d55',
+        parchment: '#ece4d4',
+        ink: '#1f1a15',
+        ember: '#a65335',
+        moss: '#667a65',
+        brass: '#c18453',
+        slatewood: '#476a67',
+        dossier: '#fff9ec',
+        fieldcase: '#172326',
       },
       boxShadow: {
-        tool: '0 10px 30px rgba(33, 26, 22, 0.08)',
+        tool: '0 12px 28px rgba(31, 26, 21, 0.10)',
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
-        serif: ['Georgia', 'ui-serif', 'serif'],
+        sans: ['Inter', 'Aptos', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        serif: ['LOKI', 'Classica Prestige', 'Vectis', 'Cormorant Garamond', 'Libre Baskerville', 'Palatino Linotype', 'Book Antiqua', 'Georgia', 'ui-serif', 'serif'],
+        label: ['Aptos', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['Aptos Mono', 'Cascadia Mono', 'SFMono-Regular', 'Consolas', 'Liberation Mono', 'monospace'],
       },
     },
   },

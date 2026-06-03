@@ -20,8 +20,8 @@ const gmTabs: { id: GmTab; label: string }[] = [
 
 function InfoPill({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-md border border-ink/10 bg-parchment/60 p-3">
-      <dt className="text-xs font-bold uppercase tracking-[0.14em] text-ink/45">{label}</dt>
+    <div className="rounded-md border border-slatewood/20 bg-[#fbfaf5] p-3 shadow-sm">
+      <dt className="ledger-label text-xs font-bold uppercase text-ink/45">{label}</dt>
       <dd className="mt-1 text-sm font-bold leading-5">{value}</dd>
     </div>
   );
@@ -72,8 +72,8 @@ export function GMView({
             <button
               type="button"
               onClick={() => (canPrintPacket ? onOpenPrint() : onLockedFeature('pdfExport'))}
-              className={`inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-bold shadow-tool ${
-                canPrintPacket ? 'bg-ember text-white hover:bg-ember/90' : 'bg-ink/10 text-ink/45 hover:bg-ink/15'
+              className={`inline-flex items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-bold shadow-tool transition ${
+                canPrintPacket ? 'border-ember bg-ember text-white hover:bg-ember/90' : 'border-ink/10 bg-ink/10 text-ink/45 hover:bg-ink/15'
               }`}
             >
               {canPrintPacket ? <Printer className="h-4 w-4" aria-hidden="true" /> : <Lock className="h-4 w-4" aria-hidden="true" />}
@@ -82,8 +82,8 @@ export function GMView({
             <button
               type="button"
               onClick={() => (canPrintPacket ? onOpenPrint() : onLockedFeature('pdfExport'))}
-              className={`inline-flex items-center justify-center gap-2 rounded-md px-3 py-2 text-sm font-bold shadow-tool ${
-                canPrintPacket ? 'bg-brass text-white hover:bg-brass/90' : 'bg-ink/10 text-ink/45 hover:bg-ink/15'
+              className={`inline-flex items-center justify-center gap-2 rounded-md border px-3 py-2 text-sm font-bold shadow-tool transition ${
+                canPrintPacket ? 'border-slatewood bg-slatewood text-white hover:bg-slatewood/90' : 'border-ink/10 bg-ink/10 text-ink/45 hover:bg-ink/15'
               }`}
             >
               {canPrintPacket ? <FileDown className="h-4 w-4" aria-hidden="true" /> : <Lock className="h-4 w-4" aria-hidden="true" />}
@@ -92,14 +92,14 @@ export function GMView({
           </div>
         </div>
       </div>
-      <div className="flex gap-2 overflow-x-auto pb-1">
+      <div className="flex gap-2 overflow-x-auto rounded-md border border-slatewood/20 bg-[#fbfaf5]/85 p-1 shadow-sm">
         {gmTabs.map((tab) => (
           <button
             key={tab.id}
             type="button"
             onClick={() => setActiveTab(tab.id)}
-            className={`shrink-0 rounded-md border px-3 py-2 text-sm font-bold ${
-              activeTab === tab.id ? 'border-ember bg-ember text-white' : 'border-ink/10 bg-white text-ink/70'
+            className={`shrink-0 rounded-md border px-3 py-2 text-sm font-bold transition ${
+              activeTab === tab.id ? 'border-slatewood bg-slatewood text-white shadow-tool' : 'border-transparent bg-transparent text-ink/70 hover:bg-slatewood/10'
             }`}
           >
             {tab.label}
@@ -109,7 +109,7 @@ export function GMView({
 
       {activeTab === 'setup' && (
         <Panel>
-          <h3 className="font-serif text-2xl font-bold">Story Setup</h3>
+          <h3 className="survey-title font-serif text-2xl font-bold">Story Setup</h3>
           <p className="mt-3 text-sm leading-6 text-ink/75">{dungeon.background}</p>
           <dl className="mt-4 grid gap-3 sm:grid-cols-2">
             <InfoPill label="Theme" value={dungeon.theme} />
@@ -126,8 +126,8 @@ export function GMView({
           <Panel className="p-3">
             <div className="flex items-center justify-between gap-3">
               <div>
-                <h3 className="font-serif text-xl font-bold">Room Index</h3>
-                <p className="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-ink/45">Tap a room to expand and jump</p>
+                <h3 className="survey-title font-serif text-xl font-bold">Room Index</h3>
+                <p className="ledger-label mt-1 text-xs font-semibold uppercase text-ink/45">Tap a room to expand and jump</p>
               </div>
               <Badge tone="accent">{dungeon.rooms.length} rooms</Badge>
             </div>
@@ -138,7 +138,7 @@ export function GMView({
                   type="button"
                   onClick={() => openRoom(room.number, true)}
                   className={`rounded-md border p-2 text-left text-sm ${
-                    expandedRoom === room.number ? 'border-ember bg-ember/10' : 'border-ink/10 bg-parchment/60 hover:bg-parchment'
+                    expandedRoom === room.number ? 'border-ember bg-ember/10' : 'border-slatewood/20 bg-[#fbfaf5] hover:bg-slatewood/10'
                   }`}
                 >
                   <div className="flex items-start justify-between gap-2">
@@ -174,10 +174,10 @@ export function GMView({
       {activeTab === 'treasure' && <EncounterTable title="Treasure Table" die="d6" entries={dungeon.treasureTable} />}
       {activeTab === 'notes' && (
         <Panel>
-          <h3 className="font-serif text-2xl font-bold">GM Notes</h3>
+          <h3 className="survey-title font-serif text-2xl font-bold">GM Notes</h3>
           <ul className="mt-4 space-y-3">
             {dungeon.gmNotes.map((note) => (
-              <li key={note} className="rounded-md border border-ink/10 bg-parchment/60 p-3 text-sm leading-6 text-ink/75">
+              <li key={note} className="rounded-md border border-slatewood/20 bg-[#fbfaf5] p-3 text-sm leading-6 text-ink/75">
                 {note}
               </li>
             ))}

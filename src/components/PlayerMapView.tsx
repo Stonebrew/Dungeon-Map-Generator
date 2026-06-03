@@ -18,10 +18,10 @@ export function PlayerMapView({ dungeon, premiumUnlocked }: { dungeon: Dungeon; 
       />
       <Panel className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h3 className="font-serif text-xl font-bold">Player Map Labels</h3>
+          <h3 className="survey-title font-serif text-xl font-bold">Player Map Labels</h3>
           <p className="mt-1 text-sm leading-6 text-ink/65">Turn room numbers off for a clean player-facing handout.</p>
         </div>
-        <label className="inline-flex items-center gap-3 rounded-md border border-ink/10 bg-white px-3 py-2 text-sm font-bold text-ink">
+        <label className="inline-flex items-center gap-3 rounded-md border border-slatewood/20 bg-[#fbfaf5] px-3 py-2 text-sm font-bold text-ink shadow-sm">
           <input
             type="checkbox"
             checked={showRoomNumbers}
@@ -33,7 +33,7 @@ export function PlayerMapView({ dungeon, premiumUnlocked }: { dungeon: Dungeon; 
       </Panel>
       <DungeonMap mode="player" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={premiumUnlocked} playerLabelsVisible={showRoomNumbers} />
       <Panel>
-        <h3 className="font-serif text-2xl font-bold">Visible To Players</h3>
+        <h3 className="survey-title font-serif text-2xl font-bold">Visible To Players</h3>
         <p className="mt-3 text-sm leading-6 text-ink/75">{playerSafeDescription}</p>
         <p className="mt-3 text-sm leading-6 text-ink/65">Hidden routes, trap marks, treasure labels, and GM-only notes are withheld.</p>
       </Panel>

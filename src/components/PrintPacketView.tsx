@@ -20,8 +20,8 @@ function PrintSection({
 }) {
   return (
     <section className={`print-section ${pageBreak ? 'print-page' : ''} ${className}`}>
-      {kicker && <p className="print-kicker text-xs font-bold uppercase tracking-[0.14em] text-ember">{kicker}</p>}
-      <h2 className="font-serif text-2xl font-bold">{title}</h2>
+      {kicker && <p className="print-kicker ledger-label text-xs font-bold uppercase text-ember">{kicker}</p>}
+      <h2 className="survey-title font-serif text-2xl font-bold">{title}</h2>
       <div className="mt-3">{children}</div>
     </section>
   );
@@ -30,7 +30,7 @@ function PrintSection({
 function PrintField({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div className="print-field">
-      <h4 className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">{label}</h4>
+      <h4 className="ledger-label text-xs font-bold uppercase text-ink/45">{label}</h4>
       <div className="mt-1 text-sm leading-6 text-ink/75">{children}</div>
     </div>
   );
@@ -39,14 +39,14 @@ function PrintField({ label, children }: { label: string; children: ReactNode })
 function PrintTable({ title, entries }: { title: string; entries: TableEntry[] }) {
   return (
     <div className="print-avoid rounded-md border border-ink/10 bg-white p-4">
-      <h3 className="font-serif text-xl font-bold">{title}</h3>
+      <h3 className="survey-title font-serif text-xl font-bold">{title}</h3>
       <div className="mt-3 overflow-hidden rounded-md border border-ink/10">
         {entries.map((entry, index) => (
           <div key={`${title}-${entry.roll}-${entry.result}`} className={`grid grid-cols-[3.25rem_1fr] ${index > 0 ? 'border-t border-ink/10' : ''}`}>
             <div className="bg-ink/5 px-3 py-2 text-center text-sm font-black">{entry.roll}</div>
             <div className="px-3 py-2 text-sm leading-6 text-ink/75">
               {entry.result}
-              {entry.type && <span className="ml-2 text-xs font-bold uppercase tracking-[0.08em] text-moss">{entry.type}</span>}
+              {entry.type && <span className="ledger-label ml-2 text-xs font-bold uppercase text-moss">{entry.type}</span>}
             </div>
           </div>
         ))}
@@ -320,10 +320,10 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
 
   return (
     <article className={`print-packet print-orientation-${printOrientation} space-y-6`}>
-      <div className="no-print flex flex-col gap-3 rounded-md border border-ink/10 bg-white p-4 shadow-tool sm:flex-row sm:items-center sm:justify-between">
+      <div className="no-print paper-panel field-corner flex flex-col gap-3 rounded-md border border-slatewood/20 p-4 shadow-tool sm:flex-row sm:items-center sm:justify-between">
         <div>
           <Badge tone="warning">Prototype print preview</Badge>
-          <h2 className="mt-2 font-serif text-3xl font-bold">Print Packet</h2>
+          <h2 className="survey-title mt-2 font-serif text-3xl font-bold">Print Packet</h2>
           <p className="mt-1 max-w-2xl text-sm leading-6 text-ink/65">
             Browser print and direct PDF download are available now. Server-side PDF, PNG, and SVG exports are not implemented yet.
           </p>
@@ -335,12 +335,12 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
               {pdfError}
             </p>
           )}
-          <div className="mt-3 grid max-w-2xl gap-3 rounded-md border border-ink/10 bg-parchment/60 p-3 text-sm text-ink sm:grid-cols-2">
+          <div className="mt-3 grid max-w-2xl gap-3 rounded-md border border-slatewood/20 bg-[#fbfaf5] p-3 text-sm text-ink sm:grid-cols-2">
             <fieldset>
-              <legend className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">Page Orientation</legend>
+              <legend className="ledger-label text-xs font-bold uppercase text-ink/45">Page Orientation</legend>
               <div className="mt-2 flex flex-wrap gap-2">
                 {(['landscape', 'portrait'] as const).map((orientation) => (
-                  <label key={orientation} className={`inline-flex items-center gap-2 rounded-md border px-3 py-2 font-bold capitalize ${printOrientation === orientation ? 'border-ember bg-white text-ember' : 'border-ink/10 bg-white/70 text-ink'}`}>
+                  <label key={orientation} className={`inline-flex items-center gap-2 rounded-md border px-3 py-2 font-bold capitalize ${printOrientation === orientation ? 'border-slatewood bg-white text-slatewood' : 'border-slatewood/20 bg-white/70 text-ink'}`}>
                     <input
                       type="radio"
                       name="print-orientation"
@@ -355,9 +355,9 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
               </div>
             </fieldset>
             <fieldset>
-              <legend className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">Player Map</legend>
+              <legend className="ledger-label text-xs font-bold uppercase text-ink/45">Player Map</legend>
               <div className="mt-2 flex flex-wrap gap-2">
-                <label className={`inline-flex items-center gap-2 rounded-md border px-3 py-2 font-bold ${showPlayerRoomNumbers ? 'border-ember bg-white text-ember' : 'border-ink/10 bg-white/70 text-ink'}`}>
+                <label className={`inline-flex items-center gap-2 rounded-md border px-3 py-2 font-bold ${showPlayerRoomNumbers ? 'border-slatewood bg-white text-slatewood' : 'border-slatewood/20 bg-white/70 text-ink'}`}>
                   <input
                     type="radio"
                     name="player-map-labels"
@@ -367,7 +367,7 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
                   />
                   Labeled
                 </label>
-                <label className={`inline-flex items-center gap-2 rounded-md border px-3 py-2 font-bold ${!showPlayerRoomNumbers ? 'border-ember bg-white text-ember' : 'border-ink/10 bg-white/70 text-ink'}`}>
+                <label className={`inline-flex items-center gap-2 rounded-md border px-3 py-2 font-bold ${!showPlayerRoomNumbers ? 'border-slatewood bg-white text-slatewood' : 'border-slatewood/20 bg-white/70 text-ink'}`}>
                   <input
                     type="radio"
                     name="player-map-labels"
@@ -386,7 +386,7 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
             <ArrowLeft className="h-4 w-4" aria-hidden="true" />
             Back
           </button>
-          <button type="button" onClick={() => window.print()} className="inline-flex items-center gap-2 rounded-md bg-ember px-3 py-2 text-sm font-bold text-white">
+          <button type="button" onClick={() => window.print()} className="inline-flex items-center gap-2 rounded-md border border-ember bg-ember px-3 py-2 text-sm font-bold text-white shadow-tool">
             <Printer className="h-4 w-4" aria-hidden="true" />
             Print
           </button>
@@ -394,7 +394,7 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
             type="button"
             onClick={handleSavePdf}
             disabled={isCreatingPdf}
-            className="inline-flex items-center gap-2 rounded-md bg-brass px-3 py-2 text-sm font-bold text-white disabled:cursor-not-allowed disabled:opacity-65"
+            className="inline-flex items-center gap-2 rounded-md border border-slatewood bg-slatewood px-3 py-2 text-sm font-bold text-white shadow-tool disabled:cursor-not-allowed disabled:opacity-65"
           >
             <FileDown className="h-4 w-4" aria-hidden="true" />
             {isCreatingPdf ? 'Creating PDF...' : 'Save as PDF'}
@@ -406,33 +406,33 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
         <PrintSection title={dungeon.title} kicker="Daily Dungeon Packet">
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">Date</p>
+              <p className="ledger-label text-xs font-bold uppercase text-ink/45">Date</p>
               <p className="mt-1 text-sm font-bold">{dungeon.dateIso}</p>
             </div>
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">Difficulty</p>
+              <p className="ledger-label text-xs font-bold uppercase text-ink/45">Difficulty</p>
               <p className="mt-1 text-sm font-bold">{dungeon.difficulty}</p>
             </div>
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">Party Size</p>
+              <p className="ledger-label text-xs font-bold uppercase text-ink/45">Party Size</p>
               <p className="mt-1 text-sm font-bold">{dungeon.partySize}</p>
             </div>
             <div>
-              <p className="text-xs font-bold uppercase tracking-[0.12em] text-ink/45">Play Time</p>
+              <p className="ledger-label text-xs font-bold uppercase text-ink/45">Play Time</p>
               <p className="mt-1 text-sm font-bold">{dungeon.estimatedPlayTime}</p>
             </div>
           </div>
           <div className="print-hook mt-4 rounded-md border border-brass/30 bg-brass/10 p-4">
-            <p className="text-xs font-bold uppercase tracking-[0.14em] text-brass">Story Hook</p>
+            <p className="ledger-label text-xs font-bold uppercase text-brass">Story Hook</p>
             <p className="mt-2 text-sm leading-6 text-ink/75">{dungeon.hook}</p>
           </div>
           <div className="mt-4 grid gap-4 lg:grid-cols-[1.2fr_0.8fr]">
             <div>
-              <h3 className="font-serif text-xl font-bold">GM Summary</h3>
+              <h3 className="survey-title font-serif text-xl font-bold">GM Summary</h3>
               <p className="mt-2 text-sm leading-6 text-ink/75">{dungeon.background}</p>
             </div>
             <div>
-              <h3 className="font-serif text-xl font-bold">Running Notes</h3>
+              <h3 className="survey-title font-serif text-xl font-bold">Running Notes</h3>
               <ul className="mt-2 list-disc space-y-2 pl-5 text-sm leading-6 text-ink/75">
                 {dungeon.gmNotes.map((note) => (
                   <li key={note}>{note}</li>
@@ -445,7 +445,7 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
         <PrintSection title="GM Map" kicker="Page 2" pageBreak className="pdf-map-section">
           <figure className="print-map-frame">
             <DungeonMap mode="gm" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} showLegend presentation="print" />
-            <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.12em] text-ink/55">
+            <figcaption className="ledger-label mt-2 text-xs font-semibold uppercase text-ink/55">
               GM reference map. Includes keyed areas, GM markers, secret routes, and map legend.
             </figcaption>
           </figure>
@@ -455,7 +455,7 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
           {dungeon.map.playerSafe.description && <p className="pdf-map-description mb-3 text-sm leading-6 text-ink/65">{dungeon.map.playerSafe.description}</p>}
           <figure className="print-map-frame">
             <DungeonMap mode="player" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} showLegend presentation="print" playerLabelsVisible={showPlayerRoomNumbers} />
-            <figcaption className="mt-2 text-xs font-semibold uppercase tracking-[0.12em] text-ink/55">
+            <figcaption className="ledger-label mt-2 text-xs font-semibold uppercase text-ink/55">
               {showPlayerRoomNumbers
                 ? 'Player-safe map. Keyed numbers remain visible, but GM markers, hidden routes, treasure, hazards, and GM-only labels are not shown.'
                 : 'Clean player-safe map. Room numbers, GM markers, hidden routes, treasure, hazards, and GM-only labels are not shown.'}
@@ -471,8 +471,8 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
                   <div className="flex items-start gap-3">
                     <span className="print-room-number flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-ink text-lg font-black text-white">{room.number}</span>
                     <div>
-                      <p className="text-xs font-bold uppercase tracking-[0.14em] text-ember">Keyed Area</p>
-                      <h3 className="font-serif text-xl font-bold">{room.name}</h3>
+                      <p className="ledger-label text-xs font-bold uppercase text-ember">Keyed Area</p>
+                      <h3 className="survey-title font-serif text-xl font-bold">{room.name}</h3>
                     </div>
                   </div>
                   <div className="flex flex-wrap gap-1">

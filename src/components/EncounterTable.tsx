@@ -5,13 +5,13 @@ export function EncounterTable({ title, die, entries }: { title: string; die: st
   return (
     <Panel>
       <div className="flex items-center justify-between gap-3">
-        <h3 className="font-serif text-xl font-bold">{title}</h3>
+        <h3 className="survey-title font-serif text-xl font-bold">{title}</h3>
         <Badge tone="accent">{die}</Badge>
       </div>
-      <div className="mt-4 overflow-hidden rounded-md border border-ink/10">
+      <div className="mt-4 overflow-hidden rounded-md border border-slatewood/20 bg-[#fbfaf5]">
         {entries.map((entry, index) => (
-          <div key={`${entry.roll}-${entry.result}`} className={`grid grid-cols-[3rem_1fr] ${index > 0 ? 'border-t border-ink/10' : ''}`}>
-            <div className="bg-ink/5 px-3 py-3 text-center text-sm font-black">{entry.roll}</div>
+          <div key={`${entry.roll}-${entry.result}`} className={`grid grid-cols-[3rem_1fr] ${index > 0 ? 'border-t border-slatewood/20' : ''}`}>
+            <div className="bg-slatewood/10 px-3 py-3 text-center text-sm font-black text-slatewood">{entry.roll}</div>
             <div className="px-3 py-3 text-sm leading-6 text-ink/75">
               {entry.result}
               {entry.type && <span className="ml-2 inline-block"><Badge tone="success">{entry.type}</Badge></span>}

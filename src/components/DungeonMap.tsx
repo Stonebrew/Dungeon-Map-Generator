@@ -92,26 +92,31 @@ export function DungeonMap({
   const palette = createMapPalette({ enhanced, isPlayer, presentation });
   const isPrintPresentation = presentation === 'print';
   const showLabels = !isPlayer || playerLabelsVisible;
+  const hasLegendContent = showLabels || !isPlayer;
 
   return (
-    <div className={`overflow-hidden rounded-md border bg-white shadow-tool ${isPrintPresentation ? 'border-ink/35 print-map-card' : 'border-ink/10'}`}>
-      <div className={`flex items-center justify-between gap-3 border-b px-4 ${isPrintPresentation ? 'border-ink/25 bg-white' : 'border-ink/10'} ${compact ? 'py-2.5' : 'py-3'}`}>
+    <div className={`map-ledger-frame overflow-hidden rounded-md border shadow-tool ${isPrintPresentation ? 'border-ink/35 print-map-card' : 'border-[#bba98f]'}`}>
+      <div
+        className={`flex items-center justify-between gap-3 border-b px-4 ${
+          isPrintPresentation ? 'border-ink/25 bg-white' : 'border-[#cdbfa9] bg-[#fbf4e6]/95'
+        } ${compact ? 'py-2.5' : 'py-3'}`}
+      >
         <div>
-          <h2 className={`font-serif font-bold ${compact ? 'text-lg' : 'text-xl'}`}>{isPlayer ? 'Player-Safe Map' : isFog ? 'Fog-of-War Map' : 'GM Map Preview'}</h2>
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-ink/45">{isPrintPresentation ? 'Print-optimized map' : enhanced ? 'Enhanced tabletop map' : 'Lantern black-and-white map'}</p>
+          <h2 className={`survey-title font-serif font-bold ${compact ? 'text-lg' : 'text-xl'}`}>{isPlayer ? 'Player-Safe Map' : isFog ? 'Fog-of-War Map' : 'GM Map Preview'}</h2>
+          <p className="ledger-label text-xs font-semibold uppercase text-ink/45">{isPrintPresentation ? 'Print-optimized map' : enhanced ? 'Enhanced tabletop map' : 'Lantern black-and-white map'}</p>
         </div>
         {isPlayer ? <Badge tone="success">Secrets hidden</Badge> : <Badge tone="accent">GM labels</Badge>}
       </div>
 
-      <svg viewBox="0 0 720 480" role="img" aria-label={`${isPlayer ? 'Player safe' : 'GM'} dungeon map`} className={`h-auto w-full ${isPrintPresentation ? 'bg-[#f8f1e2]' : enhanced ? 'bg-[#efe7d6]' : 'bg-[#f7f7f7]'}`}>
+      <svg viewBox="0 0 720 480" role="img" aria-label={`${isPlayer ? 'Player safe' : 'GM'} dungeon map`} className={`h-auto w-full ${isPrintPresentation ? 'bg-[#f8f1e2]' : enhanced ? 'bg-[#edf0ec]' : 'bg-[#fff9ec]'}`}>
         <MapDefs />
         <MapTexture isPlayer={isPlayer} enhanced={enhanced && !isPrintPresentation} />
         <MapContent mapData={mapData} mapStyle={mapStyle} palette={palette} isPlayer={isPlayer} enhanced={enhanced} presentation={presentation} showLabels={showLabels} />
         {isFog && <rect x="46" y="44" width="628" height="392" fill="#211a16" opacity="0.22" />}
       </svg>
 
-      {showLegend && (
-        <div className="flex flex-wrap gap-2 border-t border-ink/10 px-4 py-2 text-xs font-bold text-ink/55">
+      {showLegend && hasLegendContent && (
+        <div className="flex flex-wrap gap-2 border-t border-[#cdbfa9] bg-[#f4ead8]/95 px-4 py-2 text-xs font-bold text-ink/60">
           {showLabels && <span>Numbers: keyed rooms</span>}
           {!isPlayer && <span>T: treasure</span>}
           {!isPlayer && <span>H: hazard</span>}

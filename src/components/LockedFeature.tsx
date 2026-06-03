@@ -23,7 +23,7 @@ export function LockedFeature({
               <Lock className="h-5 w-5" aria-hidden="true" />
             </span>
             <div>
-              <h2 className="font-serif text-3xl font-bold">{label}</h2>
+              <h2 className="survey-title font-serif text-3xl font-bold">{label}</h2>
               <p className="mt-1 text-sm font-bold text-ink/60">Available in {getTierLabel(requiredTier)} and above.</p>
             </div>
           </div>
