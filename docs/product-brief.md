@@ -14,17 +14,17 @@ The first prototype demonstrates the daily dungeon reading experience with mock 
 - Player Safe Map View
 - Encounter Tables
 - Premium / Upgrade section
-- Reroll / Refresh panel
+- New Packet Refresh panel
 
 ## Subscription Model
 
-The prototype uses three mock tiers: Lantern, Adventurer, and Dungeonwright. Lantern is free, Adventurer unlocks table-use features, and Dungeonwright unlocks advanced control features.
+The current visible prototype uses two tiers: Surveyor and Cartographer. Surveyor is the free/basic preview tier, and Cartographer is the core map-and-packet tier. A third tier is postponed until advanced controls, archives, or export bundles have a stronger value proposition.
 
-Feature entitlement checks are centralized in `src/lib/entitlements.ts`. The temporary mock dungeon and mock user tier selectors are isolated in the Prototype Dev Panel and should be replaced by real daily generation and account data later.
+Feature entitlement checks are centralized in `src/lib/entitlements.ts`. The sample dungeon and preview tier selectors are isolated in the Sample Dungeon Selector and should be replaced by real daily generation and account data later.
 
 Mock dungeon payloads now include backend-planning fields such as ISO dates, stable room IDs, structured exits, and `map.connections` as the source of truth for map connectivity. Run `npm run validate:dungeons` before changing mock dungeon content or map routes.
 
-Prototype app state is isolated in `src/hooks/useMockDailyDungeonApp.ts`. This hook currently owns mock dungeon selection, mock tier selection, favorites, reroll resources, locked feature state, and view routing until real backend/account APIs exist.
+Prototype app state is isolated in `src/hooks/useMockDailyDungeonApp.ts`. This hook currently owns sample dungeon selection, preview tier selection, favorites, New Packet Refresh resources, locked feature state, and view routing until real backend/account APIs exist.
 
 ## Out Of Scope
 
@@ -35,3 +35,4 @@ Prototype app state is isolated in `src/hooks/useMockDailyDungeonApp.ts`. This h
 - Payment processing
 - Real PDF export
 - External API calls
+

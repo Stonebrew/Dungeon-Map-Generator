@@ -66,7 +66,7 @@ export function DungeonSummary({
   const hasPdfExport = canAccessFeature(tier, 'pdfExport');
   const hasArchive = canAccessFeature(tier, 'archive');
   const hasFavorite = canAccessFeature(tier, 'favorite');
-  const hasRerolls = canAccessFeature(tier, 'fullReroll');
+  const hasNewPacketRefresh = canAccessFeature(tier, 'fullReroll');
 
   const selectPremiumFeature = (feature: FeatureKey, unlockedView?: 'player' | 'rerolls') => {
     if (canAccessFeature(tier, feature) && unlockedView) {
@@ -133,9 +133,9 @@ export function DungeonSummary({
             onClick={() => (hasPdfExport ? onNavigate('print') : onLockedFeature('pdfExport'))}
           />
           <ActionButton
-            label="Reroll"
+            label="Refresh"
             icon={RefreshCcw}
-            locked={!hasRerolls}
+            locked={!hasNewPacketRefresh}
             onClick={() =>
               selectPremiumFeature(
                 'fullReroll',
@@ -156,8 +156,8 @@ export function DungeonSummary({
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <Badge tone="warning">Premium</Badge>
-            <h2 className="survey-title mt-2 font-serif text-xl font-bold">Unlock player maps, archive access, and rerolls.</h2>
-            <p className="mt-1 text-sm leading-6 text-ink/65">Adventurer adds the tools most useful during live play.</p>
+            <h2 className="survey-title mt-2 font-serif text-xl font-bold">Unlock player maps, archive access, and packet refresh.</h2>
+            <p className="mt-1 text-sm leading-6 text-ink/65">Cartographer adds the map and packet tools most useful during live play.</p>
           </div>
           <button type="button" onClick={() => onNavigate('upgrade')} className="rounded-md border border-slatewood bg-slatewood px-3 py-2 text-sm font-bold text-white shadow-tool transition hover:bg-slatewood/90">
             View Plans

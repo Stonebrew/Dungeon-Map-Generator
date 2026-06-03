@@ -11,7 +11,7 @@ Daily Dungeon already has strong export ingredients:
 - 10 validated mock dungeon fixtures with stable IDs, ISO dates, structured room exits, encounter tables, treasure tables, GM notes, and player-safe map rules.
 - A shared `Dungeon` contract in `src/types.ts`.
 - `map.connections` as the source of truth for route rendering and exits.
-- Lantern schematic maps plus premium Level 2 maps for Adventurer and Dungeonwright.
+- Surveyor schematic maps plus premium Level 2 maps for Cartographer.
 - Distinct GM and player-safe map rendering, with secret routes and GM markers hidden from player maps.
 - Run Mode and GM View surfaces that prove the data is table-usable.
 - Fixture export via `npm run export:fixtures`, producing backend-seed JSON under `fixtures/dungeons/`.
@@ -198,6 +198,8 @@ The prototype Print Packet view uses the currently selected dungeon and includes
 - Today and GM View now surface this feature as Print / Export Packet plus a visible Save as PDF entry point, both leading to the Print Packet view where the direct PDF button is available.
 - Print-specific room cards, map frames, captions, section labels, and page-break rules for a more usable table packet.
 - Print-specific map presentation mode for GM and player-safe maps, with stronger label contrast, clearer route strokes, reduced decorative texture, and cleaner print framing.
+- Browser print and app Save as PDF now share a compact map-frame direction: section headings/captions carry the packet structure, while redundant in-card map chrome is reduced for larger printed maps.
+- Portrait and landscape browser print use the same compact map-frame treatment; only available page dimensions and map scaling differ by orientation.
 - User-facing helper text explaining that browser print and direct client-side PDF download are available, while server-side PDF, PNG, and SVG exports remain future work.
 
 Done when:
@@ -227,7 +229,7 @@ Next, harden the browser-print packet preview for private playtesting.
 
 Scope:
 
-- QA the Print Packet view across Lantern locked behavior, Adventurer GM maps, and Adventurer player-safe maps.
+- QA the Print Packet view across Surveyor locked behavior, Cartographer GM maps, and Cartographer player-safe maps.
 - Add print QA screenshots or a checklist for all 10 environments.
 - Improve page numbers, headers/footers, print presets, and compact room density if playtesters print full packets.
 - Add a feedback prompt asking whether GMs printed, saved PDF, or ran from mobile.
@@ -249,8 +251,8 @@ Before charging for export as a premium value driver, build:
 
 Done when:
 
-- Adventurer users can reliably create a polished printable adventure packet.
-- Dungeonwright users can eventually generate export bundles if that tier remains.
+- Cartographer users can reliably create a polished printable adventure packet.
+- A third tier is postponed until export bundles or advanced controls have a stronger value proposition.
 - Exported player maps never leak GM-only content.
 - Export quality is consistent enough to be a subscription selling point.
 
@@ -276,9 +278,9 @@ Questions to validate before payments:
 
 - Do GMs print packets, run from the app, or use both?
 - Is player-safe map export more valuable than in-app Player Map?
-- Are premium maps enough to drive Adventurer conversion?
+- Are premium maps enough to drive Cartographer conversion?
 - Would users pay monthly for daily dungeons, or prefer themed packs?
-- Does Dungeonwright need export bundles more than advanced controls?
+- Should a future third tier focus on export bundles, archives, or advanced controls?
 - Would a polished printable packet convert users more strongly than daily generation alone?
 
 ## Before Private Playtesting
@@ -287,7 +289,7 @@ Build or verify:
 
 - Browser print packet preview.
 - Print CSS for maps and room notes.
-- Manual QA for at least Lantern, Adventurer GM map, and Adventurer player map.
+- Manual QA for at least Surveyor locked/basic behavior, Cartographer GM map, and Cartographer player map.
 - A feedback question asking whether users printed, saved PDF, or ran from mobile.
 - Basic player-safe leakage checklist.
 
@@ -310,7 +312,7 @@ Do not charge for a mocked PDF button or export flow that only implies a real fi
 
 - Server-side PDF jobs until browser print proves the packet format.
 - PNG/SVG export options beyond maps until basic packet value is validated.
-- Dungeonwright export bundle until Adventurer export value is clear.
+- Postpone third-tier export bundles until Cartographer export value is clear.
 - Player handouts beyond player-safe map unless safe handout copy is added.
 - VTT export.
 - Print-on-demand or marketplace features.
@@ -338,3 +340,4 @@ Why this first:
 - Player-safe leakage would seriously damage trust in paid exports.
 - QA can happen before adding PDF libraries or backend export jobs.
 - It keeps the work grounded in real browser print output before building heavier export infrastructure.
+

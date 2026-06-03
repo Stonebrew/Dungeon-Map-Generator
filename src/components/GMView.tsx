@@ -30,22 +30,17 @@ function InfoPill({ label, value }: { label: string; value: string }) {
 export function GMView({
   dungeon,
   tier,
-  partialRefreshRemaining,
-  onUsePartialRefresh,
   onOpenPrint,
   onLockedFeature,
 }: {
   dungeon: Dungeon;
   tier: TierId;
-  partialRefreshRemaining: number;
-  onUsePartialRefresh: () => boolean;
   onOpenPrint: () => void;
   onLockedFeature: (feature: FeatureKey) => void;
 }) {
   const [activeTab, setActiveTab] = useState<GmTab>('setup');
   const [expandedRoom, setExpandedRoom] = useState<number | undefined>();
   const hasColorMap = canAccessFeature(tier, 'colorMap');
-  const canRefreshRooms = canAccessFeature(tier, 'partialRefresh');
   const canPrintPacket = canAccessFeature(tier, 'pdfExport');
 
   useEffect(() => {
@@ -160,9 +155,6 @@ export function GMView({
               <RoomCard
                 key={room.number}
                 room={room}
-                canRefresh={canRefreshRooms}
-                partialRefreshRemaining={partialRefreshRemaining}
-                onRefresh={() => onUsePartialRefresh()}
                 expanded={expandedRoom === room.number}
                 onToggle={() => openRoom(room.number)}
               />

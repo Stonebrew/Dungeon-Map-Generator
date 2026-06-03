@@ -23,7 +23,7 @@ const viewItems: { id: ViewId; label: string; icon: typeof BookOpen }[] = [
   { id: 'archive', label: 'Archive', icon: Archive },
   { id: 'encounters', label: 'Tables', icon: Dice5 },
   { id: 'upgrade', label: 'Plans', icon: Crown },
-  { id: 'rerolls', label: 'Rerolls', icon: RefreshCcw },
+  { id: 'rerolls', label: 'Refresh', icon: RefreshCcw },
 ];
 
 function App() {
@@ -48,6 +48,7 @@ function DailyDungeonApp() {
     placeholderFeature,
     selectedDungeonId,
     selectedDungeon,
+    newPacketRefreshTarget,
     selectedTier,
     currentPlan,
     savedDungeonIds,
@@ -63,7 +64,6 @@ function DailyDungeonApp() {
     showLockedFeature,
     toggleFavorite,
     selectArchivedDungeon,
-    consumeRerollResource,
   } = appState;
 
   return (
@@ -119,8 +119,6 @@ function DailyDungeonApp() {
               <GMView
                 dungeon={selectedDungeon}
                 tier={selectedTier}
-                partialRefreshRemaining={sessionRerollCounts[selectedTier].remainingPartial}
-                onUsePartialRefresh={() => consumeRerollResource('partial')}
                 onOpenPrint={() => navigateTo('print')}
                 onLockedFeature={showLockedFeature}
               />
@@ -142,8 +140,8 @@ function DailyDungeonApp() {
                 tier={selectedTier}
                 rerolls={sessionRerollCounts[selectedTier]}
                 allowance={rerollAllowancesByTier[selectedTier]}
-                onUseFullReroll={() => consumeRerollResource('full')}
-                onUsePartialRefresh={() => consumeRerollResource('partial')}
+                newPacketRefreshTarget={newPacketRefreshTarget}
+                onUseNewPacketRefresh={appState.useNewPacketRefresh}
                 onLockedFeature={showLockedFeature}
               />
             )}

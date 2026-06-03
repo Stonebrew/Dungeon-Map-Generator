@@ -72,14 +72,14 @@ const featureDefinitions: Record<FeatureKey, FeatureDefinition> = {
     description: 'Mark useful dungeons so they can be found again later when real storage exists.',
   },
   fullReroll: {
-    label: 'Reroll / Refresh Tools',
+    label: 'New Packet Refresh',
     requiredTier: 'adventurer',
-    description: 'Adjust today’s dungeon with full rerolls, map-preserving variants, or targeted partial refreshes.',
+    description: "Switch to today's alternate complete dungeon packet. This does not partially regenerate rooms or maps.",
   },
   partialRefresh: {
-    label: 'Partial Refresh',
+    label: 'Room Refresh',
     requiredTier: 'adventurer',
-    description: 'Refresh a single room, encounter table, treasure result, story hook, or dungeon section.',
+    description: 'Future map-safe room text, encounter, treasure, hook, or clue refreshes can live here.',
   },
   advancedControls: {
     label: 'Advanced Controls',
@@ -161,8 +161,8 @@ export function getFeatureDescription(feature: FeatureKey) {
 
 export function getTierLabel(tier: TierId) {
   const labels: Record<TierId, string> = {
-    lantern: 'Lantern',
-    adventurer: 'Adventurer',
+    lantern: 'Surveyor',
+    adventurer: 'Cartographer',
     dungeonwright: 'Dungeonwright',
   };
 

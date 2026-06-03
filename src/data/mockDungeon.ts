@@ -8,51 +8,51 @@ export const currentTier: TierId = 'lantern';
 export const plans: Plan[] = [
   {
     id: 'lantern',
-    name: 'Lantern',
+    name: 'Surveyor',
     priceLabel: 'Free',
-    tagline: 'A shared dungeon for tonight.',
+    tagline: 'A basic map-and-packet preview for trying the workflow.',
     featureGroups: [
       {
-        title: 'Daily dungeon access',
-        features: ['One global daily dungeon', 'Basic room descriptions', 'Basic encounter tables'],
+        title: 'Packet preview',
+        features: ['One shared daily dungeon', 'Basic room descriptions', 'Encounter and treasure tables'],
       },
       {
         title: 'Maps and exports',
-        features: ['Black-and-white GM map', 'No player-safe map', 'No PDF export', 'No archive'],
+        features: ['Simple schematic GM map', 'Player maps locked', 'Print and PDF export locked', 'Session archive locked'],
       },
       {
-        title: 'Rerolls and refreshes',
-        features: ['No full rerolls', 'No partial refreshes'],
+        title: 'Refresh tools',
+        features: ['No New Packet Refresh'],
       },
       {
         title: 'Customization',
         features: ['No advanced customization'],
       },
     ],
-    rerolls: '0 full rerolls',
-    refreshes: '0 partial refreshes',
+    rerolls: '0 daily refreshes',
+    refreshes: 'Refreshes locked',
   },
   {
     id: 'adventurer',
-    name: 'Adventurer',
-    priceLabel: 'Low Premium',
-    tagline: 'More usable at the table.',
+    name: 'Cartographer',
+    priceLabel: 'Core',
+    tagline: 'The full map-and-packet experience for table prep.',
     featureGroups: [
       {
-        title: 'Daily dungeon access',
-        features: ['Everything in Lantern'],
+        title: 'Packet access',
+        features: ['Everything in Surveyor'],
       },
       {
         title: 'Maps and exports',
-        features: ['Color map', 'Player-safe map', 'GM map', 'Print and PDF packet export', 'Session archive preview', 'Save/favorite dungeons preview'],
+        features: ['Premium illustrated maps when available', 'GM map', 'Player labeled map', 'Player clean map', 'Print and PDF packet export', 'Session archive preview'],
       },
       {
-        title: 'Rerolls and refreshes',
-        features: ['1 full dungeon reroll per day', 'Stored full rerolls up to 2', '2 partial refreshes per day', 'Stored partial refreshes up to 4'],
+        title: 'Limited refresh tools',
+        features: ['1 New Packet Refresh per day', 'Switches to a complete alternate packet', 'No room-level partial refresh controls'],
       },
     ],
-    rerolls: '1 daily / 2 stored',
-    refreshes: '2 daily / 4 stored',
+    rerolls: '1 daily refresh',
+    refreshes: 'No partial refresh',
   },
   {
     id: 'dungeonwright',
@@ -62,11 +62,11 @@ export const plans: Plan[] = [
     featureGroups: [
       {
         title: 'Daily dungeon access',
-        features: ['Everything in Adventurer'],
+        features: ['Everything in Cartographer'],
       },
       {
-        title: 'Rerolls and refreshes',
-        features: ['2 full dungeon rerolls per day', 'Stored full rerolls up to 4', '6 partial refreshes per day', 'Stored partial refreshes up to 12'],
+        title: 'Future refresh tools',
+        features: ['Additional packet refresh capacity', 'Map-safe room text refresh concepts', 'Encounter, treasure, hook, and clue refresh concepts'],
       },
       {
         title: 'Customization',
@@ -77,8 +77,8 @@ export const plans: Plan[] = [
         features: ['Puzzle frequency control preview', 'Hazard frequency control preview', 'Treasure frequency control preview', 'Secret room frequency control preview', 'Fog-of-war map view', 'Export bundle preview'],
       },
     ],
-    rerolls: '2 daily / 4 stored',
-    refreshes: '6 daily / 12 stored',
+    rerolls: 'Future capacity',
+    refreshes: 'Future tools',
   },
 ];
 
@@ -91,9 +91,9 @@ export const rerollCountsByTier: Record<TierId, RerollCounts> = {
   },
   adventurer: {
     remainingFull: 1,
-    storedFull: 1,
-    remainingPartial: 2,
-    storedPartial: 3,
+    storedFull: 0,
+    remainingPartial: 0,
+    storedPartial: 0,
   },
   dungeonwright: {
     remainingFull: 2,
@@ -110,7 +110,7 @@ export const rerollAllowancesByTier: Record<TierId, RerollAllowance> = {
   },
   adventurer: {
     fullDailyLimit: 1,
-    partialDailyLimit: 2,
+    partialDailyLimit: 0,
   },
   dungeonwright: {
     fullDailyLimit: 2,

@@ -1,32 +1,25 @@
-import { Lock } from 'lucide-react';
-import { useState } from 'react';
-import type { RerollAllowance, RerollCounts, TierId } from '../types';
-import { canAccessFeature, getFeatureDescription, getFeatureLabel, type FeatureKey } from '../lib/entitlements';
+import { Lock, RefreshCcw } from 'lucide-react';
+import type { Dungeon, RerollAllowance, RerollCounts, TierId } from '../types';
+import { canAccessFeature, type FeatureKey } from '../lib/entitlements';
 import { Badge, Panel, SectionHeader } from './Badge';
 
 function ResourceCard({
-  label,
   dailyLimit,
   remaining,
-  stored,
   note,
 }: {
-  label: string;
   dailyLimit: number;
   remaining: number;
-  stored: number;
   note: string;
 }) {
-  const storedCap = dailyLimit * 2;
-
   return (
     <div className="rounded-md border border-ink/10 bg-white p-4 shadow-tool">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="ledger-label text-xs font-bold uppercase text-ink/45">{label}</p>
+          <p className="ledger-label text-xs font-bold uppercase text-ink/45">New Packet Refreshes</p>
           <p className="mt-1 text-sm leading-6 text-ink/65">{note}</p>
         </div>
-        <Badge tone={dailyLimit > 0 ? 'success' : 'neutral'}>{dailyLimit > 0 ? 'Available' : 'Locked'}</Badge>
+        <Badge tone={dailyLimit > 0 ? 'success' : 'neutral'}>{dailyLimit > 0 ? 'Cartographer' : 'Locked'}</Badge>
       </div>
       <dl className="mt-4 grid grid-cols-2 gap-3">
         <div className="rounded-md bg-parchment p-3">
@@ -34,99 +27,11 @@ function ResourceCard({
           <dd className="survey-title mt-1 font-serif text-3xl font-bold">{dailyLimit}</dd>
         </div>
         <div className="rounded-md bg-parchment p-3">
-          <dt className="ledger-label text-xs font-bold uppercase text-ink/45">Remaining</dt>
+          <dt className="ledger-label text-xs font-bold uppercase text-ink/45">Remaining today</dt>
           <dd className="survey-title mt-1 font-serif text-3xl font-bold">{remaining}</dd>
-        </div>
-        <div className="rounded-md bg-parchment p-3">
-          <dt className="ledger-label text-xs font-bold uppercase text-ink/45">Stored</dt>
-          <dd className="survey-title mt-1 font-serif text-3xl font-bold">{stored}</dd>
-        </div>
-        <div className="rounded-md bg-parchment p-3">
-          <dt className="ledger-label text-xs font-bold uppercase text-ink/45">Stored cap</dt>
-          <dd className="survey-title mt-1 font-serif text-3xl font-bold">{storedCap}</dd>
         </div>
       </dl>
     </div>
-  );
-}
-
-function RerollTypeCard({
-  title,
-  text,
-  buttonLabel,
-  poolLabel,
-  locked,
-  depleted,
-  onUse,
-}: {
-  title: string;
-  text: string;
-  buttonLabel: string;
-  poolLabel: string;
-  locked: boolean;
-  depleted: boolean;
-  onUse: () => void;
-}) {
-  const disabled = locked || depleted;
-
-  return (
-    <article className={`rounded-md border p-4 shadow-tool ${disabled ? 'border-ink/10 bg-ink/5 text-ink/45' : 'border-ember bg-white'}`}>
-      <div className="flex items-start justify-between gap-3">
-        <h3 className="survey-title font-serif text-xl font-bold">{title}</h3>
-        {disabled && <Lock className="h-5 w-5" aria-hidden="true" />}
-      </div>
-      <p className="mt-2 text-sm leading-6">{text}</p>
-      <p className="ledger-label mt-3 text-xs font-bold uppercase text-ink/45">{depleted && !locked ? 'No preview uses remaining today' : poolLabel}</p>
-      <button type="button" disabled={disabled} onClick={onUse} className="mt-4 w-full rounded-md bg-ember px-3 py-2 text-sm font-bold text-white disabled:bg-ink/10 disabled:text-ink/40">
-        {buttonLabel}
-      </button>
-    </article>
-  );
-}
-
-function PremiumControl({
-  feature,
-  options,
-  tier,
-  onLockedFeature,
-}: {
-  feature: FeatureKey;
-  options: string[];
-  tier: TierId;
-  onLockedFeature: (feature: FeatureKey) => void;
-}) {
-  const unlocked = canAccessFeature(tier, feature);
-  const label = getFeatureLabel(feature);
-  const controlClasses = `block rounded-md border p-3 text-left ${unlocked ? 'border-ink/10 bg-white' : 'border-ink/10 bg-ink/5 text-ink/45 hover:bg-ink/10'}`;
-
-  if (!unlocked) {
-    return (
-      <button
-        type="button"
-        className={controlClasses}
-        onClick={() => onLockedFeature(feature)}
-        title={getFeatureDescription(feature)}
-      >
-        <span className="ledger-label flex items-center justify-between gap-2 text-xs font-bold uppercase">
-          {label}
-          <Lock className="h-4 w-4" aria-hidden="true" />
-        </span>
-        <span className="mt-2 block rounded-md border border-ink/10 px-3 py-2 text-sm font-semibold">{options[0]}</span>
-      </button>
-    );
-  }
-
-  return (
-    <label className={controlClasses}>
-      <span className="ledger-label flex items-center justify-between gap-2 text-xs font-bold uppercase">
-        {label}
-      </span>
-      <select className="mt-2 w-full rounded-md border border-ink/10 bg-white px-3 py-2 text-sm font-semibold">
-        {options.map((option) => (
-          <option key={option}>{option}</option>
-        ))}
-      </select>
-    </label>
   );
 }
 
@@ -134,106 +39,77 @@ export function RerollPanel({
   tier,
   rerolls,
   allowance,
-  onUseFullReroll,
-  onUsePartialRefresh,
+  newPacketRefreshTarget,
+  onUseNewPacketRefresh,
   onLockedFeature,
 }: {
   tier: TierId;
   rerolls: RerollCounts;
   allowance: RerollAllowance;
-  onUseFullReroll: () => boolean;
-  onUsePartialRefresh: () => boolean;
+  newPacketRefreshTarget?: Dungeon;
+  onUseNewPacketRefresh: () => boolean;
   onLockedFeature: (feature: FeatureKey) => void;
 }) {
-  const [feedback, setFeedback] = useState<string>();
-  const controls = [
-    { feature: 'themeSelector' as FeatureKey, options: ['Flooded shrine', 'Lost mine', 'Forest barrow'] },
-    { feature: 'difficultySelector' as FeatureKey, options: ['Low', 'Moderate', 'High', 'Severe'] },
-    { feature: 'dayNightVariant' as FeatureKey, options: ['Day', 'Night', 'Twilight'] },
-    { feature: 'fogOfWar' as FeatureKey, options: ['Explored only', 'Room reveal', 'GM reveal'] },
-    { feature: 'dungeonSize' as FeatureKey, options: ['Small', 'Standard', 'Large'] },
-    { feature: 'inhabitantType' as FeatureKey, options: ['Bandits', 'Undead', 'Constructs'] },
-    { feature: 'puzzleFrequency' as FeatureKey, options: ['Low', 'Standard', 'High'] },
-    { feature: 'hazardFrequency' as FeatureKey, options: ['Low', 'Standard', 'High'] },
-    { feature: 'treasureFrequency' as FeatureKey, options: ['Low', 'Standard', 'High'] },
-    { feature: 'secretFrequency' as FeatureKey, options: ['Low', 'Standard', 'High'] },
-    { feature: 'exportBundle' as FeatureKey, options: ['GM + player pack', 'Table packet', 'Campaign note pack'] },
-  ];
-  const canUseFullRerolls = canAccessFeature(tier, 'fullReroll');
-  const canUsePartialRefreshes = canAccessFeature(tier, 'partialRefresh');
-  const fullRerollsDepleted = canUseFullRerolls && rerolls.remainingFull <= 0;
-  const partialRefreshesDepleted = canUsePartialRefreshes && rerolls.remainingPartial <= 0;
+  const hasNewPacketRefresh = canAccessFeature(tier, 'fullReroll');
+  const hasRemainingRefresh = rerolls.remainingFull > 0;
+  const canRefresh = hasNewPacketRefresh && hasRemainingRefresh && Boolean(newPacketRefreshTarget);
+  const buttonLabel = !hasNewPacketRefresh
+    ? 'Cartographer Feature'
+    : hasRemainingRefresh
+      ? 'Switch to Alternate Packet'
+      : 'Refresh Used Today';
 
-  const handlePreviewAction = (resource: 'full' | 'partial', message: string) => {
-    const used = resource === 'full' ? onUseFullReroll() : onUsePartialRefresh();
-    setFeedback(used ? message : `No ${resource === 'full' ? 'full rerolls' : 'partial refreshes'} remaining today.`);
+  const handleRefresh = () => {
+    if (!hasNewPacketRefresh) {
+      onLockedFeature('fullReroll');
+      return;
+    }
+
+    if (canRefresh) {
+      onUseNewPacketRefresh();
+    }
   };
 
   return (
     <div className="space-y-5">
-      <SectionHeader eyebrow="Refresh Tools" title="Reroll / Refresh Preview" text="Preview how rerolls and targeted refreshes would be organized during a session." />
-      <div className="grid gap-4 xl:grid-cols-2">
-        <ResourceCard
-          label="Full Dungeon Rerolls"
-          dailyLimit={allowance.fullDailyLimit}
-          remaining={rerolls.remainingFull}
-          stored={rerolls.storedFull}
-          note="Full and variant rerolls use this pool. Unused rerolls carry over up to double the daily limit."
-        />
-        <ResourceCard
-          label="Partial Refreshes"
-          dailyLimit={allowance.partialDailyLimit}
-          remaining={rerolls.remainingPartial}
-          stored={rerolls.storedPartial}
-          note="Targeted refreshes use this separate pool. Unused refreshes carry over up to double the daily limit."
-        />
-      </div>
+      <SectionHeader
+        eyebrow="Refresh Tools"
+        title="New Packet Refresh"
+        text="Cartographer can use one daily refresh to switch to another complete dungeon packet. This does not edit rooms, routes, anchors, or map metadata inside the current packet."
+      />
 
-      {feedback && (
-        <Panel className="border-brass/35 p-3">
-          <Badge tone="warning">Preview feedback</Badge>
-          <p className="mt-2 text-sm font-semibold text-ink/70">{feedback}</p>
-          <p className="mt-1 text-xs leading-5 text-ink/50">This preview does not alter the current dungeon content.</p>
-        </Panel>
-      )}
+      <ResourceCard
+        dailyLimit={allowance.fullDailyLimit}
+        remaining={rerolls.remainingFull}
+        note="A New Packet Refresh changes the whole packet. Room-level partial refresh controls are not shown in this build."
+      />
 
-      <div className="grid gap-4 xl:grid-cols-3">
-        <RerollTypeCard
-          title="Full Dungeon Reroll"
-          text="Creates a new dungeon."
-          buttonLabel="Preview Full Reroll"
-          poolLabel="Uses full reroll pool"
-          locked={!canUseFullRerolls}
-          depleted={fullRerollsDepleted}
-          onUse={() => handlePreviewAction('full', 'Full dungeon reroll preview used. The current dungeon remains unchanged.')}
-        />
-        <RerollTypeCard
-          title="Variant Reroll"
-          text="Keeps the map but changes theme, inhabitants, story, or encounters."
-          buttonLabel="Preview Variant Reroll"
-          poolLabel="Uses full reroll pool"
-          locked={!canUseFullRerolls}
-          depleted={fullRerollsDepleted}
-          onUse={() => handlePreviewAction('full', 'Variant reroll preview used. The map and dungeon content remain unchanged.')}
-        />
-        <RerollTypeCard
-          title="Partial Refresh"
-          text="Changes one room, table, hook, treasure result, or dungeon section."
-          buttonLabel="Preview Partial Refresh"
-          poolLabel="Uses partial refresh pool"
-          locked={!canUsePartialRefreshes}
-          depleted={partialRefreshesDepleted}
-          onUse={() => handlePreviewAction('partial', 'Partial refresh preview used. No room, table, hook, treasure, or section content changed.')}
-        />
-      </div>
-
-      <Panel>
-        <h3 className="survey-title font-serif text-2xl font-bold">Generation Controls</h3>
-        <p className="mt-2 text-sm leading-6 text-ink/65">These controls show the planned shape of higher-tier customization without changing today’s sample dungeon.</p>
-        <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
-          {controls.map((control) => (
-            <PremiumControl key={control.feature} {...control} tier={tier} onLockedFeature={onLockedFeature} />
-          ))}
+      <Panel className="border-brass/35 p-4">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div>
+            <Badge tone={hasNewPacketRefresh ? 'warning' : 'neutral'}>{hasNewPacketRefresh ? '1 daily refresh' : 'Surveyor preview'}</Badge>
+            <h3 className="survey-title mt-2 font-serif text-2xl font-bold">Preview today&apos;s alternate packet</h3>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/70">
+              {newPacketRefreshTarget
+                ? `This switches to ${newPacketRefreshTarget.title}, the next complete sample packet in today&apos;s deterministic preview sequence.`
+                : 'No alternate packet is available in the current sample library.'}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={handleRefresh}
+            disabled={!canRefresh && hasNewPacketRefresh}
+            className={`flex min-h-11 items-center justify-center gap-2 rounded-md border px-4 py-2.5 text-sm font-bold shadow-tool transition ${
+              canRefresh
+                ? 'border-ember bg-ember text-white hover:bg-ember/90'
+                : hasNewPacketRefresh
+                  ? 'border-ink/10 bg-ink/10 text-ink/45'
+                  : 'border-ink/10 bg-ink/5 text-ink/55 hover:bg-ink/10'
+            }`}
+          >
+            {!hasNewPacketRefresh ? <Lock className="h-4 w-4" aria-hidden="true" /> : <RefreshCcw className="h-4 w-4" aria-hidden="true" />}
+            {buttonLabel}
+          </button>
         </div>
       </Panel>
     </div>

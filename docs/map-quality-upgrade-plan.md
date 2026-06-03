@@ -15,7 +15,7 @@ The main quality gaps:
 - Map details are optimized for in-app preview, not paper/PDF contrast, ink behavior, or full-page composition.
 - Player maps mostly hide information correctly, but they do not yet feel like separate polished handouts.
 - There is no print-specific map rendering mode, grid option, map-only export, or print QA matrix.
-- Premium value is visible compared with Lantern, but not yet strong enough to carry a subscription by itself.
+- Premium value is visible compared with Surveyor, but not yet strong enough to carry a subscription by itself.
 
 The maps are table-usable now as keyed reference maps. They are not yet convincing as paid printable adventure assets.
 
@@ -33,7 +33,7 @@ Target quality:
 - Optional grid/no-grid handling.
 - Export-ready map framing that works inside a packet and as a standalone map.
 
-The goal is not to compete with fully illustrated commercial battlemaps immediately. The near-term target is a polished keyed adventure map that is attractive enough to justify Adventurer value when paired with the printable packet.
+The goal is not to compete with fully illustrated commercial battlemaps immediately. The near-term target is a polished keyed adventure map that is attractive enough to justify Cartographer value when paired with the printable packet.
 
 ## Print Map Requirements
 
@@ -299,7 +299,7 @@ Maps should support optional grid/no-grid eventually.
 
 Recommended behavior:
 
-- Lantern schematic maps: no grid by default, optional simple grid later.
+- Surveyor schematic maps: no grid by default, optional simple grid later.
 - GM premium print maps: optional faint grid if useful for table reference.
 - Player premium print maps: no grid by default unless the GM explicitly wants it.
 - Future PNG/SVG export: expose grid as an export option.
@@ -368,7 +368,9 @@ Status: the first proof-of-concept illustrated base map is connected to `Premium
 
 Dev annotation support now exists at `/dev/map-annotator` in local development builds. It is not a user-facing product feature; it is a prototype tool for visually placing room labels, GM markers, secret routes, and draft connections over local premium map assets. It can load registered assets, load a custom image path from `public/premium-maps/` with automatic natural-dimension detection, and load existing premium map mock dungeons such as the Verdant Watercourt for edit-and-copy overlay tuning. The annotator now uses the same `720x480` premium map bounds and anchor conversion helper as the production premium map renderer, so overlay placement should match the GM Map, Player Map, and Print Packet previews. `map.connections` remains structural connectivity data and does not control premium label or marker placement. This should reduce coordinate guessing while premium map workflows are still manual.
 
-Premium map-first dungeons can define `premiumMap.schematicFootprints` so Lantern/free maps become simplified spatial schematics instead of abstract node graphs. These footprints are especially important when premium illustrated areas are large enough to contain multiple GM markers; the free map should still show room/area size relationships, GM markers in GM mode, and player-safe hiding in Player mode without exposing illustrated art. Footprints should be tidy diagram shapes with restrained size and rotation so Lantern remains useful rather than looking like an unfinished trace of the illustrated map.
+The annotator can also export a complete annotation package JSON for Codex/development handoff. The package combines draft title/theme/tone notes, image metadata, generated `premiumMap` metadata, and draft `map.connections` so future map-first dungeon creation does not require several separate copy/paste blocks.
+
+Premium map-first dungeons can define `premiumMap.schematicFootprints` so Surveyor/free maps become simplified spatial schematics instead of abstract node graphs. These footprints are especially important when premium illustrated areas are large enough to contain multiple GM markers; the free map should still show room/area size relationships, GM markers in GM mode, and player-safe hiding in Player mode without exposing illustrated art. Footprints should be tidy diagram shapes with restrained size and rotation so Surveyor remains useful rather than looking like an unfinished trace of the illustrated map.
 
 ## Recommended Next 10 Map Quality Tasks
 
@@ -380,7 +382,7 @@ Premium map-first dungeons can define `premiumMap.schematicFootprints` so Lanter
 6. Add standalone map-only print sections or presets in the Print Packet view.
 7. Prototype SVG map serialization/download for GM and player-safe maps.
 8. Prototype PNG export from the serialized SVG after style inlining is solved.
-9. Define acceptance screenshots for Adventurer paid-value comparison: Lantern schematic vs premium GM print map vs premium player handout.
+9. Define acceptance screenshots for Cartographer paid-value comparison: Surveyor schematic vs premium GM print map vs premium player handout.
 10. Decide whether `presentation="print"` should split into explicit `print-gm` and `print-player` modes after QA.
 
 ## Before Private Playtesting
@@ -400,7 +402,7 @@ Private playtesting can proceed without illustrated map images if the maps are h
 
 Improve before charging:
 
-- Premium maps must feel materially better than Lantern when printed.
+- Premium maps must feel materially better than Surveyor schematic maps when printed.
 - Player-safe maps must feel like real handouts.
 - The weakest environments need visual upgrades or should be excluded from paid export claims.
 - SVG/PDF output must be reliable enough that users do not need to fight browser quirks.
@@ -434,3 +436,4 @@ Why this first:
 - Laboratory, shrine, and crypt still need the most visual lift for paid value.
 - QA should verify player-safe hiding before export formats become downloadable files.
 - The results will inform whether `print-gm` and `print-player` need separate renderer branches.
+

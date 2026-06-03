@@ -3,6 +3,8 @@ import type { Plan, TierId } from '../types';
 import { Badge, SectionHeader } from './Badge';
 
 export function PremiumPlans({ plans, currentTier, tierRank }: { plans: Plan[]; currentTier: TierId; tierRank: Record<TierId, number> }) {
+  const visiblePlans = plans.filter((plan) => plan.id !== 'dungeonwright');
+
   return (
     <div className="space-y-5">
       <SectionHeader
@@ -10,8 +12,8 @@ export function PremiumPlans({ plans, currentTier, tierRank }: { plans: Plan[]; 
         title="Plan Preview"
         text="Compare the access levels available in this build. Use the preview tier selector to try each toolset."
       />
-      <div className="grid gap-4 xl:grid-cols-3">
-        {plans.map((plan) => {
+      <div className="grid gap-4 xl:grid-cols-2">
+        {visiblePlans.map((plan) => {
           const active = plan.id === currentTier;
           const unlocked = tierRank[plan.id] <= tierRank[currentTier];
 

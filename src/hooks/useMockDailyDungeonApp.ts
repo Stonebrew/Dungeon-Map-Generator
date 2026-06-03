@@ -10,6 +10,8 @@ type PlaceholderFeature = {
   text: string;
 };
 
+const newPacketRefreshStorageKey = 'daily-dungeon:new-packet-refresh';
+
 const lockedFeatures: Partial<Record<ViewId, FeatureKey>> = {
   player: 'playerMap',
   archive: 'archive',
@@ -23,6 +25,62 @@ function cloneRerollCounts() {
   ) as Record<TierId, RerollCounts>;
 }
 
+function getLocalDateKey() {
+  return new Date().toLocaleDateString('en-CA');
+}
+
+function getNewPacketRefreshUsage() {
+  if (typeof window === 'undefined') {
+    return {};
+  }
+
+  try {
+    const savedUsage = window.localStorage.getItem(newPacketRefreshStorageKey);
+    if (!savedUsage) {
+      return {};
+    }
+
+    const parsed = JSON.parse(savedUsage) as { date?: string; usedByTier?: Partial<Record<TierId, boolean>> };
+    return parsed.date === getLocalDateKey() ? parsed.usedByTier ?? {} : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveNewPacketRefreshUsage(tier: TierId) {
+  if (typeof window === 'undefined') {
+    return;
+  }
+
+  try {
+    window.localStorage.setItem(
+      newPacketRefreshStorageKey,
+      JSON.stringify({
+        date: getLocalDateKey(),
+        usedByTier: {
+          ...getNewPacketRefreshUsage(),
+          [tier]: true,
+        },
+      }),
+    );
+  } catch {
+    // Keep the prototype usable even if storage is unavailable.
+  }
+}
+
+function getInitialRerollCounts() {
+  const counts = cloneRerollCounts();
+  const usedByTier = getNewPacketRefreshUsage();
+
+  Object.entries(usedByTier).forEach(([tier, used]) => {
+    if (used) {
+      counts[tier as TierId].remainingFull = 0;
+    }
+  });
+
+  return counts;
+}
+
 // Prototype-only state layer. Replace this hook with real daily dungeon,
 // account, entitlement, archive, favorite, and reroll APIs when the backend exists.
 export function useMockDailyDungeonApp() {
@@ -32,13 +90,22 @@ export function useMockDailyDungeonApp() {
   const [selectedDungeonId, setSelectedDungeonId] = useState(mockDungeons[0].id);
   const [selectedTier, setSelectedTier] = useState<TierId>(currentTier);
   const [savedDungeonIds, setSavedDungeonIds] = useState<Set<string>>(() => new Set());
-  const [sessionRerollCounts, setSessionRerollCounts] = useState<Record<TierId, RerollCounts>>(() => cloneRerollCounts());
+  const [sessionRerollCounts, setSessionRerollCounts] = useState<Record<TierId, RerollCounts>>(() => getInitialRerollCounts());
 
   const currentPlan = useMemo(() => plans.find((plan) => plan.id === selectedTier), [selectedTier]);
   const selectedDungeon = useMemo(
     () => mockDungeons.find((dungeon) => dungeon.id === selectedDungeonId) ?? mockDungeons[0],
     [selectedDungeonId],
   );
+  const newPacketRefreshTarget = useMemo(() => {
+    if (mockDungeons.length < 2) {
+      return undefined;
+    }
+
+    const currentIndex = mockDungeons.findIndex((dungeon) => dungeon.id === selectedDungeonId);
+    const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % mockDungeons.length : 1;
+    return mockDungeons[nextIndex];
+  }, [selectedDungeonId]);
 
   const showLockedFeature = (feature: FeatureKey) => {
     setLockedFeature(feature);
@@ -72,34 +139,32 @@ export function useMockDailyDungeonApp() {
     setView(nextView);
   };
 
-  const consumeRerollResource = (resource: 'full' | 'partial') => {
-    const feature: FeatureKey = resource === 'full' ? 'fullReroll' : 'partialRefresh';
-
-    if (!canAccessFeature(selectedTier, feature)) {
-      showLockedFeature(feature);
+  const useNewPacketRefresh = () => {
+    if (!canAccessFeature(selectedTier, 'fullReroll')) {
+      showLockedFeature('fullReroll');
       return false;
     }
 
-    let used = false;
-    setSessionRerollCounts((current) => {
-      const currentCounts = current[selectedTier];
-      const remainingKey = resource === 'full' ? 'remainingFull' : 'remainingPartial';
+    if (!newPacketRefreshTarget) {
+      return false;
+    }
 
-      if (currentCounts[remainingKey] <= 0) {
-        return current;
-      }
+    const currentCounts = sessionRerollCounts[selectedTier];
+    if (currentCounts.remainingFull <= 0) {
+      return false;
+    }
 
-      used = true;
-      return {
-        ...current,
-        [selectedTier]: {
-          ...currentCounts,
-          [remainingKey]: currentCounts[remainingKey] - 1,
-        },
-      };
-    });
-
-    return used;
+    setSessionRerollCounts((current) => ({
+      ...current,
+      [selectedTier]: {
+        ...current[selectedTier],
+        remainingFull: Math.max(0, current[selectedTier].remainingFull - 1),
+      },
+    }));
+    saveNewPacketRefreshUsage(selectedTier);
+    setSelectedDungeonId(newPacketRefreshTarget.id);
+    setView('today');
+    return true;
   };
 
   const isViewLocked = (targetView: ViewId) => {
@@ -142,6 +207,7 @@ export function useMockDailyDungeonApp() {
     placeholderFeature,
     selectedDungeonId,
     selectedDungeon,
+    newPacketRefreshTarget,
     selectedTier,
     currentPlan,
     savedDungeonIds,
@@ -158,6 +224,6 @@ export function useMockDailyDungeonApp() {
     showPlaceholderFeature,
     toggleFavorite,
     selectArchivedDungeon,
-    consumeRerollResource,
+    useNewPacketRefresh,
   };
 }

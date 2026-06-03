@@ -1,6 +1,6 @@
 # Premium Illustrated Map Layer Plan
 
-This document defines a future premium map layer for Daily Dungeon. It does not replace the current SVG map system. The current Lantern schematic maps and Level 2 SVG maps should remain useful as fallback/reference maps, while premium illustrated maps become an additive paid printable layer when available.
+This document defines a future premium map layer for Daily Dungeon. It does not replace the current SVG map system. The current Surveyor schematic maps and Level 2 SVG maps should remain useful as fallback/reference maps, while premium illustrated maps become an additive paid printable layer when available.
 
 ## 1. Why Current SVG Maps Are Not Enough
 
@@ -14,7 +14,7 @@ They are not yet enough for paid printable value because:
 - Player-safe maps hide data correctly, but do not yet feel like polished handouts a GM would proudly show players.
 - Client-side PDF output can package the map, but it cannot turn a reference-grade map into a premium illustrated asset.
 
-The current SVG maps should remain part of the product. They are useful for Lantern, fallback rendering, debugging, validation, and low-bandwidth table reference. Paid printable value likely needs a higher-quality illustrated base layer.
+The current SVG maps should remain part of the product. They are useful for Surveyor, fallback rendering, debugging, validation, and low-bandwidth table reference. Paid printable value likely needs a higher-quality illustrated base layer.
 
 ## 2. Premium Map Quality Target
 
@@ -27,7 +27,7 @@ Premium illustrated maps should feel closer to top-down fantasy battlemaps:
 - Player-safe presentation that feels intentional, not merely redacted.
 - GM overlays that are readable without damaging the illustrated base.
 
-The target is not full VTT battlemap parity in the first implementation. The near-term goal is a premium printable map page that materially increases Adventurer/Dungeonwright value inside the packet.
+The target is not full VTT battlemap parity in the first implementation. The near-term goal is a premium printable map page that materially increases Cartographer value inside the packet.
 
 ## 3. Hybrid Data Model Approach
 
@@ -106,12 +106,12 @@ The Print Packet should choose maps in this order:
 
 1. Use premium illustrated GM/player map assets when the user tier can access them and the dungeon has valid premium map metadata.
 2. Use current Level 2 SVG premium maps for paid users when no illustrated asset exists.
-3. Use Lantern schematic maps for Lantern users or as a fallback when premium rendering fails.
+3. Use Surveyor schematic maps for Surveyor users or as a fallback when premium rendering fails.
 
 Recommended behavior:
 
-- Adventurer and Dungeonwright packet pages prefer premium illustrated maps.
-- Lantern keeps schematic maps.
+- Cartographer packet pages prefer premium illustrated maps.
+- Surveyor keeps schematic maps.
 - If premium illustrated map loading fails, show the Level 2 SVG fallback and a non-print warning in the app UI.
 - PDF export should capture the selected map layer exactly as shown in the packet.
 
@@ -238,9 +238,9 @@ API boundaries affected:
 
 Recommended tier behavior:
 
-- Lantern: schematic/reference maps only.
-- Adventurer: premium illustrated maps when available, player-safe illustrated map, printable packet export.
-- Dungeonwright: all Adventurer map access plus future controls such as print variants, grid/no-grid, export bundle, fog-of-war/reveal state, or custom map style options.
+- Surveyor: schematic/reference maps only.
+- Cartographer: premium illustrated maps when available, player-safe illustrated map, printable packet export.
+- Third tier postponed: future controls such as print variants, grid/no-grid, export bundles, fog-of-war/reveal state, or custom map style options may return later under a stronger tier concept.
 
 Do not promise illustrated maps for every generated dungeon until the pipeline can reliably produce them. A safe product promise might be “premium map when available” during private beta, then become a hard entitlement once generation/storage is stable.
 
@@ -297,7 +297,7 @@ Done when one dungeon can display an illustrated base map with correctly aligned
 - Keep Level 2 SVG fallback.
 - QA direct client-side PDF output with image maps.
 
-Done when Adventurer/Dungeonwright packet output can include premium illustrated GM and player maps without leaking player-safe data.
+Done when Cartographer packet output can include premium illustrated GM and player maps without leaking player-safe data.
 
 ### Phase 3: Fixture And Validation Expansion
 
@@ -351,7 +351,7 @@ The first illustrated-map proof of concept is now a separate map-first mock dung
 
 - The dungeon references `/premium-maps/test-temple-map.png` through `map.premiumMap.baseMapImage`.
 - The illustrated map drives room count, room names, exits, `map.connections`, treasure locations, hazards, objective placement, and running notes.
-- The premium image is used as the base layer for Adventurer/Dungeonwright enhanced GM and player-safe map views.
+- The premium image is used as the base layer for Cartographer enhanced GM and player-safe map views.
 - GM overlays render room numbers, GM markers, and secret routes above the image.
 - Player-safe overlays render room numbers while hiding GM markers and secret routes.
 - Room labels and GM markers now use premium-map-specific percentage anchors when present, instead of relying on the old SVG map room coordinates.
@@ -370,7 +370,7 @@ The second illustrated-map proof of concept is also map-first: `Premium Map POC:
 - It uses annotator-created premium overlay metadata and a draft `map.connections` graph to define a volcanic ruin play surface.
 - The local image remains ignored under `public/premium-maps/`; only metadata and mock dungeon content are tracked.
 - Normal route overlays are disabled because visible stairs, bridges, ledges, and platforms belong to the illustrated base map.
-- Lantern/free schematic views for map-first premium dungeons use the dungeon's actual premium label anchors, GM marker anchors in GM mode, and `map.connections` so the free reference map does not invent rooms that are absent from the content. Player-safe schematic views continue hiding GM markers and secret routes.
+- Surveyor/free schematic views for map-first premium dungeons use the dungeon's actual premium label anchors, GM marker anchors in GM mode, and `map.connections` so the free reference map does not invent rooms that are absent from the content. Player-safe schematic views continue hiding GM markers and secret routes.
 - The free schematic can use `premiumMap.schematicFootprints` to draw simplified black-and-white area shapes around premium anchors. These should be clean, conservative shapes rather than rough blobs. This avoids reducing large illustrated rooms to tiny node circles and helps GM marker badges remain inside the room or area they describe.
 
 ## Dev Annotation Tool
@@ -401,8 +401,10 @@ Current capabilities:
 - Delete room anchors, markers, routes, and draft connections from side lists.
 - Draft `map.connections` entries with type, route style, difficulty, and note.
 - Copy generated `premiumMap` metadata and draft `map.connections` JSON for manual paste-back into mock data or future fixtures.
+- Enter optional dungeon draft info such as proposed title, theme, tone, difficulty, party size, estimated play time, and creative notes.
+- Copy or download a complete annotation package JSON containing draft info, image info, generated `premiumMap` metadata, and draft `map.connections` for Codex/development handoff.
 
-The annotator supports both blank/new metadata creation and edit-and-copy work on existing premium map dungeons. For a new local image, put the file in `public/premium-maps/`, open `/dev/map-annotator`, enter the public path, click `Load Custom Image`, annotate, then copy the generated `premiumMap` and `map.connections` JSON back into mock data manually. Loading an existing dungeon does not mutate the source data; it only populates the local annotator state so the updated JSON can be copied back manually after review.
+The annotator supports both blank/new metadata creation and edit-and-copy work on existing premium map dungeons. For a new local image, put the file in `public/premium-maps/`, open `/dev/map-annotator`, enter the public path, click `Load Custom Image`, annotate, add draft notes, then copy or download the generated annotation package JSON. The package is intended for prompts such as “Use this annotation package JSON to create a new map-first premium dungeon.” Separate `premiumMap` and `map.connections` exports remain available for debugging and manual paste-back. Loading an existing dungeon does not mutate the source data; it only populates the local annotator state so the updated JSON can be copied back manually after review.
 
 The annotator uses the same coordinate interpretation as `PremiumMapLayer`: the premium image is rendered into `premiumMap.mapBounds`, currently `0 0 720 480`, with `preserveAspectRatio="xMidYMid slice"`. Room label and GM marker anchors export as `xPercent` / `yPercent` values relative to those bounds. GM-only secret route paths export in the same `720x480` overlay SVG coordinate space. This makes the annotator WYSIWYG with GM Map, Player Map, and Print Packet previews.
 
@@ -414,6 +416,7 @@ Limitations:
 
 - It does not save files.
 - It does not update mock data automatically.
+- Annotation package download is a browser download only; it does not write directly to the project source tree.
 - It does not upload, write, or auto-discover image files; custom local images must already exist under `public/premium-maps/`.
 - It can load existing annotations from mock dungeon payloads and supports basic visual dragging for room anchors, GM markers, and secret route points.
 - It does not validate room prose, structured exits, or connection bidirectionality while editing.
@@ -437,3 +440,4 @@ Why this first:
 - The first image fixture is now connected.
 - The next risk is whether the image bounds, labels, markers, and secret routes are readable enough in every surface.
 - It keeps the test narrow before adding more premium images or backend asset delivery.
+

@@ -1,90 +1,67 @@
 # Daily Dungeon Tier Model
 
-## Lantern
+## Current Visible Model
 
-Free tier.
+The prototype now presents two user-facing tiers:
 
-### Daily Dungeon Access
+- Surveyor replaces Lantern as the visible free/basic tier name.
+- Cartographer replaces Adventurer as the visible paid/core tier name.
 
-- One global daily dungeon
+The internal tier IDs remain `lantern`, `adventurer`, and `dungeonwright` for now to avoid risky entitlement refactors during prototype hardening.
+
+## Surveyor
+
+Free/basic preview tier for trying the dossier workflow.
+
+### Packet Access
+
+- One shared daily dungeon
 - Basic room descriptions
-- Basic encounter tables
+- Encounter and treasure tables
 
 ### Maps And Exports
 
-- Black-and-white GM map
-- No player-safe map
-- No PDF export
-- No archive
+- Simple schematic GM map
+- Player maps locked
+- Print and PDF export locked
+- Session archive locked
 
-### Rerolls And Refreshes
+### Refresh Tools
 
-- No full rerolls
-- No partial refreshes
+- No New Packet Refresh
 
-### Customization
+## Cartographer
 
-- No advanced customization
+Core paid tier focused on the map-and-packet experience.
 
-## Adventurer
+### Packet Access
 
-Low premium tier focused on making the app genuinely useful at the table.
-
-### Daily Dungeon Access
-
-- Everything in Lantern
+- Everything in Surveyor
 
 ### Maps And Exports
 
-- Color map
-- Player-safe map
+- Premium illustrated maps when available
 - GM map
-- Mock PDF export button
-- Archive access placeholder
-- Save/favorite dungeons placeholder
+- Player labeled map
+- Player clean map
+- Print and PDF packet export
+- Session archive preview
 
-### Rerolls And Refreshes
+### Limited Refresh Tools
 
-- 1 full dungeon reroll per day
-- Stored full rerolls up to 2
-- 2 partial refreshes per day
-- Stored partial refreshes up to 4
+- 1 New Packet Refresh per day
+- Refresh switches to a complete alternate dungeon packet
+- No room-level partial refresh controls in the visible prototype
 
-## Dungeonwright
+## Postponed Third Tier
 
-Full access tier focused on control.
+Dungeonwright is no longer visible as a current user-facing plan. The internal tier may remain for future testing, but the product should not advertise it until the value proposition is stronger.
 
-### Daily Dungeon Access
+Possible future names include Archivist, Mapwright, or another cartography/dossier-themed name. Additional packet refreshes may later be handled through add-ons or credits rather than a higher subscription tier.
 
-- Everything in Adventurer
+## Refresh Rules
 
-### Rerolls And Refreshes
-
-- 2 full dungeon rerolls per day
-- Stored full rerolls up to 4
-- 6 partial refreshes per day
-- Stored partial refreshes up to 12
-
-### Customization
-
-- Theme selector
-- Difficulty selector
-- Day/night variant
-- Dungeon size selector
-- Inhabitant type control
-
-### Advanced Tools
-
-- Puzzle frequency control
-- Hazard frequency control
-- Treasure frequency control
-- Secret room frequency control
-- Fog-of-war map view
-- Export bundle placeholder
-
-## Reroll Rules
-
-Full dungeon rerolls and partial refreshes are separate resources. Unused rerolls and refreshes carry over up to double the tier's daily limit. Reroll controls are UI-only in the current prototype.
+Current visible copy presents refresh behavior as one daily New Packet Refresh for Cartographer. In this frontend prototype, the refresh switches to another complete sample dungeon packet in a deterministic sequence, so it visibly changes the packet without editing room text, anchors, connections, or premium map metadata. Room-level refresh tools may return later as explicit map-safe actions such as Refresh Room Text, Swap Encounter, Refresh Treasure, Refresh Story Hook, or Refresh Clues.
 
 ## Implementation Note
 

@@ -18,6 +18,7 @@ export function DevPanel({
   onTierChange: (tier: TierId) => void;
 }) {
   const [open, setOpen] = useState(false);
+  const visiblePlans = plans.filter((plan) => plan.id !== 'dungeonwright');
   const validationResults = import.meta.env.DEV ? validateDungeons(dungeons) : [];
   const selectedValidation = import.meta.env.DEV ? validationResults.find((result) => result.dungeonId === selectedDungeonId) : undefined;
   const selectedIssueCount = (selectedValidation?.errors.length ?? 0) + (selectedValidation?.warnings.length ?? 0);
@@ -56,7 +57,7 @@ export function DevPanel({
               onChange={(event) => onTierChange(event.target.value as TierId)}
               className="mt-2 w-full rounded-md border border-ink/10 bg-white px-3 py-2 text-sm font-bold text-ink"
             >
-              {plans.map((plan) => (
+              {visiblePlans.map((plan) => (
                 <option key={plan.id} value={plan.id}>
                   {plan.name}
                 </option>

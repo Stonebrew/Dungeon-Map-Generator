@@ -103,7 +103,7 @@ export function DungeonMap({
       >
         <div>
           <h2 className={`survey-title font-serif font-bold ${compact ? 'text-lg' : 'text-xl'}`}>{isPlayer ? 'Player-Safe Map' : isFog ? 'Fog-of-War Map' : 'GM Map Preview'}</h2>
-          <p className="ledger-label text-xs font-semibold uppercase text-ink/45">{isPrintPresentation ? 'Print-optimized map' : enhanced ? 'Enhanced tabletop map' : 'Lantern black-and-white map'}</p>
+          <p className="ledger-label text-xs font-semibold uppercase text-ink/45">{isPrintPresentation ? 'Print-optimized map' : enhanced ? 'Enhanced tabletop map' : 'Surveyor schematic map'}</p>
         </div>
         {isPlayer ? <Badge tone="success">Secrets hidden</Badge> : <Badge tone="accent">GM labels</Badge>}
       </div>
