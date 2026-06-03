@@ -49,7 +49,7 @@ function RunSection({
         <span className={`inline-flex h-7 w-7 items-center justify-center rounded-md ${accent ? 'bg-ember/10 text-ember' : 'bg-slatewood/10 text-slatewood'}`}>{icon}</span>
         {title}
       </h3>
-      <div className="mt-2 text-sm leading-6 text-ink/75">{children}</div>
+      <div className="mt-2 text-[15px] leading-7 text-ink/75 sm:text-sm sm:leading-6">{children}</div>
     </section>
   );
 }
@@ -194,9 +194,11 @@ export function RunMode({
         </div>
       </div>
 
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.35fr)]">
-        <div className="space-y-4">
-          <DungeonMap mode="gm" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} compact showLegend />
+      <div className="grid min-w-0 gap-4 xl:grid-cols-[minmax(0,0.95fr)_minmax(0,1.35fr)]">
+        <div className="min-w-0 space-y-4">
+          <div className="min-w-0 max-w-full overflow-hidden">
+            <DungeonMap mode="gm" mapData={dungeon.map} mapStyle={dungeon.mapStyle} colorEnabled={hasColorMap} compact showLegend />
+          </div>
 
           <Panel className="sticky top-3 z-10 p-3">
             <div className="flex items-center justify-between gap-3">
@@ -211,7 +213,7 @@ export function RunMode({
                     key={room.number}
                     type="button"
                     onClick={() => selectRoom(room.number)}
-                    className={`rounded-md border p-2 text-left text-sm ${
+                    className={`rounded-md border p-3 text-left text-[15px] leading-5 sm:p-2 sm:text-sm ${
                       active ? 'border-slatewood bg-slatewood text-white shadow-tool ring-2 ring-slatewood/20' : 'border-slatewood/20 bg-[#fbfaf5] text-ink/75 hover:bg-slatewood/10'
                     }`}
                   >
@@ -231,14 +233,14 @@ export function RunMode({
           </Panel>
         </div>
 
-        <div id="run-current-room" className="scroll-mt-24 space-y-4">
+        <div id="run-current-room" className="min-w-0 scroll-mt-24 space-y-4">
           <div className="sticky top-0 z-20 rounded-md border border-slatewood/20 bg-[#fbfaf5]/95 p-2 shadow-tool backdrop-blur">
           <div className="grid grid-cols-2 gap-2">
             <button
               type="button"
               disabled={!canGoPrevious}
               onClick={() => moveRoom(-1)}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-ink px-3 py-2 text-sm font-bold text-white disabled:bg-ink/10 disabled:text-ink/40"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md bg-ink px-3 py-2.5 text-sm font-bold text-white disabled:bg-ink/10 disabled:text-ink/40 sm:min-h-11 sm:py-2"
             >
               <ChevronLeft className="h-4 w-4" aria-hidden="true" />
               <span>
@@ -250,7 +252,7 @@ export function RunMode({
               type="button"
               disabled={!canGoNext}
               onClick={() => moveRoom(1)}
-              className="inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-ink px-3 py-2 text-sm font-bold text-white disabled:bg-ink/10 disabled:text-ink/40"
+              className="inline-flex min-h-12 items-center justify-center gap-2 rounded-md bg-ink px-3 py-2.5 text-sm font-bold text-white disabled:bg-ink/10 disabled:text-ink/40 sm:min-h-11 sm:py-2"
             >
               <span>
                 <span className="ledger-label block text-[11px] uppercase opacity-70">Next</span>
@@ -266,7 +268,7 @@ export function RunMode({
                 key={section.id}
                 type="button"
                 onClick={() => scrollToRunSection(section.id)}
-                className="inline-flex shrink-0 items-center gap-2 rounded-md border border-slatewood/20 bg-white px-3 py-2 text-xs font-bold text-ink/65 shadow-tool hover:bg-slatewood/10"
+                className="inline-flex min-h-11 shrink-0 items-center gap-2 rounded-md border border-slatewood/20 bg-white px-3.5 py-2.5 text-sm font-bold text-ink/65 shadow-tool hover:bg-slatewood/10 sm:min-h-10 sm:px-3 sm:py-2 sm:text-xs"
               >
                 <section.icon className="h-3.5 w-3.5" aria-hidden="true" />
                 {section.label}

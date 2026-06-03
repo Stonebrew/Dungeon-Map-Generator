@@ -41,7 +41,7 @@ export function SectionHeader({ eyebrow, title, text }: { eyebrow: string; title
 export function Field({ label, value, compact = false }: { label: string; value: string; compact?: boolean }) {
   return (
     <div className={compact ? '' : 'mt-3'}>
-      <p className="ledger-label text-xs font-bold uppercase text-ink/45">{label}</p>
+      <p className="ledger-label text-xs font-black uppercase text-[#344e57]">{label}</p>
       <p className="mt-1 text-sm leading-6 text-ink/75">{value}</p>
     </div>
   );

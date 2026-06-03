@@ -60,7 +60,7 @@ export function GMView({
   return (
     <div className="space-y-5">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
-        <SectionHeader eyebrow="Dungeon Detail" title="GM View" text="Complete table-facing notes with system-neutral inhabitants, hazards, treasure, and secrets." />
+        <SectionHeader eyebrow="Dungeon Detail" title="GM View" text="Room-by-room notes for running the dungeon at the table." />
         <div className="no-print flex shrink-0 flex-col gap-2 sm:items-end">
           <p className="max-w-64 text-xs font-semibold leading-5 text-ink/55 sm:text-right">Preview, print, or save this dungeon as a PDF packet.</p>
           <div className="flex flex-wrap gap-2 sm:justify-end">

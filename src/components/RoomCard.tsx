@@ -17,7 +17,7 @@ function previewText(text: string) {
 function DetailSection({ title, children }: { title: string; children: ReactNode }) {
   return (
     <section>
-      <h4 className="ledger-label text-xs font-bold uppercase text-ink/45">{title}</h4>
+      <h4 className="ledger-label text-xs font-black uppercase text-[#344e57]">{title}</h4>
       <div className="mt-1">{children}</div>
     </section>
   );

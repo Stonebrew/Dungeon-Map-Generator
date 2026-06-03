@@ -95,7 +95,7 @@ export function DungeonMap({
   const hasLegendContent = showLabels || !isPlayer;
 
   return (
-    <div className={`map-ledger-frame overflow-hidden rounded-md border shadow-tool ${isPrintPresentation ? 'border-ink/35 print-map-card' : 'border-[#bba98f]'}`}>
+    <div className={`map-ledger-frame w-full max-w-full overflow-hidden rounded-md border shadow-tool ${isPrintPresentation ? 'border-ink/35 print-map-card' : 'border-[#bba98f]'}`}>
       <div
         className={`flex items-center justify-between gap-3 border-b px-4 ${
           isPrintPresentation ? 'border-ink/25 bg-white' : 'border-[#cdbfa9] bg-[#fbf4e6]/95'
@@ -108,7 +108,7 @@ export function DungeonMap({
         {isPlayer ? <Badge tone="success">Secrets hidden</Badge> : <Badge tone="accent">GM labels</Badge>}
       </div>
 
-      <svg viewBox="0 0 720 480" role="img" aria-label={`${isPlayer ? 'Player safe' : 'GM'} dungeon map`} className={`h-auto w-full ${isPrintPresentation ? 'bg-[#f8f1e2]' : enhanced ? 'bg-[#edf0ec]' : 'bg-[#fff9ec]'}`}>
+      <svg viewBox="0 0 720 480" role="img" aria-label={`${isPlayer ? 'Player safe' : 'GM'} dungeon map`} className={`block h-auto w-full max-w-full ${isPrintPresentation ? 'bg-[#f8f1e2]' : enhanced ? 'bg-[#edf0ec]' : 'bg-[#fff9ec]'}`}>
         <MapDefs />
         <MapTexture isPlayer={isPlayer} enhanced={enhanced && !isPrintPresentation} />
         <MapContent mapData={mapData} mapStyle={mapStyle} palette={palette} isPlayer={isPlayer} enhanced={enhanced} presentation={presentation} showLabels={showLabels} />

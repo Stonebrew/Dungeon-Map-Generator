@@ -19,5 +19,10 @@ pnpm-debug.log*
 .vscode/
 .DS_Store
 Thumbs.db
-# Local-only premium map test assets
-public/premium-maps/
+# Local-only premium map test assets by default.
+# Keep only committed showcase/demo assets available to tester builds.
+public/premium-maps/*
+!public/premium-maps/test-temple-map.png
+!public/premium-maps/volcanic-ruin-1.png
+!public/premium-maps/arctic-temple-1.png
+!public/premium-maps/enchanted-forest-village-1.png
