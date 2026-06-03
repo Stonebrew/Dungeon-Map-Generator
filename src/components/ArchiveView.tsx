@@ -19,15 +19,15 @@ export function ArchiveView({
     <div className="space-y-5">
       <SectionHeader
         eyebrow="Archive"
-        title="Mock Dungeon Archive"
-        text="Prototype-only archive surface using the existing mock dungeons. Real saved dungeon storage is not implemented yet."
+        title="Saved Dungeons"
+        text="Browse sample dungeons and favorites saved during this session."
       />
 
       <Panel className="border-brass/35 p-3">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <Badge tone="warning">Mock data</Badge>
-            <p className="mt-2 text-sm leading-6 text-ink/65">Favorites only last until the page refreshes. Later this view can connect to account storage and daily dungeon history.</p>
+            <Badge tone="warning">Session archive</Badge>
+            <p className="mt-2 text-sm leading-6 text-ink/65">Favorites are saved for this testing session, so you can compare packets without leaving the app.</p>
           </div>
           <Badge tone="accent">{savedDungeonIds.size} saved this session</Badge>
         </div>

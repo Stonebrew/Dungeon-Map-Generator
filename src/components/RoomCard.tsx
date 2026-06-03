@@ -54,8 +54,8 @@ export function RoomCard({
     const used = onRefresh();
     setRefreshMessage(
       used
-        ? `Mock refreshed Room ${room.number}. No real room content changed.`
-        : 'No mock partial refreshes remaining today.',
+        ? `Refresh preview used for Room ${room.number}. The room content remains unchanged.`
+        : 'No partial refreshes remaining today.',
     );
   };
 

@@ -17,18 +17,17 @@ export function DevPanel({
   selectedTier: TierId;
   onTierChange: (tier: TierId) => void;
 }) {
-  // Prototype-only tooling. Replace with real daily generation, archive, and account subscription data later.
   const [open, setOpen] = useState(false);
-  const validationResults = validateDungeons(dungeons);
-  const selectedValidation = validationResults.find((result) => result.dungeonId === selectedDungeonId);
+  const validationResults = import.meta.env.DEV ? validateDungeons(dungeons) : [];
+  const selectedValidation = import.meta.env.DEV ? validationResults.find((result) => result.dungeonId === selectedDungeonId) : undefined;
   const selectedIssueCount = (selectedValidation?.errors.length ?? 0) + (selectedValidation?.warnings.length ?? 0);
 
   return (
     <section className="mb-4 rounded-md border border-dashed border-ink/20 bg-white/45 p-3 text-sm">
       <button type="button" onClick={() => setOpen((current) => !current)} className="flex w-full items-center justify-between gap-3 text-left">
         <span>
-          <span className="ledger-label block text-[11px] font-bold uppercase text-ink/45">Prototype Dev Panel</span>
-          <span className="text-xs text-ink/55">Temporary mock dungeon and tier controls</span>
+          <span className="ledger-label block text-[11px] font-bold uppercase text-ink/45">Sample Dungeon Selector</span>
+          <span className="text-xs text-ink/55">Choose a sample dungeon and preview tier for this build</span>
         </span>
         <span className="rounded-md bg-ink/10 px-2 py-1 text-xs font-bold text-ink/60">{open ? 'Hide' : 'Show'}</span>
       </button>
@@ -36,7 +35,7 @@ export function DevPanel({
       {open && (
         <div className="mt-3 grid gap-3 lg:grid-cols-[1fr_16rem]">
           <label className="block">
-            <span className="ledger-label text-[11px] font-bold uppercase text-ink/45">Mock Dungeon Selector</span>
+            <span className="ledger-label text-[11px] font-bold uppercase text-ink/45">Sample Dungeon</span>
             <select
               value={selectedDungeonId}
               onChange={(event) => onDungeonChange(event.target.value)}
@@ -51,7 +50,7 @@ export function DevPanel({
           </label>
 
           <label className="block">
-            <span className="ledger-label text-[11px] font-bold uppercase text-ink/45">Mock User Tier</span>
+            <span className="ledger-label text-[11px] font-bold uppercase text-ink/45">Preview Tier</span>
             <select
               value={selectedTier}
               onChange={(event) => onTierChange(event.target.value as TierId)}
@@ -66,14 +65,14 @@ export function DevPanel({
           </label>
 
           <p className="text-xs leading-5 text-ink/55 lg:col-span-2">
-            This panel is prototype-only and should be replaced by real daily generation, archive selection, and account subscription data later.
+            Select a sample dungeon to preview the GM prep, map, and packet workflows. Tier preview changes which table tools are visible.
           </p>
 
-          <div className="rounded-md border border-ink/10 bg-white p-3 lg:col-span-2">
+          {import.meta.env.DEV && <div className="rounded-md border border-ink/10 bg-white p-3 lg:col-span-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <div>
-                <p className="ledger-label text-[11px] font-bold uppercase text-ink/45">Map Consistency Validation</p>
-                <p className="mt-1 text-xs text-ink/55">Dev-only check against map.connections and room exits.</p>
+                <p className="ledger-label text-[11px] font-bold uppercase text-ink/45">Map Consistency Check</p>
+                <p className="mt-1 text-xs text-ink/55">Development-only check against map.connections and room exits.</p>
               </div>
               <span className={`rounded-md px-2.5 py-1 text-xs font-bold ${selectedIssueCount === 0 ? 'bg-moss/15 text-moss' : 'bg-brass/15 text-brass'}`}>
                 {selectedIssueCount === 0 ? 'Selected dungeon OK' : `${selectedIssueCount} issue${selectedIssueCount === 1 ? '' : 's'}`}
@@ -90,7 +89,7 @@ export function DevPanel({
                 ))}
               </ul>
             )}
-          </div>
+          </div>}
         </div>
       )}
     </section>

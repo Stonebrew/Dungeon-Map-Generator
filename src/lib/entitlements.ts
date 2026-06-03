@@ -59,7 +59,7 @@ const featureDefinitions: Record<FeatureKey, FeatureDefinition> = {
   pdfExport: {
     label: 'PDF Export',
     requiredTier: 'adventurer',
-    description: 'Prepare a table-ready handout packet for the dungeon. This prototype only shows the export entry point.',
+    description: 'Prepare a table-ready handout packet for the dungeon with print and PDF options.',
   },
   archive: {
     label: 'Archive Access',

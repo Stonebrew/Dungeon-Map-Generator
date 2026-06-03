@@ -44,7 +44,7 @@ export const plans: Plan[] = [
       },
       {
         title: 'Maps and exports',
-        features: ['Color map', 'Player-safe map', 'GM map', 'Mock PDF export', 'Archive access placeholder', 'Save/favorite dungeons placeholder'],
+        features: ['Color map', 'Player-safe map', 'GM map', 'Print and PDF packet export', 'Session archive preview', 'Save/favorite dungeons preview'],
       },
       {
         title: 'Rerolls and refreshes',
@@ -74,7 +74,7 @@ export const plans: Plan[] = [
       },
       {
         title: 'Advanced tools',
-        features: ['Puzzle frequency control', 'Hazard frequency control', 'Treasure frequency control', 'Secret room frequency control', 'Fog-of-war map view', 'Export bundle placeholder'],
+        features: ['Puzzle frequency control preview', 'Hazard frequency control preview', 'Treasure frequency control preview', 'Secret room frequency control preview', 'Fog-of-war map view', 'Export bundle preview'],
       },
     ],
     rerolls: '2 daily / 4 stored',
@@ -852,7 +852,7 @@ const premiumMapPocDungeonDraft: DraftDungeon = {
   id: 'dd-2026-05-16-premium-map-poc',
   dateIso: '2026-05-16',
   date: 'May 16, 2026',
-  title: 'Premium Map POC: The Verdant Watercourt',
+  title: 'The Verdant Watercourt',
   theme: 'Overgrown ruined temple water garden with reversed flow, hidden culverts, and a restless shrine custodian',
   difficulty: 'Moderate',
   partySize: '3-5 adventurers',
@@ -1185,7 +1185,7 @@ const volcanicPremiumMapPocDungeonDraft: DraftDungeon = {
   id: 'dd-2026-05-17-premium-volcanic-map-poc',
   dateIso: '2026-05-17',
   date: 'May 17, 2026',
-  title: 'Premium Map POC: The Ashen Crucible',
+  title: 'The Ashen Crucible',
   theme: 'Volcanic fire-temple ruin with basalt stairs, broken bridges, and a dangerous cinder relic',
   difficulty: 'High',
   partySize: '3-5 adventurers',
@@ -1473,7 +1473,7 @@ const volcanicPremiumMapPocDungeonDraft: DraftDungeon = {
     'Use the visible basalt platforms, stairs, bridges, and vents as the play surface; heat, height, and broken crossings should shape choices.',
     'Normal route overlays are disabled on the premium map because the art already shows the visible routes.',
     'The bridge from Room 2 to Room 3 is structurally blocked, but remains a known normal connection for table play and problem solving.',
-    'The secret route between Rooms 5 and 6 is described in room text and structured exits, but has no separate visible route overlay in the pasted premiumMap metadata.',
+    'The secret route between Rooms 5 and 6 is described in room text and structured exits. Keep it GM-only; it is intentionally not drawn as a visible player-facing route.',
   ],
 };
 
@@ -1481,7 +1481,7 @@ const arcticTemplePremiumMapPocDungeonDraft: DraftDungeon = {
   id: 'dd-2026-05-18-premium-arctic-temple-map-poc',
   dateIso: '2026-05-18',
   date: 'May 18, 2026',
-  title: 'Premium Map POC: The Frostwake Spire',
+  title: 'The Frostwake Spire',
   theme: 'Arctic temple of ice bridges, frozen side courts, and a central awakening chamber',
   difficulty: 'High',
   partySize: '3-5 adventurers',
@@ -3310,7 +3310,7 @@ const forestRuinDungeonDraft: DraftDungeon = {
         {
           name: 'Greenhollow Root Chorus',
           role: 'Social spirits',
-          threat: 'Moderate if mocked',
+          threat: 'Moderate if challenged',
           durability: 'Tough',
           damage: 'Light',
           tactics: 'Ask binding questions, reveal shameful memories, block exits with roots',
@@ -4039,7 +4039,7 @@ const desertTempleDungeonDraft: DraftDungeon = {
         {
           name: 'Sandbound Scribes',
           role: 'Social spirits',
-          threat: 'Moderate if mocked',
+          threat: 'Moderate if challenged',
           durability: 'Standard',
           damage: 'Light',
           tactics: 'Speak through falling sand, obscure false readers, test intent with riddles',

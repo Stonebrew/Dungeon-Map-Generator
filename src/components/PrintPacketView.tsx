@@ -322,10 +322,10 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
     <article className={`print-packet print-orientation-${printOrientation} space-y-6`}>
       <div className="no-print paper-panel field-corner flex flex-col gap-3 rounded-md border border-slatewood/20 p-4 shadow-tool sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <Badge tone="warning">Prototype print preview</Badge>
+          <Badge tone="warning">Print Packet Preview</Badge>
           <h2 className="survey-title mt-2 font-serif text-3xl font-bold">Print Packet</h2>
           <p className="mt-1 max-w-2xl text-sm leading-6 text-ink/65">
-            Browser print and direct PDF download are available now. Server-side PDF, PNG, and SVG exports are not implemented yet.
+            Review and export your table-ready packet with portrait or landscape pages and labeled or clean player maps.
           </p>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-ink/70">
             Use Print for your system print dialog. Use Save as PDF to download this packet directly.

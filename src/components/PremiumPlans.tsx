@@ -7,8 +7,8 @@ export function PremiumPlans({ plans, currentTier, tierRank }: { plans: Plan[]; 
     <div className="space-y-5">
       <SectionHeader
         eyebrow="Premium"
-        title="Upgrade Plans"
-        text="Mock plan selection only. Payment, accounts, and entitlement storage are intentionally out of scope for this prototype."
+        title="Plan Preview"
+        text="Compare the access levels available in this build. Use the preview tier selector to try each toolset."
       />
       <div className="grid gap-4 xl:grid-cols-3">
         {plans.map((plan) => {
@@ -45,7 +45,7 @@ export function PremiumPlans({ plans, currentTier, tierRank }: { plans: Plan[]; 
                 ))}
               </div>
               <button type="button" className="mt-5 w-full rounded-md border border-ink bg-ink px-3 py-2 text-sm font-bold text-white shadow-tool transition hover:bg-slatewood">
-                {active ? 'Selected' : 'Mock Upgrade'}
+                {active ? 'Current Preview' : 'Preview In Selector'}
               </button>
             </article>
           );

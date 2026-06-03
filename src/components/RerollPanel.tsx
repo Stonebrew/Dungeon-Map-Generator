@@ -76,7 +76,7 @@ function RerollTypeCard({
         {disabled && <Lock className="h-5 w-5" aria-hidden="true" />}
       </div>
       <p className="mt-2 text-sm leading-6">{text}</p>
-      <p className="ledger-label mt-3 text-xs font-bold uppercase text-ink/45">{depleted && !locked ? 'No mock uses remaining today' : poolLabel}</p>
+      <p className="ledger-label mt-3 text-xs font-bold uppercase text-ink/45">{depleted && !locked ? 'No preview uses remaining today' : poolLabel}</p>
       <button type="button" disabled={disabled} onClick={onUse} className="mt-4 w-full rounded-md bg-ember px-3 py-2 text-sm font-bold text-white disabled:bg-ink/10 disabled:text-ink/40">
         {buttonLabel}
       </button>
@@ -164,14 +164,14 @@ export function RerollPanel({
   const fullRerollsDepleted = canUseFullRerolls && rerolls.remainingFull <= 0;
   const partialRefreshesDepleted = canUsePartialRefreshes && rerolls.remainingPartial <= 0;
 
-  const handleMockAction = (resource: 'full' | 'partial', message: string) => {
+  const handlePreviewAction = (resource: 'full' | 'partial', message: string) => {
     const used = resource === 'full' ? onUseFullReroll() : onUsePartialRefresh();
-    setFeedback(used ? message : `No mock ${resource === 'full' ? 'full rerolls' : 'partial refreshes'} remaining today.`);
+    setFeedback(used ? message : `No ${resource === 'full' ? 'full rerolls' : 'partial refreshes'} remaining today.`);
   };
 
   return (
     <div className="space-y-5">
-      <SectionHeader eyebrow="Refresh Tools" title="Reroll / Refresh Panel" text="Controls are visual only. Backend generation and reroll logic will connect here later." />
+      <SectionHeader eyebrow="Refresh Tools" title="Reroll / Refresh Preview" text="Preview how rerolls and targeted refreshes would be organized during a session." />
       <div className="grid gap-4 xl:grid-cols-2">
         <ResourceCard
           label="Full Dungeon Rerolls"
@@ -191,9 +191,9 @@ export function RerollPanel({
 
       {feedback && (
         <Panel className="border-brass/35 p-3">
-          <Badge tone="warning">Prototype feedback</Badge>
+          <Badge tone="warning">Preview feedback</Badge>
           <p className="mt-2 text-sm font-semibold text-ink/70">{feedback}</p>
-          <p className="mt-1 text-xs leading-5 text-ink/50">No real dungeon content was generated or changed.</p>
+          <p className="mt-1 text-xs leading-5 text-ink/50">This preview does not alter the current dungeon content.</p>
         </Panel>
       )}
 
@@ -201,35 +201,35 @@ export function RerollPanel({
         <RerollTypeCard
           title="Full Dungeon Reroll"
           text="Creates a new dungeon."
-          buttonLabel="Mock Full Dungeon Reroll"
+          buttonLabel="Preview Full Reroll"
           poolLabel="Uses full reroll pool"
           locked={!canUseFullRerolls}
           depleted={fullRerollsDepleted}
-          onUse={() => handleMockAction('full', 'Mock full dungeon reroll used. No real dungeon content changed.')}
+          onUse={() => handlePreviewAction('full', 'Full dungeon reroll preview used. The current dungeon remains unchanged.')}
         />
         <RerollTypeCard
           title="Variant Reroll"
           text="Keeps the map but changes theme, inhabitants, story, or encounters."
-          buttonLabel="Mock Variant Reroll"
+          buttonLabel="Preview Variant Reroll"
           poolLabel="Uses full reroll pool"
           locked={!canUseFullRerolls}
           depleted={fullRerollsDepleted}
-          onUse={() => handleMockAction('full', 'Mock variant reroll used. The map and dungeon content are unchanged in this prototype.')}
+          onUse={() => handlePreviewAction('full', 'Variant reroll preview used. The map and dungeon content remain unchanged.')}
         />
         <RerollTypeCard
           title="Partial Refresh"
           text="Changes one room, table, hook, treasure result, or dungeon section."
-          buttonLabel="Mock Partial Refresh"
+          buttonLabel="Preview Partial Refresh"
           poolLabel="Uses partial refresh pool"
           locked={!canUsePartialRefreshes}
           depleted={partialRefreshesDepleted}
-          onUse={() => handleMockAction('partial', 'Mock partial refresh used. No room, table, hook, treasure, or section content changed.')}
+          onUse={() => handlePreviewAction('partial', 'Partial refresh preview used. No room, table, hook, treasure, or section content changed.')}
         />
       </div>
 
       <Panel>
-        <h3 className="survey-title font-serif text-2xl font-bold">Mock Generation Controls</h3>
-        <p className="mt-2 text-sm leading-6 text-ink/65">Unused rerolls and refreshes carry over up to double the daily limit in the tier model.</p>
+        <h3 className="survey-title font-serif text-2xl font-bold">Generation Controls</h3>
+        <p className="mt-2 text-sm leading-6 text-ink/65">These controls show the planned shape of higher-tier customization without changing today’s sample dungeon.</p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2 xl:grid-cols-3">
           {controls.map((control) => (
             <PremiumControl key={control.feature} {...control} tier={tier} onLockedFeature={onLockedFeature} />

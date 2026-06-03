@@ -180,7 +180,7 @@ function DailyDungeonApp() {
 function PlaceholderFeature({ feature }: { feature: { name: string; text: string } }) {
   return (
     <Panel className="border-brass/35">
-      <Badge tone="warning">Prototype placeholder</Badge>
+      <Badge tone="warning">Coming soon</Badge>
       <h2 className="survey-title mt-3 font-serif text-3xl font-bold">{feature.name}</h2>
       <p className="mt-3 max-w-2xl text-sm leading-6 text-ink/70">{feature.text}</p>
     </Panel>

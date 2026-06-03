@@ -388,7 +388,7 @@
         {
           "name": "Sandbound Scribes",
           "role": "Social spirits",
-          "threat": "Moderate if mocked",
+          "threat": "Moderate if challenged",
           "durability": "Standard",
           "damage": "Light",
           "tactics": "Speak through falling sand, obscure false readers, test intent with riddles",
