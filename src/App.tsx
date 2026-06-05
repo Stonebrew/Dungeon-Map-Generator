@@ -16,14 +16,14 @@ import { canAccessFeature, tierRank } from './lib/entitlements';
 import { useMockDailyDungeonApp, type ViewId } from './hooks/useMockDailyDungeonApp';
 import type { Plan } from './types';
 
-const viewItems: { id: ViewId; label: string; icon: typeof BookOpen }[] = [
-  { id: 'today', label: 'Today', icon: BookOpen },
-  { id: 'gm', label: 'GM View', icon: ScrollText },
-  { id: 'player', label: 'Player Map', icon: Shield },
-  { id: 'archive', label: 'Archive', icon: Archive },
-  { id: 'encounters', label: 'Tables', icon: Dice5 },
-  { id: 'upgrade', label: 'Plans', icon: Crown },
-  { id: 'rerolls', label: 'Refresh', icon: RefreshCcw },
+const viewItems: { id: ViewId; label: string; mobileLabel: string; icon: typeof BookOpen }[] = [
+  { id: 'today', label: 'Today', mobileLabel: 'Today', icon: BookOpen },
+  { id: 'gm', label: 'GM View', mobileLabel: 'GM', icon: ScrollText },
+  { id: 'player', label: 'Player Map', mobileLabel: 'Player', icon: Shield },
+  { id: 'archive', label: 'Archive', mobileLabel: 'Saved', icon: Archive },
+  { id: 'encounters', label: 'Tables', mobileLabel: 'Tables', icon: Dice5 },
+  { id: 'upgrade', label: 'Plans', mobileLabel: 'Plans', icon: Crown },
+  { id: 'rerolls', label: 'Refresh', mobileLabel: 'Refresh', icon: RefreshCcw },
 ];
 
 function App() {
@@ -151,7 +151,7 @@ function DailyDungeonApp() {
           </div>
         </main>
 
-        <nav className="fixed inset-x-0 bottom-0 z-30 grid grid-cols-7 border-t border-[#334145] bg-[#172326]/95 px-1 py-2 shadow-[0_-12px_35px_rgba(17,27,30,0.32)] backdrop-blur lg:hidden">
+        <nav className="fixed inset-x-0 bottom-0 z-30 grid min-w-0 grid-cols-7 border-t border-[#334145] bg-[#172326]/95 px-1 py-2 shadow-[0_-12px_35px_rgba(17,27,30,0.32)] backdrop-blur lg:hidden">
           {viewItems.map((item) => {
             const Icon = item.icon;
             return (
@@ -159,13 +159,17 @@ function DailyDungeonApp() {
                 key={item.id}
                 type="button"
                 onClick={() => navigateTo(item.id)}
-                className={`flex min-h-14 flex-col items-center justify-center gap-1 rounded-md border px-1 text-[11px] font-semibold transition ${
+                className={`flex min-h-14 min-w-0 max-w-full flex-col items-center justify-center gap-0.5 overflow-hidden rounded-md border px-0.5 text-[11px] font-semibold leading-none transition ${
                   view === item.id ? 'border-[#c18453] bg-[#a65335] text-white shadow-tool' : isViewLocked(item.id) ? 'border-transparent text-[#b8afa0]/45' : 'border-transparent text-[#f3ecdd]/75 hover:bg-[#223236]'
                 }`}
+                aria-label={item.label}
+                aria-current={view === item.id ? 'page' : undefined}
                 title={item.label}
               >
-                <Icon className="h-4 w-4" aria-hidden="true" />
-                <span className="truncate">{item.label}</span>
+                <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                <span className="block w-full min-w-0 max-w-full overflow-hidden text-ellipsis whitespace-nowrap px-0.5 text-center leading-[1.05]">
+                  {item.mobileLabel}
+                </span>
               </button>
             );
           })}

@@ -8,10 +8,10 @@ The business premise is that a daily dungeon feed may create interest, but paid 
 
 Daily Dungeon already has strong export ingredients:
 
-- 10 validated mock dungeon fixtures with stable IDs, ISO dates, structured room exits, encounter tables, treasure tables, GM notes, and player-safe map rules.
+- 5 active map-first showcase fixtures with stable IDs, ISO dates, structured room exits, encounter tables, treasure tables, GM notes, premium map metadata, schematic fallback metadata, and player-safe map rules.
 - A shared `Dungeon` contract in `src/types.ts`.
 - `map.connections` as the source of truth for route rendering and exits.
-- Surveyor schematic maps plus premium Level 2 maps for Cartographer.
+- Surveyor schematic maps plus premium illustrated maps for Cartographer.
 - Distinct GM and player-safe map rendering, with secret routes and GM markers hidden from player maps.
 - Run Mode and GM View surfaces that prove the data is table-usable.
 - Fixture export via `npm run export:fixtures`, producing backend-seed JSON under `fixtures/dungeons/`.
@@ -219,7 +219,7 @@ Known limitations:
 - Map sections are marked to avoid page splitting, and Save as PDF uses in-place flattened map section snapshots to reduce html2canvas/SVG pagination failures, separated headings, and blank duplicate map frames.
 - There are no export options for paper size, color mode, included sections, map-only output, grid toggles, or route toggles. Uploaded premium-map grids, paths, and terrain remain part of the base image.
 - There is no cached export artifact or download history.
-- Map print quality still needs manual QA across all 10 environments, especially premium Level 2 maps with subtle color or texture.
+- Map print quality still needs manual QA across the active map-first showcase packets, especially premium illustrated maps with overlays and schematic fallbacks.
 - There are no page numbers, running headers, custom cover pages, or print presets yet.
 - SVG download, PNG export, server-side generated PDF, and server-side export bundles remain future work.
 
@@ -230,7 +230,7 @@ Next, harden the browser-print packet preview for private playtesting.
 Scope:
 
 - QA the Print Packet view across Surveyor locked behavior, Cartographer GM maps, and Cartographer player-safe maps.
-- Add print QA screenshots or a checklist for all 10 environments.
+- Add print QA screenshots or a checklist for the active map-first showcase packets.
 - Improve page numbers, headers/footers, print presets, and compact room density if playtesters print full packets.
 - Add a feedback prompt asking whether GMs printed, saved PDF, or ran from mobile.
 - Do not add payment or backend export jobs yet.
@@ -319,7 +319,7 @@ Do not charge for a mocked PDF button or export flow that only implies a real fi
 
 ## Recommended Next 10 Tasks
 
-1. Add print QA screenshots or manual QA notes for all 10 environments.
+1. Add print QA screenshots or manual QA notes for the active map-first showcase packets.
 2. Add a player-safe export leakage checklist to documentation.
 3. Add export option types for paper size and included sections without implementing PDF generation yet.
 4. Add optional one-line room summaries if playtesters need a denser packet.

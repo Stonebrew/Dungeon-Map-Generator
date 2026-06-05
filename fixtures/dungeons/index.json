@@ -1,31 +1,9 @@
 {
-  "generatedAt": "2026-06-03T10:35:58.344Z",
+  "generatedAt": "2026-06-05T06:05:08.552Z",
   "source": "src/data/mockDungeon.ts",
   "contract": "Dungeon",
-  "count": 14,
+  "count": 5,
   "dungeons": [
-    {
-      "id": "dd-2026-05-06",
-      "slug": "the-bell-below-blackfen",
-      "file": "2026-05-06-the-bell-below-blackfen.json",
-      "dateIso": "2026-05-06",
-      "title": "The Bell Below Blackfen",
-      "theme": "Flooded shrine beneath a ruined tollhouse",
-      "difficulty": "Moderate",
-      "mapStyle": "blackfen",
-      "roomCount": 9
-    },
-    {
-      "id": "dd-2026-05-07",
-      "slug": "ashes-at-saint-orra-s-finger-bone-shrine",
-      "file": "2026-05-07-ashes-at-saint-orra-s-finger-bone-shrine.json",
-      "dateIso": "2026-05-07",
-      "title": "Ashes at Saint Orra's Finger-Bone Shrine",
-      "theme": "Small ruined shrine occupied by desperate relic-thieves",
-      "difficulty": "Low",
-      "mapStyle": "shrine",
-      "roomCount": 6
-    },
     {
       "id": "dd-2026-05-16-premium-map-poc",
       "slug": "the-verdant-watercourt",
@@ -71,92 +49,15 @@
       "roomCount": 15
     },
     {
-      "id": "dd-2026-05-08",
-      "slug": "the-singing-caves-of-glasswater-bend",
-      "file": "2026-05-08-the-singing-caves-of-glasswater-bend.json",
-      "dateIso": "2026-05-08",
-      "title": "The Singing Caves of Glasswater Bend",
-      "theme": "Natural cavern where sound, crystal, and hungry creatures reshape the path",
-      "difficulty": "Moderate",
-      "mapStyle": "cavern",
-      "roomCount": 6
-    },
-    {
-      "id": "dd-2026-05-09",
-      "slug": "the-courteous-dead-of-hollowmere-tomb",
-      "file": "2026-05-09-the-courteous-dead-of-hollowmere-tomb.json",
-      "dateIso": "2026-05-09",
-      "title": "The Courteous Dead of Hollowmere Tomb",
-      "theme": "Crypt where polite undead debate who deserves burial honor",
-      "difficulty": "Moderate",
-      "mapStyle": "crypt",
-      "roomCount": 6
-    },
-    {
-      "id": "dd-2026-05-10",
-      "slug": "the-saffron-drain-beneath-marketbell",
-      "file": "2026-05-10-the-saffron-drain-beneath-marketbell.json",
-      "dateIso": "2026-05-10",
-      "title": "The Saffron Drain Beneath Marketbell",
-      "theme": "Sewer and undercity route used by smugglers, vermin, and civic saboteurs",
+      "id": "dd-2026-05-20-premium-desert-tomb",
+      "slug": "the-tomb-of-amun-serekh",
+      "file": "2026-05-20-the-tomb-of-amun-serekh.json",
+      "dateIso": "2026-05-20",
+      "title": "The Tomb of Amun-Serekh",
+      "theme": "Haunted desert tomb of a paranoid pharaoh, broken wards, spider-haunted corridors, and a mummy king",
       "difficulty": "High",
-      "mapStyle": "sewer",
-      "roomCount": 6
-    },
-    {
-      "id": "dd-2026-05-11",
-      "slug": "professor-vellum-s-workshop-for-unfinished-suns",
-      "file": "2026-05-11-professor-vellum-s-workshop-for-unfinished-suns.json",
-      "dateIso": "2026-05-11",
-      "title": "Professor Vellum's Workshop for Unfinished Suns",
-      "theme": "Abandoned arcane laboratory full of unstable light, constructs, and unpaid assistants",
-      "difficulty": "Severe",
-      "mapStyle": "laboratory",
-      "roomCount": 6
-    },
-    {
-      "id": "dd-2026-05-12",
-      "slug": "the-rootbound-chapel-of-greenhollow",
-      "file": "2026-05-12-the-rootbound-chapel-of-greenhollow.json",
-      "dateIso": "2026-05-12",
-      "title": "The Rootbound Chapel of Greenhollow",
-      "theme": "Enchanted forest ruin wrapped around an old stone chapel",
-      "difficulty": "Moderate",
-      "mapStyle": "forestRuin",
-      "roomCount": 6
-    },
-    {
-      "id": "dd-2026-05-13",
-      "slug": "the-cinderheart-foundry",
-      "file": "2026-05-13-the-cinderheart-foundry.json",
-      "dateIso": "2026-05-13",
-      "title": "The Cinderheart Foundry",
-      "theme": "Volcanic forge-temple with cracked stone, old lava channels, and ritual metalwork",
-      "difficulty": "High",
-      "mapStyle": "volcanicForge",
-      "roomCount": 8
-    },
-    {
-      "id": "dd-2026-05-14",
-      "slug": "the-frostglass-reliquary",
-      "file": "2026-05-14-the-frostglass-reliquary.json",
-      "dateIso": "2026-05-14",
-      "title": "The Frostglass Reliquary",
-      "theme": "Frozen ruin and arctic cave with cracked ice, buried stonework, and wind-scoured relic halls",
-      "difficulty": "Moderate to High",
-      "mapStyle": "frozenRuin",
-      "roomCount": 8
-    },
-    {
-      "id": "dd-2026-05-15",
-      "slug": "the-sunken-ziggurat-of-arakeph",
-      "file": "2026-05-15-the-sunken-ziggurat-of-arakeph.json",
-      "dateIso": "2026-05-15",
-      "title": "The Sunken Ziggurat of Arakeph",
-      "theme": "Sand-buried desert temple with exposed platforms, sunken chambers, wind-cut paths, and hidden lower passages",
-      "difficulty": "Moderate",
       "mapStyle": "desertTemple",
-      "roomCount": 8
+      "roomCount": 9
     }
   ]
 }

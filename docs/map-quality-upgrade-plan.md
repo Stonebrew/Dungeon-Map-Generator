@@ -346,7 +346,7 @@ Near term:
 
 1. Improve current SVG renderers.
 2. Add print-specific map presentation modes.
-3. Add map QA screenshots/checklists across all 10 environments.
+3. Add map QA screenshots/checklists across the active map-first showcase packets.
 4. Improve player-safe handout styling.
 5. Add optional grid/no-grid metadata and UI later.
 
@@ -364,7 +364,7 @@ Long term:
 3. Generate GM and player-safe image assets from the same geometry and visibility rules.
 4. Cache export-ready images and PDFs server-side.
 
-Status: the first proof-of-concept illustrated base map is connected to `Premium Map POC: The Verdant Watercourt` using `/premium-maps/test-temple-map.png`. This is a map-first mock dungeon: the illustrated watercourt drives room content, `map.connections`, exits, treasure, hazards, objective placement, and GM/player overlays. Normal route overlays are disabled because visible routes are part of the base art; only a manually aligned GM-only secret route overlay is drawn. This is an alignment and rendering test, not final paid-quality map art.
+Status: the visible sample set is now map-first. The active showcase packets are The Verdant Watercourt, The Ashen Crucible, The Frostwake Spire, The Bramblebell Moot, and The Tomb of Amun-Serekh. Older schematic-only packets have been retired from normal user-facing flows rather than upgraded in place. Surveyor uses simplified schematic/basic maps derived from the map-first packets, while Cartographer uses premium illustrated GM/player maps, player clean/labeled map options, and print/export packet flows.
 
 Dev annotation support now exists at `/dev/map-annotator` in local development builds. It is not a user-facing product feature; it is a prototype tool for visually placing room labels, GM markers, secret routes, and draft connections over local premium map assets. It can load registered assets, load a custom image path from `public/premium-maps/` with automatic natural-dimension detection, and load existing premium map mock dungeons such as the Verdant Watercourt for edit-and-copy overlay tuning. The annotator now uses the same `720x480` premium map bounds and anchor conversion helper as the production premium map renderer, so overlay placement should match the GM Map, Player Map, and Print Packet previews. `map.connections` remains structural connectivity data and does not control premium label or marker placement. This should reduce coordinate guessing while premium map workflows are still manual.
 
@@ -374,7 +374,7 @@ Premium map-first dungeons can define `premiumMap.schematicFootprints` so Survey
 
 ## Recommended Next 10 Map Quality Tasks
 
-1. Create a map print QA checklist for all 10 environments: GM map, player map, room number readability, route clarity, and secret hiding.
+1. Create a map print QA checklist for the active map-first showcase packets: GM map, player map, room number readability, route clarity, and secret hiding.
 2. Improve player-safe print map styling so it feels like an intentional handout.
 3. Add high-contrast print tokens for walls, floor, routes, labels, markers, water, lava, ice, sand, and forest terrain.
 4. Tune the weakest paid-value environments first: laboratory, shrine, and crypt.
@@ -390,7 +390,7 @@ Premium map-first dungeons can define `premiumMap.schematicFootprints` so Survey
 Improve before private playtesting:
 
 - Print-specific map mode for GM and player maps.
-- Manual QA across all 10 environments.
+- Manual QA across all active map-first showcase packets.
 - Player-safe leakage checklist.
 - At least one pass on map label, marker, and route contrast in browser print/save-to-PDF.
 - Client-side PDF download QA against the same player-safe leakage checklist.
@@ -421,10 +421,10 @@ Postpone:
 - VTT export.
 - Dynamic fog-of-war print/export.
 - Advanced map style marketplace.
-- More environments.
+- More environments before they are map-first and showcase-ready.
 - Complex grid scale controls.
 
-These may become important later, but they should not distract from making the current 10 maps print-worthy.
+These may become important later, but they should not distract from making the current map-first showcase packets print-worthy.
 
 ## Recommended Next Technical Task
 

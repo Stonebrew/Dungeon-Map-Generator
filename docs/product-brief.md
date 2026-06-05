@@ -24,6 +24,8 @@ Feature entitlement checks are centralized in `src/lib/entitlements.ts`. The sam
 
 Mock dungeon payloads now include backend-planning fields such as ISO dates, stable room IDs, structured exits, and `map.connections` as the source of truth for map connectivity. Run `npm run validate:dungeons` before changing mock dungeon content or map routes.
 
+The active visible sample set is map-first: The Verdant Watercourt, The Ashen Crucible, The Frostwake Spire, The Bramblebell Moot, and The Tomb of Amun-Serekh. Legacy schematic-only packets are retired from normal user-facing flows so Surveyor and Cartographer both demonstrate the same map-first packet structure.
+
 Prototype app state is isolated in `src/hooks/useMockDailyDungeonApp.ts`. This hook currently owns sample dungeon selection, preview tier selection, favorites, New Packet Refresh resources, locked feature state, and view routing until real backend/account APIs exist.
 
 ## Out Of Scope

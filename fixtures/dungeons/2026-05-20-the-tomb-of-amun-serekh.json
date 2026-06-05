@@ -1,0 +1,943 @@
+{
+  "id": "dd-2026-05-20-premium-desert-tomb",
+  "dateIso": "2026-05-20",
+  "date": "May 20, 2026",
+  "title": "The Tomb of Amun-Serekh",
+  "theme": "Haunted desert tomb of a paranoid pharaoh, broken wards, spider-haunted corridors, and a mummy king",
+  "difficulty": "High",
+  "partySize": "3-5 adventurers",
+  "estimatedPlayTime": "3-4 hours",
+  "hook": "A sandstorm has uncovered three separate mouths into the tomb of Amun-Serekh, a pharaoh remembered for murdering his heirs to lengthen his own reign. A patron wants proof that the old tyrant is truly dead before tomb smoke reaches the nearest oasis.",
+  "background": "Amun-Serekh built his tomb as a second kingdom beneath the dunes. He sealed his sons in the walls, raised ward engines to drink strength from trespassers, and ordered his embalmers to keep his rule from ending even after death.\n\nNow the tomb has opened in three places at once. Jackal-masked sentries and sand-sick grave servants roam the lower halls, spiders nest in the upper web shafts, and two ward engines still feed power toward the pharaoh's burial chamber. The party can push straight for Room 9, but Amun-Serekh is far more dangerous while both ward engines remain active.\n\nThe party enters to silence the tomb, recover proof of the pharaoh's crimes, and stop the curse from reaching the oasis. Disabling or destroying the ward engines in Rooms 2 and 4 weakens the mummy king before the final confrontation.",
+  "map": {
+    "style": "desertTemple",
+    "gmMapId": "premium-amun-serekh-gm",
+    "playerMapId": "premium-amun-serekh-player",
+    "layout": {
+      "grammar": [
+        "fragmentedVertical",
+        "constructedHub"
+      ],
+      "notes": "Desert tomb with three entry mouths, a lower receiving hall, side ward chambers, spider-haunted upper passages, secret doors, and the pharaoh's burial chamber at the top."
+    },
+    "connections": [
+      {
+        "routeStyle": "corridor",
+        "routeDifficulty": "clear",
+        "from": 1,
+        "to": 5,
+        "type": "normal",
+        "path": "M359.28 398.74 L496.01 243.74"
+      },
+      {
+        "routeStyle": "corridor",
+        "routeDifficulty": "hazardous",
+        "from": 1,
+        "to": 7,
+        "type": "normal",
+        "note": "An arrow trap triggers when trespassers enter the western corridor.",
+        "path": "M359.28 398.74 L142.27 215.57"
+      },
+      {
+        "routeStyle": "corridor",
+        "routeDifficulty": "hazardous",
+        "from": 1,
+        "to": 8,
+        "type": "normal",
+        "note": "Giant tomb spiders descend when trespassers enter the upper web corridor for the first time.",
+        "path": "M359.28 398.74 L211.32 88.75"
+      },
+      {
+        "routeStyle": "corridor",
+        "routeDifficulty": "hazardous",
+        "from": 8,
+        "to": 9,
+        "type": "normal",
+        "note": "Webbing and loose ceiling stones make the final approach dangerous.",
+        "path": "M211.32 88.75 L362.09 69.02"
+      },
+      {
+        "routeStyle": "stair",
+        "routeDifficulty": "clear",
+        "from": 1,
+        "to": 9,
+        "type": "normal",
+        "path": "M359.28 398.74 L362.09 69.02"
+      },
+      {
+        "routeStyle": "corridor",
+        "routeDifficulty": "hidden",
+        "from": 2,
+        "to": 7,
+        "type": "secret",
+        "note": "Completely enveloping either Room 2 or Room 7 in darkness opens the door between them.",
+        "path": "M140.9 362.11 L142.27 215.57"
+      },
+      {
+        "routeStyle": "corridor",
+        "routeDifficulty": "hidden",
+        "from": 3,
+        "to": 4,
+        "type": "secret",
+        "note": "Pushing on a keystone hidden in the wall opens the door from Room 3 to Room 4.",
+        "path": "M522.72 372 L593.21 252.24"
+      },
+      {
+        "routeStyle": "stair",
+        "routeDifficulty": "clear",
+        "from": 3,
+        "to": 5,
+        "type": "normal",
+        "path": "M522.72 372 L496.01 243.74"
+      },
+      {
+        "routeStyle": "stair",
+        "routeDifficulty": "clear",
+        "from": 5,
+        "to": 6,
+        "type": "normal",
+        "path": "M496.01 243.74 L528.41 101.47"
+      }
+    ],
+    "playerSafe": {
+      "hideSecrets": true,
+      "hideTreasure": true,
+      "hideHazards": true,
+      "hideGmNotes": true,
+      "description": "A player-safe illustrated desert tomb map. Keyed numbers may remain visible when labels are enabled, but GM markers, ward details, treasures, hazards, and hidden doors are not shown."
+    },
+    "premiumMap": {
+      "status": "available",
+      "baseMapImage": {
+        "id": "custom-desert-tomb-1",
+        "url": "/premium-maps/desert-tomb-1.png",
+        "width": 1254,
+        "height": 1254,
+        "mimeType": "image/png"
+      },
+      "imageSize": {
+        "width": 1254,
+        "height": 1254
+      },
+      "mapBounds": {
+        "x": 0,
+        "y": 0,
+        "width": 720,
+        "height": 480
+      },
+      "overlayViewBox": "0 0 720 480",
+      "printableMapVariant": "standard",
+      "showNormalRouteOverlay": false,
+      "schematicFootprints": [
+        {
+          "roomNumber": 1,
+          "shape": "rect",
+          "xPercent": 49.9,
+          "yPercent": 83.07,
+          "widthPercent": 20,
+          "heightPercent": 13
+        },
+        {
+          "roomNumber": 2,
+          "shape": "rect",
+          "xPercent": 18.5,
+          "yPercent": 72.5,
+          "widthPercent": 22,
+          "heightPercent": 19
+        },
+        {
+          "roomNumber": 3,
+          "shape": "rect",
+          "xPercent": 74,
+          "yPercent": 78.5,
+          "widthPercent": 25,
+          "heightPercent": 19
+        },
+        {
+          "roomNumber": 4,
+          "shape": "rect",
+          "xPercent": 82.4,
+          "yPercent": 50,
+          "widthPercent": 19,
+          "heightPercent": 18
+        },
+        {
+          "roomNumber": 5,
+          "shape": "rect",
+          "xPercent": 68.89,
+          "yPercent": 50.78,
+          "widthPercent": 16,
+          "heightPercent": 13
+        },
+        {
+          "roomNumber": 6,
+          "shape": "rect",
+          "xPercent": 73.39,
+          "yPercent": 21.14,
+          "widthPercent": 18,
+          "heightPercent": 14
+        },
+        {
+          "roomNumber": 7,
+          "shape": "rect",
+          "xPercent": 29,
+          "yPercent": 44.5,
+          "widthPercent": 34,
+          "heightPercent": 20
+        },
+        {
+          "roomNumber": 8,
+          "shape": "rect",
+          "xPercent": 31,
+          "yPercent": 23,
+          "widthPercent": 24,
+          "heightPercent": 22
+        },
+        {
+          "roomNumber": 9,
+          "shape": "rect",
+          "xPercent": 50.29,
+          "yPercent": 10,
+          "widthPercent": 24,
+          "heightPercent": 20
+        }
+      ],
+      "gmOverlay": {
+        "viewBox": "0 0 720 480",
+        "labelAnchors": [
+          {
+            "roomNumber": 1,
+            "xPercent": 49.9,
+            "yPercent": 83.07
+          },
+          {
+            "roomNumber": 2,
+            "xPercent": 19.57,
+            "yPercent": 75.44
+          },
+          {
+            "roomNumber": 3,
+            "xPercent": 72.6,
+            "yPercent": 77.5
+          },
+          {
+            "roomNumber": 4,
+            "xPercent": 82.39,
+            "yPercent": 52.55
+          },
+          {
+            "roomNumber": 5,
+            "xPercent": 68.89,
+            "yPercent": 50.78
+          },
+          {
+            "roomNumber": 6,
+            "xPercent": 73.39,
+            "yPercent": 21.14
+          },
+          {
+            "roomNumber": 7,
+            "xPercent": 19.76,
+            "yPercent": 44.91
+          },
+          {
+            "roomNumber": 8,
+            "xPercent": 29.35,
+            "yPercent": 18.49
+          },
+          {
+            "roomNumber": 9,
+            "xPercent": 50.29,
+            "yPercent": 14.38
+          }
+        ],
+        "markerAnchors": [
+          {
+            "roomNumber": 2,
+            "marker": "objective",
+            "xPercent": 16.63,
+            "yPercent": 72.8
+          },
+          {
+            "roomNumber": 2,
+            "marker": "secret",
+            "xPercent": 16.63,
+            "yPercent": 66.05
+          },
+          {
+            "roomNumber": 3,
+            "marker": "secret",
+            "xPercent": 82.39,
+            "yPercent": 73.97
+          },
+          {
+            "roomNumber": 4,
+            "marker": "objective",
+            "xPercent": 81.02,
+            "yPercent": 44.91
+          },
+          {
+            "roomNumber": 4,
+            "marker": "treasure",
+            "xPercent": 86.5,
+            "yPercent": 45.5
+          },
+          {
+            "roomNumber": 7,
+            "marker": "treasure",
+            "xPercent": 19.57,
+            "yPercent": 38.75
+          },
+          {
+            "roomNumber": 9,
+            "marker": "treasure",
+            "xPercent": 55.58,
+            "yPercent": 5.58
+          },
+          {
+            "roomNumber": 9,
+            "marker": "objective",
+            "xPercent": 50.29,
+            "yPercent": 5.58
+          },
+          {
+            "roomNumber": 9,
+            "marker": "boss",
+            "xPercent": 45.99,
+            "yPercent": 5.87
+          },
+          {
+            "roomNumber": 8,
+            "marker": "hazard",
+            "xPercent": 41.1,
+            "yPercent": 29.36
+          },
+          {
+            "roomNumber": 7,
+            "marker": "hazard",
+            "xPercent": 40.9,
+            "yPercent": 48.14
+          },
+          {
+            "roomNumber": 5,
+            "marker": "hazard",
+            "xPercent": 65.75,
+            "yPercent": 46.67
+          },
+          {
+            "roomNumber": 3,
+            "marker": "treasure",
+            "xPercent": 65.75,
+            "yPercent": 82.78
+          }
+        ],
+        "routeOverlayPaths": [],
+        "notes": "Generated by the dev-only premium map annotator. Review alignment before committing."
+      },
+      "playerOverlay": {
+        "viewBox": "0 0 720 480",
+        "labelAnchors": [
+          {
+            "roomNumber": 1,
+            "xPercent": 49.9,
+            "yPercent": 83.07
+          },
+          {
+            "roomNumber": 2,
+            "xPercent": 19.57,
+            "yPercent": 75.44
+          },
+          {
+            "roomNumber": 3,
+            "xPercent": 72.6,
+            "yPercent": 77.5
+          },
+          {
+            "roomNumber": 4,
+            "xPercent": 82.39,
+            "yPercent": 52.55
+          },
+          {
+            "roomNumber": 5,
+            "xPercent": 68.89,
+            "yPercent": 50.78
+          },
+          {
+            "roomNumber": 6,
+            "xPercent": 73.39,
+            "yPercent": 21.14
+          },
+          {
+            "roomNumber": 7,
+            "xPercent": 19.76,
+            "yPercent": 44.91
+          },
+          {
+            "roomNumber": 8,
+            "xPercent": 29.35,
+            "yPercent": 18.49
+          },
+          {
+            "roomNumber": 9,
+            "xPercent": 50.29,
+            "yPercent": 14.38
+          }
+        ]
+      },
+      "printNotes": "Generated from the dev-only premium map annotator."
+    }
+  },
+  "mapStyle": "desertTemple",
+  "mapPlaceholder": "premium-amun-serekh-gm",
+  "playerMapPlaceholder": "premium-amun-serekh-player",
+  "rooms": [
+    {
+      "layoutRole": "hub",
+      "areaShape": "hall",
+      "areaScale": "large",
+      "openness": "semiOpen",
+      "environmentRole": "fortified",
+      "number": 1,
+      "name": "Sunken Receiving Hall",
+      "readAloud": "A wide sand-choked hall opens beneath a cracked ceiling. Three passages and a steep central stair vanish into darkness around a floor mosaic of a crowned jackal.",
+      "gmNotes": "This is the main lower entrance and route hub. Tracks from the new sand breach show that tomb servants still pass between the central stair, the east guard route, and the western arrow corridor.",
+      "threat": "Moderate",
+      "tags": [
+        "Entrance",
+        "Hub",
+        "Sand"
+      ],
+      "inhabitants": [
+        {
+          "name": "Jackal-Masked Tomb Sentries",
+          "role": "Undead hall guards",
+          "threat": "Moderate",
+          "durability": "Standard",
+          "damage": "Serious",
+          "tactics": "Hold the stair, drive intruders into trapped corridors, and retreat toward Room 9 if pressed",
+          "morale": "Fight until a royal cartouche is defaced or both ward engines fall silent",
+          "wants": "Keep the pharaoh's burial chamber untouched",
+          "leverage": "They hesitate before anyone carrying a prince's funerary token"
+        }
+      ],
+      "treasure": "A cracked lapis eye from the floor mosaic can be lifted without disturbing the main ward lines.",
+      "secrets": "The three entry mouths were intentional: Amun-Serekh wanted enemies to split up before reaching the burial chamber.",
+      "exits": "Clear corridor to Room 5, hazardous arrow corridor to Room 7, hazardous web corridor to Room 8, and central stair to Room 9.",
+      "id": "dd-2026-05-20-premium-desert-tomb-room-01",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-20-premium-desert-tomb-room-01-to-dd-2026-05-20-premium-desert-tomb-room-05",
+          "toRoomId": "dd-2026-05-20-premium-desert-tomb-room-05",
+          "toRoomNumber": 5,
+          "type": "normal",
+          "label": "Route to Room 5",
+          "description": "Clear corridor to Room 5, hazardous arrow corridor to Room 7, hazardous web corridor to Room 8, and central stair to Room 9."
+        },
+        {
+          "id": "dd-2026-05-20-premium-desert-tomb-room-01-to-dd-2026-05-20-premium-desert-tomb-room-07",
+          "toRoomId": "dd-2026-05-20-premium-desert-tomb-room-07",
+          "toRoomNumber": 7,
+          "type": "normal",
+          "label": "An arrow trap triggers when trespassers enter the western corridor.",
+          "description": "Clear corridor to Room 5, hazardous arrow corridor to Room 7, hazardous web corridor to Room 8, and central stair to Room 9.",
+          "note": "An arrow trap triggers when trespassers enter the western corridor."
+        },
+        {
+          "id": "dd-2026-05-20-premium-desert-tomb-room-01-to-dd-2026-05-20-premium-desert-tomb-room-08",
+          "toRoomId": "dd-2026-05-20-premium-desert-tomb-room-08",
+          "toRoomNumber": 8,
+          "type": "normal",
+          "label": "Giant tomb spiders descend when trespassers enter the upper web corridor for the first time.",
+          "description": "Clear corridor to Room 5, hazardous arrow corridor to Room 7, hazardous web corridor to Room 8, and central stair to Room 9.",
+          "note": "Giant tomb spiders descend when trespassers enter the upper web corridor for the first time."
+        },
+        {
+          "id": "dd-2026-05-20-premium-desert-tomb-room-01-to-dd-2026-05-20-premium-desert-tomb-room-09",
+          "toRoomId": "dd-2026-05-20-premium-desert-tomb-room-09",
+          "toRoomNumber": 9,
+          "type": "normal",
+          "label": "Route to Room 9",
+          "description": "Clear corridor to Room 5, hazardous arrow corridor to Room 7, hazardous web corridor to Room 8, and central stair to Room 9."
+        }
+      ]
+    },
+    {
+      "layoutRole": "objective",
+      "areaShape": "chamber",
+      "areaScale": "medium",
+      "openness": "enclosed",
+      "environmentRole": "ritual",
+      "number": 2,
+      "name": "Western Ward Engine",
+      "readAloud": "A side entrance drops into a chamber of black stone ribs. A copper disk turns slowly above a dry basin, catching torchlight like a watchful eye.",
+      "gmNotes": "This is one of the two weakening objectives. If the disk is stopped, shattered, or ritually inverted, Amun-Serekh loses some of his unnatural resilience in Room 9. Darkness opens the secret door to Room 7.",
+      "threat": "High",
+      "tags": [
+        "Entrance",
+        "Ward",
+        "Secret"
+      ],
+      "inhabitants": [],
+      "treasure": "A copper ward needle can be removed from the basin after the engine is disabled.",
+      "secrets": "Completely enveloping this chamber in darkness opens the hidden door to Room 7; the engine was built to fear the absence of light.",
+      "exits": "Outer breach to the dunes, or hidden corridor to Room 7 when either connected chamber is completely dark.",
+      "id": "dd-2026-05-20-premium-desert-tomb-room-02",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-20-premium-desert-tomb-room-02-to-dd-2026-05-20-premium-desert-tomb-room-07",
+          "toRoomId": "dd-2026-05-20-premium-desert-tomb-room-07",
+          "toRoomNumber": 7,
+          "type": "secret",
+          "label": "Completely enveloping either Room 2 or Room 7 in darkness opens the door between them.",
+          "description": "Outer breach to the dunes, or hidden corridor to Room 7 when either connected chamber is completely dark.",
+          "note": "Completely enveloping either Room 2 or Room 7 in darkness opens the door between them."
+        }
+      ]
+    },
+    {
+      "layoutRole": "threshold",
+      "areaShape": "stair",
+      "areaScale": "medium",
+      "openness": "semiOpen",
+      "environmentRole": "fortified",
+      "number": 3,
+      "name": "Eastern Prince-Gate",
+      "readAloud": "A second entrance descends between reliefs of three young princes whose faces have been chiseled away. Sand pours through the open gate in thin curtains.",
+      "gmNotes": "This entrance offers a faster route toward Room 5 and the hidden keystone door to Room 4. The treasure marker belongs to grave goods left by servants who feared the pharaoh more than thieves.",
+      "threat": "Moderate",
+      "tags": [
+        "Entrance",
+        "Treasure",
+        "Secret"
+      ],
+      "inhabitants": [],
+      "treasure": "A prince's funerary token, a small alabaster cup, and a roll of names scratched from the royal succession.",
+      "secrets": "A hidden keystone opens the concealed door to Room 4. Each defaced prince points toward the same stone.",
+      "exits": "Clear stair to Room 5, or hidden door to Room 4 if the keystone is pressed.",
+      "id": "dd-2026-05-20-premium-desert-tomb-room-03",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-20-premium-desert-tomb-room-03-to-dd-2026-05-20-premium-desert-tomb-room-04",
+          "toRoomId": "dd-2026-05-20-premium-desert-tomb-room-04",
+          "toRoomNumber": 4,
+          "type": "secret",
+          "label": "Pushing on a keystone hidden in the wall opens the door from Room 3 to Room 4.",
+          "description": "Clear stair to Room 5, or hidden door to Room 4 if the keystone is pressed.",
+          "note": "Pushing on a keystone hidden in the wall opens the door from Room 3 to Room 4."
+        },
+        {
+          "id": "dd-2026-05-20-premium-desert-tomb-room-03-to-dd-2026-05-20-premium-desert-tomb-room-05",
+          "toRoomId": "dd-2026-05-20-premium-desert-tomb-room-05",
+          "toRoomNumber": 5,
+          "type": "normal",
+          "label": "Route to Room 5",
+          "description": "Clear stair to Room 5, or hidden door to Room 4 if the keystone is pressed."
+        }
+      ]
+    },
+    {
+      "layoutRole": "objective",
+      "areaShape": "chamber",
+      "areaScale": "medium",
+      "openness": "enclosed",
+      "environmentRole": "ritual",
+      "number": 4,
+      "name": "Oath-Breaker Ward",
+      "readAloud": "A narrow chamber glitters with gold leaf and old blood-brown varnish. A carved sun disk floats above a sealed coffer, humming in a voice just below hearing.",
+      "gmNotes": "This is the second weakening objective. Disabling this ward strips Amun-Serekh of part of his command over minions. The coffer is treasure but linked to the ward hum.",
+      "threat": "High",
+      "tags": [
+        "Ward",
+        "Treasure",
+        "Secret chamber"
+      ],
+      "inhabitants": [],
+      "treasure": "The sealed coffer holds gold leaf funerary plaques and a scarab ring that marks false royal oaths.",
+      "secrets": "The ward was powered by the names of the pharaoh's sons; speaking those names aloud makes the sun disk falter.",
+      "exits": "Hidden door to Room 3, opened by the keystone from the prince-gate side.",
+      "id": "dd-2026-05-20-premium-desert-tomb-room-04",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-20-premium-desert-tomb-room-04-to-dd-2026-05-20-premium-desert-tomb-room-03",
+          "toRoomId": "dd-2026-05-20-premium-desert-tomb-room-03",
+          "toRoomNumber": 3,
+          "type": "secret",
+          "label": "Pushing on a keystone hidden in the wall opens the door from Room 3 to Room 4.",
+          "description": "Hidden door to Room 3, opened by the keystone from the prince-gate side.",
+          "note": "Pushing on a keystone hidden in the wall opens the door from Room 3 to Room 4."
+        }
+      ]
+    },
+    {
+      "layoutRole": "transition",
+      "areaShape": "hall",
+      "areaScale": "large",
+      "openness": "semiOpen",
+      "environmentRole": "hazardAdjacent",
+      "number": 5,
+      "name": "Hall Of Crooked Scales",
+      "readAloud": "A long hall slopes upward between statues holding broken judgment scales. Sand hisses from cracks in the walls and gathers around the heavier pan of every scale.",
+      "gmNotes": "This chamber connects the main receiving hall, the eastern entrance, and the upper stair. The hazard marker is a pressure-sand scale trap that punishes anyone carrying obvious grave wealth.",
+      "threat": "High",
+      "tags": [
+        "Hazard",
+        "Judgment hall",
+        "Transit"
+      ],
+      "inhabitants": [],
+      "treasure": "A balanced pair of small bronze scale pans can be safely removed after the trap is jammed.",
+      "secrets": "The scales weigh guilt, not weight. Confessing a broken promise quiets the pressure-sand for one crossing.",
+      "exits": "Clear corridor to Room 1, clear stair to Room 3, and clear stair to Room 6.",
+      "id": "dd-2026-05-20-premium-desert-tomb-room-05",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-20-premium-desert-tomb-room-05-to-dd-2026-05-20-premium-desert-tomb-room-01",
+          "toRoomId": "dd-2026-05-20-premium-desert-tomb-room-01",
+          "toRoomNumber": 1,
+          "type": "normal",
+          "label": "Route to Room 1",
+          "description": "Clear corridor to Room 1, clear stair to Room 3, and clear stair to Room 6."
+        },
+        {
+          "id": "dd-2026-05-20-premium-desert-tomb-room-05-to-dd-2026-05-20-premium-desert-tomb-room-03",
+          "toRoomId": "dd-2026-05-20-premium-desert-tomb-room-03",
+          "toRoomNumber": 3,
+          "type": "normal",
+          "label": "Route to Room 3",
+          "description": "Clear corridor to Room 1, clear stair to Room 3, and clear stair to Room 6."
+        },
+        {
+          "id": "dd-2026-05-20-premium-desert-tomb-room-05-to-dd-2026-05-20-premium-desert-tomb-room-06",
+          "toRoomId": "dd-2026-05-20-premium-desert-tomb-room-06",
+          "toRoomNumber": 6,
+          "type": "normal",
+          "label": "Route to Room 6",
+          "description": "Clear corridor to Room 1, clear stair to Room 3, and clear stair to Room 6."
+        }
+      ]
+    },
+    {
+      "layoutRole": "branch",
+      "areaShape": "stair",
+      "areaScale": "medium",
+      "openness": "enclosed",
+      "environmentRole": "ritual",
+      "number": 6,
+      "name": "Embalmers' Upper Stair",
+      "readAloud": "A steep stair climbs past niches packed with dry linen, salt jars, and tools shaped like hooks and spoons. The air smells of resin and hot stone.",
+      "gmNotes": "This is a quieter upper branch that foreshadows the mummy king. It gives the party a place to discover how the wards connect to Amun-Serekh's embalming rites.",
+      "threat": "Moderate",
+      "tags": [
+        "Stair",
+        "Embalming",
+        "Clue"
+      ],
+      "inhabitants": [
+        {
+          "name": "Salt-Linen Attendants",
+          "role": "Restless embalming servants",
+          "threat": "Moderate",
+          "durability": "Fragile",
+          "damage": "Light",
+          "tactics": "Swarm, bind limbs with linen, and pull intruders back toward the hooks",
+          "morale": "Scatter if the embalming jars are respectfully sealed",
+          "wants": "Finish a burial that should have ended centuries ago",
+          "leverage": "They obey anyone who names the murdered princes as rightful heirs"
+        }
+      ],
+      "treasure": "A resin-sealed embalmer's knife and a jar of rare desert myrrh remain usable.",
+      "secrets": "The notes here explain that destroying both ward engines weakens the mummy king before he wakes fully.",
+      "exits": "Stair down to Room 5.",
+      "id": "dd-2026-05-20-premium-desert-tomb-room-06",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-20-premium-desert-tomb-room-06-to-dd-2026-05-20-premium-desert-tomb-room-05",
+          "toRoomId": "dd-2026-05-20-premium-desert-tomb-room-05",
+          "toRoomNumber": 5,
+          "type": "normal",
+          "label": "Route to Room 5",
+          "description": "Stair down to Room 5."
+        }
+      ]
+    },
+    {
+      "layoutRole": "branch",
+      "areaShape": "hall",
+      "areaScale": "large",
+      "openness": "semiOpen",
+      "environmentRole": "fortified",
+      "number": 7,
+      "name": "Blind Archers' Gallery",
+      "readAloud": "A western gallery is lined with archer statues whose faces have been polished smooth. Their bows point toward every patch of light.",
+      "gmNotes": "This treasure and hazard room controls the secret route to Room 2. The arrow corridor from Room 1 triggers when light crosses the wrong floor inlay; darkness also opens the secret door to Room 2.",
+      "threat": "High",
+      "tags": [
+        "Hazard",
+        "Treasure",
+        "Secret"
+      ],
+      "inhabitants": [],
+      "treasure": "Three black-fletched ceremonial arrows and a silver thumb ring sit in a wall niche behind the statues.",
+      "secrets": "Completely darkening the gallery opens the hidden passage to Room 2. The statues were built blind so they could guard by light alone.",
+      "exits": "Hazardous corridor to Room 1, or hidden corridor to Room 2 when either connected chamber is completely dark.",
+      "id": "dd-2026-05-20-premium-desert-tomb-room-07",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-20-premium-desert-tomb-room-07-to-dd-2026-05-20-premium-desert-tomb-room-01",
+          "toRoomId": "dd-2026-05-20-premium-desert-tomb-room-01",
+          "toRoomNumber": 1,
+          "type": "normal",
+          "label": "An arrow trap triggers when trespassers enter the western corridor.",
+          "description": "Hazardous corridor to Room 1, or hidden corridor to Room 2 when either connected chamber is completely dark.",
+          "note": "An arrow trap triggers when trespassers enter the western corridor."
+        },
+        {
+          "id": "dd-2026-05-20-premium-desert-tomb-room-07-to-dd-2026-05-20-premium-desert-tomb-room-02",
+          "toRoomId": "dd-2026-05-20-premium-desert-tomb-room-02",
+          "toRoomNumber": 2,
+          "type": "secret",
+          "label": "Completely enveloping either Room 2 or Room 7 in darkness opens the door between them.",
+          "description": "Hazardous corridor to Room 1, or hidden corridor to Room 2 when either connected chamber is completely dark.",
+          "note": "Completely enveloping either Room 2 or Room 7 in darkness opens the door between them."
+        }
+      ]
+    },
+    {
+      "layoutRole": "branch",
+      "areaShape": "shaft",
+      "areaScale": "medium",
+      "openness": "enclosed",
+      "environmentRole": "hazardAdjacent",
+      "number": 8,
+      "name": "Webbed Heir Shaft",
+      "readAloud": "A broken shaft rises into web-choked stonework. Small bones hang in the silk beside gold-threaded scraps of royal child-cloth.",
+      "gmNotes": "This hazardous corridor room is tied to the spider notes in the connections. The spiders descend the first time the party enters the corridor from Room 1 or crosses toward Room 9.",
+      "threat": "High",
+      "tags": [
+        "Hazard",
+        "Spiders",
+        "Upper route"
+      ],
+      "inhabitants": [
+        {
+          "name": "Giant Tomb Spiders",
+          "role": "Web-nesting carrion hunters",
+          "threat": "High",
+          "durability": "Standard",
+          "damage": "Serious",
+          "tactics": "Drop from above, split the party with webbing, and drag prey toward ceiling cracks",
+          "morale": "Retreat if fire or loud stone impacts destroy the upper webs",
+          "wants": "Fresh prey and undisturbed egg sacs",
+          "leverage": "They avoid incense from the embalming stair"
+        }
+      ],
+      "treasure": "A gold-threaded funerary sash is caught in the upper webs, still bearing one murdered prince's name.",
+      "secrets": "The bones here prove Amun-Serekh murdered his heirs inside the tomb before sealing himself away.",
+      "exits": "Hazardous corridor to Room 1, or hazardous upper corridor to Room 9.",
+      "id": "dd-2026-05-20-premium-desert-tomb-room-08",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-20-premium-desert-tomb-room-08-to-dd-2026-05-20-premium-desert-tomb-room-01",
+          "toRoomId": "dd-2026-05-20-premium-desert-tomb-room-01",
+          "toRoomNumber": 1,
+          "type": "normal",
+          "label": "Giant tomb spiders descend when trespassers enter the upper web corridor for the first time.",
+          "description": "Hazardous corridor to Room 1, or hazardous upper corridor to Room 9.",
+          "note": "Giant tomb spiders descend when trespassers enter the upper web corridor for the first time."
+        },
+        {
+          "id": "dd-2026-05-20-premium-desert-tomb-room-08-to-dd-2026-05-20-premium-desert-tomb-room-09",
+          "toRoomId": "dd-2026-05-20-premium-desert-tomb-room-09",
+          "toRoomNumber": 9,
+          "type": "normal",
+          "label": "Webbing and loose ceiling stones make the final approach dangerous.",
+          "description": "Hazardous corridor to Room 1, or hazardous upper corridor to Room 9.",
+          "note": "Webbing and loose ceiling stones make the final approach dangerous."
+        }
+      ]
+    },
+    {
+      "number": 9,
+      "name": "Sarcophagus Of Amun-Serekh",
+      "readAloud": "A high burial chamber opens around a black stone sarcophagus. Gold masks stare from the walls, and a dry wind coils above the lid like a crown.",
+      "gmNotes": "This is the boss and final objective chamber. Amun-Serekh is strongest if either ward engine still turns. If Rooms 2 and 4 are both disabled, he loses his ward-fed resilience and command over some minions.",
+      "threat": "Severe",
+      "tags": [
+        "Boss",
+        "Objective",
+        "Treasure"
+      ],
+      "layoutRole": "objective",
+      "areaShape": "chamber",
+      "areaScale": "huge",
+      "openness": "enclosed",
+      "environmentRole": "ritual",
+      "inhabitants": [
+        {
+          "name": "Amun-Serekh, Mummy Pharaoh",
+          "role": "Tyrant ruler bound to his own tomb",
+          "threat": "Severe",
+          "durability": "Very Tough",
+          "damage": "Severe",
+          "tactics": "Commands minions, curses oathbreakers, and tries to force intruders down the stair or into the web shaft",
+          "morale": "Fights until destroyed unless confronted with the names and tokens of his murdered sons after both wards are disabled",
+          "wants": "Rule forever from beneath the dunes and erase every heir from memory",
+          "leverage": "His power weakens when the ward engines in Rooms 2 and 4 are shut down or destroyed"
+        }
+      ],
+      "treasure": "The sarcophagus contains a gold death mask, the pharaoh's black crook, and a sealed confession naming the sons he killed.",
+      "secrets": "Amun-Serekh can be weakened before the fight by disabling the ward engines in Rooms 2 and 4; the prince tokens make his final denial falter.",
+      "exits": "Central stair to Room 1, or hazardous upper corridor to Room 8.",
+      "id": "dd-2026-05-20-premium-desert-tomb-room-09",
+      "structuredExits": [
+        {
+          "id": "dd-2026-05-20-premium-desert-tomb-room-09-to-dd-2026-05-20-premium-desert-tomb-room-08",
+          "toRoomId": "dd-2026-05-20-premium-desert-tomb-room-08",
+          "toRoomNumber": 8,
+          "type": "normal",
+          "label": "Webbing and loose ceiling stones make the final approach dangerous.",
+          "description": "Central stair to Room 1, or hazardous upper corridor to Room 8.",
+          "note": "Webbing and loose ceiling stones make the final approach dangerous."
+        },
+        {
+          "id": "dd-2026-05-20-premium-desert-tomb-room-09-to-dd-2026-05-20-premium-desert-tomb-room-01",
+          "toRoomId": "dd-2026-05-20-premium-desert-tomb-room-01",
+          "toRoomNumber": 1,
+          "type": "normal",
+          "label": "Route to Room 1",
+          "description": "Central stair to Room 1, or hazardous upper corridor to Room 8."
+        }
+      ]
+    }
+  ],
+  "encounterTables": {
+    "wandering": [
+      {
+        "roll": "1",
+        "result": "Jackal-masked sentries drag chains across a nearby corridor",
+        "type": "Combat"
+      },
+      {
+        "roll": "2",
+        "result": "A salt-linen attendant begs the party to name the dead princes",
+        "type": "Social"
+      },
+      {
+        "roll": "3",
+        "result": "Sand pours from the ceiling and briefly hides one visible exit",
+        "type": "Hazard"
+      },
+      {
+        "roll": "4",
+        "result": "A carved royal eye opens and watches the loudest intruder",
+        "type": "Exploration"
+      },
+      {
+        "roll": "5",
+        "result": "A spider web trembles from a passage the party has not entered yet",
+        "type": "Hazard"
+      },
+      {
+        "roll": "6",
+        "result": "A prince's ghost whispers one word: darkness, keystone, or ward",
+        "type": "Puzzle"
+      }
+    ],
+    "environmental": [
+      {
+        "roll": "1",
+        "result": "The western ward engine brightens and strengthens the burial chamber",
+        "type": "Puzzle"
+      },
+      {
+        "roll": "2",
+        "result": "The oath-breaker ward hums whenever someone lies about their purpose",
+        "type": "Social"
+      },
+      {
+        "roll": "3",
+        "result": "Arrow slits click as light crosses the wrong floor inlay",
+        "type": "Hazard"
+      },
+      {
+        "roll": "4",
+        "result": "A webbed ceiling stone drops and exposes a safer handhold",
+        "type": "Exploration"
+      },
+      {
+        "roll": "5",
+        "result": "The judgment scales tilt toward whoever carries the most tomb treasure",
+        "type": "Hazard"
+      },
+      {
+        "roll": "6",
+        "result": "The sarcophagus wind carries the scent of myrrh through the nearest stair",
+        "type": "Exploration"
+      }
+    ],
+    "complications": [
+      {
+        "roll": "1",
+        "result": "A disabled ward sputters and demands a second decisive action",
+        "type": "Puzzle"
+      },
+      {
+        "roll": "2",
+        "result": "Amun-Serekh speaks through a wall mask and offers false mercy",
+        "type": "Social"
+      },
+      {
+        "roll": "3",
+        "result": "A tomb spider stalks the party instead of attacking immediately",
+        "type": "Combat"
+      },
+      {
+        "roll": "4",
+        "result": "A grave servant mistakes one character for a murdered heir",
+        "type": "Social"
+      },
+      {
+        "roll": "5",
+        "result": "A treasure token heats up and points toward Room 9",
+        "type": "Exploration"
+      },
+      {
+        "roll": "6",
+        "result": "A corridor trap resets unless its royal seal is broken",
+        "type": "Hazard"
+      }
+    ]
+  },
+  "treasureTable": [
+    {
+      "roll": "1",
+      "result": "Copper ward needle from the western engine"
+    },
+    {
+      "roll": "2",
+      "result": "Prince's funerary token from the eastern gate"
+    },
+    {
+      "roll": "3",
+      "result": "Scarab ring that marks false royal oaths"
+    },
+    {
+      "roll": "4",
+      "result": "Silver archer's thumb ring and three black-fletched arrows"
+    },
+    {
+      "roll": "5",
+      "result": "Gold-threaded funerary sash bearing a murdered prince's name"
+    },
+    {
+      "roll": "6",
+      "result": "Amun-Serekh's gold death mask and sealed confession"
+    }
+  ],
+  "gmNotes": [
+    "Rooms 1, 2, and 3 are all entrance points. Let players choose how much of the tomb they risk before pushing toward Room 9.",
+    "Disabling the ward engines in Rooms 2 and 4 weakens Amun-Serekh. If neither is disabled, make the final fight feel oppressive and minion-heavy.",
+    "Keep the secret routes GM-only: darkness opens the route between Rooms 2 and 7, and a hidden keystone opens the door between Rooms 3 and 4.",
+    "The tomb should feel dangerous but legible: hazards point toward the pharaoh's paranoia, while treasures point toward his crimes."
+  ]
+}

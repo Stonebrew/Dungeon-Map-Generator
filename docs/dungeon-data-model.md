@@ -60,7 +60,7 @@ The current `path` field is prototype SVG data, not a procedural generation API.
 
 ## Optional Premium Illustrated Map Metadata
 
-`map.premiumMap` is an optional additive layer for future paid printable maps. Existing dungeons remain valid without it.
+`map.premiumMap` is the expected metadata layer for current visible sample packets. Older schematic-only dungeons may still exist in source history or internal retired data, but they are no longer part of the normal user-facing sample set.
 
 The current shape supports:
 
@@ -82,7 +82,7 @@ Premium overlay anchors can use either absolute SVG coordinates (`x`, `y`) or pe
 
 Player Clean Map is a renderer presentation option, not a separate data contract. Player Labeled Map uses `playerOverlay.labelAnchors` or schematic room labels when available. Player Clean Map hides those room labels while continuing to hide GM markers, secret routes, GM-only labels, and secret information. Uploaded premium image grids, paths, and visible terrain remain part of the base art.
 
-Dev workflow: in local development builds, use `/dev/map-annotator` to visually place room anchors, GM marker anchors, and secret route points on local premium maps. Put new local images in `public/premium-maps/`, enter a public path such as `/premium-maps/my-new-map.png`, and the annotator will load the image and detect its natural dimensions for exported metadata. The annotator uses the same `720x480` premium map bounds and anchor conversion helper as the production `PremiumMapLayer`, so placement should be WYSIWYG with GM Map, Player Map, and Print Packet previews. The annotator can start from blank metadata or load an existing mock dungeon with `premiumMap` metadata, including `Premium Map POC: The Verdant Watercourt`. Loaded and newly created room anchors, GM markers, and secret route points can be dragged to update normalized coordinates. It produces copyable `premiumMap` metadata, draft `map.connections` JSON, and a complete annotation package JSON with draft info, image info, premium map metadata, and connections for Codex/development handoff. It does not save data or image files automatically; generated metadata still needs to be reviewed and pasted into mock data or future backend fixtures.
+Dev workflow: in local development builds, use `/dev/map-annotator` to visually place room anchors, GM marker anchors, and secret route points on local premium maps. Put new local images in `public/premium-maps/`, enter a public path such as `/premium-maps/my-new-map.png`, and the annotator will load the image and detect its natural dimensions for exported metadata. The annotator uses the same `720x480` premium map bounds and anchor conversion helper as the production `PremiumMapLayer`, so placement should be WYSIWYG with GM Map, Player Map, and Print Packet previews. The annotator can start from blank metadata or load an existing mock dungeon with `premiumMap` metadata, including The Verdant Watercourt. Loaded and newly created room anchors, GM markers, and secret route points can be dragged to update normalized coordinates. It produces copyable `premiumMap` metadata, draft `map.connections` JSON, and a complete annotation package JSON with draft info, image info, premium map metadata, and connections for Codex/development handoff. It does not save data or image files automatically; generated metadata still needs to be reviewed and pasted into mock data or future backend fixtures.
 
 `map.connections` remains the source of truth for dungeon connectivity only. It should not be used to position premium illustrated room labels, GM markers, or hand-aligned secret route overlays.
 
@@ -94,11 +94,11 @@ The renderer path is intentionally additive:
 
 1. If an entitled map view has usable `premiumMap` image metadata, a future illustrated-image branch can render the base image and SVG overlays.
 2. If no premium image exists, the app falls back to the current SVG map renderer.
-3. Surveyor schematic maps remain available as reference/fallback maps.
+3. Surveyor schematic maps remain available as reference/fallback maps for the same map-first packets.
 
 Player-safe rule: secrets must not be baked into player-facing base art. If the GM base image contains hidden doors, secret paths, treasure, trap symbols, or objective markers, the dungeon must provide a separate `playerBaseMapImage` or avoid using that image for player-safe export.
 
-Current map-first proof of concept: `Premium Map POC: The Verdant Watercourt` references `/premium-maps/test-temple-map.png` as a shared `baseMapImage`. Its room content, `map.connections`, exits, GM markers, treasure, hazards, and objective are written around the illustrated map rather than adapted from an unrelated dungeon. Its GM overlay provides percentage-based room labels, GM markers, and a manually aligned secret culvert route. Its player overlay provides only room labels; GM markers and secret routes remain hidden in player-safe mode. If the image fails to load, the app falls back to the existing Level 2 SVG shrine map.
+Current active sample content is map-first. The visible app exports and rotates only the showcase-ready packets with premium illustrated map metadata: The Verdant Watercourt, The Ashen Crucible, The Frostwake Spire, The Bramblebell Moot, and The Tomb of Amun-Serekh. Surveyor uses simplified schematic/basic versions of those same packets; Cartographer uses their premium illustrated GM/player map renderers, player clean/labeled map options, and print/export packet flow. Legacy schematic-only packets such as The Bell Below Blackfen have been retired from the normal user-facing sample set rather than upgraded in place.
 
 ## Room Fields
 
@@ -184,9 +184,9 @@ Run `npm run validate:dungeons` to validate all mock dungeons. The script checks
 
 ## Backend Fixture Export
 
-Run `npm run export:fixtures` to export the finalized mock dungeons to `fixtures/dungeons/`.
+Run `npm run export:fixtures` to export the active finalized mock dungeons to `fixtures/dungeons/`.
 
-The export script imports the same finalized `mockDungeons` payload used by the frontend, runs the dungeon validator first, and aborts without writing fixtures if validation fails. On success, it writes one full `Dungeon` JSON file per mock dungeon plus `fixtures/dungeons/index.json`.
+The export script imports the same active finalized `mockDungeons` payload used by the frontend, runs the dungeon validator first, and aborts without writing fixtures if validation fails. On success, it writes one full `Dungeon` JSON file per active dungeon plus `fixtures/dungeons/index.json`. Retired legacy packets are not exported.
 
 The manifest includes each dungeon's `id`, `slug`, `dateIso`, title, theme, difficulty, `mapStyle`, room count, and fixture file name. This is a bridge between the frontend mock data layer and the future `GET /api/dungeons/today` backend endpoint; the frontend still uses the existing mock data flow until a backend adapter is explicitly added.
 

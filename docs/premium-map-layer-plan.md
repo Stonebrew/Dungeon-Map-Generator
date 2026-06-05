@@ -342,12 +342,14 @@ The first foundation task is now represented in the contract and renderer path:
 - Premium map metadata can describe shared, GM-specific, and player-safe illustrated base images.
 - The metadata can also describe image size, map bounds, overlay viewBox alignment, percentage or absolute overlay anchors, GM overlays, player-safe overlays, and print variant notes.
 - `DungeonMap` now has a no-op premium renderer branch that checks for usable premium image metadata before falling back to the current SVG renderers.
-- Existing mock dungeons do not include premium image metadata yet, so current schematic and Level 2 SVG maps remain visually unchanged.
+- Current visible sample dungeons include premium image metadata and map-first schematic fallback metadata. Legacy schematic-only dungeons are retired from normal user-facing flows.
 - Validation only checks premium map metadata when it is present.
 
 ## Map-First Proof-Of-Concept Status
 
-The first illustrated-map proof of concept is now a separate map-first mock dungeon: `Premium Map POC: The Verdant Watercourt`.
+The active visible sample set is now map-first. The showcase packets are The Verdant Watercourt, The Ashen Crucible, The Frostwake Spire, The Bramblebell Moot, and The Tomb of Amun-Serekh.
+
+The first illustrated-map proof of concept is The Verdant Watercourt.
 
 - The dungeon references `/premium-maps/test-temple-map.png` through `map.premiumMap.baseMapImage`.
 - The illustrated map drives room count, room names, exits, `map.connections`, treasure locations, hazards, objective placement, and running notes.
@@ -364,11 +366,11 @@ The previous attempt to attach the test image to Saint Orra showed an important 
 
 Content quality rule: map-first is a production workflow, not table-facing adventure text. Final mock dungeons may be created from illustrated maps, but GM-facing fields such as `theme`, `hook`, `background`, room notes, and packet notes should read as in-world adventure material rather than process notes, prototype labels, or explanations of how the dungeon was authored.
 
-The second illustrated-map proof of concept is also map-first: `Premium Map POC: The Ashen Crucible`.
+The second illustrated-map proof of concept is also map-first: The Ashen Crucible.
 
 - The dungeon references `/premium-maps/volcanic-ruin-1.png` through `map.premiumMap.baseMapImage`.
 - It uses annotator-created premium overlay metadata and a draft `map.connections` graph to define a volcanic ruin play surface.
-- The local image remains ignored under `public/premium-maps/`; only metadata and mock dungeon content are tracked.
+- The required showcase image is intentionally committed for tester/demo builds; future experimental images in `public/premium-maps/` remain ignored unless explicitly promoted.
 - Normal route overlays are disabled because visible stairs, bridges, ledges, and platforms belong to the illustrated base map.
 - Surveyor/free schematic views for map-first premium dungeons use the dungeon's actual premium label anchors, GM marker anchors in GM mode, and `map.connections` so the free reference map does not invent rooms that are absent from the content. Player-safe schematic views continue hiding GM markers and secret routes.
 - The free schematic can use `premiumMap.schematicFootprints` to draw simplified black-and-white area shapes around premium anchors. These should be clean, conservative shapes rather than rough blobs. This avoids reducing large illustrated rooms to tiny node circles and helps GM marker badges remain inside the room or area they describe.
@@ -388,7 +390,7 @@ Current capabilities:
 - Load the known local premium map asset `/premium-maps/test-temple-map.png`.
 - Load a custom local premium map image by entering a display name and a path such as `/premium-maps/my-new-map.png`.
 - Detect custom image natural width and height for exported `premiumMap.baseMapImage` and `imageSize` metadata.
-- Load existing mock dungeons that already include `premiumMap` metadata, starting with `Premium Map POC: The Verdant Watercourt`.
+- Load existing mock dungeons that already include `premiumMap` metadata, starting with The Verdant Watercourt.
 - Import the selected dungeon's current base map image, room label anchors, GM marker anchors, GM-only secret route overlays, `showNormalRouteOverlay` flag, and draft `map.connections`.
 - Place room number anchors by clicking the image.
 - Drag existing room number anchors to retune their `xPercent` / `yPercent` placement.
