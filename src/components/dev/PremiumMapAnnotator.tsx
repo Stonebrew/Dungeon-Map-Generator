@@ -3,7 +3,7 @@ import { useMemo, useState } from 'react';
 import type { MouseEvent, PointerEvent, ReactNode } from 'react';
 import { mockDungeons } from '../../data/mockDungeon';
 import { DEFAULT_PREMIUM_MAP_BOUNDS, getPremiumAnchorPoint, getPremiumPercentPoint } from '../maps/premium/premiumMapGeometry';
-import type { Dungeon, MapConnection, PremiumMapMarkerAnchor, PremiumMapMetadata, PremiumMapOverlayAnchor, PremiumMapRouteOverlay, RouteDifficulty, RouteStyle } from '../../types';
+import type { Dungeon, MapConnection, PremiumMapBattlePrintCalibration, PremiumMapMarkerAnchor, PremiumMapMetadata, PremiumMapOverlayAnchor, PremiumMapRouteOverlay, RouteDifficulty, RouteStyle } from '../../types';
 
 type AnnotatorMode = 'room' | 'marker' | 'route' | 'select';
 type PreviewMode = 'gm' | 'player';
@@ -12,7 +12,8 @@ type MarkerType = PremiumMapMarkerAnchor['marker'];
 type DragTarget =
   | { type: 'room'; roomNumber: number }
   | { type: 'marker'; index: number }
-  | { type: 'routePoint'; routeId: string; pointIndex: number };
+  | { type: 'routePoint'; routeId: string; pointIndex: number }
+  | { type: 'calibrationOrigin' };
 
 type SelectedAnnotation = DragTarget | undefined;
 
@@ -58,6 +59,48 @@ type AnnotationDraftInfo = {
   creativeNotes: string;
 };
 
+type BattleMapPrintForm = {
+  status: PremiumMapBattlePrintCalibration['status'];
+  squareWidthPx: string;
+  squareHeightPx: string;
+  lockSquareSize: boolean;
+  originXPercent: string;
+  originYPercent: string;
+  rotationDeg: string;
+  cropX: string;
+  cropY: string;
+  cropWidth: string;
+  cropHeight: string;
+  defaultOverlapInches: '' | '0' | '0.25' | '0.5';
+  notes: string;
+};
+
+type AnnotatorMapZoom = 'fit' | '1' | '1.5' | '2';
+type CalibrationGridColor = 'amber' | 'cyan' | 'white' | 'black';
+
+const calibrationGridColors: Record<CalibrationGridColor, { line: string; major: string; crop: string; fill: string }> = {
+  amber: { line: '#fef3c7', major: '#f59e0b', crop: '#38bdf8', fill: 'rgba(14,165,233,0.06)' },
+  cyan: { line: '#bae6fd', major: '#38bdf8', crop: '#fef3c7', fill: 'rgba(186,230,253,0.08)' },
+  white: { line: '#ffffff', major: '#d6d3d1', crop: '#38bdf8', fill: 'rgba(255,255,255,0.06)' },
+  black: { line: '#1c1917', major: '#000000', crop: '#f59e0b', fill: 'rgba(0,0,0,0.05)' },
+};
+
+const defaultBattleMapPrintForm: BattleMapPrintForm = {
+  status: 'uncalibrated',
+  squareWidthPx: '',
+  squareHeightPx: '',
+  lockSquareSize: true,
+  originXPercent: '0',
+  originYPercent: '0',
+  rotationDeg: '0',
+  cropX: '',
+  cropY: '',
+  cropWidth: '',
+  cropHeight: '',
+  defaultOverlapInches: '',
+  notes: 'Grid calibration pending for 1-inch battle-map printing.',
+};
+
 const localPremiumMapAssets: LocalPremiumMapAsset[] = [
   {
     id: 'premium-test-temple-map',
@@ -88,6 +131,10 @@ function roundPercent(value: number) {
 
 function clampPercent(value: number) {
   return roundPercent(Math.min(100, Math.max(0, value)));
+}
+
+function clampNumber(value: number, min: number, max: number) {
+  return Math.min(max, Math.max(min, value));
 }
 
 function overlayPoint(point: { xPercent?: number; yPercent?: number; x?: number; y?: number }) {
@@ -169,6 +216,10 @@ function isSelected(selected: SelectedAnnotation, target: DragTarget) {
     return false;
   }
 
+  if (selected.type === 'calibrationOrigin' || target.type === 'calibrationOrigin') {
+    return selected.type === target.type;
+  }
+
   if (selected.type === 'room' && target.type === 'room') {
     return selected.roomNumber === target.roomNumber;
   }
@@ -184,7 +235,184 @@ function isSelected(selected: SelectedAnnotation, target: DragTarget) {
   return false;
 }
 
-function buildPremiumMapMetadata(asset: LocalPremiumMapAsset, rooms: PremiumMapOverlayAnchor[], markers: PremiumMapMarkerAnchor[], routes: DraftRoute[], showNormalRouteOverlay: boolean) {
+function optionalNumber(value: string) {
+  const trimmedValue = value.trim();
+
+  if (!trimmedValue) {
+    return undefined;
+  }
+
+  const parsedValue = Number(trimmedValue);
+  return Number.isFinite(parsedValue) ? parsedValue : undefined;
+}
+
+function formatOptionalNumber(value: number | undefined, fallback = '') {
+  return value !== undefined && Number.isFinite(value) ? roundPercent(value).toString() : fallback;
+}
+
+function battleMapPrintFromForm(form: BattleMapPrintForm): PremiumMapBattlePrintCalibration {
+  const squareWidthPx = optionalNumber(form.squareWidthPx);
+  const squareHeightPx = optionalNumber(form.squareHeightPx);
+  const originXPercent = optionalNumber(form.originXPercent);
+  const originYPercent = optionalNumber(form.originYPercent);
+  const rotationDeg = optionalNumber(form.rotationDeg);
+  const cropValues = [form.cropX, form.cropY, form.cropWidth, form.cropHeight].map(optionalNumber);
+  const hasCompleteCropBounds = cropValues.every((value) => value !== undefined);
+
+  return {
+    status: form.status,
+    ...(squareWidthPx !== undefined || squareHeightPx !== undefined
+      ? {
+          grid: {
+            squareWidthPx: squareWidthPx ?? squareHeightPx ?? 70,
+            squareHeightPx: squareHeightPx ?? squareWidthPx ?? 70,
+            ...(originXPercent !== undefined ? { originXPercent } : {}),
+            ...(originYPercent !== undefined ? { originYPercent } : {}),
+            ...(rotationDeg !== undefined ? { rotationDeg } : {}),
+          },
+        }
+      : {}),
+    ...(hasCompleteCropBounds
+      ? {
+          cropBoundsPercent: {
+            x: cropValues[0] as number,
+            y: cropValues[1] as number,
+            width: cropValues[2] as number,
+            height: cropValues[3] as number,
+          },
+        }
+      : {}),
+    ...(form.defaultOverlapInches ? { defaultOverlapInches: Number(form.defaultOverlapInches) as PremiumMapBattlePrintCalibration['defaultOverlapInches'] } : {}),
+    ...(form.notes.trim() ? { notes: form.notes.trim() } : {}),
+  };
+}
+
+function battleMapPrintFormFromMetadata(calibration: PremiumMapBattlePrintCalibration | undefined): BattleMapPrintForm {
+  if (!calibration) {
+    return { ...defaultBattleMapPrintForm };
+  }
+
+  const legacySquarePx = calibration.grid?.squarePx;
+  const squareWidthPx = calibration.grid?.squareWidthPx ?? legacySquarePx;
+  const squareHeightPx = calibration.grid?.squareHeightPx ?? legacySquarePx;
+
+  return {
+    status: calibration.status,
+    squareWidthPx: squareWidthPx?.toString() ?? '',
+    squareHeightPx: squareHeightPx?.toString() ?? '',
+    lockSquareSize: squareWidthPx === undefined || squareHeightPx === undefined || squareWidthPx === squareHeightPx,
+    originXPercent: calibration.grid?.originXPercent?.toString() ?? '0',
+    originYPercent: calibration.grid?.originYPercent?.toString() ?? '0',
+    rotationDeg: calibration.grid?.rotationDeg?.toString() ?? '0',
+    cropX: calibration.cropBoundsPercent?.x.toString() ?? '',
+    cropY: calibration.cropBoundsPercent?.y.toString() ?? '',
+    cropWidth: calibration.cropBoundsPercent?.width.toString() ?? '',
+    cropHeight: calibration.cropBoundsPercent?.height.toString() ?? '',
+    defaultOverlapInches: calibration.defaultOverlapInches !== undefined ? calibration.defaultOverlapInches.toString() as BattleMapPrintForm['defaultOverlapInches'] : '',
+    notes: calibration.notes ?? '',
+  };
+}
+
+function getImageRenderTransform(asset: LocalPremiumMapAsset) {
+  const scale = Math.max(DEFAULT_PREMIUM_MAP_BOUNDS.width / asset.width, DEFAULT_PREMIUM_MAP_BOUNDS.height / asset.height);
+  const renderedWidth = asset.width * scale;
+  const renderedHeight = asset.height * scale;
+
+  return {
+    scale,
+    renderedWidth,
+    renderedHeight,
+    offsetX: DEFAULT_PREMIUM_MAP_BOUNDS.x + (DEFAULT_PREMIUM_MAP_BOUNDS.width - renderedWidth) / 2,
+    offsetY: DEFAULT_PREMIUM_MAP_BOUNDS.y + (DEFAULT_PREMIUM_MAP_BOUNDS.height - renderedHeight) / 2,
+  };
+}
+
+function imagePercentToOverlay(value: number, imageSize: number, offset: number, scale: number) {
+  return offset + imageSize * (value / 100) * scale;
+}
+
+function getBattleMapCrop(form: BattleMapPrintForm) {
+  const cropX = optionalNumber(form.cropX) ?? 0;
+  const cropY = optionalNumber(form.cropY) ?? 0;
+  const cropWidth = optionalNumber(form.cropWidth) ?? 100;
+  const cropHeight = optionalNumber(form.cropHeight) ?? 100;
+
+  return {
+    x: clampPercent(cropX),
+    y: clampPercent(cropY),
+    width: clampPercent(cropWidth),
+    height: clampPercent(cropHeight),
+  };
+}
+
+function getBattleMapCalibrationPreview(asset: LocalPremiumMapAsset, form: BattleMapPrintForm) {
+  const squareWidthPx = optionalNumber(form.squareWidthPx) ?? 70;
+  const squareHeightPx = optionalNumber(form.squareHeightPx) ?? squareWidthPx;
+  const originXPercent = optionalNumber(form.originXPercent) ?? 0;
+  const originYPercent = optionalNumber(form.originYPercent) ?? 0;
+  const rotationDeg = optionalNumber(form.rotationDeg) ?? 0;
+  const transform = getImageRenderTransform(asset);
+  const crop = getBattleMapCrop(form);
+  const cropOverlay = {
+    x: imagePercentToOverlay(crop.x, asset.width, transform.offsetX, transform.scale),
+    y: imagePercentToOverlay(crop.y, asset.height, transform.offsetY, transform.scale),
+    width: asset.width * (crop.width / 100) * transform.scale,
+    height: asset.height * (crop.height / 100) * transform.scale,
+  };
+  const origin = {
+    x: imagePercentToOverlay(originXPercent, asset.width, transform.offsetX, transform.scale),
+    y: imagePercentToOverlay(originYPercent, asset.height, transform.offsetY, transform.scale),
+  };
+  const stepX = squareWidthPx * transform.scale;
+  const stepY = squareHeightPx * transform.scale;
+  const cropImageWidth = asset.width * (crop.width / 100);
+  const cropImageHeight = asset.height * (crop.height / 100);
+
+  return {
+    squareWidthPx,
+    squareHeightPx,
+    originXPercent,
+    originYPercent,
+    rotationDeg,
+    transform,
+    crop,
+    cropOverlay,
+    origin,
+    stepX,
+    stepY,
+    estimatedColumns: squareWidthPx > 0 ? cropImageWidth / squareWidthPx : undefined,
+    estimatedRows: squareHeightPx > 0 ? cropImageHeight / squareHeightPx : undefined,
+    printedWidthInches: squareWidthPx > 0 ? cropImageWidth / squareWidthPx : undefined,
+    printedHeightInches: squareHeightPx > 0 ? cropImageHeight / squareHeightPx : undefined,
+  };
+}
+
+function buildGridLinePositions(start: number, min: number, max: number, step: number) {
+  if (!Number.isFinite(step) || step <= 0) {
+    return [];
+  }
+
+  const positions: number[] = [];
+  let position = start;
+
+  while (position > min) {
+    position -= step;
+  }
+
+  while (position <= max) {
+    if (position >= min) {
+      positions.push(roundPercent(position));
+    }
+    position += step;
+    if (positions.length > 240) {
+      break;
+    }
+  }
+
+  return positions;
+}
+
+function buildPremiumMapMetadata(asset: LocalPremiumMapAsset, rooms: PremiumMapOverlayAnchor[], markers: PremiumMapMarkerAnchor[], routes: DraftRoute[], showNormalRouteOverlay: boolean, battleMapPrint: PremiumMapBattlePrintCalibration) {
   const routeOverlayPaths: PremiumMapRouteOverlay[] = routes
     .filter((route) => route.path?.trim() || route.points.length > 1)
     .map((route) => ({
@@ -229,14 +457,15 @@ function buildPremiumMapMetadata(asset: LocalPremiumMapAsset, rooms: PremiumMapO
     showNormalRouteOverlay,
     gmOverlay,
     playerOverlay,
+    battleMapPrint,
     printNotes: 'Generated from the dev-only premium map annotator.',
   };
 
   return premiumMap;
 }
 
-function formatMetadata(asset: LocalPremiumMapAsset, rooms: PremiumMapOverlayAnchor[], markers: PremiumMapMarkerAnchor[], routes: DraftRoute[], showNormalRouteOverlay: boolean) {
-  const premiumMap = buildPremiumMapMetadata(asset, rooms, markers, routes, showNormalRouteOverlay);
+function formatMetadata(asset: LocalPremiumMapAsset, rooms: PremiumMapOverlayAnchor[], markers: PremiumMapMarkerAnchor[], routes: DraftRoute[], showNormalRouteOverlay: boolean, battleMapPrint: PremiumMapBattlePrintCalibration) {
+  const premiumMap = buildPremiumMapMetadata(asset, rooms, markers, routes, showNormalRouteOverlay, battleMapPrint);
 
   return JSON.stringify(premiumMap, null, 2);
 }
@@ -288,6 +517,7 @@ function formatAnnotationPackage({
   routes,
   connections,
   showNormalRouteOverlay,
+  battleMapPrint,
 }: {
   createdAt: string;
   draftInfo: AnnotationDraftInfo;
@@ -297,6 +527,7 @@ function formatAnnotationPackage({
   routes: DraftRoute[];
   connections: DraftConnection[];
   showNormalRouteOverlay: boolean;
+  battleMapPrint: PremiumMapBattlePrintCalibration;
 }) {
   const packageJson = {
     schemaVersion: 1,
@@ -312,7 +543,7 @@ function formatAnnotationPackage({
       ...(asset.mimeType ? { mimeType: asset.mimeType } : {}),
       ...(asset.alt ? { alt: asset.alt } : {}),
     },
-    premiumMap: buildPremiumMapMetadata(asset, rooms, markers, routes, showNormalRouteOverlay),
+    premiumMap: buildPremiumMapMetadata(asset, rooms, markers, routes, showNormalRouteOverlay, battleMapPrint),
     connections: buildMapConnections(connections),
   };
 
@@ -384,7 +615,11 @@ function routePathToPercentPoints(path: string) {
 }
 
 function draftConnectionsFromDungeon(dungeon: Dungeon): DraftConnection[] {
-  return (dungeon.map.connections ?? []).map((connection, index) => ({
+  return draftConnectionsFromMapConnections(dungeon.map.connections);
+}
+
+function draftConnectionsFromMapConnections(connections: MapConnection[] | undefined): DraftConnection[] {
+  return (connections ?? []).map((connection, index) => ({
     id: createId(`connection-${index}`),
     from: connection.from,
     to: connection.to,
@@ -409,6 +644,8 @@ export function PremiumMapAnnotator() {
   const [customImagePath, setCustomImagePath] = useState('');
   const [customImageStatus, setCustomImageStatus] = useState<string | undefined>();
   const [isLoadingCustomImage, setIsLoadingCustomImage] = useState(false);
+  const [packageImportText, setPackageImportText] = useState('');
+  const [packageImportStatus, setPackageImportStatus] = useState<string | undefined>();
   const [mode, setMode] = useState<AnnotatorMode>('room');
   const [previewMode, setPreviewMode] = useState<PreviewMode>('gm');
   const [roomNumber, setRoomNumber] = useState(1);
@@ -441,9 +678,25 @@ export function PremiumMapAnnotator() {
     estimatedPlayTime: '',
     creativeNotes: '',
   });
+  const [battleMapPrintForm, setBattleMapPrintForm] = useState<BattleMapPrintForm>(() => ({ ...defaultBattleMapPrintForm }));
+  const [showCalibrationGrid, setShowCalibrationGrid] = useState(false);
+  const [calibrationGridOpacity, setCalibrationGridOpacity] = useState(0.55);
+  const [showMajorCalibrationLines, setShowMajorCalibrationLines] = useState(true);
+  const [calibrationGridColor, setCalibrationGridColor] = useState<CalibrationGridColor>('amber');
+  const [mapZoom, setMapZoom] = useState<AnnotatorMapZoom>('fit');
 
   const asset = availableAssets.find((item) => item.id === assetId) ?? availableAssets[0];
-  const metadataOutput = useMemo(() => formatMetadata(asset, rooms, markers, routes, showNormalRouteOverlay), [asset, markers, rooms, routes, showNormalRouteOverlay]);
+  const battleMapPrint = useMemo(() => battleMapPrintFromForm(battleMapPrintForm), [battleMapPrintForm]);
+  const calibrationPreview = useMemo(() => getBattleMapCalibrationPreview(asset, battleMapPrintForm), [asset, battleMapPrintForm]);
+  const calibrationGridXLines = useMemo(
+    () => buildGridLinePositions(calibrationPreview.origin.x, calibrationPreview.cropOverlay.x - calibrationPreview.cropOverlay.width, calibrationPreview.cropOverlay.x + calibrationPreview.cropOverlay.width * 2, calibrationPreview.stepX),
+    [calibrationPreview],
+  );
+  const calibrationGridYLines = useMemo(
+    () => buildGridLinePositions(calibrationPreview.origin.y, calibrationPreview.cropOverlay.y - calibrationPreview.cropOverlay.height, calibrationPreview.cropOverlay.y + calibrationPreview.cropOverlay.height * 2, calibrationPreview.stepY),
+    [calibrationPreview],
+  );
+  const metadataOutput = useMemo(() => formatMetadata(asset, rooms, markers, routes, showNormalRouteOverlay, battleMapPrint), [asset, battleMapPrint, markers, rooms, routes, showNormalRouteOverlay]);
   const connectionsOutput = useMemo(() => formatConnections(connections), [connections]);
   const packageOutput = useMemo(
     () =>
@@ -456,11 +709,16 @@ export function PremiumMapAnnotator() {
         routes,
         connections,
         showNormalRouteOverlay,
+        battleMapPrint,
       }),
-    [asset, connections, draftInfo, markers, packageCreatedAt, rooms, routes, showNormalRouteOverlay],
+    [asset, battleMapPrint, connections, draftInfo, markers, packageCreatedAt, rooms, routes, showNormalRouteOverlay],
   );
   const packageFilename = useMemo(() => safePackageFilename(draftInfo, asset), [asset, draftInfo]);
   const activeRoute = routes.find((route) => route.id === activeRouteId);
+  const activeCalibrationGridColor = calibrationGridColors[calibrationGridColor];
+  const mapCanvasStyle = mapZoom === 'fit'
+    ? { width: '100%' }
+    : { width: `${720 * Number(mapZoom)}px`, maxWidth: 'none' };
 
   const clearAnnotations = () => {
     setRooms([]);
@@ -487,6 +745,60 @@ export function PremiumMapAnnotator() {
     setDraftInfo((current) => ({ ...current, [field]: value }));
   };
 
+  const updateBattleMapPrint = <Field extends keyof BattleMapPrintForm>(field: Field, value: BattleMapPrintForm[Field]) => {
+    setBattleMapPrintForm((current) => ({ ...current, [field]: value }));
+  };
+
+  const setBattleMapSquareWidthPx = (value: number) => {
+    const nextValue = Math.round(clampNumber(value, 10, 300)).toString();
+    setBattleMapPrintForm((current) => ({
+      ...current,
+      squareWidthPx: nextValue,
+      ...(current.lockSquareSize ? { squareHeightPx: nextValue } : {}),
+    }));
+  };
+
+  const setBattleMapSquareHeightPx = (value: number) => {
+    const nextValue = Math.round(clampNumber(value, 10, 300)).toString();
+    setBattleMapPrintForm((current) => ({
+      ...current,
+      squareHeightPx: nextValue,
+      ...(current.lockSquareSize ? { squareWidthPx: nextValue } : {}),
+    }));
+  };
+
+  const updateBattleMapSquareText = (field: 'squareWidthPx' | 'squareHeightPx', value: string) => {
+    setBattleMapPrintForm((current) => ({
+      ...current,
+      [field]: value,
+      ...(current.lockSquareSize ? { [field === 'squareWidthPx' ? 'squareHeightPx' : 'squareWidthPx']: value } : {}),
+    }));
+  };
+
+  const setBattleMapSquareLock = (locked: boolean) => {
+    setBattleMapPrintForm((current) => ({
+      ...current,
+      lockSquareSize: locked,
+      ...(locked ? { squareHeightPx: current.squareWidthPx || current.squareHeightPx } : {}),
+    }));
+  };
+
+  const nudgeBattleMapOrigin = (axis: 'x' | 'y', amount: number) => {
+    const field = axis === 'x' ? 'originXPercent' : 'originYPercent';
+    const currentValue = optionalNumber(battleMapPrintForm[field]) ?? 0;
+    updateBattleMapPrint(field, clampPercent(currentValue + amount).toString());
+  };
+
+  const resetBattleMapCrop = () => {
+    setBattleMapPrintForm((current) => ({
+      ...current,
+      cropX: '',
+      cropY: '',
+      cropWidth: '',
+      cropHeight: '',
+    }));
+  };
+
   const resetToBlank = () => {
     setSelectedDungeonId('blank');
     setAssetId(availableAssets[0].id);
@@ -500,6 +812,7 @@ export function PremiumMapAnnotator() {
       creativeNotes: '',
     });
     clearAnnotations();
+    setBattleMapPrintForm({ ...defaultBattleMapPrintForm });
   };
 
   const loadCustomImage = () => {
@@ -535,6 +848,7 @@ export function PremiumMapAnnotator() {
       }));
       clearAnnotations();
       setCustomImageStatus(`Loaded ${customAsset.name} (${customAsset.width}x${customAsset.height}).`);
+      setBattleMapPrintForm({ ...defaultBattleMapPrintForm });
       setIsLoadingCustomImage(false);
     };
     image.onerror = () => {
@@ -544,20 +858,19 @@ export function PremiumMapAnnotator() {
     image.src = trimmedPath;
   };
 
-  const loadDungeon = (dungeonId: string) => {
-    if (dungeonId === 'blank') {
-      resetToBlank();
-      return;
-    }
-
-    const dungeon = premiumMapDungeons.find((item) => item.id === dungeonId);
-    const premiumMap = dungeon?.map.premiumMap;
-    const loadedAsset = assetFromPremiumMap(premiumMap);
-
-    if (!dungeon || !premiumMap || !loadedAsset) {
-      return;
-    }
-
+  const applyPremiumMapDraft = ({
+    premiumMap,
+    loadedAsset,
+    nextDraftInfo,
+    nextConnections,
+    nextSelectedDungeonId = 'blank',
+  }: {
+    premiumMap: PremiumMapMetadata;
+    loadedAsset: LocalPremiumMapAsset;
+    nextDraftInfo: AnnotationDraftInfo;
+    nextConnections: DraftConnection[];
+    nextSelectedDungeonId?: string;
+  }) => {
     const bounds = premiumMap.mapBounds ?? { x: 0, y: 0, width: 720, height: 480 };
     const gmOverlay = premiumMap.gmOverlay;
     const loadedRooms = (premiumMap.playerOverlay?.labelAnchors ?? gmOverlay?.labelAnchors ?? [])
@@ -581,22 +894,16 @@ export function PremiumMapAnnotator() {
         points: routePathToPercentPoints(route.path),
       }));
 
-    setSelectedDungeonId(dungeon.id);
+    setSelectedDungeonId(nextSelectedDungeonId);
+    setCustomAssets((current) => uniqueAssets([...current, loadedAsset]));
     setAssetId(loadedAsset.id);
-    setDraftInfo({
-      proposedTitle: dungeon.title,
-      theme: dungeon.theme,
-      tone: dungeon.rooms.flatMap((room) => room.tags).slice(0, 4).join(', '),
-      difficulty: dungeon.difficulty,
-      partySize: dungeon.partySize,
-      estimatedPlayTime: dungeon.estimatedPlayTime,
-      creativeNotes: dungeon.hook,
-    });
+    setDraftInfo(nextDraftInfo);
     setRooms(loadedRooms);
     setMarkers(loadedMarkers);
     setRoutes(loadedRoutes);
-    setConnections(draftConnectionsFromDungeon(dungeon));
+    setConnections(nextConnections);
     setShowNormalRouteOverlay(Boolean(premiumMap.showNormalRouteOverlay));
+    setBattleMapPrintForm(battleMapPrintFormFromMetadata(premiumMap.battleMapPrint));
     setSelectedAnnotation(undefined);
     setDragTarget(undefined);
     setActiveRouteId(undefined);
@@ -604,8 +911,96 @@ export function PremiumMapAnnotator() {
     setMarkerRoomNumber(loadedRooms[0]?.roomNumber ?? 1);
     setRouteFrom(loadedRoutes[0]?.from ?? 1);
     setRouteTo(loadedRoutes[0]?.to ?? 2);
-    setConnectionFrom(dungeon.map.connections?.at(-1)?.to ?? 1);
-    setConnectionTo((dungeon.map.connections?.at(-1)?.to ?? 1) + 1);
+    setConnectionFrom(nextConnections.at(-1)?.to ?? 1);
+    setConnectionTo((nextConnections.at(-1)?.to ?? 1) + 1);
+  };
+
+  const importAnnotationPackage = () => {
+    try {
+      const parsed = JSON.parse(packageImportText) as {
+        draftInfo?: Partial<AnnotationDraftInfo>;
+        image?: {
+          id?: string;
+          displayName?: string;
+          path?: string;
+          width?: number;
+          height?: number;
+          mimeType?: LocalPremiumMapAsset['mimeType'];
+          alt?: string;
+        };
+        premiumMap?: PremiumMapMetadata;
+        connections?: MapConnection[];
+      };
+      const importedPremiumMap = parsed.premiumMap;
+      const imageAsset = parsed.image;
+      const loadedAsset =
+        assetFromPremiumMap(importedPremiumMap) ??
+        (imageAsset?.id && imageAsset.path && imageAsset.width && imageAsset.height
+          ? {
+              id: imageAsset.id,
+              name: imageAsset.displayName ?? imageAsset.id,
+              url: imageAsset.path,
+              width: imageAsset.width,
+              height: imageAsset.height,
+              mimeType: imageAsset.mimeType,
+              alt: imageAsset.alt,
+            }
+          : undefined);
+
+      if (!importedPremiumMap || !loadedAsset) {
+        setPackageImportStatus('Could not import package. Paste a complete annotation package with premiumMap and image metadata.');
+        return;
+      }
+
+      applyPremiumMapDraft({
+        premiumMap: importedPremiumMap,
+        loadedAsset,
+        nextDraftInfo: {
+          proposedTitle: parsed.draftInfo?.proposedTitle ?? '',
+          theme: parsed.draftInfo?.theme ?? '',
+          tone: parsed.draftInfo?.tone ?? '',
+          difficulty: parsed.draftInfo?.difficulty ?? '',
+          partySize: parsed.draftInfo?.partySize ?? '',
+          estimatedPlayTime: parsed.draftInfo?.estimatedPlayTime ?? '',
+          creativeNotes: parsed.draftInfo?.creativeNotes ?? '',
+        },
+        nextConnections: draftConnectionsFromMapConnections(parsed.connections),
+      });
+      setPackageImportStatus('Imported annotation package into the copy-only editor.');
+    } catch {
+      setPackageImportStatus('Could not parse annotation package JSON.');
+    }
+  };
+
+  const loadDungeon = (dungeonId: string) => {
+    if (dungeonId === 'blank') {
+      resetToBlank();
+      return;
+    }
+
+    const dungeon = premiumMapDungeons.find((item) => item.id === dungeonId);
+    const premiumMap = dungeon?.map.premiumMap;
+    const loadedAsset = assetFromPremiumMap(premiumMap);
+
+    if (!dungeon || !premiumMap || !loadedAsset) {
+      return;
+    }
+
+    applyPremiumMapDraft({
+      premiumMap,
+      loadedAsset,
+      nextDraftInfo: {
+        proposedTitle: dungeon.title,
+        theme: dungeon.theme,
+        tone: dungeon.rooms.flatMap((room) => room.tags).slice(0, 4).join(', '),
+        difficulty: dungeon.difficulty,
+        partySize: dungeon.partySize,
+        estimatedPlayTime: dungeon.estimatedPlayTime,
+        creativeNotes: dungeon.hook,
+      },
+      nextConnections: draftConnectionsFromDungeon(dungeon),
+      nextSelectedDungeonId: dungeon.id,
+    });
   };
 
   const handleMapClick = (event: MouseEvent<SVGSVGElement>) => {
@@ -661,6 +1056,15 @@ export function PremiumMapAnnotator() {
   };
 
   const moveAnnotation = (target: DragTarget, xPercent: number, yPercent: number) => {
+    if (target.type === 'calibrationOrigin') {
+      setBattleMapPrintForm((current) => ({
+        ...current,
+        originXPercent: xPercent.toString(),
+        originYPercent: yPercent.toString(),
+      }));
+      return;
+    }
+
     if (target.type === 'room') {
       setRooms((current) => current.map((room) => (room.roomNumber === target.roomNumber ? { ...room, xPercent, yPercent } : room)));
       return;
@@ -671,7 +1075,8 @@ export function PremiumMapAnnotator() {
       return;
     }
 
-    setRoutes((current) =>
+    if (target.type === 'routePoint') {
+      setRoutes((current) =>
       current.map((route) =>
         route.id === target.routeId
           ? {
@@ -681,7 +1086,8 @@ export function PremiumMapAnnotator() {
             }
           : route,
       ),
-    );
+      );
+    }
   };
 
   const startDrag = (target: DragTarget) => (event: PointerEvent<SVGElement>) => {
@@ -729,6 +1135,176 @@ export function PremiumMapAnnotator() {
     setConnectionTo(connectionTo + 1);
     setConnectionNote('');
   };
+
+  const battlePrintCalibrationControls = (
+    <ControlGroup title="Battle Print Metadata">
+      <label className="flex items-start gap-2 rounded-md border border-white/10 bg-black/20 p-2 text-xs leading-5 text-white/60">
+        <input type="checkbox" checked={showCalibrationGrid} onChange={(event) => setShowCalibrationGrid(event.target.checked)} className="mt-1" />
+        <span>
+          Show calibration grid
+          <span className="block text-white/40">Draws a visual grid over the annotator map only.</span>
+        </span>
+      </label>
+      <p className="rounded-md border border-sky-300/20 bg-sky-300/10 p-2 text-xs leading-5 text-white/60">
+        Some illustrated maps have a baked-in grid that is not perfectly uniform. Align this overlay as the best regular grid fit. Future battle-map printing will use the overlay grid as the accurate 1-inch grid.
+      </p>
+      <SelectInput
+        label="Status"
+        value={battleMapPrintForm.status}
+        options={['uncalibrated', 'calibrated', 'unavailable']}
+        onChange={(value) => updateBattleMapPrint('status', value as BattleMapPrintForm['status'])}
+      />
+      <label className="flex items-center gap-2 rounded-md border border-white/10 bg-black/20 p-2 text-xs font-semibold text-white/70">
+        <input type="checkbox" checked={battleMapPrintForm.lockSquareSize} onChange={(event) => setBattleMapSquareLock(event.target.checked)} />
+        Lock square size
+      </label>
+      <div className="grid grid-cols-2 gap-2">
+        <label className="block text-xs font-semibold text-white/70">
+          Square width px
+          <input value={battleMapPrintForm.squareWidthPx} onChange={(event) => updateBattleMapSquareText('squareWidthPx', event.target.value)} inputMode="decimal" placeholder="source px per grid column" className="mt-1 w-full rounded-md border border-white/10 bg-black/40 px-2 py-1.5 text-white placeholder:text-white/25" />
+        </label>
+        <label className="block text-xs font-semibold text-white/70">
+          Square height px
+          <input value={battleMapPrintForm.squareHeightPx} onChange={(event) => updateBattleMapSquareText('squareHeightPx', event.target.value)} inputMode="decimal" placeholder="source px per grid row" className="mt-1 w-full rounded-md border border-white/10 bg-black/40 px-2 py-1.5 text-white placeholder:text-white/25" />
+        </label>
+      </div>
+      <label className="block text-xs font-semibold text-white/70">
+        Width slider
+        <input
+          type="range"
+          min="10"
+          max="300"
+          step="1"
+          value={optionalNumber(battleMapPrintForm.squareWidthPx) ?? 70}
+          onChange={(event) => setBattleMapSquareWidthPx(Number(event.target.value))}
+          className="mt-1 w-full accent-amber-400"
+          aria-label="Grid square width in source pixels"
+        />
+      </label>
+      <label className="block text-xs font-semibold text-white/70">
+        Height slider
+        <input
+          type="range"
+          min="10"
+          max="300"
+          step="1"
+          value={optionalNumber(battleMapPrintForm.squareHeightPx) ?? optionalNumber(battleMapPrintForm.squareWidthPx) ?? 70}
+          onChange={(event) => setBattleMapSquareHeightPx(Number(event.target.value))}
+          className="mt-1 w-full accent-amber-400"
+          aria-label="Grid square height in source pixels"
+        />
+      </label>
+
+      <div className="grid grid-cols-2 gap-2">
+        <label className="block text-xs font-semibold text-white/70">
+          Origin X %
+          <input value={battleMapPrintForm.originXPercent} onChange={(event) => updateBattleMapPrint('originXPercent', event.target.value)} inputMode="decimal" className="mt-1 w-full rounded-md border border-white/10 bg-black/40 px-2 py-1.5 text-white" />
+        </label>
+        <label className="block text-xs font-semibold text-white/70">
+          Origin Y %
+          <input value={battleMapPrintForm.originYPercent} onChange={(event) => updateBattleMapPrint('originYPercent', event.target.value)} inputMode="decimal" className="mt-1 w-full rounded-md border border-white/10 bg-black/40 px-2 py-1.5 text-white" />
+        </label>
+      </div>
+      <label className="block text-xs font-semibold text-white/70">
+        Rotation deg
+        <input value={battleMapPrintForm.rotationDeg} onChange={(event) => updateBattleMapPrint('rotationDeg', event.target.value)} inputMode="decimal" className="mt-1 w-full rounded-md border border-white/10 bg-black/40 px-2 py-1.5 text-white" />
+      </label>
+      <input
+        type="range"
+        min="-5"
+        max="5"
+        step="0.1"
+        value={optionalNumber(battleMapPrintForm.rotationDeg) ?? 0}
+        onChange={(event) => updateBattleMapPrint('rotationDeg', event.target.value)}
+        className="w-full accent-sky-300"
+        aria-label="Grid rotation degrees"
+      />
+      <div className="grid grid-cols-4 gap-1">
+        <button type="button" onClick={() => nudgeBattleMapOrigin('x', -0.25)} className="rounded-md bg-white/10 px-2 py-1.5 text-xs font-bold text-white">
+          Left
+        </button>
+        <button type="button" onClick={() => nudgeBattleMapOrigin('x', 0.25)} className="rounded-md bg-white/10 px-2 py-1.5 text-xs font-bold text-white">
+          Right
+        </button>
+        <button type="button" onClick={() => nudgeBattleMapOrigin('y', -0.25)} className="rounded-md bg-white/10 px-2 py-1.5 text-xs font-bold text-white">
+          Up
+        </button>
+        <button type="button" onClick={() => nudgeBattleMapOrigin('y', 0.25)} className="rounded-md bg-white/10 px-2 py-1.5 text-xs font-bold text-white">
+          Down
+        </button>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2">
+        <SelectInput
+          label="Grid color"
+          value={calibrationGridColor}
+          options={['amber', 'cyan', 'white', 'black']}
+          onChange={(value) => setCalibrationGridColor(value as CalibrationGridColor)}
+        />
+        <label className="block text-xs font-semibold text-white/70">
+          Grid opacity
+          <input
+            type="range"
+            min="0.1"
+            max="1"
+            step="0.05"
+            value={calibrationGridOpacity}
+            onChange={(event) => setCalibrationGridOpacity(Number(event.target.value))}
+            className="mt-1 w-full accent-sky-300"
+          />
+        </label>
+      </div>
+      <div className="grid grid-cols-2 gap-2">
+        <label className="flex items-end gap-2 rounded-md border border-white/10 bg-black/20 p-2 text-xs font-semibold text-white/70">
+          <input type="checkbox" checked={showMajorCalibrationLines} onChange={(event) => setShowMajorCalibrationLines(event.target.checked)} className="mb-1" />
+          Major lines
+        </label>
+        <p className="rounded-md border border-white/10 bg-black/20 p-2 text-xs leading-5 text-white/45">Drag the blue origin handle on the map for quick placement.</p>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2">
+        <label className="block text-xs font-semibold text-white/70">
+          Crop x %
+          <input value={battleMapPrintForm.cropX} onChange={(event) => updateBattleMapPrint('cropX', event.target.value)} inputMode="decimal" placeholder="full map" className="mt-1 w-full rounded-md border border-white/10 bg-black/40 px-2 py-1.5 text-white placeholder:text-white/25" />
+        </label>
+        <label className="block text-xs font-semibold text-white/70">
+          Crop y %
+          <input value={battleMapPrintForm.cropY} onChange={(event) => updateBattleMapPrint('cropY', event.target.value)} inputMode="decimal" placeholder="full map" className="mt-1 w-full rounded-md border border-white/10 bg-black/40 px-2 py-1.5 text-white placeholder:text-white/25" />
+        </label>
+        <label className="block text-xs font-semibold text-white/70">
+          Crop width %
+          <input value={battleMapPrintForm.cropWidth} onChange={(event) => updateBattleMapPrint('cropWidth', event.target.value)} inputMode="decimal" placeholder="full map" className="mt-1 w-full rounded-md border border-white/10 bg-black/40 px-2 py-1.5 text-white placeholder:text-white/25" />
+        </label>
+        <label className="block text-xs font-semibold text-white/70">
+          Crop height %
+          <input value={battleMapPrintForm.cropHeight} onChange={(event) => updateBattleMapPrint('cropHeight', event.target.value)} inputMode="decimal" placeholder="full map" className="mt-1 w-full rounded-md border border-white/10 bg-black/40 px-2 py-1.5 text-white placeholder:text-white/25" />
+        </label>
+      </div>
+      <button type="button" onClick={resetBattleMapCrop} className="w-full rounded-md bg-white/10 px-3 py-2 text-xs font-bold text-white hover:bg-white/15">
+        Reset to full map crop
+      </button>
+
+      <SelectInput
+        label="Default overlap inches"
+        value={battleMapPrintForm.defaultOverlapInches}
+        options={['', '0', '0.25', '0.5']}
+        onChange={(value) => updateBattleMapPrint('defaultOverlapInches', value as BattleMapPrintForm['defaultOverlapInches'])}
+      />
+      <label className="block text-xs font-semibold text-white/70">
+        Notes
+        <textarea value={battleMapPrintForm.notes} onChange={(event) => updateBattleMapPrint('notes', event.target.value)} placeholder="Grid calibration pending for 1-inch battle-map printing." className="mt-1 h-20 w-full resize-y rounded-md border border-white/10 bg-black/40 px-2 py-1.5 text-white placeholder:text-white/25" />
+      </label>
+      <div className="rounded-md border border-white/10 bg-black/25 p-2 text-xs leading-5 text-white/55">
+        <p>Square width: {formatOptionalNumber(calibrationPreview.squareWidthPx, 'unknown')} source px</p>
+        <p>Square height: {formatOptionalNumber(calibrationPreview.squareHeightPx, 'unknown')} source px</p>
+        <p>Estimated columns: {formatOptionalNumber(calibrationPreview.estimatedColumns, 'unknown')}</p>
+        <p>Estimated rows: {formatOptionalNumber(calibrationPreview.estimatedRows, 'unknown')}</p>
+        <p>Estimated print size: {formatOptionalNumber(calibrationPreview.printedWidthInches, 'unknown')} in x {formatOptionalNumber(calibrationPreview.printedHeightInches, 'unknown')} in</p>
+        <p>Regular overlay grid; baked image grid may vary.</p>
+      </div>
+      <p className="text-xs leading-5 text-white/45">Metadata only. Battle-map printing is not implemented yet; leave maps uncalibrated until deliberate source-pixel calibration is available.</p>
+    </ControlGroup>
+  );
 
   return (
     <div className="min-h-screen bg-[#17130f] p-4 text-white">
@@ -783,6 +1359,17 @@ export function PremiumMapAnnotator() {
               <p className="text-xs leading-5 text-white/45">Put the file in public/premium-maps/, then enter the public path. Dimensions are detected automatically.</p>
             </ControlGroup>
 
+            <ControlGroup title="Import Annotation Package">
+              <label className="block text-xs font-semibold text-white/70">
+                Package JSON
+                <textarea value={packageImportText} onChange={(event) => setPackageImportText(event.target.value)} placeholder="Paste an annotation package JSON to reload draft info, premiumMap metadata, battle print calibration, and connections." className="mt-1 h-24 w-full resize-y rounded-md border border-white/10 bg-black/40 px-2 py-1.5 font-mono text-xs text-white placeholder:text-white/25" />
+              </label>
+              <button type="button" onClick={importAnnotationPackage} className="w-full rounded-md bg-sky-300 px-3 py-2 text-sm font-bold text-black">
+                Load Package JSON
+              </button>
+              {packageImportStatus && <p className="text-xs leading-5 text-white/55">{packageImportStatus}</p>}
+            </ControlGroup>
+
             <ControlGroup title="Annotation Package">
               <label className="block text-xs font-semibold text-white/70">
                 Proposed dungeon title
@@ -824,6 +1411,8 @@ export function PremiumMapAnnotator() {
                 <span className="block text-white/40">Usually off for illustrated maps because visible paths belong in the art.</span>
               </span>
             </label>
+
+            {battlePrintCalibrationControls}
 
             <div>
               <p className="mb-2 text-xs font-bold uppercase tracking-[0.14em] text-white/50">Mode</p>
@@ -911,22 +1500,91 @@ export function PremiumMapAnnotator() {
           </aside>
 
           <main className="rounded-md border border-white/10 bg-black/25 p-3">
-            <div className="mb-2 flex items-center justify-between gap-3 text-xs font-semibold text-white/55">
+            <div className="mb-2 flex flex-wrap items-center justify-between gap-3 text-xs font-semibold text-white/55">
               <span>{asset.url}</span>
-              <span>{activeRoute ? `Drawing route ${activeRoute.from}-${activeRoute.to}` : '720x480 production overlay; anchors export as percent of mapBounds'}</span>
+              <div className="flex flex-wrap items-center gap-2">
+                <span>{activeRoute ? `Drawing route ${activeRoute.from}-${activeRoute.to}` : '720x480 production overlay'}</span>
+                <div className="flex rounded-md border border-white/10 bg-black/25 p-0.5" aria-label="Map preview zoom">
+                  {(['fit', '1', '1.5', '2'] as AnnotatorMapZoom[]).map((zoom) => (
+                    <button
+                      key={zoom}
+                      type="button"
+                      onClick={() => setMapZoom(zoom)}
+                      className={`rounded px-2 py-1 text-[11px] font-bold ${mapZoom === zoom ? 'bg-sky-300 text-black' : 'text-white/70 hover:bg-white/10 hover:text-white'}`}
+                    >
+                      {zoom === 'fit' ? 'Fit' : `${Number(zoom) * 100}%`}
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
-            <svg
-              viewBox="0 0 720 480"
-              role="img"
-              aria-label="Premium map annotation canvas"
-              onClick={handleMapClick}
-              onPointerMove={handlePointerMove}
-              onPointerUp={finishDrag}
-              onPointerCancel={finishDrag}
-              onPointerLeave={finishDrag}
-              className="h-auto w-full cursor-crosshair touch-none rounded-md border border-white/10 bg-black"
-            >
+            <div className="overflow-auto rounded-md border border-white/10 bg-black/60">
+              <div className="mx-auto" style={mapCanvasStyle}>
+                <svg
+                  viewBox="0 0 720 480"
+                  role="img"
+                  aria-label="Premium map annotation canvas"
+                  onClick={handleMapClick}
+                  onPointerMove={handlePointerMove}
+                  onPointerUp={finishDrag}
+                  onPointerCancel={finishDrag}
+                  onPointerLeave={finishDrag}
+                  className="block h-auto w-full cursor-crosshair touch-none bg-black"
+                >
               <image href={asset.url} x="0" y="0" width="720" height="480" preserveAspectRatio="xMidYMid slice" />
+
+              {showCalibrationGrid && (
+                <g pointerEvents="none" opacity={calibrationGridOpacity}>
+                  <defs>
+                    <clipPath id="battle-print-calibration-crop">
+                      <rect
+                        x={calibrationPreview.cropOverlay.x}
+                        y={calibrationPreview.cropOverlay.y}
+                        width={calibrationPreview.cropOverlay.width}
+                        height={calibrationPreview.cropOverlay.height}
+                      />
+                    </clipPath>
+                  </defs>
+                  <rect
+                    x={calibrationPreview.cropOverlay.x}
+                    y={calibrationPreview.cropOverlay.y}
+                    width={calibrationPreview.cropOverlay.width}
+                    height={calibrationPreview.cropOverlay.height}
+                    fill={activeCalibrationGridColor.fill}
+                    stroke={activeCalibrationGridColor.crop}
+                    strokeDasharray="6 6"
+                    strokeWidth="2"
+                  />
+                  <g clipPath="url(#battle-print-calibration-crop)" transform={`rotate(${calibrationPreview.rotationDeg} ${calibrationPreview.origin.x} ${calibrationPreview.origin.y})`}>
+                    {calibrationGridXLines.map((x, index) => (
+                      <line
+                        key={`cal-x-${x}`}
+                        x1={x}
+                        y1={calibrationPreview.cropOverlay.y - calibrationPreview.cropOverlay.height}
+                        x2={x}
+                        y2={calibrationPreview.cropOverlay.y + calibrationPreview.cropOverlay.height * 2}
+                        stroke={showMajorCalibrationLines && index % 5 === 0 ? activeCalibrationGridColor.major : activeCalibrationGridColor.line}
+                        strokeWidth={showMajorCalibrationLines && index % 5 === 0 ? '2' : '1.15'}
+                      />
+                    ))}
+                    {calibrationGridYLines.map((y, index) => (
+                      <line
+                        key={`cal-y-${y}`}
+                        x1={calibrationPreview.cropOverlay.x - calibrationPreview.cropOverlay.width}
+                        y1={y}
+                        x2={calibrationPreview.cropOverlay.x + calibrationPreview.cropOverlay.width * 2}
+                        y2={y}
+                        stroke={showMajorCalibrationLines && index % 5 === 0 ? activeCalibrationGridColor.major : activeCalibrationGridColor.line}
+                        strokeWidth={showMajorCalibrationLines && index % 5 === 0 ? '2' : '1.15'}
+                      />
+                    ))}
+                  </g>
+                  <g className="cursor-move" onPointerDown={startDrag({ type: 'calibrationOrigin' })} onClick={(event) => event.stopPropagation()}>
+                    <circle cx={calibrationPreview.origin.x} cy={calibrationPreview.origin.y} r="8" fill="#38bdf8" stroke="#0f172a" strokeWidth="2" />
+                    <path d={`M ${calibrationPreview.origin.x - 12} ${calibrationPreview.origin.y} L ${calibrationPreview.origin.x + 12} ${calibrationPreview.origin.y} M ${calibrationPreview.origin.x} ${calibrationPreview.origin.y - 12} L ${calibrationPreview.origin.x} ${calibrationPreview.origin.y + 12}`} stroke="#0f172a" strokeWidth="1.5" strokeLinecap="round" />
+                  </g>
+                </g>
+              )}
 
               {previewMode === 'gm' &&
                 routes.map((route) => (
@@ -997,7 +1655,9 @@ export function PremiumMapAnnotator() {
                   </g>
                 );
               })}
-            </svg>
+                </svg>
+              </div>
+            </div>
           </main>
 
           <aside className="space-y-3">

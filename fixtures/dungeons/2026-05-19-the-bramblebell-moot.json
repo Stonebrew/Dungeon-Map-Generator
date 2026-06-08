@@ -526,6 +526,10 @@
           }
         ]
       },
+      "battleMapPrint": {
+        "status": "uncalibrated",
+        "notes": "Grid calibration pending for 1-inch battle-map printing."
+      },
       "printNotes": "Generated from the dev-only premium map annotator."
     }
   },

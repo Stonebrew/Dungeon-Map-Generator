@@ -26,6 +26,8 @@ Mock dungeon payloads now include backend-planning fields such as ISO dates, sta
 
 The active visible sample set is map-first: The Verdant Watercourt, The Ashen Crucible, The Frostwake Spire, The Bramblebell Moot, and The Tomb of Amun-Serekh. Legacy schematic-only packets are retired from normal user-facing flows so Surveyor and Cartographer both demonstrate the same map-first packet structure.
 
+Future Battle Map Print support will require calibrated `premiumMap.battleMapPrint` metadata. The current prototype can store and export calibration status, source-pixel grid width/height, grid origin, small rotation, crop bounds, overlap, and notes through the dev-only annotator, but no user-facing tiled 1-inch print view is implemented yet. The calibrated overlay grid is intended to become the accurate print grid; baked-in illustrated grids may not be perfectly uniform.
+
 Prototype app state is isolated in `src/hooks/useMockDailyDungeonApp.ts`. This hook currently owns sample dungeon selection, preview tier selection, favorites, New Packet Refresh resources, locked feature state, and view routing until real backend/account APIs exist.
 
 ## Out Of Scope

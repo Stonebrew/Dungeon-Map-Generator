@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'react';
-import { Archive, BookOpen, Crown, Dice5, RefreshCcw, ScrollText, Shield } from 'lucide-react';
+import { lazy, Suspense, useState } from 'react';
+import { Archive, BookOpen, Crown, Dice5, HelpCircle, RefreshCcw, ScrollText, Shield, X } from 'lucide-react';
 import { ArchiveView } from './components/ArchiveView';
 import { Badge, Panel } from './components/Badge';
 import { DevPanel } from './components/DevPanel';
@@ -85,6 +85,7 @@ function DailyDungeonApp() {
 
           <div className="px-4 py-5 sm:px-6 lg:px-8 lg:py-7">
             <div className="no-print">
+              {view === 'today' && <AppGuidePanel />}
               <DevPanel
                 dungeons={mockDungeons}
                 selectedDungeonId={selectedDungeonId}
@@ -179,6 +180,75 @@ function DailyDungeonApp() {
   );
 }
 
+function AppGuidePanel() {
+  const [helpOpen, setHelpOpen] = useState(false);
+  const helpSteps = [
+    'Choose a sample dungeon.',
+    'Use Today for the overview and story hook.',
+    'Use GM View or Run Mode to run the dungeon.',
+    'Use Player Map to show players a safe map.',
+    'Use Print Packet to export table notes and maps.',
+    'Cartographer can use one New Packet Refresh per day to switch to another complete packet.',
+  ];
+
+  return (
+    <section className="mb-4 rounded-md border border-slatewood/20 bg-[#fff9ec]/88 p-4 shadow-tool">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="max-w-3xl">
+          <p className="ledger-label text-[11px] font-bold uppercase text-slatewood">What this app does</p>
+          <p className="mt-2 text-sm leading-6 text-ink/75">
+            Create and preview ready-to-run dungeon packets from illustrated fantasy maps, including GM notes, player-safe maps, and printable table handouts.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => setHelpOpen(true)}
+          className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md border border-slatewood bg-slatewood px-3 py-2 text-sm font-bold text-white shadow-tool transition hover:bg-slatewood/90"
+        >
+          <HelpCircle className="h-4 w-4" aria-hidden="true" />
+          How to use this app
+        </button>
+      </div>
+
+      {helpOpen && (
+        <div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/50 p-3 backdrop-blur-sm sm:items-center" role="dialog" aria-modal="true" aria-labelledby="app-help-title">
+          <div className="paper-panel field-corner max-h-[90vh] w-full max-w-xl overflow-y-auto rounded-md border border-[#cdbfa9] p-4 shadow-[0_24px_70px_rgba(31,26,21,0.34)] sm:p-5">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="ledger-label text-[11px] font-bold uppercase text-ember">Quick start</p>
+                <h2 id="app-help-title" className="survey-title mt-1 font-serif text-3xl font-bold">
+                  How to use this app
+                </h2>
+              </div>
+              <button
+                type="button"
+                onClick={() => setHelpOpen(false)}
+                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-slatewood/20 bg-white text-ink/65 shadow-sm transition hover:bg-slatewood/10"
+                aria-label="Close help"
+              >
+                <X className="h-4 w-4" aria-hidden="true" />
+              </button>
+            </div>
+            <ol className="mt-4 space-y-3 text-sm leading-6 text-ink/75">
+              {helpSteps.map((step, index) => (
+                <li key={step} className="flex gap-3">
+                  <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-slatewood text-xs font-black text-white">{index + 1}</span>
+                  <span>{step}</span>
+                </li>
+              ))}
+            </ol>
+            <div className="mt-5 rounded-md border border-slatewood/15 bg-[#fbf4e6] p-3 text-sm leading-6 text-ink/70">
+              <p>
+                Surveyor previews the basic packet and schematic map. Cartographer unlocks premium maps, player map options, print/export, and one daily New Packet Refresh.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
+    </section>
+  );
+}
+
 function PlaceholderFeature({ feature }: { feature: { name: string; text: string } }) {
   return (
     <Panel className="border-brass/35">
@@ -201,7 +271,7 @@ function AppHeader({ compact = false, currentPlan }: { compact?: boolean; curren
           <h1 className={`survey-title ${compact ? 'text-lg' : 'mt-1 text-2xl'} font-serif font-bold leading-tight`}>Field Notes & Maps</h1>
         </div>
       </div>
-      <span className="catalog-tag rounded-md border border-[#c18453]/35 bg-[#c18453]/10 px-2.5 py-1 text-xs font-bold text-current shadow-sm">
+      <span className="status-tag rounded-md border border-[#c18453]/30 bg-[#c18453]/10 px-2.5 py-1 text-xs font-bold text-current">
         {currentPlan?.name}
       </span>
     </header>

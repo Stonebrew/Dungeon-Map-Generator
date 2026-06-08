@@ -174,7 +174,7 @@ Useful additions:
 - `labelAnchors`: room/keyed-area label positions.
 - `markerAnchors`: optional GM marker positions.
 - `routeOverlayPaths`: overlay paths derived from `map.connections`.
-- `grid`: optional grid metadata, separate from connectivity.
+- `battleMapPrint`: optional grid calibration metadata for future 1-inch miniature-scale tiled printing, separate from connectivity and overlay placement.
 - `assetVersion`: map asset revision for cache busting and fixture reproducibility.
 
 Example:
@@ -409,6 +409,8 @@ Current capabilities:
 The annotator supports both blank/new metadata creation and edit-and-copy work on existing premium map dungeons. For a new local image, put the file in `public/premium-maps/`, open `/dev/map-annotator`, enter the public path, click `Load Custom Image`, annotate, add draft notes, then copy or download the generated annotation package JSON. The package is intended for prompts such as “Use this annotation package JSON to create a new map-first premium dungeon.” Separate `premiumMap` and `map.connections` exports remain available for debugging and manual paste-back. Loading an existing dungeon does not mutate the source data; it only populates the local annotator state so the updated JSON can be copied back manually after review.
 
 The annotator uses the same coordinate interpretation as `PremiumMapLayer`: the premium image is rendered into `premiumMap.mapBounds`, currently `0 0 720 480`, with `preserveAspectRatio="xMidYMid slice"`. Room label and GM marker anchors export as `xPercent` / `yPercent` values relative to those bounds. GM-only secret route paths export in the same `720x480` overlay SVG coordinate space. This makes the annotator WYSIWYG with GM Map, Player Map, and Print Packet previews.
+
+That `720x480` coordinate space is not print scale. Future Battle Map Print output needs separate `premiumMap.battleMapPrint` calibration with `status`, `grid.squareWidthPx`, `grid.squareHeightPx`, optional grid origin percentages, optional small `rotationDeg`, optional crop bounds, optional tiled-page overlap, and notes. The annotator provides a visual calibration grid overlay so the grid can be aligned by eye instead of manually counting every row and column. The calibrated overlay grid is the accurate future 1-inch print grid; any baked-in image grid is treated as artwork and may not be perfectly uniform. Current showcase maps are intentionally marked `uncalibrated`; the annotator can export and preserve calibration fields, but the actual tiled 1-inch Battle Map Print view is not implemented yet.
 
 `map.connections` remains structural dungeon data. It describes which keyed areas connect and should not be used to place room labels, GM markers, or premium illustrated overlay art.
 

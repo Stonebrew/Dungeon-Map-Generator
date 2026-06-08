@@ -218,6 +218,7 @@ Known limitations:
 - Premium map images must be reachable from the browser at export time. Local `public/premium-maps/` assets work for development, but missing local files still cannot be embedded into the PDF.
 - Map sections are marked to avoid page splitting, and Save as PDF uses in-place flattened map section snapshots to reduce html2canvas/SVG pagination failures, separated headings, and blank duplicate map frames.
 - There are no export options for paper size, color mode, included sections, map-only output, grid toggles, or route toggles. Uploaded premium-map grids, paths, and terrain remain part of the base image.
+- One-inch miniature-scale battle-map printing is not implemented yet. Premium maps now reserve optional `battleMapPrint` calibration metadata, but current showcase maps remain uncalibrated until `grid.squareWidthPx`, `grid.squareHeightPx`, origin, and any small rotation are visually calibrated in the annotator. The app overlay grid should become the accurate print grid; baked-in image grids may vary.
 - There is no cached export artifact or download history.
 - Map print quality still needs manual QA across the active map-first showcase packets, especially premium illustrated maps with overlays and schematic fallbacks.
 - There are no page numbers, running headers, custom cover pages, or print presets yet.
@@ -231,6 +232,7 @@ Scope:
 
 - QA the Print Packet view across Surveyor locked behavior, Cartographer GM maps, and Cartographer player-safe maps.
 - Add print QA screenshots or a checklist for the active map-first showcase packets.
+- Calibrate one showcase map with `battleMapPrint.grid.squareWidthPx`, `battleMapPrint.grid.squareHeightPx`, origin, and optional rotation metadata before prototyping map-only tiled battle-map output.
 - Improve page numbers, headers/footers, print presets, and compact room density if playtesters print full packets.
 - Add a feedback prompt asking whether GMs printed, saved PDF, or ran from mobile.
 - Do not add payment or backend export jobs yet.

@@ -105,7 +105,7 @@ export function DungeonMap({
           <h2 className={`survey-title font-serif font-bold ${compact ? 'text-lg' : 'text-xl'}`}>{isPlayer ? 'Player-Safe Map' : isFog ? 'Fog-of-War Map' : 'GM Map Preview'}</h2>
           <p className="ledger-label text-xs font-semibold uppercase text-ink/45">{isPrintPresentation ? 'Print-optimized map' : enhanced ? 'Enhanced tabletop map' : 'Surveyor schematic map'}</p>
         </div>
-        {isPlayer ? <Badge tone="success">Secrets hidden</Badge> : <Badge tone="accent">GM labels</Badge>}
+        {isPlayer ? <Badge tone="success">Player safe</Badge> : <Badge tone="accent">GM labels visible</Badge>}
       </div>
 
       <svg viewBox="0 0 720 480" role="img" aria-label={`${isPlayer ? 'Player safe' : 'GM'} dungeon map`} className={`block h-auto w-full max-w-full ${isPrintPresentation ? 'bg-[#f8f1e2]' : enhanced ? 'bg-[#edf0ec]' : 'bg-[#fff9ec]'}`}>

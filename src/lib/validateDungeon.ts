@@ -46,6 +46,8 @@ const validPrintableMapVariantValues = new Set(['standard', 'inkLight', 'highCon
 const validPremiumMapMimeTypes = new Set(['image/png', 'image/jpeg', 'image/webp', 'image/svg+xml']);
 const validPremiumMapMarkerValues = new Set(['treasure', 'hazard', 'secret', 'boss', 'objective', 'custom']);
 const validPremiumMapSchematicFootprintShapes = new Set(['ellipse', 'rect']);
+const validPremiumBattleMapPrintStatusValues = new Set(['calibrated', 'uncalibrated', 'unavailable']);
+const validPremiumBattleMapPrintOverlapValues = new Set([0, 0.25, 0.5]);
 
 function validateOptionalValue(value: string | undefined, validValues: Set<string>, label: string, warnings: DungeonValidationIssue[], roomNumbers?: number[]) {
   if (value && !validValues.has(value)) {
@@ -118,6 +120,15 @@ function validatePositiveNumber(value: number | undefined, label: string, warnin
     warnings.push({
       severity: 'warning',
       message: `${label} should be a positive number when premium map metadata is present.`,
+    });
+  }
+}
+
+function validateRequiredPositiveNumber(value: number | undefined, label: string, warnings: DungeonValidationIssue[]) {
+  if (value === undefined || !Number.isFinite(value) || value <= 0) {
+    warnings.push({
+      severity: 'warning',
+      message: `${label} should be a positive number when premium battle-map print calibration is marked calibrated.`,
     });
   }
 }
@@ -306,6 +317,58 @@ function validatePremiumMapSchematicFootprints(premiumMap: PremiumMapMetadata, r
   }
 }
 
+function validateBattleMapPrintCalibration(premiumMap: PremiumMapMetadata, warnings: DungeonValidationIssue[]) {
+  const calibration = premiumMap.battleMapPrint;
+
+  if (!calibration) {
+    return;
+  }
+
+  validateOptionalValue(calibration.status, validPremiumBattleMapPrintStatusValues, 'Premium battleMapPrint status', warnings);
+
+  if (calibration.status === 'calibrated') {
+    validateRequiredPositiveNumber(calibration.grid?.squareWidthPx ?? calibration.grid?.squarePx, 'Premium battleMapPrint grid.squareWidthPx', warnings);
+    validateRequiredPositiveNumber(calibration.grid?.squareHeightPx ?? calibration.grid?.squarePx, 'Premium battleMapPrint grid.squareHeightPx', warnings);
+  }
+
+  if (calibration.grid) {
+    validatePositiveNumber(calibration.grid.squareWidthPx ?? calibration.grid.squarePx, 'Premium battleMapPrint grid.squareWidthPx', warnings);
+    validatePositiveNumber(calibration.grid.squareHeightPx ?? calibration.grid.squarePx, 'Premium battleMapPrint grid.squareHeightPx', warnings);
+    validatePositiveNumber(calibration.grid.squarePx, 'Premium battleMapPrint legacy grid.squarePx', warnings);
+    validatePercentNumber(calibration.grid.originXPercent, 'Premium battleMapPrint grid.originXPercent', warnings);
+    validatePercentNumber(calibration.grid.originYPercent, 'Premium battleMapPrint grid.originYPercent', warnings);
+    validateFiniteNumber(calibration.grid.rotationDeg, 'Premium battleMapPrint grid.rotationDeg', warnings);
+
+    if (calibration.grid.rotationDeg !== undefined && (calibration.grid.rotationDeg < -10 || calibration.grid.rotationDeg > 10)) {
+      warnings.push({
+        severity: 'warning',
+        message: 'Premium battleMapPrint grid.rotationDeg should stay between -10 and 10 degrees.',
+      });
+    }
+  }
+
+  if (calibration.cropBoundsPercent) {
+    validatePercentNumber(calibration.cropBoundsPercent.x, 'Premium battleMapPrint cropBoundsPercent x', warnings);
+    validatePercentNumber(calibration.cropBoundsPercent.y, 'Premium battleMapPrint cropBoundsPercent y', warnings);
+    validatePercentNumber(calibration.cropBoundsPercent.width, 'Premium battleMapPrint cropBoundsPercent width', warnings);
+    validatePercentNumber(calibration.cropBoundsPercent.height, 'Premium battleMapPrint cropBoundsPercent height', warnings);
+
+    if (calibration.cropBoundsPercent.width <= 0 || calibration.cropBoundsPercent.height <= 0) {
+      warnings.push({
+        severity: 'warning',
+        message: 'Premium battleMapPrint cropBoundsPercent width and height should be positive percentages.',
+      });
+    }
+  }
+
+  if (calibration.defaultOverlapInches !== undefined && !validPremiumBattleMapPrintOverlapValues.has(calibration.defaultOverlapInches)) {
+    warnings.push({
+      severity: 'warning',
+      message: 'Premium battleMapPrint defaultOverlapInches should be one of 0, 0.25, or 0.5.',
+    });
+  }
+}
+
 function validatePremiumMapMetadata(premiumMap: PremiumMapMetadata | undefined, roomsByNumber: Map<number, DungeonRoom>, warnings: DungeonValidationIssue[]) {
   if (!premiumMap) {
     return;
@@ -326,6 +389,7 @@ function validatePremiumMapMetadata(premiumMap: PremiumMapMetadata | undefined, 
   validatePremiumMapLabelCoverage(premiumMap.gmOverlay, 'Premium gmOverlay', roomsByNumber, warnings);
   validatePremiumMapLabelCoverage(premiumMap.playerOverlay, 'Premium playerOverlay', roomsByNumber, warnings);
   validatePremiumMapSchematicFootprints(premiumMap, roomsByNumber, warnings);
+  validateBattleMapPrintCalibration(premiumMap, warnings);
 
   if (premiumMap.status === 'available' && !premiumMap.baseMapImage && !premiumMap.gmBaseMapImage && !premiumMap.playerBaseMapImage) {
     warnings.push({

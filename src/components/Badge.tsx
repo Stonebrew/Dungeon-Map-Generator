@@ -4,20 +4,20 @@ import type { ReactNode } from 'react';
 type BadgeTone = 'neutral' | 'accent' | 'success' | 'warning' | 'danger';
 
 const toneClasses: Record<BadgeTone, string> = {
-  neutral: 'border-slatewood/20 bg-slatewood/[0.08] text-ink/70',
-  accent: 'border-ember/25 bg-ember/[0.08] text-ember',
-  success: 'border-moss/25 bg-moss/[0.10] text-moss',
-  warning: 'border-brass/25 bg-brass/[0.10] text-brass',
-  danger: 'border-ember bg-ember text-white',
+  neutral: 'border-slatewood/18 bg-slatewood/[0.045] text-ink/62',
+  accent: 'border-ember/20 bg-ember/[0.055] text-ember',
+  success: 'border-moss/20 bg-moss/[0.07] text-moss',
+  warning: 'border-brass/20 bg-brass/[0.07] text-brass',
+  danger: 'border-ember/25 bg-ember/[0.10] text-ember',
 };
 
 export function Badge({ children, tone = 'neutral' }: { children: ReactNode; tone?: BadgeTone }) {
-  return <span className={`catalog-tag inline-flex items-center rounded-md border px-2.5 py-1 text-xs font-bold ${toneClasses[tone]}`}>{children}</span>;
+  return <span className={`status-tag inline-flex items-center rounded-md border px-2.5 py-1 text-xs font-bold ${toneClasses[tone]}`}>{children}</span>;
 }
 
 export function LockedBadge() {
   return (
-    <span className="catalog-tag inline-flex items-center gap-1 rounded-md border border-slatewood/20 bg-slatewood/[0.08] px-2.5 py-1 text-xs font-bold text-ink/45">
+    <span className="status-tag inline-flex items-center gap-1 rounded-md border border-slatewood/18 bg-slatewood/[0.045] px-2.5 py-1 text-xs font-bold text-ink/45">
       <Lock className="h-3.5 w-3.5" aria-hidden="true" />
       Locked
     </span>

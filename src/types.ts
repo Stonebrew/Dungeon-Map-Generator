@@ -85,6 +85,27 @@ export type PremiumMapSchematicFootprint = {
   label?: string;
 };
 
+export type PremiumMapBattlePrintCalibration = {
+  status: 'calibrated' | 'uncalibrated' | 'unavailable';
+  grid?: {
+    squareWidthPx: number;
+    squareHeightPx: number;
+    originXPercent?: number;
+    originYPercent?: number;
+    rotationDeg?: number;
+    // Legacy package support: older annotator exports used one uniform square size.
+    squarePx?: number;
+  };
+  cropBoundsPercent?: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
+  defaultOverlapInches?: 0 | 0.25 | 0.5;
+  notes?: string;
+};
+
 export type PremiumMapOverlay = {
   viewBox?: string;
   labelAnchors?: PremiumMapOverlayAnchor[];
@@ -108,6 +129,7 @@ export type PremiumMapMetadata = {
   gmOverlay?: PremiumMapOverlay;
   playerOverlay?: PremiumMapOverlay;
   schematicFootprints?: PremiumMapSchematicFootprint[];
+  battleMapPrint?: PremiumMapBattlePrintCalibration;
   showNormalRouteOverlay?: boolean;
   printNotes?: string;
 };

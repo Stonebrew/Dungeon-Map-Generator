@@ -169,8 +169,16 @@ textarea:focus-visible {
   z-index: 2;
 }
 
+.status-tag {
+  cursor: default;
+  box-shadow: none;
+  text-transform: uppercase;
+  letter-spacing: 0.075em;
+}
+
 .catalog-tag {
-  box-shadow: inset 3px 0 0 rgb(71 106 103 / 0.46);
+  cursor: default;
+  box-shadow: none;
 }
 
 .brand-mark {
