@@ -294,8 +294,15 @@
         ]
       },
       "battleMapPrint": {
-        "status": "uncalibrated",
-        "notes": "Grid calibration pending for 1-inch battle-map printing."
+        "status": "calibrated",
+        "grid": {
+          "squareWidthPx": 28.5,
+          "squareHeightPx": 29.5,
+          "originXPercent": 1.5,
+          "originYPercent": 1.5,
+          "rotationDeg": 0
+        },
+        "notes": "Grid calibrated against the central playable area. The baked-in map grid has minor non-uniform image distortion, so the app overlay grid should be treated as the authoritative printable grid."
       },
       "printNotes": "Generated from the dev-only premium map annotator."
     }
