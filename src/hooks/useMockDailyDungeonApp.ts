@@ -3,7 +3,7 @@ import { currentTier, mockDungeons, plans, rerollAllowancesByTier, rerollCountsB
 import { canAccessFeature, type FeatureKey } from '../lib/entitlements';
 import type { RerollCounts, TierId } from '../types';
 
-export type ViewId = 'today' | 'run' | 'gm' | 'player' | 'archive' | 'encounters' | 'upgrade' | 'rerolls' | 'print' | 'locked' | 'placeholder';
+export type ViewId = 'today' | 'run' | 'gm' | 'player' | 'archive' | 'encounters' | 'upgrade' | 'rerolls' | 'print' | 'battle-map-print' | 'locked' | 'placeholder';
 
 type PlaceholderFeature = {
   name: string;
@@ -17,6 +17,7 @@ const lockedFeatures: Partial<Record<ViewId, FeatureKey>> = {
   archive: 'archive',
   rerolls: 'fullReroll',
   print: 'pdfExport',
+  'battle-map-print': 'pdfExport',
 };
 
 function cloneRerollCounts() {

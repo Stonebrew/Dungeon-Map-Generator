@@ -1,7 +1,8 @@
-import { ArrowLeft, FileDown, Printer } from 'lucide-react';
+import { ArrowLeft, FileDown, Grid3X3, Printer } from 'lucide-react';
 import { useRef, useState, type ReactNode } from 'react';
 import type { Dungeon, TableEntry, TierId } from '../types';
 import { canAccessFeature } from '../lib/entitlements';
+import { getBattleMapPrintAvailability } from '../lib/battleMapPrint';
 import { DungeonMap } from './DungeonMap';
 import { Badge } from './Badge';
 
@@ -268,8 +269,10 @@ async function flattenMapSectionsForPdf(root: HTMLElement) {
   };
 }
 
-export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; tier: TierId; onBack: () => void }) {
+export function PrintPacketView({ dungeon, tier, onBack, onOpenBattleMap }: { dungeon: Dungeon; tier: TierId; onBack: () => void; onOpenBattleMap: () => void }) {
   const hasColorMap = canAccessFeature(tier, 'colorMap');
+  const canUseBattleMapPrint = canAccessFeature(tier, 'pdfExport');
+  const battleMapAvailability = getBattleMapPrintAvailability(dungeon);
   const packetContentRef = useRef<HTMLDivElement | null>(null);
   const [isCreatingPdf, setIsCreatingPdf] = useState(false);
   const [pdfError, setPdfError] = useState<string | null>(null);
@@ -379,6 +382,27 @@ export function PrintPacketView({ dungeon, tier, onBack }: { dungeon: Dungeon; t
                 </label>
               </div>
             </fieldset>
+          </div>
+          <div className="mt-3 rounded-md border border-slatewood/20 bg-[#fbfaf5] p-3 text-sm text-ink">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div>
+                <p className="ledger-label text-xs font-bold uppercase text-ink/45">Battle Map Print</p>
+                <p className="mt-1 leading-6 text-ink/70">
+                  {battleMapAvailability.available
+                    ? `Print a player-safe 1-inch grid map across ${battleMapAvailability.plan.tiles.length} A4 landscape tiles. Use 100% scale and disable browser headers and footers.`
+                    : battleMapAvailability.message}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={onOpenBattleMap}
+                disabled={!canUseBattleMapPrint || !battleMapAvailability.available}
+                className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md border border-slatewood bg-slatewood px-3 py-2 text-sm font-bold text-white shadow-tool disabled:cursor-not-allowed disabled:border-ink/10 disabled:bg-ink/10 disabled:text-ink/45"
+              >
+                <Grid3X3 className="h-4 w-4" aria-hidden="true" />
+                Battle Map Print
+              </button>
+            </div>
           </div>
         </div>
         <div className="flex flex-wrap gap-2">

@@ -1,6 +1,7 @@
 import { lazy, Suspense, useState } from 'react';
 import { Archive, BookOpen, Crown, Dice5, HelpCircle, RefreshCcw, ScrollText, Shield, X } from 'lucide-react';
 import { ArchiveView } from './components/ArchiveView';
+import { BattleMapPrintView } from './components/BattleMapPrintView';
 import { Badge, Panel } from './components/Badge';
 import { DevPanel } from './components/DevPanel';
 import { DungeonSummary } from './components/DungeonSummary';
@@ -146,7 +147,8 @@ function DailyDungeonApp() {
                 onLockedFeature={showLockedFeature}
               />
             )}
-            {view === 'print' && <PrintPacketView dungeon={selectedDungeon} tier={selectedTier} onBack={() => setView('gm')} />}
+            {view === 'print' && <PrintPacketView dungeon={selectedDungeon} tier={selectedTier} onBack={() => setView('gm')} onOpenBattleMap={() => navigateTo('battle-map-print')} />}
+            {view === 'battle-map-print' && <BattleMapPrintView dungeon={selectedDungeon} tier={selectedTier} onBack={() => setView('print')} />}
             {view === 'locked' && lockedFeature && <LockedFeature feature={lockedFeature} onUpgrade={() => setView('upgrade')} />}
             {view === 'placeholder' && placeholderFeature && <PlaceholderFeature feature={placeholderFeature} />}
           </div>

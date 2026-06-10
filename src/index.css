@@ -318,6 +318,96 @@ textarea:focus-visible {
   max-height: 560px;
 }
 
+.battle-map-print-preview {
+  overflow-x: auto;
+}
+
+.battle-map-print-pages {
+  display: grid;
+  gap: 1rem;
+  justify-items: start;
+}
+
+.battle-map-tile-page {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid rgb(31 26 21 / 0.16);
+  background: #ffffff;
+  box-shadow: 0 12px 30px rgb(31 26 21 / 0.14);
+  color: #211a16;
+}
+
+.battle-map-tile-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.18in;
+  min-height: 0.42in;
+  padding: 0.08in 0.12in 0.06in;
+  border-bottom: 1px solid rgb(31 26 21 / 0.18);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+.battle-map-tile-header h2 {
+  margin: 0;
+  font-size: 12pt;
+  line-height: 1.1;
+}
+
+.battle-map-tile-header p {
+  margin: 0;
+  font-size: 8pt;
+  font-weight: 700;
+  line-height: 1.2;
+  text-transform: uppercase;
+}
+
+.battle-map-tile-kicker {
+  color: #a65335;
+  letter-spacing: 0.06em;
+}
+
+.battle-map-tile-stage {
+  position: relative;
+  overflow: hidden;
+  margin: 0 auto;
+  background: #ffffff;
+}
+
+.battle-map-tile-image {
+  position: relative;
+  overflow: hidden;
+  background-repeat: no-repeat;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.battle-map-print-grid {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    repeating-linear-gradient(90deg, rgb(18 28 31 / 0.48) 0 0.012in, transparent 0.012in 1in),
+    repeating-linear-gradient(0deg, rgb(18 28 31 / 0.48) 0 0.012in, transparent 0.012in 1in),
+    repeating-linear-gradient(90deg, rgb(166 83 53 / 0.7) 0 0.018in, transparent 0.018in 5in),
+    repeating-linear-gradient(0deg, rgb(166 83 53 / 0.7) 0 0.018in, transparent 0.018in 5in);
+  background-repeat: repeat;
+  print-color-adjust: exact;
+  -webkit-print-color-adjust: exact;
+}
+
+.battle-map-tile-footer {
+  padding: 0.045in 0.12in;
+  border-top: 1px solid rgb(31 26 21 / 0.14);
+  color: rgb(33 26 22 / 0.68);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 7.5pt;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
 @media print {
   @page {
     size: letter;
@@ -332,6 +422,11 @@ textarea:focus-visible {
   @page packet-landscape {
     size: letter landscape;
     margin: 0.45in;
+  }
+
+  @page battle-map {
+    size: A4 landscape;
+    margin: 0;
   }
 
   :root,
@@ -565,5 +660,57 @@ textarea:focus-visible {
     max-width: 100% !important;
     height: auto !important;
     margin: 0 !important;
+  }
+
+  .battle-map-print {
+    page: battle-map;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #ffffff !important;
+  }
+
+  body:has(.battle-map-print) main,
+  body:has(.battle-map-print) main > div,
+  body:has(.battle-map-print) .mx-auto {
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+
+  .battle-map-print-preview {
+    overflow: visible !important;
+    border: 0 !important;
+    padding: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .battle-map-print-pages {
+    display: block !important;
+  }
+
+  .battle-map-tile-page {
+    width: 11.69in !important;
+    min-height: 8.27in !important;
+    max-height: 8.27in !important;
+    margin: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    break-after: page;
+    page-break-after: always;
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
+  }
+
+  .battle-map-tile-page:last-child {
+    break-after: auto;
+    page-break-after: auto;
+  }
+
+  .battle-map-tile-stage,
+  .battle-map-tile-image,
+  .battle-map-print-grid {
+    print-color-adjust: exact;
+    -webkit-print-color-adjust: exact;
   }
 }
