@@ -960,8 +960,15 @@ const premiumMapPocDungeonDraft: DraftDungeon = {
         ],
       },
       battleMapPrint: {
-        status: 'uncalibrated',
-        notes: 'Grid calibration pending for 1-inch battle-map printing.',
+        status: 'calibrated',
+        grid: {
+          squareWidthPx: 26,
+          squareHeightPx: 26,
+          originXPercent: 1,
+          originYPercent: 0.5,
+          rotationDeg: 0,
+        },
+        notes: 'Grid calibrated for future 1-inch battle-map printing. Battle Map Print feature not implemented yet.',
       },
       printNotes: 'Generated from the dev-only premium map annotator.',
     },
