@@ -221,7 +221,7 @@ export function RunMode({
                       <span className="font-bold">
                         {room.number}. {room.name}
                       </span>
-                      <span className={`rounded-md px-2 py-0.5 text-[11px] font-bold ${active ? 'bg-white/20 text-white' : 'bg-white text-ink/55'}`}>
+                      <span className={`status-tag rounded-[3px] border-l-2 px-2 py-0.5 text-[11px] font-black ${active ? 'border-l-white/45 bg-white/20 text-white/80' : 'border-l-slatewood/30 bg-slatewood/[0.045] text-ink/55'}`}>
                         {room.threat}
                       </span>
                     </span>

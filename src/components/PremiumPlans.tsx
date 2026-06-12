@@ -27,9 +27,9 @@ export function PremiumPlans({ plans, currentTier, tierRank }: { plans: Plan[]; 
                 {active && <Badge tone="danger">Current</Badge>}
               </div>
               <p className="mt-2 min-h-12 text-sm leading-6 text-ink/65">{plan.tagline}</p>
-              <div className="mt-3 grid grid-cols-2 gap-2 text-xs font-bold">
-                <span className="rounded-md border border-slatewood/20 bg-[#fbfaf5] px-2 py-2">{plan.rerolls}</span>
-                <span className="rounded-md border border-slatewood/20 bg-[#fbfaf5] px-2 py-2">{plan.refreshes}</span>
+              <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] font-black">
+                <span className="catalog-tag px-2 py-1.5">{plan.rerolls}</span>
+                <span className="catalog-tag px-2 py-1.5">{plan.refreshes}</span>
               </div>
               <div className="mt-4 space-y-4 text-sm text-ink/75">
                 {plan.featureGroups.map((group) => (

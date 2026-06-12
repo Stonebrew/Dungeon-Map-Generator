@@ -52,11 +52,11 @@ export function ArchiveView({
                 {saved && <Bookmark className="h-5 w-5 shrink-0 fill-brass text-brass" aria-hidden="true" />}
               </div>
 
-              <div className="mt-3 grid grid-cols-2 gap-2 text-xs font-bold text-ink/65">
-                <span className="rounded-md border border-slatewood/20 bg-[#fbfaf5] px-2 py-2">{dungeon.theme}</span>
-                <span className="rounded-md border border-slatewood/20 bg-[#fbfaf5] px-2 py-2">{dungeon.difficulty}</span>
-                <span className="rounded-md border border-slatewood/20 bg-[#fbfaf5] px-2 py-2">{dungeon.partySize}</span>
-                <span className="rounded-md border border-slatewood/20 bg-[#fbfaf5] px-2 py-2">{dungeon.estimatedPlayTime}</span>
+              <div className="mt-3 grid grid-cols-2 gap-2 text-[11px] font-black text-ink/65">
+                <span className="catalog-tag px-2 py-1.5">{dungeon.theme}</span>
+                <span className="catalog-tag px-2 py-1.5">{dungeon.difficulty}</span>
+                <span className="catalog-tag px-2 py-1.5">{dungeon.partySize}</span>
+                <span className="catalog-tag px-2 py-1.5">{dungeon.estimatedPlayTime}</span>
               </div>
 
               <div className="mt-4 grid grid-cols-2 gap-2">
