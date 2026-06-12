@@ -174,11 +174,18 @@ textarea:focus-visible {
   box-shadow: none;
   text-transform: uppercase;
   letter-spacing: 0.075em;
+  user-select: text;
 }
 
 .catalog-tag {
   cursor: default;
   box-shadow: none;
+  border-left: 2px solid rgb(71 106 103 / 0.28);
+  border-radius: 3px;
+  background: rgb(71 106 103 / 0.045);
+  color: rgb(31 26 21 / 0.62);
+  text-transform: uppercase;
+  letter-spacing: 0.075em;
 }
 
 .brand-mark {
