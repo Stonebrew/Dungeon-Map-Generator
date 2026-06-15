@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState } from 'react';
-import { Archive, BookOpen, Crown, Dice5, HelpCircle, RefreshCcw, ScrollText, Shield, X } from 'lucide-react';
+import { Archive, BookOpen, Crown, Dice5, HelpCircle, Megaphone, RefreshCcw, ScrollText, Shield, X } from 'lucide-react';
 import { ArchiveView } from './components/ArchiveView';
 import { BattleMapPrintView } from './components/BattleMapPrintView';
 import { Badge, Panel } from './components/Badge';
@@ -27,6 +27,10 @@ const viewItems: { id: ViewId; label: string; mobileLabel: string; icon: typeof 
   { id: 'rerolls', label: 'Refresh', mobileLabel: 'Refresh', icon: RefreshCcw },
 ];
 
+const testerBuildAnnouncement = {
+  text: 'Tester build update: all five showcase maps are calibrated, and Battle Map Print is now available for Cartographer maps.',
+};
+
 function App() {
   if (import.meta.env.DEV && window.location.pathname === '/dev/map-annotator') {
     const PremiumMapAnnotator = lazy(() => import('./components/dev/PremiumMapAnnotator').then((module) => ({ default: module.PremiumMapAnnotator })));
@@ -53,6 +57,7 @@ function DailyDungeonApp() {
     selectedTier,
     currentPlan,
     savedDungeonIds,
+    archiveLimitMessage,
     sessionRerollCounts,
     plans,
     mockDungeons,
@@ -87,6 +92,7 @@ function DailyDungeonApp() {
           <div className="px-4 py-5 sm:px-6 lg:px-8 lg:py-7">
             <div className="no-print">
               {view === 'today' && <AppGuidePanel />}
+              {view === 'today' && <AnnouncementBanner />}
               <DevPanel
                 dungeons={mockDungeons}
                 selectedDungeonId={selectedDungeonId}
@@ -95,6 +101,11 @@ function DailyDungeonApp() {
                 selectedTier={selectedTier}
                 onTierChange={handleTierChange}
               />
+              {archiveLimitMessage && (
+                <div role="status" className="mb-4 rounded-md border border-brass/25 bg-brass/10 px-3 py-2 text-sm font-bold leading-6 text-ink/75">
+                  {archiveLimitMessage}
+                </div>
+              )}
             </div>
 
             {view === 'today' && (
@@ -130,6 +141,7 @@ function DailyDungeonApp() {
               <ArchiveView
                 dungeons={mockDungeons}
                 savedDungeonIds={savedDungeonIds}
+                tier={selectedTier}
                 currentDungeonId={selectedDungeon.id}
                 onSelectDungeon={(dungeonId) => selectArchivedDungeon(dungeonId)}
                 onRunDungeon={(dungeonId) => selectArchivedDungeon(dungeonId, 'run')}
@@ -182,6 +194,19 @@ function DailyDungeonApp() {
   );
 }
 
+function AnnouncementBanner() {
+  return (
+    <section className="mb-4 rounded-md border border-slatewood/20 bg-[#fbf4e6]/88 px-3 py-2.5 text-sm leading-6 text-ink/72 shadow-sm">
+      <div className="flex items-start gap-2.5">
+        <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-[3px] bg-slatewood/[0.08] text-slatewood" aria-hidden="true">
+          <Megaphone className="h-3.5 w-3.5" />
+        </span>
+        <p>{testerBuildAnnouncement.text}</p>
+      </div>
+    </section>
+  );
+}
+
 function AppGuidePanel() {
   const [helpOpen, setHelpOpen] = useState(false);
   const helpSteps = [
@@ -198,6 +223,7 @@ function AppGuidePanel() {
       <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
         <div className="max-w-3xl">
           <p className="ledger-label text-[11px] font-bold uppercase text-slatewood">What this app does</p>
+          <p className="mt-2 text-sm font-bold leading-6 text-ink/80">Printable dungeon packets for busy Game Masters.</p>
           <p className="mt-2 text-sm leading-6 text-ink/75">
             Create and preview ready-to-run dungeon packets from illustrated fantasy maps, including GM notes, player-safe maps, and printable table handouts.
           </p>
@@ -262,15 +288,19 @@ function PlaceholderFeature({ feature }: { feature: { name: string; text: string
 }
 
 function AppHeader({ compact = false, currentPlan }: { compact?: boolean; currentPlan?: Plan }) {
+  const sidebarTagline = 'Printable packets for busy GMs.';
+
   return (
     <header className={compact ? 'flex items-center justify-between gap-3' : ''}>
       <div className="flex min-w-0 items-center gap-3">
-        <span className={`brand-mark ${compact ? 'h-10 w-10 text-[11px]' : 'h-14 w-14 text-xs'} flex shrink-0 items-center justify-center rounded-md border border-[#f3ecdd]/20 font-label font-black tracking-[0.16em] text-[#f3ecdd]`}>
-          DD
+        <span className={`brand-mark ${compact ? 'h-10 w-10' : 'h-14 w-14'} flex shrink-0 items-center justify-center overflow-hidden rounded-md border border-[#f3ecdd]/20`}>
+          <img src="/brand/dungeon-dossier-logo.png" alt="" className="h-full w-full object-contain" aria-hidden="true" />
         </span>
         <div className="min-w-0">
-          <p className="ledger-label text-xs font-bold uppercase text-current opacity-70">Daily Dungeon</p>
-          <h1 className={`survey-title ${compact ? 'text-lg' : 'mt-1 text-2xl'} font-serif font-bold leading-tight`}>Field Notes & Maps</h1>
+          <h1 className={`survey-title ${compact ? 'text-lg' : 'mt-1 text-2xl'} font-serif font-bold leading-tight`}>Dungeon Dossier</h1>
+          <p className={`${compact ? 'max-w-[13rem] text-[11px]' : 'mt-1 max-w-[11.5rem] text-xs'} font-semibold leading-4 text-current opacity-70`}>
+            {sidebarTagline}
+          </p>
         </div>
       </div>
       <span className="status-tag rounded-md border border-[#c18453]/30 bg-[#c18453]/10 px-2.5 py-1 text-xs font-bold text-current">
