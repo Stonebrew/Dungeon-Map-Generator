@@ -8,10 +8,14 @@ export function PremiumPlans({ plans, currentTier, tierRank }: { plans: Plan[]; 
   return (
     <div className="space-y-5">
       <SectionHeader
-        eyebrow="Premium"
-        title="Plan Preview"
-        text="Compare the access levels available in this build. Use the preview tier selector to try each toolset."
+        eyebrow="Pricing"
+        title="Pricing Preview"
+        text="Compare the access levels available in this tester build. Use the preview tier selector to try each toolset."
       />
+      <div className="paper-panel field-corner rounded-md border border-brass/25 p-3 text-sm leading-6 text-ink/72 shadow-tool">
+        <p className="font-bold text-ink">Payment not active in tester build.</p>
+        <p className="mt-1 text-ink/65">Pricing preview shown in USD. Future checkout may support local-currency payment where available.</p>
+      </div>
       <div className="grid gap-4 xl:grid-cols-2">
         {visiblePlans.map((plan) => {
           const active = plan.id === currentTier;

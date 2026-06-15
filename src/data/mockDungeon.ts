@@ -10,15 +10,15 @@ export const plans: Plan[] = [
     id: 'lantern',
     name: 'Surveyor',
     priceLabel: 'Free',
-    tagline: 'A basic map-and-packet preview for trying the workflow.',
+    tagline: 'Free preview tier for trying Dungeon Dossier. Includes sample dungeon access, basic packet preview, and 1 saved dossier.',
     featureGroups: [
       {
         title: 'Packet preview',
-        features: ['One shared daily dungeon', 'Basic room descriptions', 'Encounter and treasure tables'],
+        features: ['One shared dungeon dossier', 'Basic room descriptions', 'Encounter and treasure tables'],
       },
       {
         title: 'Maps and exports',
-        features: ['Simple schematic GM map', 'Player maps locked', 'Print and PDF export locked', 'Session archive locked'],
+        features: ['Simple schematic GM map', '1 saved dossier', 'Player maps locked', 'Print and PDF export locked'],
       },
       {
         title: 'Refresh tools',
@@ -30,13 +30,13 @@ export const plans: Plan[] = [
       },
     ],
     rerolls: '0 daily refreshes',
-    refreshes: 'Refreshes locked',
+    refreshes: '1 saved dossier',
   },
   {
     id: 'adventurer',
     name: 'Cartographer',
-    priceLabel: 'Core',
-    tagline: 'The full map-and-packet experience for table prep.',
+    priceLabel: 'Planned founding price: USD $2.99/month',
+    tagline: 'Unlock illustrated dungeon packets, player-safe maps, print/export tools, Battle Map Print, New Packet Refresh, and 10 saved dossiers.',
     featureGroups: [
       {
         title: 'Packet access',
@@ -44,7 +44,7 @@ export const plans: Plan[] = [
       },
       {
         title: 'Maps and exports',
-        features: ['Premium illustrated maps when available', 'GM map', 'Player labeled map', 'Player clean map', 'Print and PDF packet export', 'Session archive preview'],
+        features: ['Illustrated dungeon packets', 'GM View', 'Player-safe maps', 'Print Packet', 'Save as PDF', 'Battle Map Print', '10 saved dossiers'],
       },
       {
         title: 'Limited refresh tools',
@@ -52,7 +52,7 @@ export const plans: Plan[] = [
       },
     ],
     rerolls: '1 daily refresh',
-    refreshes: 'No partial refresh',
+    refreshes: '10 saved dossiers',
   },
   {
     id: 'dungeonwright',
