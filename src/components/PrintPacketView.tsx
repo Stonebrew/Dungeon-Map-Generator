@@ -67,9 +67,9 @@ function toSafeFilenamePart(value: string) {
 }
 
 function getDungeonPdfFilename(dungeon: Dungeon) {
-  const title = toSafeFilenamePart(dungeon.title) || 'daily-dungeon';
+  const title = toSafeFilenamePart(dungeon.title) || 'dungeon-dossier';
   const date = toSafeFilenamePart(dungeon.dateIso) || 'undated';
-  return `daily-dungeon-${title}-${date}.pdf`;
+  return `dungeon-dossier-${title}-${date}.pdf`;
 }
 
 type PrintOrientation = 'portrait' | 'landscape';
@@ -427,7 +427,7 @@ export function PrintPacketView({ dungeon, tier, onBack, onOpenBattleMap }: { du
       </div>
 
       <div ref={packetContentRef} className={`export-packet-content export-packet-${printOrientation} space-y-6 bg-white text-ink`}>
-        <PrintSection title={dungeon.title} kicker="Daily Dungeon Packet">
+        <PrintSection title={dungeon.title} kicker="Dungeon Dossier Packet">
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <p className="ledger-label text-xs font-bold uppercase text-ink/45">Date</p>

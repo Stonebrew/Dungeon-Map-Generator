@@ -35,11 +35,17 @@ export const tierRank: Record<TierId, number> = {
   dungeonwright: 2,
 };
 
+export const archiveSlotLimitByTier: Record<TierId, number> = {
+  lantern: 1,
+  adventurer: 10,
+  dungeonwright: 10,
+};
+
 const featureDefinitions: Record<FeatureKey, FeatureDefinition> = {
   dailyDungeon: {
-    label: 'Daily Dungeon',
+    label: 'Dungeon Dossier',
     requiredTier: 'lantern',
-    description: 'Open the shared daily dungeon with basic room descriptions, GM notes, and encounter tables.',
+    description: 'Open the shared dungeon dossier with basic room descriptions, GM notes, and encounter tables.',
   },
   gmView: {
     label: 'GM View',
@@ -63,13 +69,13 @@ const featureDefinitions: Record<FeatureKey, FeatureDefinition> = {
   },
   archive: {
     label: 'Archive Access',
-    requiredTier: 'adventurer',
-    description: 'Keep previous daily dungeons available for later sessions, reskins, or campaign prep.',
+    requiredTier: 'lantern',
+    description: 'Save dossiers for later sessions, reskins, or campaign prep. Surveyor includes 1 saved dossier; Cartographer includes 10.',
   },
   favorite: {
-    label: 'Save / Favorite Dungeons',
-    requiredTier: 'adventurer',
-    description: 'Mark useful dungeons so they can be found again later when real storage exists.',
+    label: 'Save Dossiers',
+    requiredTier: 'lantern',
+    description: 'Save useful dossiers so they can be found again later during this testing session.',
   },
   fullReroll: {
     label: 'New Packet Refresh',
@@ -167,4 +173,8 @@ export function getTierLabel(tier: TierId) {
   };
 
   return labels[tier];
+}
+
+export function getArchiveSlotLimit(tier: TierId) {
+  return archiveSlotLimitByTier[tier];
 }

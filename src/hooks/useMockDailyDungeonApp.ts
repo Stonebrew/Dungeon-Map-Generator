@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { currentTier, mockDungeons, plans, rerollAllowancesByTier, rerollCountsByTier } from '../data/mockDungeon';
-import { canAccessFeature, type FeatureKey } from '../lib/entitlements';
+import { canAccessFeature, getArchiveSlotLimit, type FeatureKey } from '../lib/entitlements';
 import type { RerollCounts, TierId } from '../types';
 
 export type ViewId = 'today' | 'run' | 'gm' | 'player' | 'archive' | 'encounters' | 'upgrade' | 'rerolls' | 'print' | 'battle-map-print' | 'locked' | 'placeholder';
@@ -91,6 +91,7 @@ export function useMockDailyDungeonApp() {
   const [selectedDungeonId, setSelectedDungeonId] = useState(mockDungeons[0].id);
   const [selectedTier, setSelectedTier] = useState<TierId>(currentTier);
   const [savedDungeonIds, setSavedDungeonIds] = useState<Set<string>>(() => new Set());
+  const [archiveLimitMessage, setArchiveLimitMessage] = useState<string | undefined>();
   const [sessionRerollCounts, setSessionRerollCounts] = useState<Record<TierId, RerollCounts>>(() => getInitialRerollCounts());
 
   const currentPlan = useMemo(() => plans.find((plan) => plan.id === selectedTier), [selectedTier]);
@@ -128,8 +129,19 @@ export function useMockDailyDungeonApp() {
       const next = new Set(current);
       if (next.has(dungeonId)) {
         next.delete(dungeonId);
+        setArchiveLimitMessage(undefined);
       } else {
+        const archiveLimit = getArchiveSlotLimit(selectedTier);
+        if (current.size >= archiveLimit) {
+          setArchiveLimitMessage(
+            selectedTier === 'lantern'
+              ? 'Surveyor includes 1 saved dossier. Upgrade to Cartographer for more archive slots.'
+              : 'Your archive is full. Delete a saved dossier to save another.',
+          );
+          return current;
+        }
         next.add(dungeonId);
+        setArchiveLimitMessage(undefined);
       }
       return next;
     });
@@ -184,6 +196,7 @@ export function useMockDailyDungeonApp() {
 
   const handleTierChange = (nextTier: TierId) => {
     setSelectedTier(nextTier);
+    setArchiveLimitMessage(undefined);
     const lock = lockedFeatures[view];
 
     if (lock && !canAccessFeature(nextTier, lock)) {
@@ -212,6 +225,7 @@ export function useMockDailyDungeonApp() {
     selectedTier,
     currentPlan,
     savedDungeonIds,
+    archiveLimitMessage,
     sessionRerollCounts,
     plans,
     mockDungeons,

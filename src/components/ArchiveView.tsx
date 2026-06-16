@@ -1,20 +1,26 @@
 import { Bookmark, Play, RotateCcw } from 'lucide-react';
-import type { Dungeon } from '../types';
+import type { Dungeon, TierId } from '../types';
+import { getArchiveSlotLimit, getTierLabel } from '../lib/entitlements';
 import { Badge, Panel, SectionHeader } from './Badge';
 
 export function ArchiveView({
   dungeons,
   savedDungeonIds,
+  tier,
   currentDungeonId,
   onSelectDungeon,
   onRunDungeon,
 }: {
   dungeons: Dungeon[];
   savedDungeonIds: Set<string>;
+  tier: TierId;
   currentDungeonId: string;
   onSelectDungeon: (dungeonId: string) => void;
   onRunDungeon: (dungeonId: string) => void;
 }) {
+  const archiveLimit = getArchiveSlotLimit(tier);
+  const tierLabel = getTierLabel(tier);
+
   return (
     <div className="space-y-5">
       <SectionHeader
@@ -27,9 +33,11 @@ export function ArchiveView({
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <Badge tone="warning">Session archive</Badge>
-            <p className="mt-2 text-sm leading-6 text-ink/65">Favorites are saved for this testing session, so you can compare packets without leaving the app.</p>
+            <p className="mt-2 text-sm leading-6 text-ink/65">
+              Saved dossiers are kept for this testing session. {tierLabel} includes {archiveLimit} saved dossier{archiveLimit === 1 ? '' : 's'}.
+            </p>
           </div>
-          <Badge tone="accent">{savedDungeonIds.size} saved this session</Badge>
+          <Badge tone="accent">{savedDungeonIds.size} / {archiveLimit} saved</Badge>
         </div>
       </Panel>
 
