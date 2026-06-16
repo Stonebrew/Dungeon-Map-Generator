@@ -2,7 +2,7 @@ import { Archive, Bookmark, FileDown, Lock, Map, Printer, RefreshCcw, Swords } f
 import type { Dungeon, TierId } from '../types';
 import { DungeonMap } from './DungeonMap';
 import { Badge, Panel } from './Badge';
-import { canAccessFeature, type FeatureKey } from '../lib/entitlements';
+import { canAccessDungeonFeature, canAccessFeature, isFreeSamplePacket, type FeatureKey } from '../lib/entitlements';
 
 function InfoChip({ label, value }: { label: string; value: string }) {
   return (
@@ -61,15 +61,16 @@ export function DungeonSummary({
   onToggleFavorite: () => void;
   onLockedFeature: (feature: FeatureKey) => void;
 }) {
-  const hasColorMap = canAccessFeature(tier, 'colorMap');
-  const hasPlayerMap = canAccessFeature(tier, 'playerMap');
-  const hasPdfExport = canAccessFeature(tier, 'pdfExport');
+  const hasColorMap = canAccessDungeonFeature(tier, dungeon, 'colorMap');
+  const hasPlayerMap = canAccessDungeonFeature(tier, dungeon, 'playerMap');
+  const hasPdfExport = canAccessDungeonFeature(tier, dungeon, 'pdfExport');
   const hasArchive = canAccessFeature(tier, 'archive');
   const hasFavorite = canAccessFeature(tier, 'favorite');
   const hasNewPacketRefresh = canAccessFeature(tier, 'fullReroll');
+  const isFreeSample = isFreeSamplePacket(dungeon);
 
   const selectPremiumFeature = (feature: FeatureKey, unlockedView?: 'player' | 'rerolls') => {
-    if (canAccessFeature(tier, feature) && unlockedView) {
+    if (canAccessDungeonFeature(tier, dungeon, feature) && unlockedView) {
       onNavigate(unlockedView);
       return;
     }
@@ -81,6 +82,7 @@ export function DungeonSummary({
       <section className="paper-panel field-corner rounded-md border border-[#cdbfa9] p-4 shadow-tool sm:p-5">
         <div className="flex flex-wrap items-center gap-2">
           <Badge tone="accent">Today</Badge>
+          {isFreeSample && <Badge tone="success">Free Sample Packet</Badge>}
           <span className="ledger-label text-xs font-bold uppercase text-ink/45">{dungeon.date}</span>
         </div>
         <h2 className="survey-title font-serif text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl">{dungeon.title}</h2>
@@ -155,9 +157,11 @@ export function DungeonSummary({
       <Panel className="border-slatewood/25 p-3">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <Badge tone="warning">Premium</Badge>
-            <h2 className="survey-title mt-2 font-serif text-xl font-bold">Unlock player maps, packet export, and refresh.</h2>
-            <p className="mt-1 text-sm leading-6 text-ink/65">Cartographer adds the map and packet tools most useful during live play.</p>
+            <Badge tone={isFreeSample ? 'success' : 'warning'}>{isFreeSample ? 'Free Sample' : 'Premium'}</Badge>
+            <h2 className="survey-title mt-2 font-serif text-xl font-bold">{isFreeSample ? 'Complete sample packet unlocked.' : 'Unlock player maps, packet export, and refresh.'}</h2>
+            <p className="mt-1 text-sm leading-6 text-ink/65">
+              {isFreeSample ? 'Surveyor can try the full packet workflow on this sample tavern. Cartographer unlocks the rest of the illustrated packet library.' : 'Cartographer adds the map and packet tools most useful during live play.'}
+            </p>
           </div>
           <button type="button" onClick={() => onNavigate('upgrade')} className="rounded-md border border-slatewood bg-slatewood px-3 py-2 text-sm font-bold text-white shadow-tool transition hover:bg-slatewood/90">
             View Plans

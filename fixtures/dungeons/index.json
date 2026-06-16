@@ -1,9 +1,20 @@
 {
-  "generatedAt": "2026-06-15T09:13:42.192Z",
+  "generatedAt": "2026-06-16T09:33:36.800Z",
   "source": "src/data/mockDungeon.ts",
   "contract": "Dungeon",
-  "count": 5,
+  "count": 6,
   "dungeons": [
+    {
+      "id": "dd-2026-05-21-free-sample-tavern",
+      "slug": "free-sample-packet-tavern",
+      "file": "2026-05-21-free-sample-packet-tavern.json",
+      "dateIso": "2026-05-21",
+      "title": "Free Sample Packet Tavern",
+      "theme": "Lively fantasy tavern with a private room, two guest rooms, a busy kitchen, and a hidden coin stash",
+      "difficulty": "Low",
+      "mapStyle": "shrine",
+      "roomCount": 6
+    },
     {
       "id": "dd-2026-05-16-premium-map-poc",
       "slug": "the-verdant-watercourt",

@@ -1,7 +1,7 @@
 import { ArrowLeft, FileDown, Grid3X3, Printer } from 'lucide-react';
 import { useRef, useState, type ReactNode } from 'react';
 import type { Dungeon, TableEntry, TierId } from '../types';
-import { canAccessFeature } from '../lib/entitlements';
+import { canAccessDungeonFeature } from '../lib/entitlements';
 import { getBattleMapPrintAvailability } from '../lib/battleMapPrint';
 import { DungeonMap } from './DungeonMap';
 import { Badge } from './Badge';
@@ -270,8 +270,8 @@ async function flattenMapSectionsForPdf(root: HTMLElement) {
 }
 
 export function PrintPacketView({ dungeon, tier, onBack, onOpenBattleMap }: { dungeon: Dungeon; tier: TierId; onBack: () => void; onOpenBattleMap: () => void }) {
-  const hasColorMap = canAccessFeature(tier, 'colorMap');
-  const canUseBattleMapPrint = canAccessFeature(tier, 'pdfExport');
+  const hasColorMap = canAccessDungeonFeature(tier, dungeon, 'colorMap');
+  const canUseBattleMapPrint = canAccessDungeonFeature(tier, dungeon, 'pdfExport');
   const battleMapAvailability = getBattleMapPrintAvailability(dungeon);
   const packetContentRef = useRef<HTMLDivElement | null>(null);
   const [isCreatingPdf, setIsCreatingPdf] = useState(false);

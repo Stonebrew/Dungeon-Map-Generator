@@ -253,6 +253,7 @@ export type Dungeon = {
   featureMetadata?: {
     premiumMapAvailable?: boolean;
     playerMapAvailable?: boolean;
+    freeSamplePacket?: boolean;
     refreshableRoomNumbers?: number[];
   };
 };

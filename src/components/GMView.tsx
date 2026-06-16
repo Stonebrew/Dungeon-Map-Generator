@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { FileDown, Lock, Printer } from 'lucide-react';
 import type { Dungeon, TierId } from '../types';
-import { canAccessFeature, type FeatureKey } from '../lib/entitlements';
+import { canAccessDungeonFeature, type FeatureKey } from '../lib/entitlements';
 import { DungeonMap } from './DungeonMap';
 import { EncounterTable, EncounterTablesSection } from './EncounterTable';
 import { Badge, Panel, SectionHeader } from './Badge';
@@ -40,8 +40,8 @@ export function GMView({
 }) {
   const [activeTab, setActiveTab] = useState<GmTab>('setup');
   const [expandedRoom, setExpandedRoom] = useState<number | undefined>();
-  const hasColorMap = canAccessFeature(tier, 'colorMap');
-  const canPrintPacket = canAccessFeature(tier, 'pdfExport');
+  const hasColorMap = canAccessDungeonFeature(tier, dungeon, 'colorMap');
+  const canPrintPacket = canAccessDungeonFeature(tier, dungeon, 'pdfExport');
 
   useEffect(() => {
     setExpandedRoom(undefined);

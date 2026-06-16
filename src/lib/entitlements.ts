@@ -1,4 +1,4 @@
-import type { TierId } from '../types';
+import type { Dungeon, TierId } from '../types';
 
 export type FeatureKey =
   | 'dailyDungeon'
@@ -151,6 +151,20 @@ const featureDefinitions: Record<FeatureKey, FeatureDefinition> = {
 
 export function canAccessFeature(tier: TierId, feature: FeatureKey) {
   return tierRank[tier] >= tierRank[getRequiredTier(feature)];
+}
+
+const freeSampleFeatureExceptions = new Set<FeatureKey>(['colorMap', 'playerMap', 'pdfExport']);
+
+export function isFreeSamplePacket(dungeon: Dungeon | undefined) {
+  return Boolean(dungeon?.featureMetadata?.freeSamplePacket);
+}
+
+export function canAccessDungeonFeature(tier: TierId, dungeon: Dungeon | undefined, feature: FeatureKey) {
+  if (isFreeSamplePacket(dungeon) && freeSampleFeatureExceptions.has(feature)) {
+    return true;
+  }
+
+  return canAccessFeature(tier, feature);
 }
 
 export function getRequiredTier(feature: FeatureKey) {

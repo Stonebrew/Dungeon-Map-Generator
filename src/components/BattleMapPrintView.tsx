@@ -2,7 +2,7 @@ import { ArrowLeft, Lock, Printer } from 'lucide-react';
 import { useMemo, useState } from 'react';
 import type { Dungeon, TierId } from '../types';
 import { getBattleMapPrintAvailability, type BattleMapOverlapInches, type BattleMapPrintPlan, type BattleMapPrintTile } from '../lib/battleMapPrint';
-import { canAccessFeature } from '../lib/entitlements';
+import { canAccessDungeonFeature, isFreeSamplePacket } from '../lib/entitlements';
 import { Badge, Panel } from './Badge';
 
 const overlapOptions: BattleMapOverlapInches[] = [0, 0.25, 0.5];
@@ -45,7 +45,8 @@ function TilePreview({ plan, tile, showDebugGrid }: { plan: BattleMapPrintPlan; 
 }
 
 export function BattleMapPrintView({ dungeon, tier, onBack }: { dungeon: Dungeon; tier: TierId; onBack: () => void }) {
-  const canUseBattleMapPrint = canAccessFeature(tier, 'pdfExport');
+  const canUseBattleMapPrint = canAccessDungeonFeature(tier, dungeon, 'pdfExport');
+  const isFreeSample = isFreeSamplePacket(dungeon);
   const defaultAvailability = useMemo(() => getBattleMapPrintAvailability(dungeon), [dungeon]);
   const defaultOverlap = defaultAvailability.available ? defaultAvailability.plan.overlapInches : 0.25;
   const [overlapInches, setOverlapInches] = useState<BattleMapOverlapInches>(defaultOverlap);
@@ -57,7 +58,7 @@ export function BattleMapPrintView({ dungeon, tier, onBack }: { dungeon: Dungeon
       <div className="no-print paper-panel field-corner rounded-md border border-slatewood/20 p-4 shadow-tool">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
           <div>
-            <Badge tone="warning">Cartographer Print Tool</Badge>
+            <Badge tone={isFreeSample ? 'success' : 'warning'}>{isFreeSample ? 'Free Sample Print Tool' : 'Cartographer Print Tool'}</Badge>
             <h2 className="survey-title mt-2 font-serif text-3xl font-bold">Battle Map Print</h2>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-ink/70">
               Print only the player-safe map as tiled A4 landscape pages. Calibration metadata scales the baked-in map grid to approximately 1 inch.
@@ -85,7 +86,7 @@ export function BattleMapPrintView({ dungeon, tier, onBack }: { dungeon: Dungeon
 
         {!canUseBattleMapPrint && (
           <div className="mt-4 rounded-md border border-ink/10 bg-[#fbfaf5] p-3 text-sm leading-6 text-ink/70">
-            Battle Map Print is a Cartographer print/export feature.
+            Battle Map Print is available for Cartographer maps and this complete free sample packet.
           </div>
         )}
 
@@ -144,7 +145,7 @@ export function BattleMapPrintView({ dungeon, tier, onBack }: { dungeon: Dungeon
         <Panel>
           <h3 className="survey-title font-serif text-2xl font-bold">Battle Map Print Unavailable</h3>
           <p className="mt-2 text-sm leading-6 text-ink/70">
-            This view is intentionally limited to calibrated Cartographer premium maps so the printed grid is accurate at tabletop scale.
+            This view is intentionally limited to calibrated Cartographer premium maps and calibrated free sample packets so the printed grid is accurate at tabletop scale.
           </p>
         </Panel>
       ) : (

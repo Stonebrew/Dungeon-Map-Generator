@@ -2,7 +2,7 @@ import { ArrowLeft, BookOpenText, Bookmark, ChevronLeft, ChevronRight, Coins, Do
 import type { ReactNode } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import type { Dungeon, Room, TierId } from '../types';
-import { canAccessFeature } from '../lib/entitlements';
+import { canAccessDungeonFeature, canAccessFeature } from '../lib/entitlements';
 import { Badge, Field, Panel } from './Badge';
 import { DungeonMap } from './DungeonMap';
 import { EncounterTablesSection } from './EncounterTable';
@@ -136,7 +136,7 @@ export function RunMode({
   onExit: () => void;
 }) {
   const [currentRoomNumber, setCurrentRoomNumber] = useState(dungeon.rooms[0]?.number ?? 1);
-  const hasColorMap = canAccessFeature(tier, 'colorMap');
+  const hasColorMap = canAccessDungeonFeature(tier, dungeon, 'colorMap');
   const hasFavorite = canAccessFeature(tier, 'favorite');
   const currentIndex = useMemo(
     () => Math.max(0, dungeon.rooms.findIndex((room) => room.number === currentRoomNumber)),

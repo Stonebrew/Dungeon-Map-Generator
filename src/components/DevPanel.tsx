@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { Dungeon, Plan, TierId } from '../types';
 import { validateDungeons } from '../lib/validateDungeon';
+import { isFreeSamplePacket } from '../lib/entitlements';
 
 export function DevPanel({
   dungeons,
@@ -44,7 +45,7 @@ export function DevPanel({
             >
               {dungeons.map((dungeon) => (
                 <option key={dungeon.id} value={dungeon.id}>
-                  {dungeon.title}
+                  {isFreeSamplePacket(dungeon) ? `${dungeon.title} - Free Sample Packet` : dungeon.title}
                 </option>
               ))}
             </select>

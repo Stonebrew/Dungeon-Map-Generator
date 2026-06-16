@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { currentTier, mockDungeons, plans, rerollAllowancesByTier, rerollCountsByTier } from '../data/mockDungeon';
-import { canAccessFeature, getArchiveSlotLimit, type FeatureKey } from '../lib/entitlements';
+import { canAccessDungeonFeature, canAccessFeature, getArchiveSlotLimit, isFreeSamplePacket, type FeatureKey } from '../lib/entitlements';
 import type { RerollCounts, TierId } from '../types';
 
 export type ViewId = 'today' | 'run' | 'gm' | 'player' | 'archive' | 'encounters' | 'upgrade' | 'rerolls' | 'print' | 'battle-map-print' | 'locked' | 'placeholder';
@@ -100,13 +100,15 @@ export function useMockDailyDungeonApp() {
     [selectedDungeonId],
   );
   const newPacketRefreshTarget = useMemo(() => {
-    if (mockDungeons.length < 2) {
+    const refreshDungeons = mockDungeons.filter((dungeon) => !isFreeSamplePacket(dungeon));
+
+    if (refreshDungeons.length < 2) {
       return undefined;
     }
 
-    const currentIndex = mockDungeons.findIndex((dungeon) => dungeon.id === selectedDungeonId);
-    const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % mockDungeons.length : 1;
-    return mockDungeons[nextIndex];
+    const currentIndex = refreshDungeons.findIndex((dungeon) => dungeon.id === selectedDungeonId);
+    const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % refreshDungeons.length : 0;
+    return refreshDungeons[nextIndex];
   }, [selectedDungeonId]);
 
   const showLockedFeature = (feature: FeatureKey) => {
@@ -182,12 +184,12 @@ export function useMockDailyDungeonApp() {
 
   const isViewLocked = (targetView: ViewId) => {
     const lock = lockedFeatures[targetView];
-    return Boolean(lock && !canAccessFeature(selectedTier, lock));
+    return Boolean(lock && !canAccessDungeonFeature(selectedTier, selectedDungeon, lock));
   };
 
   const navigateTo = (targetView: ViewId) => {
     const lock = lockedFeatures[targetView];
-    if (lock && !canAccessFeature(selectedTier, lock)) {
+    if (lock && !canAccessDungeonFeature(selectedTier, selectedDungeon, lock)) {
       showLockedFeature(lock);
       return;
     }
@@ -199,13 +201,13 @@ export function useMockDailyDungeonApp() {
     setArchiveLimitMessage(undefined);
     const lock = lockedFeatures[view];
 
-    if (lock && !canAccessFeature(nextTier, lock)) {
+    if (lock && !canAccessDungeonFeature(nextTier, selectedDungeon, lock)) {
       setLockedFeature(lock);
       setView('locked');
       return;
     }
 
-    if (view === 'locked' && lockedFeature && canAccessFeature(nextTier, lockedFeature)) {
+    if (view === 'locked' && lockedFeature && canAccessDungeonFeature(nextTier, selectedDungeon, lockedFeature)) {
       setView('today');
       return;
     }

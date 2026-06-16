@@ -1,8 +1,20 @@
-import { Lock, Sparkles } from 'lucide-react';
+import { BookOpen, Lock, Sparkles } from 'lucide-react';
 import type { Plan, TierId } from '../types';
 import { Badge, SectionHeader } from './Badge';
 
-export function PremiumPlans({ plans, currentTier, tierRank }: { plans: Plan[]; currentTier: TierId; tierRank: Record<TierId, number> }) {
+export function PremiumPlans({
+  plans,
+  currentTier,
+  tierRank,
+  freeSampleTitle,
+  onOpenFreeSample,
+}: {
+  plans: Plan[];
+  currentTier: TierId;
+  tierRank: Record<TierId, number>;
+  freeSampleTitle?: string;
+  onOpenFreeSample?: () => void;
+}) {
   const visiblePlans = plans.filter((plan) => plan.id !== 'dungeonwright');
 
   return (
@@ -15,6 +27,28 @@ export function PremiumPlans({ plans, currentTier, tierRank }: { plans: Plan[]; 
       <div className="paper-panel field-corner rounded-md border border-brass/25 p-3 text-sm leading-6 text-ink/72 shadow-tool">
         <p className="font-bold text-ink">Payment not active in tester build.</p>
         <p className="mt-1 text-ink/65">Pricing preview shown in USD. Future checkout may support local-currency payment where available.</p>
+      </div>
+      <div className="rounded-md border border-moss/20 bg-moss/[0.07] p-3 text-sm leading-6 text-ink/72 shadow-sm">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div>
+            <div className="flex flex-wrap items-center gap-2">
+              <Badge tone="success">Free Sample Packet</Badge>
+              {freeSampleTitle && <span className="ledger-label text-[11px] font-bold uppercase text-moss">{freeSampleTitle}</span>}
+            </div>
+            <p className="mt-2 font-bold text-ink">Try the free tavern sample before upgrading.</p>
+            <p className="mt-1 text-ink/65">Surveyor includes one complete sample dossier with player-safe maps, print/export tools, and Battle Map Print.</p>
+          </div>
+          {onOpenFreeSample && (
+            <button
+              type="button"
+              onClick={onOpenFreeSample}
+              className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md border border-moss bg-moss px-3 py-2 text-sm font-bold text-white shadow-tool transition hover:bg-moss/90"
+            >
+              <BookOpen className="h-4 w-4" aria-hidden="true" />
+              Open free sample
+            </button>
+          )}
+        </div>
       </div>
       <div className="grid gap-4 xl:grid-cols-2">
         {visiblePlans.map((plan) => {

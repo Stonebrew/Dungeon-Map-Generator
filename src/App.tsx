@@ -13,7 +13,7 @@ import { PremiumPlans } from './components/PremiumPlans';
 import { PrintPacketView } from './components/PrintPacketView';
 import { RerollPanel } from './components/RerollPanel';
 import { RunMode } from './components/RunMode';
-import { canAccessFeature, tierRank } from './lib/entitlements';
+import { canAccessDungeonFeature, isFreeSamplePacket, tierRank } from './lib/entitlements';
 import { useMockDailyDungeonApp, type ViewId } from './hooks/useMockDailyDungeonApp';
 import type { Plan } from './types';
 
@@ -71,6 +71,7 @@ function DailyDungeonApp() {
     toggleFavorite,
     selectArchivedDungeon,
   } = appState;
+  const freeSampleDungeon = mockDungeons.find((dungeon) => isFreeSamplePacket(dungeon));
 
   return (
     <div className="min-h-screen text-ink">
@@ -93,6 +94,16 @@ function DailyDungeonApp() {
             <div className="no-print">
               {view === 'today' && <AppGuidePanel />}
               {view === 'today' && <AnnouncementBanner />}
+              {view === 'today' && freeSampleDungeon && (
+                <FreeSampleCallout
+                  dungeonTitle={freeSampleDungeon.title}
+                  active={selectedDungeonId === freeSampleDungeon.id}
+                  onOpen={() => {
+                    setSelectedDungeonId(freeSampleDungeon.id);
+                    setView('today');
+                  }}
+                />
+              )}
               <DevPanel
                 dungeons={mockDungeons}
                 selectedDungeonId={selectedDungeonId}
@@ -136,7 +147,7 @@ function DailyDungeonApp() {
                 onLockedFeature={showLockedFeature}
               />
             )}
-            {view === 'player' && <PlayerMapView dungeon={selectedDungeon} premiumUnlocked={canAccessFeature(selectedTier, 'playerMap')} />}
+            {view === 'player' && <PlayerMapView dungeon={selectedDungeon} premiumUnlocked={canAccessDungeonFeature(selectedTier, selectedDungeon, 'playerMap')} />}
             {view === 'archive' && (
               <ArchiveView
                 dungeons={mockDungeons}
@@ -148,7 +159,22 @@ function DailyDungeonApp() {
               />
             )}
             {view === 'encounters' && <EncounterTablesSection tables={selectedDungeon.encounterTables} />}
-            {view === 'upgrade' && <PremiumPlans plans={plans} currentTier={selectedTier} tierRank={tierRank} />}
+            {view === 'upgrade' && (
+              <PremiumPlans
+                plans={plans}
+                currentTier={selectedTier}
+                tierRank={tierRank}
+                freeSampleTitle={freeSampleDungeon?.title}
+                onOpenFreeSample={
+                  freeSampleDungeon
+                    ? () => {
+                        setSelectedDungeonId(freeSampleDungeon.id);
+                        setView('today');
+                      }
+                    : undefined
+                }
+              />
+            )}
             {view === 'rerolls' && (
               <RerollPanel
                 tier={selectedTier}
@@ -202,6 +228,33 @@ function AnnouncementBanner() {
           <Megaphone className="h-3.5 w-3.5" />
         </span>
         <p>{testerBuildAnnouncement.text}</p>
+      </div>
+    </section>
+  );
+}
+
+function FreeSampleCallout({ dungeonTitle, active, onOpen }: { dungeonTitle: string; active: boolean; onOpen: () => void }) {
+  return (
+    <section className="mb-4 rounded-md border border-moss/20 bg-moss/[0.07] px-3 py-3 text-sm leading-6 text-ink/75 shadow-sm">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="max-w-3xl">
+          <div className="flex flex-wrap items-center gap-2">
+            <Badge tone="success">Free Sample Packet</Badge>
+            <p className="ledger-label text-[11px] font-bold uppercase text-moss">{dungeonTitle}</p>
+          </div>
+          <h2 className="survey-title mt-2 font-serif text-xl font-bold text-ink">Try the free sample packet</h2>
+          <p className="mt-1">
+            Open a complete tavern dossier with GM notes, player-safe maps, print/export tools, and Battle Map Print. It is included with Surveyor so you can see how Dungeon Dossier works before upgrading.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={onOpen}
+          className="inline-flex min-h-11 shrink-0 items-center justify-center gap-2 rounded-md border border-moss bg-moss px-3 py-2 text-sm font-bold text-white shadow-tool transition hover:bg-moss/90"
+        >
+          <BookOpen className="h-4 w-4" aria-hidden="true" />
+          {active ? 'Free sample open' : 'Open free sample'}
+        </button>
       </div>
     </section>
   );
