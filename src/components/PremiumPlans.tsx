@@ -2,6 +2,19 @@ import { BookOpen, Lock, Sparkles } from 'lucide-react';
 import type { Plan, TierId } from '../types';
 import { Badge, SectionHeader } from './Badge';
 
+const previewCards = [
+  {
+    label: 'Surveyor schematic',
+    text: 'Static sample of the readable free-tier schematic style.',
+    image: '/previews/surveyor-schematic-preview.png',
+  },
+  {
+    label: 'Cartographer illustrated map',
+    text: 'Static cropped sample of the illustrated map style included with Cartographer.',
+    image: '/previews/cartographer-illustrated-preview.png',
+  },
+];
+
 export function PremiumPlans({
   plans,
   currentTier,
@@ -28,6 +41,33 @@ export function PremiumPlans({
         <p className="font-bold text-ink">Payment not active in tester build.</p>
         <p className="mt-1 text-ink/65">Pricing preview shown in USD. Future checkout may support local-currency payment where available.</p>
       </div>
+      <section className="paper-panel field-corner rounded-md border border-slatewood/20 p-4 shadow-tool">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="ledger-label text-[11px] font-bold uppercase text-ember">Preview Comparison</p>
+            <h3 className="survey-title mt-1 font-serif text-2xl font-bold">Map style comparison</h3>
+          </div>
+          <p className="max-w-2xl text-sm leading-6 text-ink/65">
+            These static preview crops show the difference between the free Surveyor schematic style and the illustrated Cartographer map style. Open the free sample packet to try the actual packet tools.
+          </p>
+        </div>
+        <div className="mt-4 grid gap-3 lg:grid-cols-2">
+          {previewCards.map((preview) => (
+            <figure key={preview.label} className="cursor-default overflow-hidden rounded-md border border-slatewood/20 bg-[#fbfaf5] shadow-sm">
+              <div className="aspect-[16/9] overflow-hidden bg-parchment">
+                <img src={preview.image} alt="" className="h-full w-full object-cover" loading="lazy" aria-hidden="true" />
+              </div>
+              <figcaption className="p-3">
+                <span className="status-tag rounded-[3px] border-l-2 border-l-slatewood/30 bg-slatewood/[0.045] px-2 py-0.5 text-[11px] font-black uppercase text-ink/55">
+                  {preview.label}
+                </span>
+                <p className="mt-2 text-sm leading-6 text-ink/68">{preview.text}</p>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+        <p className="mt-3 text-xs font-semibold leading-5 text-ink/50">Images are static comparison crops and do not open larger previews.</p>
+      </section>
       <div className="rounded-md border border-moss/20 bg-moss/[0.07] p-3 text-sm leading-6 text-ink/72 shadow-sm">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <div>
