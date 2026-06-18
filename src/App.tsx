@@ -13,6 +13,7 @@ import { PremiumPlans } from './components/PremiumPlans';
 import { PrintPacketView } from './components/PrintPacketView';
 import { RerollPanel } from './components/RerollPanel';
 import { RunMode } from './components/RunMode';
+import { TermsOfService } from './components/legal/TermsOfService';
 import { canAccessDungeonFeature, isFreeSamplePacket, tierRank } from './lib/entitlements';
 import { useMockDailyDungeonApp, type ViewId } from './hooks/useMockDailyDungeonApp';
 import type { Plan } from './types';
@@ -353,12 +354,12 @@ function AccountHelpMenu({ compact = false }: { compact?: boolean }) {
     placeholder === 'terms'
       ? {
           title: 'Terms of Service',
-          text: 'Terms of Service will be added before payment features are enabled.',
+          content: <TermsOfService />,
         }
       : placeholder === 'privacy'
         ? {
             title: 'Privacy Policy',
-            text: 'Privacy Policy will be added before accounts or payment features are enabled.',
+            content: <p>Privacy Policy will be added before accounts or payment features are enabled.</p>,
           }
         : undefined;
 
@@ -408,10 +409,11 @@ function AccountHelpMenu({ compact = false }: { compact?: boolean }) {
 
       {placeholderContent && (
         <div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/50 p-3 backdrop-blur-sm sm:items-center" role="dialog" aria-modal="true" aria-labelledby="account-help-title">
-          <div className="paper-panel field-corner max-h-[90vh] w-full max-w-md overflow-y-auto rounded-md border border-[#cdbfa9] p-4 shadow-[0_24px_70px_rgba(31,26,21,0.34)]">
-            <div className="flex items-start justify-between gap-3">
+          <div className={`paper-panel field-corner flex max-h-[90vh] w-full flex-col overflow-hidden rounded-md border border-[#cdbfa9] shadow-[0_24px_70px_rgba(31,26,21,0.34)] ${placeholder === 'terms' ? 'max-w-3xl' : 'max-w-md'}`}>
+            <div className="shrink-0 border-b border-slatewood/15 bg-[#fff9ec]/95 p-4 sm:p-5">
+              <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="ledger-label text-[11px] font-bold uppercase text-ember">Coming soon</p>
+                <p className="ledger-label text-[11px] font-bold uppercase text-ember">{placeholder === 'terms' ? 'Legal' : 'Coming soon'}</p>
                 <h2 id="account-help-title" className="survey-title mt-1 font-serif text-2xl font-bold">
                   {placeholderContent.title}
                 </h2>
@@ -420,12 +422,13 @@ function AccountHelpMenu({ compact = false }: { compact?: boolean }) {
                 type="button"
                 onClick={() => setPlaceholder(undefined)}
                 className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-slatewood/20 bg-white text-ink/65 shadow-sm transition hover:bg-slatewood/10"
-                aria-label="Close Account and Help dialog"
+                aria-label={placeholder === 'terms' ? 'Close Terms of Service' : 'Close Account and Help dialog'}
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
+              </div>
             </div>
-            <p className="mt-4 text-sm leading-6 text-ink/72">{placeholderContent.text}</p>
+            <div className="min-h-0 flex-1 overflow-y-auto p-4 text-sm leading-6 text-ink/72 sm:p-5">{placeholderContent.content}</div>
           </div>
         </div>
       )}
