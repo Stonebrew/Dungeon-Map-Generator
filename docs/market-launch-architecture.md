@@ -247,7 +247,7 @@ Near-term market-readiness priorities:
 
 1. Keep the tester build stable.
 2. Document account, payment, sync, and asset-protection decisions.
-3. Change visible Cartographer saved dossier copy from 10 to 5 when ready.
+3. Keep visible Cartographer saved dossier copy aligned with the 5-dossier launch decision.
 4. Plan authentication provider.
 5. Plan cloud-synced saved dossier storage.
 6. Plan protected premium asset delivery.

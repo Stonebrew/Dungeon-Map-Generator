@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState } from 'react';
-import { Archive, BookOpen, ChevronDown, Crown, Dice5, FileText, HelpCircle, Mail, Megaphone, RefreshCcw, ScrollText, Shield, ShieldCheck, UserCircle, X } from 'lucide-react';
+import { Archive, BookOpen, Check, ChevronDown, Copy, Crown, Dice5, FileText, HelpCircle, Mail, Megaphone, RefreshCcw, ScrollText, Shield, ShieldCheck, UserCircle, X } from 'lucide-react';
 import { ArchiveView } from './components/ArchiveView';
 import { BattleMapPrintView } from './components/BattleMapPrintView';
 import { Badge, Panel } from './components/Badge';
@@ -32,6 +32,7 @@ const viewItems: { id: ViewId; label: string; mobileLabel: string; icon: typeof 
 const testerBuildAnnouncement = {
   text: 'Tester build update: all five showcase maps are calibrated, and Battle Map Print is now available for Cartographer maps.',
 };
+const supportEmail = 'dungeondossierapp@gmail.com';
 
 function App() {
   if (import.meta.env.DEV && window.location.pathname === '/dev/map-annotator') {
@@ -350,7 +351,8 @@ function PlaceholderFeature({ feature }: { feature: { name: string; text: string
 
 function AccountHelpMenu({ compact = false }: { compact?: boolean }) {
   const [open, setOpen] = useState(false);
-  const [legalDialog, setLegalDialog] = useState<'terms' | 'privacy' | undefined>();
+  const [legalDialog, setLegalDialog] = useState<'terms' | 'privacy' | 'support' | undefined>();
+  const [emailCopied, setEmailCopied] = useState(false);
   const legalDialogContent =
     legalDialog === 'terms'
       ? {
@@ -362,9 +364,15 @@ function AccountHelpMenu({ compact = false }: { compact?: boolean }) {
             title: 'Privacy Policy',
             content: <PrivacyPolicy />,
           }
+        : legalDialog === 'support'
+          ? {
+              title: 'Contact Support',
+              content: <ContactSupportPanel copied={emailCopied} onCopy={() => copySupportEmail(setEmailCopied)} />,
+            }
         : undefined;
 
-  const openLegalDialog = (nextDialog: 'terms' | 'privacy') => {
+  const openLegalDialog = (nextDialog: 'terms' | 'privacy' | 'support') => {
+    setEmailCopied(false);
     setLegalDialog(nextDialog);
     setOpen(false);
   };
@@ -401,10 +409,10 @@ function AccountHelpMenu({ compact = false }: { compact?: boolean }) {
             <ShieldCheck className="h-4 w-4" aria-hidden="true" />
             Privacy Policy
           </button>
-          <a href="mailto:dungeondossierapp@gmail.com" className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-bold text-ink/75 transition hover:bg-slatewood/10">
+          <button type="button" onClick={() => openLegalDialog('support')} className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-bold text-ink/75 transition hover:bg-slatewood/10">
             <Mail className="h-4 w-4" aria-hidden="true" />
             Contact Support
-          </a>
+          </button>
         </div>
       )}
 
@@ -423,7 +431,7 @@ function AccountHelpMenu({ compact = false }: { compact?: boolean }) {
                 type="button"
                 onClick={() => setLegalDialog(undefined)}
                 className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-slatewood/20 bg-white text-ink/65 shadow-sm transition hover:bg-slatewood/10"
-                aria-label={legalDialog === 'terms' ? 'Close Terms of Service' : 'Close Privacy Policy'}
+                aria-label={legalDialog === 'terms' ? 'Close Terms of Service' : legalDialog === 'privacy' ? 'Close Privacy Policy' : 'Close Contact Support'}
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -433,6 +441,37 @@ function AccountHelpMenu({ compact = false }: { compact?: boolean }) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+function copySupportEmail(setEmailCopied: (copied: boolean) => void) {
+  if (!navigator.clipboard) {
+    return;
+  }
+
+  void navigator.clipboard.writeText(supportEmail).then(() => {
+    setEmailCopied(true);
+    window.setTimeout(() => setEmailCopied(false), 1800);
+  });
+}
+
+function ContactSupportPanel({ copied, onCopy }: { copied: boolean; onCopy: () => void }) {
+  return (
+    <div className="space-y-4 text-sm leading-6 text-ink/75">
+      <div>
+        <p>For support, email:</p>
+        <p className="mt-2 select-all rounded-md border border-slatewood/15 bg-[#fbf4e6] px-3 py-2 font-mono text-sm font-bold text-ink">{supportEmail}</p>
+      </div>
+      <p>Copy this address into your preferred email app.</p>
+      <button
+        type="button"
+        onClick={onCopy}
+        className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-slatewood bg-slatewood px-3 py-2 text-sm font-bold text-white shadow-tool transition hover:bg-slatewood/90"
+      >
+        {copied ? <Check className="h-4 w-4" aria-hidden="true" /> : <Copy className="h-4 w-4" aria-hidden="true" />}
+        {copied ? 'Copied' : 'Copy email'}
+      </button>
     </div>
   );
 }

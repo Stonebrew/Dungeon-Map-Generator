@@ -37,8 +37,8 @@ export const tierRank: Record<TierId, number> = {
 
 export const archiveSlotLimitByTier: Record<TierId, number> = {
   lantern: 1,
-  adventurer: 10,
-  dungeonwright: 10,
+  adventurer: 5,
+  dungeonwright: 5,
 };
 
 const featureDefinitions: Record<FeatureKey, FeatureDefinition> = {
@@ -70,7 +70,7 @@ const featureDefinitions: Record<FeatureKey, FeatureDefinition> = {
   archive: {
     label: 'Archive Access',
     requiredTier: 'lantern',
-    description: 'Save dossiers for later sessions, reskins, or campaign prep. Surveyor includes 1 saved dossier; Cartographer includes 10.',
+    description: 'Save dossiers for later sessions, reskins, or campaign prep. Surveyor includes 1 saved dossier; Cartographer includes 5.',
   },
   favorite: {
     label: 'Save Dossiers',
