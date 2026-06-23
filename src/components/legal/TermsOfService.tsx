@@ -201,11 +201,7 @@ export function TermsOfService() {
               </ul>
             )}
             {(section.title === '1. Who operates Dungeon Dossier' || section.title === '9. Cancellation and refunds' || section.title === '25. Contact') && (
-              <p>
-                <a href={`mailto:${supportEmail}`} className="font-bold text-ember underline underline-offset-2">
-                  {supportEmail}
-                </a>
-              </p>
+              <p className="select-all font-bold text-ember">{supportEmail}</p>
             )}
           </div>
         </section>

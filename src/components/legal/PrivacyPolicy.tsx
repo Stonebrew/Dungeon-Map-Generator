@@ -214,10 +214,7 @@ export function PrivacyPolicy() {
         <p>This Privacy Policy explains how Dungeon Dossier collects, uses, stores, and protects information when you use the app.</p>
         <p>Dungeon Dossier is operated by Ronnie Lee Nunez.</p>
         <p>
-          Contact:{' '}
-          <a href={`mailto:${supportEmail}`} className="font-bold text-ember underline underline-offset-2">
-            {supportEmail}
-          </a>
+          Contact: <span className="select-all font-bold text-ember">{supportEmail}</span>
         </p>
         <p>By using Dungeon Dossier, you agree to this Privacy Policy. If you do not agree, do not use the app.</p>
       </div>
@@ -236,11 +233,7 @@ export function PrivacyPolicy() {
               </ul>
             )}
             {(section.title === "13. Children's privacy" || section.title === '18. Contact') && (
-              <p>
-                <a href={`mailto:${supportEmail}`} className="font-bold text-ember underline underline-offset-2">
-                  {supportEmail}
-                </a>
-              </p>
+              <p className="select-all font-bold text-ember">{supportEmail}</p>
             )}
           </div>
         </section>

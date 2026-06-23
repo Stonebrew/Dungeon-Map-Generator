@@ -36,7 +36,7 @@ export const plans: Plan[] = [
     id: 'adventurer',
     name: 'Cartographer',
     priceLabel: 'Planned founding price: USD $2.99/month',
-    tagline: 'Unlock illustrated dungeon packets, player-safe maps, print/export tools, Battle Map Print, New Packet Refresh, and 10 saved dossiers.',
+    tagline: 'Unlock illustrated dungeon packets, player-safe maps, print/export tools, Battle Map Print, New Packet Refresh, and 5 saved dossiers.',
     featureGroups: [
       {
         title: 'Packet access',
@@ -44,7 +44,7 @@ export const plans: Plan[] = [
       },
       {
         title: 'Maps and exports',
-        features: ['Illustrated dungeon packets', 'GM View', 'Player-safe maps', 'Print Packet', 'Save as PDF', 'Battle Map Print', '10 saved dossiers'],
+        features: ['Illustrated dungeon packets', 'GM View', 'Player-safe maps', 'Print Packet', 'Save as PDF', 'Battle Map Print', '5 saved dossiers'],
       },
       {
         title: 'Limited refresh tools',
@@ -52,7 +52,7 @@ export const plans: Plan[] = [
       },
     ],
     rerolls: '1 daily refresh',
-    refreshes: '10 saved dossiers',
+    refreshes: '5 saved dossiers',
   },
   {
     id: 'dungeonwright',
