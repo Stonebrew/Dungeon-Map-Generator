@@ -1,4 +1,4 @@
-import { lazy, Suspense, useState } from 'react';
+import { lazy, Suspense, useState, type FormEvent } from 'react';
 import { Archive, BookOpen, Check, ChevronDown, Copy, Crown, Dice5, FileText, HelpCircle, Mail, Megaphone, RefreshCcw, ScrollText, Shield, ShieldCheck, UserCircle, X } from 'lucide-react';
 import { ArchiveView } from './components/ArchiveView';
 import { BattleMapPrintView } from './components/BattleMapPrintView';
@@ -17,6 +17,7 @@ import { PrivacyPolicy } from './components/legal/PrivacyPolicy';
 import { TermsOfService } from './components/legal/TermsOfService';
 import { canAccessDungeonFeature, isFreeSamplePacket, tierRank } from './lib/entitlements';
 import { useMockDailyDungeonApp, type ViewId } from './hooks/useMockDailyDungeonApp';
+import { useSupabaseSession } from './hooks/useSupabaseSession';
 import type { Plan } from './types';
 
 const viewItems: { id: ViewId; label: string; mobileLabel: string; icon: typeof BookOpen }[] = [
@@ -351,10 +352,16 @@ function PlaceholderFeature({ feature }: { feature: { name: string; text: string
 
 function AccountHelpMenu({ compact = false }: { compact?: boolean }) {
   const [open, setOpen] = useState(false);
-  const [legalDialog, setLegalDialog] = useState<'terms' | 'privacy' | 'support' | undefined>();
+  const authSession = useSupabaseSession();
+  const [legalDialog, setLegalDialog] = useState<'account' | 'terms' | 'privacy' | 'support' | undefined>();
   const [emailCopied, setEmailCopied] = useState(false);
   const legalDialogContent =
-    legalDialog === 'terms'
+    legalDialog === 'account'
+      ? {
+          title: authSession.signedIn ? 'Account' : 'Sign in',
+          content: <AccountPanel authSession={authSession} />,
+        }
+      : legalDialog === 'terms'
       ? {
           title: 'Terms of Service',
           content: <TermsOfService />,
@@ -371,11 +378,19 @@ function AccountHelpMenu({ compact = false }: { compact?: boolean }) {
             }
         : undefined;
 
-  const openLegalDialog = (nextDialog: 'terms' | 'privacy' | 'support') => {
+  const openLegalDialog = (nextDialog: 'account' | 'terms' | 'privacy' | 'support') => {
     setEmailCopied(false);
     setLegalDialog(nextDialog);
     setOpen(false);
   };
+
+  const accountSummary = authSession.loading
+    ? 'Checking account...'
+    : !authSession.configured
+      ? 'Sign in is not configured yet.'
+      : authSession.signedIn
+        ? `Signed in as ${authSession.email ?? 'your account'}`
+        : 'Sign in / Account';
 
   return (
     <div className="relative no-print">
@@ -394,13 +409,15 @@ function AccountHelpMenu({ compact = false }: { compact?: boolean }) {
 
       {open && (
         <div className="absolute left-0 right-0 z-40 mt-2 overflow-hidden rounded-md border border-[#cdbfa9] bg-[#fff9ec] text-ink shadow-[0_16px_44px_rgba(31,26,21,0.28)]">
-          <div className="border-b border-slatewood/15 px-3 py-2">
+          <button type="button" onClick={() => openLegalDialog('account')} className="flex w-full border-b border-slatewood/15 px-3 py-2 text-left transition hover:bg-slatewood/10">
+            <div>
             <p className="ledger-label text-[11px] font-bold uppercase text-ink/45">Account</p>
             <p className="mt-1 flex items-center gap-2 text-sm font-bold text-ink/60">
               <UserCircle className="h-4 w-4" aria-hidden="true" />
-              Sign in / Account - coming soon
+              {accountSummary}
             </p>
-          </div>
+            </div>
+          </button>
           <button type="button" onClick={() => openLegalDialog('terms')} className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-bold text-ink/75 transition hover:bg-slatewood/10">
             <FileText className="h-4 w-4" aria-hidden="true" />
             Terms of Service
@@ -422,7 +439,7 @@ function AccountHelpMenu({ compact = false }: { compact?: boolean }) {
             <div className="shrink-0 border-b border-slatewood/15 bg-[#fff9ec]/95 p-4 sm:p-5">
               <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="ledger-label text-[11px] font-bold uppercase text-ember">Legal</p>
+                <p className="ledger-label text-[11px] font-bold uppercase text-ember">{legalDialog === 'account' ? 'Account' : legalDialog === 'support' ? 'Support' : 'Legal'}</p>
                 <h2 id="account-help-title" className="survey-title mt-1 font-serif text-2xl font-bold">
                   {legalDialogContent.title}
                 </h2>
@@ -431,7 +448,7 @@ function AccountHelpMenu({ compact = false }: { compact?: boolean }) {
                 type="button"
                 onClick={() => setLegalDialog(undefined)}
                 className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-slatewood/20 bg-white text-ink/65 shadow-sm transition hover:bg-slatewood/10"
-                aria-label={legalDialog === 'terms' ? 'Close Terms of Service' : legalDialog === 'privacy' ? 'Close Privacy Policy' : 'Close Contact Support'}
+                aria-label={legalDialog === 'terms' ? 'Close Terms of Service' : legalDialog === 'privacy' ? 'Close Privacy Policy' : legalDialog === 'support' ? 'Close Contact Support' : 'Close Account'}
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </button>
@@ -442,6 +459,100 @@ function AccountHelpMenu({ compact = false }: { compact?: boolean }) {
         </div>
       )}
     </div>
+  );
+}
+
+function AccountPanel({ authSession }: { authSession: ReturnType<typeof useSupabaseSession> }) {
+  const [email, setEmail] = useState('');
+  const [statusMessage, setStatusMessage] = useState<string | undefined>();
+  const [errorMessage, setErrorMessage] = useState<string | undefined>();
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSignIn = async (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    setStatusMessage(undefined);
+    setErrorMessage(undefined);
+    setSubmitting(true);
+
+    try {
+      await authSession.sendSignInLink(email.trim());
+      setStatusMessage('Check your email for a sign-in link.');
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Could not send sign-in link.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const handleSignOut = async () => {
+    setStatusMessage(undefined);
+    setErrorMessage(undefined);
+    setSubmitting(true);
+
+    try {
+      await authSession.signOut();
+      setStatusMessage('Signed out.');
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Could not sign out.');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (authSession.loading) {
+    return <p className="text-sm leading-6 text-ink/70">Checking account...</p>;
+  }
+
+  if (!authSession.configured) {
+    return <p className="text-sm leading-6 text-ink/70">Sign in is not configured yet.</p>;
+  }
+
+  if (authSession.signedIn) {
+    return (
+      <div className="space-y-4 text-sm leading-6 text-ink/75">
+        <div>
+          <p>Signed in as</p>
+          <p className="mt-2 select-all rounded-md border border-slatewood/15 bg-[#fbf4e6] px-3 py-2 font-mono text-sm font-bold text-ink">{authSession.email ?? 'your account'}</p>
+        </div>
+        <p className="text-ink/65">Signing in does not change your Surveyor or Cartographer preview access yet.</p>
+        {statusMessage && <p className="rounded-md border border-moss/20 bg-moss/[0.07] px-3 py-2 font-bold text-moss">{statusMessage}</p>}
+        {errorMessage && <p className="rounded-md border border-ember/25 bg-ember/10 px-3 py-2 font-bold text-ember">{errorMessage}</p>}
+        <button
+          type="button"
+          onClick={handleSignOut}
+          disabled={submitting}
+          className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-slatewood bg-slatewood px-3 py-2 text-sm font-bold text-white shadow-tool transition hover:bg-slatewood/90 disabled:cursor-not-allowed disabled:bg-ink/20"
+        >
+          {submitting ? 'Signing out...' : 'Sign out'}
+        </button>
+      </div>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSignIn} className="space-y-4 text-sm leading-6 text-ink/75">
+      <p>Enter your email and we&apos;ll send a sign-in link.</p>
+      <label className="block">
+        <span className="ledger-label text-xs font-bold uppercase text-ink/45">Email address</span>
+        <input
+          type="email"
+          required
+          value={email}
+          onChange={(event) => setEmail(event.target.value)}
+          placeholder="you@example.com"
+          className="mt-1 min-h-11 w-full rounded-md border border-slatewood/20 bg-white px-3 py-2 text-sm font-bold text-ink outline-none transition focus:border-ember focus:ring-2 focus:ring-ember/15"
+        />
+      </label>
+      {statusMessage && <p className="rounded-md border border-moss/20 bg-moss/[0.07] px-3 py-2 font-bold text-moss">{statusMessage}</p>}
+      {errorMessage && <p className="rounded-md border border-ember/25 bg-ember/10 px-3 py-2 font-bold text-ember">{errorMessage}</p>}
+      <button
+        type="submit"
+        disabled={submitting}
+        className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-slatewood bg-slatewood px-3 py-2 text-sm font-bold text-white shadow-tool transition hover:bg-slatewood/90 disabled:cursor-not-allowed disabled:bg-ink/20"
+      >
+        {submitting ? 'Sending...' : 'Send sign-in link'}
+      </button>
+    </form>
   );
 }
 
