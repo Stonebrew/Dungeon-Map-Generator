@@ -354,6 +354,8 @@ Do not expose service role keys, Stripe secret keys, or webhook secrets to Vite/
 
 ## Phased implementation plan
 
+Status note: the no-behavior-change Supabase foundation has been started with an optional frontend client/config module, an auth status boundary, and placeholder `.env.example` keys. It is not wired into UI, entitlements, archive behavior, protected assets, or payment.
+
 ### Phase 1: Add Supabase client/config without changing behavior
 
 * Install Supabase client package.
