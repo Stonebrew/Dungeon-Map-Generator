@@ -434,8 +434,8 @@ function AccountHelpMenu({ compact = false }: { compact?: boolean }) {
       )}
 
       {legalDialogContent && (
-        <div className="fixed inset-0 z-50 flex items-end justify-center bg-ink/50 p-3 backdrop-blur-sm sm:items-center" role="dialog" aria-modal="true" aria-labelledby="account-help-title">
-          <div className="paper-panel field-corner flex max-h-[90vh] w-full max-w-3xl flex-col overflow-hidden rounded-md border border-[#cdbfa9] shadow-[0_24px_70px_rgba(31,26,21,0.34)]">
+        <div className="account-help-modal-overlay bg-ink/50 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="account-help-title">
+          <div className="account-help-modal-panel paper-panel field-corner rounded-md border border-[#cdbfa9] shadow-[0_24px_70px_rgba(31,26,21,0.34)]">
             <div className="shrink-0 border-b border-slatewood/15 bg-[#fff9ec]/95 p-4 sm:p-5">
               <div className="flex items-start justify-between gap-3">
               <div>
@@ -454,7 +454,7 @@ function AccountHelpMenu({ compact = false }: { compact?: boolean }) {
               </button>
               </div>
             </div>
-            <div className="min-h-0 flex-1 overflow-y-auto p-4 text-sm leading-6 text-ink/72 sm:p-5">{legalDialogContent.content}</div>
+            <div className="account-help-modal-body p-4 text-sm leading-6 text-ink/72 sm:p-5">{legalDialogContent.content}</div>
           </div>
         </div>
       )}

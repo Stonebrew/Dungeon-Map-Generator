@@ -217,6 +217,46 @@ textarea:focus-visible {
   font-family: var(--font-utility);
 }
 
+.account-help-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  height: 100vh;
+  max-height: 100vh;
+  padding: calc(0.75rem + env(safe-area-inset-top)) 0.75rem calc(0.75rem + env(safe-area-inset-bottom));
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+@supports (height: 100dvh) {
+  .account-help-modal-overlay {
+    height: 100dvh;
+    max-height: 100dvh;
+  }
+}
+
+.account-help-modal-panel {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 48rem;
+  max-height: 100%;
+  overflow: hidden;
+  overscroll-behavior: contain;
+}
+
+.account-help-modal-body {
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
 .export-packet-content {
   background: #ffffff;
   color: #211a16;
