@@ -1,6 +1,9 @@
 import { BookOpen, Lock, Sparkles } from 'lucide-react';
+import { useSupabaseSession } from '../hooks/useSupabaseSession';
+import { paypalConfig } from '../lib/paypalConfig';
 import type { Plan, TierId } from '../types';
 import { Badge, SectionHeader } from './Badge';
+import { PayPalSubscriptionButton } from './PayPalSubscriptionButton';
 
 const previewCards = [
   {
@@ -29,6 +32,8 @@ export function PremiumPlans({
   onOpenFreeSample?: () => void;
 }) {
   const visiblePlans = plans.filter((plan) => plan.id !== 'dungeonwright');
+  const session = useSupabaseSession();
+  const paypalReady = paypalConfig.configured;
 
   return (
     <div className="space-y-5">
@@ -37,10 +42,12 @@ export function PremiumPlans({
         title="Pricing Preview"
         text="Compare the access levels available in this tester build. Use the preview tier selector to try each toolset."
       />
-      <div className="paper-panel field-corner rounded-md border border-brass/25 p-3 text-sm leading-6 text-ink/72 shadow-tool">
-        <p className="font-bold text-ink">Payment not active in tester build.</p>
-        <p className="mt-1 text-ink/65">Pricing preview shown in USD. Future checkout may support local-currency payment where available.</p>
-      </div>
+      {!paypalReady && (
+        <div className="paper-panel field-corner rounded-md border border-brass/25 p-3 text-sm leading-6 text-ink/72 shadow-tool">
+          <p className="font-bold text-ink">Payment not active in tester build.</p>
+          <p className="mt-1 text-ink/65">Pricing preview shown in USD. Future checkout may support local-currency payment where available.</p>
+        </div>
+      )}
       <section className="paper-panel field-corner rounded-md border border-slatewood/20 p-4 shadow-tool">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
           <div>
@@ -124,6 +131,25 @@ export function PremiumPlans({
                   </section>
                 ))}
               </div>
+              {plan.id === 'adventurer' && paypalReady && (
+                <div className="mt-5 rounded-md border border-brass/25 bg-brass/[0.07] p-3 text-sm leading-6 text-ink/72">
+                  <p className="font-bold text-ink">PayPal subscription test flow</p>
+                  <p className="mt-1 text-ink/65">
+                    This creates a PayPal subscription only. Cartographer unlock and entitlement syncing will be connected in the next milestone.
+                  </p>
+                  {session.loading ? (
+                    <p className="mt-3 rounded-md border border-slatewood/15 bg-white/35 p-2 text-xs font-semibold text-ink/60">Checking sign-in status...</p>
+                  ) : session.signedIn ? (
+                    <div className="mt-3">
+                      <PayPalSubscriptionButton />
+                    </div>
+                  ) : (
+                    <p className="mt-3 rounded-md border border-slatewood/15 bg-white/35 p-2 text-xs font-semibold leading-5 text-ink/65">
+                      Sign in before subscribing. Use Account &amp; Help to sign in, then return to Plans to test Cartographer checkout.
+                    </p>
+                  )}
+                </div>
+              )}
               <button type="button" className="mt-5 w-full rounded-md border border-ink bg-ink px-3 py-2 text-sm font-bold text-white shadow-tool transition hover:bg-slatewood">
                 {active ? 'Current Preview' : 'Preview In Selector'}
               </button>

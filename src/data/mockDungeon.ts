@@ -35,7 +35,7 @@ export const plans: Plan[] = [
   {
     id: 'adventurer',
     name: 'Cartographer',
-    priceLabel: 'Planned founding price: USD $2.99/month',
+    priceLabel: 'Planned founding price: USD $4.99/month',
     tagline: 'Unlock illustrated dungeon packets, player-safe maps, print/export tools, Battle Map Print, New Packet Refresh, and 5 saved dossiers.',
     featureGroups: [
       {
