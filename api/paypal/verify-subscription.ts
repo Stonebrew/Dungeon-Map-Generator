@@ -1,4 +1,5 @@
-import { createClient } from '@supabase/supabase-js';
+import { getPayPalAccessToken, getPayPalSubscription, getRequiredEnv } from '../lib/paypalServer';
+import { getSupabaseAdminClient } from '../lib/supabaseAdmin';
 
 type VercelRequest = {
   method?: string;
@@ -11,17 +12,6 @@ type VercelResponse = {
   status: (statusCode: number) => {
     json: (body: unknown) => void;
   };
-};
-
-type PayPalSubscriptionDetails = {
-  id?: string;
-  plan_id?: string;
-  status?: string;
-};
-
-const PAYPAL_API_BASE_BY_ENV = {
-  sandbox: 'https://api-m.sandbox.paypal.com',
-  live: 'https://api-m.paypal.com',
 };
 
 function getHeaderValue(value: string | string[] | undefined) {
@@ -51,55 +41,6 @@ function getSubscriptionId(body: unknown) {
   return typeof value === 'string' && value.trim() ? value.trim() : undefined;
 }
 
-function getRequiredEnv(name: string) {
-  const value = process.env[name]?.trim();
-
-  if (!value) {
-    throw new Error(`${name} is not configured.`);
-  }
-
-  return value;
-}
-
-async function getPayPalAccessToken(baseUrl: string, clientId: string, clientSecret: string) {
-  const credentials = Buffer.from(`${clientId}:${clientSecret}`).toString('base64');
-  const response = await fetch(`${baseUrl}/v1/oauth2/token`, {
-    method: 'POST',
-    headers: {
-      Authorization: `Basic ${credentials}`,
-      'Content-Type': 'application/x-www-form-urlencoded',
-    },
-    body: new URLSearchParams({ grant_type: 'client_credentials' }),
-  });
-
-  if (!response.ok) {
-    throw new Error('PayPal OAuth request failed.');
-  }
-
-  const payload = (await response.json()) as { access_token?: string };
-
-  if (!payload.access_token) {
-    throw new Error('PayPal OAuth response did not include an access token.');
-  }
-
-  return payload.access_token;
-}
-
-async function getPayPalSubscription(baseUrl: string, accessToken: string, subscriptionId: string) {
-  const response = await fetch(`${baseUrl}/v1/billing/subscriptions/${encodeURIComponent(subscriptionId)}`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },
-  });
-
-  if (!response.ok) {
-    throw new Error('PayPal subscription lookup failed.');
-  }
-
-  return (await response.json()) as PayPalSubscriptionDetails;
-}
-
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   res.setHeader('Allow', 'POST');
 
@@ -119,19 +60,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(401).json({ verified: false, error: 'Missing Supabase access token.' });
     }
 
-    const supabaseUrl = getRequiredEnv('SUPABASE_URL');
-    const supabaseServiceRoleKey = getRequiredEnv('SUPABASE_SERVICE_ROLE_KEY');
-    const paypalClientId = getRequiredEnv('PAYPAL_CLIENT_ID');
-    const paypalClientSecret = getRequiredEnv('PAYPAL_CLIENT_SECRET');
     const expectedPlanId = getRequiredEnv('PAYPAL_CARTOGRAPHER_PLAN_ID');
-    const paypalEnv = process.env.PAYPAL_ENV === 'live' ? 'live' : 'sandbox';
-    const paypalBaseUrl = PAYPAL_API_BASE_BY_ENV[paypalEnv];
-    const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-      },
-    });
+    const supabase = getSupabaseAdminClient();
 
     const { data: userData, error: userError } = await supabase.auth.getUser(userAccessToken);
 
@@ -139,8 +69,8 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       return res.status(401).json({ verified: false, error: 'Invalid Supabase access token.' });
     }
 
-    const paypalAccessToken = await getPayPalAccessToken(paypalBaseUrl, paypalClientId, paypalClientSecret);
-    const subscription = await getPayPalSubscription(paypalBaseUrl, paypalAccessToken, subscriptionId);
+    const paypalAccessToken = await getPayPalAccessToken();
+    const subscription = await getPayPalSubscription(paypalAccessToken, subscriptionId);
 
     if (subscription.id !== subscriptionId) {
       return res.status(400).json({ verified: false, error: 'PayPal subscription ID mismatch.' });
