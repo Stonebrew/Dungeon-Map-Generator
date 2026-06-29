@@ -80,11 +80,26 @@ function loadPayPalSdk() {
   });
 }
 
-export function PayPalSubscriptionButton() {
+type PayPalVerificationResponse = {
+  verified?: boolean;
+  granted?: boolean;
+  subscriptionStatus?: string;
+  tier?: string | null;
+  error?: string;
+};
+
+export function PayPalSubscriptionButton({
+  accessToken,
+  onSubscriptionVerified,
+}: {
+  accessToken: string;
+  onSubscriptionVerified: () => Promise<void>;
+}) {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const buttonsRef = useRef<PayPalButtonsInstance | null>(null);
   const [message, setMessage] = useState('PayPal sandbox checkout is enabled for signed-in tester accounts.');
   const [errorMessage, setErrorMessage] = useState('');
+  const [verifying, setVerifying] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -113,10 +128,39 @@ export function PayPalSubscriptionButton() {
             actions.subscription.create({
               plan_id: paypalConfig.cartographerPlanId,
             }),
-          onApprove: (data) => {
-            const subscriptionId = data.subscriptionID ? ` PayPal subscription ID: ${data.subscriptionID}.` : '';
+          onApprove: async (data) => {
+            if (!data.subscriptionID) {
+              setErrorMessage('PayPal created a subscription, but no subscription ID was returned.');
+              return;
+            }
+
             setErrorMessage('');
-            setMessage(`Subscription created in PayPal. Cartographer unlock will be connected in the next milestone.${subscriptionId}`);
+            setVerifying(true);
+            setMessage('Subscription created in PayPal. Verifying Cartographer access...');
+
+            try {
+              const response = await fetch('/api/paypal/verify-subscription', {
+                method: 'POST',
+                headers: {
+                  Authorization: `Bearer ${accessToken}`,
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ subscriptionID: data.subscriptionID }),
+              });
+              const payload = (await response.json()) as PayPalVerificationResponse;
+
+              if (!response.ok || !payload.verified || !payload.granted) {
+                throw new Error(payload.error ?? 'Subscription verification failed.');
+              }
+
+              await onSubscriptionVerified();
+              setMessage(`Subscription verified. Cartographer access is now active. PayPal subscription ID: ${data.subscriptionID}.`);
+            } catch {
+              setErrorMessage('Subscription was created, but Cartographer access could not be verified yet. Please contact support.');
+              setMessage(`PayPal subscription ID: ${data.subscriptionID}.`);
+            } finally {
+              setVerifying(false);
+            }
           },
           onCancel: () => {
             setErrorMessage('');
@@ -144,11 +188,12 @@ export function PayPalSubscriptionButton() {
         container.innerHTML = '';
       }
     };
-  }, []);
+  }, [accessToken, onSubscriptionVerified]);
 
   return (
     <div className="space-y-3">
       <div ref={containerRef} />
+      {verifying && <p className="rounded-md border border-brass/20 bg-brass/[0.08] p-2 text-xs font-bold leading-5 text-ink/70">Verifying subscription with PayPal...</p>}
       <p className="text-xs font-semibold leading-5 text-ink/58">{message}</p>
       {errorMessage && <p className="rounded-md border border-red-900/20 bg-red-900/[0.06] p-2 text-xs font-semibold leading-5 text-red-900">{errorMessage}</p>}
     </div>

@@ -18,6 +18,7 @@ import { TermsOfService } from './components/legal/TermsOfService';
 import { canAccessDungeonFeature, isFreeSamplePacket, tierRank } from './lib/entitlements';
 import { useMockDailyDungeonApp, type ViewId } from './hooks/useMockDailyDungeonApp';
 import { useSupabaseSession } from './hooks/useSupabaseSession';
+import { useUserSubscription } from './hooks/useUserSubscription';
 import type { Plan } from './types';
 
 const viewItems: { id: ViewId; label: string; mobileLabel: string; icon: typeof BookOpen }[] = [
@@ -50,7 +51,10 @@ function App() {
 }
 
 function DailyDungeonApp() {
-  const appState = useMockDailyDungeonApp();
+  const authSession = useSupabaseSession();
+  const subscriptionEntitlement = useUserSubscription(authSession);
+  const entitlementTier = authSession.configured ? subscriptionEntitlement.effectiveTier : undefined;
+  const appState = useMockDailyDungeonApp(entitlementTier);
   const {
     view,
     lockedFeature,
@@ -88,7 +92,7 @@ function DailyDungeonApp() {
             ))}
           </nav>
           <div className="mt-5">
-            <AccountHelpMenu />
+            <AccountHelpMenu authSession={authSession} subscriptionStatus={subscriptionEntitlement.subscriptionStatus} />
           </div>
         </aside>
 
@@ -96,7 +100,7 @@ function DailyDungeonApp() {
           <div className="sticky top-0 z-20 border-b border-[#334145] bg-[#1d2b2f]/95 px-4 py-3 text-[#f3ecdd] shadow-tool backdrop-blur lg:hidden">
             <AppHeader compact currentPlan={currentPlan} />
             <div className="mt-3">
-              <AccountHelpMenu compact />
+              <AccountHelpMenu compact authSession={authSession} subscriptionStatus={subscriptionEntitlement.subscriptionStatus} />
             </div>
           </div>
 
@@ -175,6 +179,8 @@ function DailyDungeonApp() {
                 currentTier={selectedTier}
                 tierRank={tierRank}
                 freeSampleTitle={freeSampleDungeon?.title}
+                authSession={authSession}
+                onSubscriptionVerified={subscriptionEntitlement.refetch}
                 onOpenFreeSample={
                   freeSampleDungeon
                     ? () => {
@@ -350,16 +356,23 @@ function PlaceholderFeature({ feature }: { feature: { name: string; text: string
   );
 }
 
-function AccountHelpMenu({ compact = false }: { compact?: boolean }) {
+function AccountHelpMenu({
+  compact = false,
+  authSession,
+  subscriptionStatus,
+}: {
+  compact?: boolean;
+  authSession: ReturnType<typeof useSupabaseSession>;
+  subscriptionStatus?: string;
+}) {
   const [open, setOpen] = useState(false);
-  const authSession = useSupabaseSession();
   const [legalDialog, setLegalDialog] = useState<'account' | 'terms' | 'privacy' | 'support' | undefined>();
   const [emailCopied, setEmailCopied] = useState(false);
   const legalDialogContent =
     legalDialog === 'account'
       ? {
           title: authSession.signedIn ? 'Account' : 'Sign in',
-          content: <AccountPanel authSession={authSession} />,
+          content: <AccountPanel authSession={authSession} subscriptionStatus={subscriptionStatus} />,
         }
       : legalDialog === 'terms'
       ? {
@@ -462,7 +475,7 @@ function AccountHelpMenu({ compact = false }: { compact?: boolean }) {
   );
 }
 
-function AccountPanel({ authSession }: { authSession: ReturnType<typeof useSupabaseSession> }) {
+function AccountPanel({ authSession, subscriptionStatus }: { authSession: ReturnType<typeof useSupabaseSession>; subscriptionStatus?: string }) {
   const [email, setEmail] = useState('');
   const [statusMessage, setStatusMessage] = useState<string | undefined>();
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
@@ -514,7 +527,11 @@ function AccountPanel({ authSession }: { authSession: ReturnType<typeof useSupab
           <p>Signed in as</p>
           <p className="mt-2 select-all rounded-md border border-slatewood/15 bg-[#fbf4e6] px-3 py-2 font-mono text-sm font-bold text-ink">{authSession.email ?? 'your account'}</p>
         </div>
-        <p className="text-ink/65">Signing in does not change your Surveyor or Cartographer preview access yet.</p>
+        <p className="text-ink/65">
+          {subscriptionStatus === 'ACTIVE'
+            ? 'Your verified Cartographer subscription is active on this account.'
+            : 'Signed-in accounts use verified subscription status for Cartographer access.'}
+        </p>
         {statusMessage && <p className="rounded-md border border-moss/20 bg-moss/[0.07] px-3 py-2 font-bold text-moss">{statusMessage}</p>}
         {errorMessage && <p className="rounded-md border border-ember/25 bg-ember/10 px-3 py-2 font-bold text-ember">{errorMessage}</p>}
         <button

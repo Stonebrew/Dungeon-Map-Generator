@@ -84,7 +84,7 @@ function getInitialRerollCounts() {
 
 // Prototype-only state layer. Replace this hook with real daily dungeon,
 // account, entitlement, archive, favorite, and reroll APIs when the backend exists.
-export function useMockDailyDungeonApp() {
+export function useMockDailyDungeonApp(entitlementTier?: TierId) {
   const [view, setView] = useState<ViewId>('today');
   const [lockedFeature, setLockedFeature] = useState<FeatureKey | undefined>();
   const [placeholderFeature, setPlaceholderFeature] = useState<PlaceholderFeature | undefined>();
@@ -93,8 +93,9 @@ export function useMockDailyDungeonApp() {
   const [savedDungeonIds, setSavedDungeonIds] = useState<Set<string>>(() => new Set());
   const [archiveLimitMessage, setArchiveLimitMessage] = useState<string | undefined>();
   const [sessionRerollCounts, setSessionRerollCounts] = useState<Record<TierId, RerollCounts>>(() => getInitialRerollCounts());
+  const activeTier = entitlementTier ?? selectedTier;
 
-  const currentPlan = useMemo(() => plans.find((plan) => plan.id === selectedTier), [selectedTier]);
+  const currentPlan = useMemo(() => plans.find((plan) => plan.id === activeTier), [activeTier]);
   const selectedDungeon = useMemo(
     () => mockDungeons.find((dungeon) => dungeon.id === selectedDungeonId) ?? mockDungeons[0],
     [selectedDungeonId],
@@ -122,7 +123,7 @@ export function useMockDailyDungeonApp() {
   };
 
   const toggleFavorite = (dungeonId: string) => {
-    if (!canAccessFeature(selectedTier, 'favorite')) {
+    if (!canAccessFeature(activeTier, 'favorite')) {
       showLockedFeature('favorite');
       return;
     }
@@ -133,10 +134,10 @@ export function useMockDailyDungeonApp() {
         next.delete(dungeonId);
         setArchiveLimitMessage(undefined);
       } else {
-        const archiveLimit = getArchiveSlotLimit(selectedTier);
+        const archiveLimit = getArchiveSlotLimit(activeTier);
         if (current.size >= archiveLimit) {
           setArchiveLimitMessage(
-            selectedTier === 'lantern'
+            activeTier === 'lantern'
               ? 'Surveyor includes 1 saved dossier. Upgrade to Cartographer for more archive slots.'
               : 'Your archive is full. Delete a saved dossier to save another.',
           );
@@ -155,7 +156,7 @@ export function useMockDailyDungeonApp() {
   };
 
   const useNewPacketRefresh = () => {
-    if (!canAccessFeature(selectedTier, 'fullReroll')) {
+    if (!canAccessFeature(activeTier, 'fullReroll')) {
       showLockedFeature('fullReroll');
       return false;
     }
@@ -164,19 +165,19 @@ export function useMockDailyDungeonApp() {
       return false;
     }
 
-    const currentCounts = sessionRerollCounts[selectedTier];
+    const currentCounts = sessionRerollCounts[activeTier];
     if (currentCounts.remainingFull <= 0) {
       return false;
     }
 
     setSessionRerollCounts((current) => ({
       ...current,
-      [selectedTier]: {
-        ...current[selectedTier],
-        remainingFull: Math.max(0, current[selectedTier].remainingFull - 1),
+      [activeTier]: {
+        ...current[activeTier],
+        remainingFull: Math.max(0, current[activeTier].remainingFull - 1),
       },
     }));
-    saveNewPacketRefreshUsage(selectedTier);
+    saveNewPacketRefreshUsage(activeTier);
     setSelectedDungeonId(newPacketRefreshTarget.id);
     setView('today');
     return true;
@@ -184,12 +185,12 @@ export function useMockDailyDungeonApp() {
 
   const isViewLocked = (targetView: ViewId) => {
     const lock = lockedFeatures[targetView];
-    return Boolean(lock && !canAccessDungeonFeature(selectedTier, selectedDungeon, lock));
+    return Boolean(lock && !canAccessDungeonFeature(activeTier, selectedDungeon, lock));
   };
 
   const navigateTo = (targetView: ViewId) => {
     const lock = lockedFeatures[targetView];
-    if (lock && !canAccessDungeonFeature(selectedTier, selectedDungeon, lock)) {
+    if (lock && !canAccessDungeonFeature(activeTier, selectedDungeon, lock)) {
       showLockedFeature(lock);
       return;
     }
@@ -200,19 +201,20 @@ export function useMockDailyDungeonApp() {
     setSelectedTier(nextTier);
     setArchiveLimitMessage(undefined);
     const lock = lockedFeatures[view];
+    const nextActiveTier = entitlementTier ?? nextTier;
 
-    if (lock && !canAccessDungeonFeature(nextTier, selectedDungeon, lock)) {
+    if (lock && !canAccessDungeonFeature(nextActiveTier, selectedDungeon, lock)) {
       setLockedFeature(lock);
       setView('locked');
       return;
     }
 
-    if (view === 'locked' && lockedFeature && canAccessDungeonFeature(nextTier, selectedDungeon, lockedFeature)) {
+    if (view === 'locked' && lockedFeature && canAccessDungeonFeature(nextActiveTier, selectedDungeon, lockedFeature)) {
       setView('today');
       return;
     }
 
-    if (view === 'placeholder' && !canAccessFeature(nextTier, 'pdfExport')) {
+    if (view === 'placeholder' && !canAccessFeature(nextActiveTier, 'pdfExport')) {
       setView('today');
     }
   };
@@ -224,7 +226,7 @@ export function useMockDailyDungeonApp() {
     selectedDungeonId,
     selectedDungeon,
     newPacketRefreshTarget,
-    selectedTier,
+    selectedTier: activeTier,
     currentPlan,
     savedDungeonIds,
     archiveLimitMessage,

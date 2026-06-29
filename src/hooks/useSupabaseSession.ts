@@ -7,7 +7,19 @@ export type SupabaseSessionState = {
   loading: boolean;
   user: User | null;
   email?: string;
+  accessToken?: string;
 };
+
+function getAuthErrorMessage(error: unknown) {
+  const message = error instanceof Error ? error.message : String(error);
+  const normalizedMessage = message.toLowerCase();
+
+  if (normalizedMessage.includes('rate limit') || normalizedMessage.includes('too many') || normalizedMessage.includes('email rate limit')) {
+    return 'Too many sign-in emails were requested. Please wait a few minutes and use the newest link.';
+  }
+
+  return message || 'Could not send sign-in link.';
+}
 
 export function useSupabaseSession() {
   const [state, setState] = useState<SupabaseSessionState>({
@@ -37,6 +49,7 @@ export function useSupabaseSession() {
         loading: false,
         user,
         email: user?.email,
+        accessToken: data.session?.access_token,
       });
     });
 
@@ -47,6 +60,7 @@ export function useSupabaseSession() {
         loading: false,
         user,
         email: user?.email,
+        accessToken: session?.access_token,
       });
     });
 
@@ -66,12 +80,12 @@ export function useSupabaseSession() {
     const { error } = await client.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: `${window.location.origin}/`,
       },
     });
 
     if (error) {
-      throw error;
+      throw new Error(getAuthErrorMessage(error));
     }
   }, []);
 

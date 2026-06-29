@@ -1,5 +1,5 @@
 import { BookOpen, Lock, Sparkles } from 'lucide-react';
-import { useSupabaseSession } from '../hooks/useSupabaseSession';
+import type { useSupabaseSession } from '../hooks/useSupabaseSession';
 import { paypalConfig } from '../lib/paypalConfig';
 import type { Plan, TierId } from '../types';
 import { Badge, SectionHeader } from './Badge';
@@ -23,16 +23,19 @@ export function PremiumPlans({
   currentTier,
   tierRank,
   freeSampleTitle,
+  authSession,
+  onSubscriptionVerified,
   onOpenFreeSample,
 }: {
   plans: Plan[];
   currentTier: TierId;
   tierRank: Record<TierId, number>;
   freeSampleTitle?: string;
+  authSession: ReturnType<typeof useSupabaseSession>;
+  onSubscriptionVerified: () => Promise<void>;
   onOpenFreeSample?: () => void;
 }) {
   const visiblePlans = plans.filter((plan) => plan.id !== 'dungeonwright');
-  const session = useSupabaseSession();
   const paypalReady = paypalConfig.configured;
 
   return (
@@ -135,13 +138,13 @@ export function PremiumPlans({
                 <div className="mt-5 rounded-md border border-brass/25 bg-brass/[0.07] p-3 text-sm leading-6 text-ink/72">
                   <p className="font-bold text-ink">PayPal subscription test flow</p>
                   <p className="mt-1 text-ink/65">
-                    This creates a PayPal subscription only. Cartographer unlock and entitlement syncing will be connected in the next milestone.
+                    This creates a PayPal subscription, then verifies it server-side before Cartographer access changes.
                   </p>
-                  {session.loading ? (
+                  {authSession.loading ? (
                     <p className="mt-3 rounded-md border border-slatewood/15 bg-white/35 p-2 text-xs font-semibold text-ink/60">Checking sign-in status...</p>
-                  ) : session.signedIn ? (
+                  ) : authSession.signedIn && authSession.accessToken ? (
                     <div className="mt-3">
-                      <PayPalSubscriptionButton />
+                      <PayPalSubscriptionButton accessToken={authSession.accessToken} onSubscriptionVerified={onSubscriptionVerified} />
                     </div>
                   ) : (
                     <p className="mt-3 rounded-md border border-slatewood/15 bg-white/35 p-2 text-xs font-semibold leading-5 text-ink/65">
