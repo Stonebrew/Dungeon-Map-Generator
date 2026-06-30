@@ -1,5 +1,5 @@
-import { getPayPalAccessToken, getPayPalSubscription, getRequiredEnv } from '../lib/paypalServer';
-import { getSupabaseAdminClient } from '../lib/supabaseAdmin';
+import { getPayPalAccessToken, getPayPalSubscription, getRequiredEnv } from '../lib/paypalServer.js';
+import { getSupabaseAdminClient } from '../lib/supabaseAdmin.js';
 
 type VercelRequest = {
   method?: string;
