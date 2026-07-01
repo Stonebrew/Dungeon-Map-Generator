@@ -167,7 +167,7 @@ export function PayPalSubscriptionButton({
             setMessage('PayPal checkout was cancelled. No subscription changes were applied in Dungeon Dossier.');
           },
           onError: () => {
-            setErrorMessage('PayPal checkout could not be completed. Please try again or use Account & Help to contact support.');
+            setErrorMessage('PayPal checkout could not be completed. Please try again or use Account to contact support.');
           },
         });
 

@@ -1,5 +1,5 @@
 import { lazy, Suspense, useState, type FormEvent } from 'react';
-import { Archive, BookOpen, Check, ChevronDown, Copy, Crown, Dice5, FileText, HelpCircle, Mail, Megaphone, RefreshCcw, ScrollText, Shield, ShieldCheck, UserCircle, X } from 'lucide-react';
+import { Archive, BookOpen, Check, Copy, Crown, Dice5, FileText, HelpCircle, Mail, Megaphone, ScrollText, Shield, ShieldCheck, UserCircle, X } from 'lucide-react';
 import { ArchiveView } from './components/ArchiveView';
 import { BattleMapPrintView } from './components/BattleMapPrintView';
 import { Badge, Panel } from './components/Badge';
@@ -21,14 +21,16 @@ import { useSupabaseSession } from './hooks/useSupabaseSession';
 import { useUserSubscription } from './hooks/useUserSubscription';
 import type { Plan } from './types';
 
-const viewItems: { id: ViewId; label: string; mobileLabel: string; icon: typeof BookOpen }[] = [
+type NavItem = { id: ViewId | 'account'; label: string; mobileLabel: string; icon: typeof BookOpen };
+
+const viewItems: NavItem[] = [
   { id: 'today', label: 'Today', mobileLabel: 'Today', icon: BookOpen },
   { id: 'gm', label: 'GM View', mobileLabel: 'GM', icon: ScrollText },
   { id: 'player', label: 'Player Map', mobileLabel: 'Player', icon: Shield },
   { id: 'archive', label: 'Archive', mobileLabel: 'Saved', icon: Archive },
   { id: 'encounters', label: 'Tables', mobileLabel: 'Tables', icon: Dice5 },
   { id: 'upgrade', label: 'Plans', mobileLabel: 'Plans', icon: Crown },
-  { id: 'rerolls', label: 'Refresh', mobileLabel: 'Refresh', icon: RefreshCcw },
+  { id: 'account', label: 'Account', mobileLabel: 'Account', icon: UserCircle },
 ];
 
 const testerBuildAnnouncement = {
@@ -55,6 +57,7 @@ function DailyDungeonApp() {
   const subscriptionEntitlement = useUserSubscription(authSession);
   const entitlementTier = authSession.configured ? subscriptionEntitlement.effectiveTier : undefined;
   const appState = useMockDailyDungeonApp(entitlementTier);
+  const [accountOpen, setAccountOpen] = useState(false);
   const {
     view,
     lockedFeature,
@@ -87,27 +90,36 @@ function DailyDungeonApp() {
         <aside className="app-chrome hidden border-r border-[#334145] p-4 shadow-[12px_0_34px_rgba(17,27,30,0.28)] lg:block lg:w-64">
           <AppHeader currentPlan={currentPlan} />
           <nav className="mt-6 space-y-1">
-            {viewItems.map((item) => (
-              <NavButton key={item.id} item={item} locked={isViewLocked(item.id)} active={view === item.id} onClick={() => navigateTo(item.id)} />
-            ))}
+            {viewItems.map((item) => {
+              const viewId = item.id === 'account' ? undefined : item.id;
+              return (
+                <NavButton
+                  key={item.id}
+                  item={item}
+                  locked={viewId ? isViewLocked(viewId) : false}
+                  active={viewId ? view === viewId : accountOpen}
+                  onClick={() => {
+                    if (!viewId) {
+                      setAccountOpen(true);
+                      return;
+                    }
+                    navigateTo(viewId);
+                  }}
+                />
+              );
+            })}
           </nav>
-          <div className="mt-5">
-            <AccountHelpMenu authSession={authSession} subscriptionStatus={subscriptionEntitlement.subscriptionStatus} />
-          </div>
         </aside>
 
         <main className="flex-1 pb-24 lg:pb-6">
           <div className="sticky top-0 z-20 border-b border-[#334145] bg-[#1d2b2f]/95 px-4 py-3 text-[#f3ecdd] shadow-tool backdrop-blur lg:hidden">
             <AppHeader compact currentPlan={currentPlan} />
-            <div className="mt-3">
-              <AccountHelpMenu compact authSession={authSession} subscriptionStatus={subscriptionEntitlement.subscriptionStatus} />
-            </div>
           </div>
 
           <div className="px-4 py-5 sm:px-6 lg:px-8 lg:py-7">
             <div className="no-print">
-              {view === 'today' && <AppGuidePanel />}
               {view === 'today' && <AnnouncementBanner />}
+              {view === 'today' && <AppGuidePanel />}
               {view === 'today' && freeSampleDungeon && (
                 <FreeSampleCallout
                   dungeonTitle={freeSampleDungeon.title}
@@ -211,16 +223,25 @@ function DailyDungeonApp() {
         <nav className="fixed inset-x-0 bottom-0 z-30 grid min-w-0 grid-cols-7 border-t border-[#334145] bg-[#172326]/95 px-1 py-2 shadow-[0_-12px_35px_rgba(17,27,30,0.32)] backdrop-blur lg:hidden">
           {viewItems.map((item) => {
             const Icon = item.icon;
+            const viewId = item.id === 'account' ? undefined : item.id;
+            const active = viewId ? view === viewId : accountOpen;
+            const locked = viewId ? isViewLocked(viewId) : false;
             return (
               <button
                 key={item.id}
                 type="button"
-                onClick={() => navigateTo(item.id)}
+                onClick={() => {
+                  if (!viewId) {
+                    setAccountOpen(true);
+                    return;
+                  }
+                  navigateTo(viewId);
+                }}
                 className={`flex min-h-14 min-w-0 max-w-full flex-col items-center justify-center gap-0.5 overflow-hidden rounded-md border px-0.5 text-[11px] font-semibold leading-none transition ${
-                  view === item.id ? 'border-[#c18453] bg-[#a65335] text-white shadow-tool' : isViewLocked(item.id) ? 'border-transparent text-[#b8afa0]/45' : 'border-transparent text-[#f3ecdd]/75 hover:bg-[#223236]'
+                  active ? 'border-[#c18453] bg-[#a65335] text-white shadow-tool' : locked ? 'border-transparent text-[#b8afa0]/45' : 'border-transparent text-[#f3ecdd]/75 hover:bg-[#223236]'
                 }`}
                 aria-label={item.label}
-                aria-current={view === item.id ? 'page' : undefined}
+                aria-current={active ? 'page' : undefined}
                 title={item.label}
               >
                 <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
@@ -232,6 +253,7 @@ function DailyDungeonApp() {
           })}
         </nav>
       </div>
+      {accountOpen && <AccountDialog onClose={() => setAccountOpen(false)} authSession={authSession} subscriptionStatus={subscriptionEntitlement.subscriptionStatus} />}
     </div>
   );
 }
@@ -356,45 +378,21 @@ function PlaceholderFeature({ feature }: { feature: { name: string; text: string
   );
 }
 
-function AccountHelpMenu({
-  compact = false,
+function AccountDialog({
+  onClose,
   authSession,
   subscriptionStatus,
 }: {
-  compact?: boolean;
+  onClose: () => void;
   authSession: ReturnType<typeof useSupabaseSession>;
   subscriptionStatus?: string;
 }) {
-  const [open, setOpen] = useState(false);
-  const [legalDialog, setLegalDialog] = useState<'account' | 'terms' | 'privacy' | 'support' | undefined>();
+  const [accountSection, setAccountSection] = useState<'account' | 'terms' | 'privacy' | 'support'>('account');
   const [emailCopied, setEmailCopied] = useState(false);
-  const legalDialogContent =
-    legalDialog === 'account'
-      ? {
-          title: authSession.signedIn ? 'Account' : 'Sign in',
-          content: <AccountPanel authSession={authSession} subscriptionStatus={subscriptionStatus} />,
-        }
-      : legalDialog === 'terms'
-      ? {
-          title: 'Terms of Service',
-          content: <TermsOfService />,
-        }
-      : legalDialog === 'privacy'
-        ? {
-            title: 'Privacy Policy',
-            content: <PrivacyPolicy />,
-          }
-        : legalDialog === 'support'
-          ? {
-              title: 'Contact Support',
-              content: <ContactSupportPanel copied={emailCopied} onCopy={() => copySupportEmail(setEmailCopied)} />,
-            }
-        : undefined;
 
-  const openLegalDialog = (nextDialog: 'account' | 'terms' | 'privacy' | 'support') => {
+  const openAccountSection = (nextSection: 'account' | 'terms' | 'privacy' | 'support') => {
     setEmailCopied(false);
-    setLegalDialog(nextDialog);
-    setOpen(false);
+    setAccountSection(nextSection);
   };
 
   const accountSummary = authSession.loading
@@ -404,73 +402,104 @@ function AccountHelpMenu({
       : authSession.signedIn
         ? `Signed in as ${authSession.email ?? 'your account'}`
         : 'Sign in / Account';
+  const accountContent =
+    accountSection === 'account'
+      ? {
+          eyebrow: 'Account',
+          title: authSession.signedIn ? 'Account' : 'Sign in',
+          content: <AccountPanel authSession={authSession} subscriptionStatus={subscriptionStatus} />,
+        }
+      : accountSection === 'terms'
+        ? {
+            eyebrow: 'Legal',
+            title: 'Terms of Service',
+            content: <TermsOfService />,
+          }
+        : accountSection === 'privacy'
+          ? {
+              eyebrow: 'Legal',
+              title: 'Privacy Policy',
+              content: <PrivacyPolicy />,
+            }
+          : {
+              eyebrow: 'Support',
+              title: 'Contact Support',
+              content: <ContactSupportPanel copied={emailCopied} onCopy={() => copySupportEmail(setEmailCopied)} />,
+            };
+  const menuItems = [
+    {
+      id: 'account' as const,
+      label: 'Account',
+      icon: UserCircle,
+      summary: accountSummary,
+    },
+    {
+      id: 'terms' as const,
+      label: 'Terms of Service',
+      icon: FileText,
+      summary: 'Read the tester build terms.',
+    },
+    {
+      id: 'privacy' as const,
+      label: 'Privacy Policy',
+      icon: ShieldCheck,
+      summary: 'Review privacy and data handling.',
+    },
+    {
+      id: 'support' as const,
+      label: 'Contact Support',
+      icon: Mail,
+      summary: supportEmail,
+    },
+  ];
 
   return (
-    <div className="relative no-print">
-      <button
-        type="button"
-        onClick={() => setOpen((current) => !current)}
-        className={`flex w-full items-center justify-between gap-2 rounded-md border border-[#334145] bg-[#223236] px-3 py-2 text-left text-sm font-bold text-[#f3ecdd] shadow-sm transition hover:bg-[#263a3f] ${compact ? 'min-h-10' : 'min-h-11'}`}
-        aria-expanded={open}
-      >
-        <span className="inline-flex min-w-0 items-center gap-2">
-          <HelpCircle className="h-4 w-4 shrink-0" aria-hidden="true" />
-          <span className="truncate">Account & Help</span>
-        </span>
-        <ChevronDown className={`h-4 w-4 shrink-0 transition ${open ? 'rotate-180' : ''}`} aria-hidden="true" />
-      </button>
-
-      {open && (
-        <div className="absolute left-0 right-0 z-40 mt-2 overflow-hidden rounded-md border border-[#cdbfa9] bg-[#fff9ec] text-ink shadow-[0_16px_44px_rgba(31,26,21,0.28)]">
-          <button type="button" onClick={() => openLegalDialog('account')} className="flex w-full border-b border-slatewood/15 px-3 py-2 text-left transition hover:bg-slatewood/10">
+    <div className="account-help-modal-overlay bg-ink/50 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="account-help-title">
+      <div className="account-help-modal-panel paper-panel field-corner rounded-md border border-[#cdbfa9] shadow-[0_24px_70px_rgba(31,26,21,0.34)]">
+        <div className="shrink-0 border-b border-slatewood/15 bg-[#fff9ec]/95 p-4 sm:p-5">
+          <div className="flex items-start justify-between gap-3">
             <div>
-            <p className="ledger-label text-[11px] font-bold uppercase text-ink/45">Account</p>
-            <p className="mt-1 flex items-center gap-2 text-sm font-bold text-ink/60">
-              <UserCircle className="h-4 w-4" aria-hidden="true" />
-              {accountSummary}
-            </p>
+              <p className="ledger-label text-[11px] font-bold uppercase text-ember">{accountContent.eyebrow}</p>
+              <h2 id="account-help-title" className="survey-title mt-1 font-serif text-2xl font-bold">
+                {accountContent.title}
+              </h2>
             </div>
-          </button>
-          <button type="button" onClick={() => openLegalDialog('terms')} className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-bold text-ink/75 transition hover:bg-slatewood/10">
-            <FileText className="h-4 w-4" aria-hidden="true" />
-            Terms of Service
-          </button>
-          <button type="button" onClick={() => openLegalDialog('privacy')} className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-bold text-ink/75 transition hover:bg-slatewood/10">
-            <ShieldCheck className="h-4 w-4" aria-hidden="true" />
-            Privacy Policy
-          </button>
-          <button type="button" onClick={() => openLegalDialog('support')} className="flex w-full items-center gap-2 px-3 py-2 text-left text-sm font-bold text-ink/75 transition hover:bg-slatewood/10">
-            <Mail className="h-4 w-4" aria-hidden="true" />
-            Contact Support
-          </button>
-        </div>
-      )}
-
-      {legalDialogContent && (
-        <div className="account-help-modal-overlay bg-ink/50 backdrop-blur-sm" role="dialog" aria-modal="true" aria-labelledby="account-help-title">
-          <div className="account-help-modal-panel paper-panel field-corner rounded-md border border-[#cdbfa9] shadow-[0_24px_70px_rgba(31,26,21,0.34)]">
-            <div className="shrink-0 border-b border-slatewood/15 bg-[#fff9ec]/95 p-4 sm:p-5">
-              <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="ledger-label text-[11px] font-bold uppercase text-ember">{legalDialog === 'account' ? 'Account' : legalDialog === 'support' ? 'Support' : 'Legal'}</p>
-                <h2 id="account-help-title" className="survey-title mt-1 font-serif text-2xl font-bold">
-                  {legalDialogContent.title}
-                </h2>
-              </div>
-              <button
-                type="button"
-                onClick={() => setLegalDialog(undefined)}
-                className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-slatewood/20 bg-white text-ink/65 shadow-sm transition hover:bg-slatewood/10"
-                aria-label={legalDialog === 'terms' ? 'Close Terms of Service' : legalDialog === 'privacy' ? 'Close Privacy Policy' : legalDialog === 'support' ? 'Close Contact Support' : 'Close Account'}
-              >
-                <X className="h-4 w-4" aria-hidden="true" />
-              </button>
-              </div>
-            </div>
-            <div className="account-help-modal-body p-4 text-sm leading-6 text-ink/72 sm:p-5">{legalDialogContent.content}</div>
+            <button
+              type="button"
+              onClick={onClose}
+              className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-slatewood/20 bg-white text-ink/65 shadow-sm transition hover:bg-slatewood/10"
+              aria-label="Close Account"
+            >
+              <X className="h-4 w-4" aria-hidden="true" />
+            </button>
           </div>
         </div>
-      )}
+        <div className="account-help-modal-body grid gap-4 p-4 text-sm leading-6 text-ink/72 sm:p-5 lg:grid-cols-[13rem_1fr]">
+          <nav className="space-y-2" aria-label="Account sections">
+            {menuItems.map((item) => {
+              const Icon = item.icon;
+              const active = accountSection === item.id;
+              return (
+                <button
+                  key={item.id}
+                  type="button"
+                  onClick={() => openAccountSection(item.id)}
+                  className={`w-full rounded-md border px-3 py-2 text-left transition ${
+                    active ? 'border-ember bg-ember/10 text-ink shadow-sm' : 'border-slatewood/15 bg-white/45 text-ink/70 hover:bg-slatewood/10'
+                  }`}
+                >
+                  <span className="flex items-center gap-2 font-bold">
+                    <Icon className="h-4 w-4 shrink-0" aria-hidden="true" />
+                    {item.label}
+                  </span>
+                  <span className="mt-1 block truncate text-xs font-semibold text-ink/45">{item.summary}</span>
+                </button>
+              );
+            })}
+          </nav>
+          <div className="min-w-0">{accountContent.content}</div>
+        </div>
+      </div>
     </div>
   );
 }
@@ -633,7 +662,7 @@ function NavButton({
   locked,
   onClick,
 }: {
-  item: { id: ViewId; label: string; icon: typeof BookOpen };
+  item: NavItem;
   active: boolean;
   locked: boolean;
   onClick: () => void;
