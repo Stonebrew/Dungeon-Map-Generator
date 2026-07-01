@@ -148,7 +148,7 @@ export function PremiumPlans({
                     </div>
                   ) : (
                     <p className="mt-3 rounded-md border border-slatewood/15 bg-white/35 p-2 text-xs font-semibold leading-5 text-ink/65">
-                      Sign in before subscribing. Use Account &amp; Help to sign in, then return to Plans to test Cartographer checkout.
+                      Sign in before subscribing. Use Account to sign in, then return to Plans to test Cartographer checkout.
                     </p>
                   )}
                 </div>

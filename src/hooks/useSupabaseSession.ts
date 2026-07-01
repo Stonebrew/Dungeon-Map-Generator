@@ -10,7 +10,7 @@ export type SupabaseSessionState = {
   accessToken?: string;
 };
 
-function getAuthErrorMessage(error: unknown) {
+function getAuthErrorMessage(error: unknown, fallback = 'Could not send sign-in link.') {
   const message = error instanceof Error ? error.message : String(error);
   const normalizedMessage = message.toLowerCase();
 
@@ -18,7 +18,11 @@ function getAuthErrorMessage(error: unknown) {
     return 'Too many sign-in emails were requested. Please wait a few minutes and use the newest link.';
   }
 
-  return message || 'Could not send sign-in link.';
+  return message || fallback;
+}
+
+function getRedirectUrl() {
+  return `${window.location.origin}/`;
 }
 
 export function useSupabaseSession() {
@@ -80,12 +84,31 @@ export function useSupabaseSession() {
     const { error } = await client.auth.signInWithOtp({
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/`,
+        emailRedirectTo: getRedirectUrl(),
       },
     });
 
     if (error) {
-      throw new Error(getAuthErrorMessage(error));
+      throw new Error(getAuthErrorMessage(error, 'Could not send sign-in link.'));
+    }
+  }, []);
+
+  const signInWithGoogle = useCallback(async () => {
+    const client = getSupabaseClient();
+
+    if (!client) {
+      throw new Error('Sign in is not configured yet.');
+    }
+
+    const { error } = await client.auth.signInWithOAuth({
+      provider: 'google',
+      options: {
+        redirectTo: getRedirectUrl(),
+      },
+    });
+
+    if (error) {
+      throw new Error(getAuthErrorMessage(error, 'Could not start Google sign-in.'));
     }
   }, []);
 
@@ -107,6 +130,7 @@ export function useSupabaseSession() {
     ...state,
     signedIn: Boolean(state.user),
     sendSignInLink,
+    signInWithGoogle,
     signOut,
   };
 }

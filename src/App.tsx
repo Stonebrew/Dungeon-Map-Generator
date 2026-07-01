@@ -253,7 +253,15 @@ function DailyDungeonApp() {
           })}
         </nav>
       </div>
-      {accountOpen && <AccountDialog onClose={() => setAccountOpen(false)} authSession={authSession} subscriptionStatus={subscriptionEntitlement.subscriptionStatus} />}
+      {accountOpen && (
+        <AccountDialog
+          onClose={() => setAccountOpen(false)}
+          authSession={authSession}
+          subscriptionLoading={subscriptionEntitlement.loading}
+          subscriptionErrorMessage={subscriptionEntitlement.errorMessage}
+          subscriptionStatus={subscriptionEntitlement.subscriptionStatus}
+        />
+      )}
     </div>
   );
 }
@@ -381,10 +389,14 @@ function PlaceholderFeature({ feature }: { feature: { name: string; text: string
 function AccountDialog({
   onClose,
   authSession,
+  subscriptionLoading,
+  subscriptionErrorMessage,
   subscriptionStatus,
 }: {
   onClose: () => void;
   authSession: ReturnType<typeof useSupabaseSession>;
+  subscriptionLoading: boolean;
+  subscriptionErrorMessage?: string;
   subscriptionStatus?: string;
 }) {
   const [accountSection, setAccountSection] = useState<'account' | 'terms' | 'privacy' | 'support'>('account');
@@ -407,7 +419,7 @@ function AccountDialog({
       ? {
           eyebrow: 'Account',
           title: authSession.signedIn ? 'Account' : 'Sign in',
-          content: <AccountPanel authSession={authSession} subscriptionStatus={subscriptionStatus} />,
+          content: <AccountPanel authSession={authSession} subscriptionLoading={subscriptionLoading} subscriptionErrorMessage={subscriptionErrorMessage} subscriptionStatus={subscriptionStatus} />,
         }
       : accountSection === 'terms'
         ? {
@@ -504,11 +516,107 @@ function AccountDialog({
   );
 }
 
-function AccountPanel({ authSession, subscriptionStatus }: { authSession: ReturnType<typeof useSupabaseSession>; subscriptionStatus?: string }) {
+function getSubscriptionStatusMessage(subscriptionStatus: string | undefined) {
+  switch (subscriptionStatus) {
+    case 'ACTIVE':
+      return {
+        plan: 'Cartographer',
+        statusLabel: 'Active',
+        statusText: 'Cartographer access is active.',
+        tone: 'success' as const,
+      };
+    case 'CANCELLED':
+      return {
+        plan: 'Surveyor',
+        statusLabel: 'Cancelled',
+        statusText: 'Cartographer access is not active.',
+        tone: 'warning' as const,
+      };
+    case 'SUSPENDED':
+      return {
+        plan: 'Surveyor',
+        statusLabel: 'Suspended',
+        statusText: 'Cartographer access is not active.',
+        tone: 'warning' as const,
+      };
+    case 'EXPIRED':
+      return {
+        plan: 'Surveyor',
+        statusLabel: 'Expired',
+        statusText: 'Cartographer access is not active.',
+        tone: 'warning' as const,
+      };
+    case 'PAYMENT_FAILED':
+      return {
+        plan: 'Surveyor',
+        statusLabel: 'Payment issue',
+        statusText: 'Cartographer access is not active. Please check PayPal or contact support.',
+        tone: 'danger' as const,
+      };
+    default:
+      return {
+        plan: 'Surveyor',
+        statusLabel: undefined,
+        statusText: 'Free access is active.',
+        tone: 'neutral' as const,
+      };
+  }
+}
+
+function AccountStatusCard({
+  subscriptionLoading,
+  subscriptionErrorMessage,
+  subscriptionStatus,
+}: {
+  subscriptionLoading: boolean;
+  subscriptionErrorMessage?: string;
+  subscriptionStatus?: string;
+}) {
+  const status = getSubscriptionStatusMessage(subscriptionStatus);
+  const toneClass =
+    status.tone === 'success'
+      ? 'border-moss/20 bg-moss/[0.07] text-moss'
+      : status.tone === 'danger'
+        ? 'border-ember/25 bg-ember/10 text-ember'
+        : status.tone === 'warning'
+          ? 'border-brass/25 bg-brass/10 text-ink/75'
+          : 'border-slatewood/15 bg-[#fbf4e6] text-ink/72';
+
+  if (subscriptionLoading) {
+    return (
+      <div className="rounded-md border border-slatewood/15 bg-[#fbf4e6] px-3 py-2 text-sm leading-6 text-ink/70">
+        <p className="font-bold text-ink">Checking account access...</p>
+        <p className="mt-1 text-ink/60">Your current plan will appear here in a moment.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className={`rounded-md border px-3 py-2 text-sm leading-6 ${toneClass}`}>
+      <p className="font-bold text-ink">Current plan: {status.plan}</p>
+      {status.statusLabel && <p className="mt-1 font-semibold">Subscription status: {status.statusLabel}</p>}
+      <p className="mt-1 text-ink/68">{status.statusText}</p>
+      {subscriptionErrorMessage && <p className="mt-2 font-semibold text-ink/60">{subscriptionErrorMessage}</p>}
+    </div>
+  );
+}
+
+function AccountPanel({
+  authSession,
+  subscriptionLoading,
+  subscriptionErrorMessage,
+  subscriptionStatus,
+}: {
+  authSession: ReturnType<typeof useSupabaseSession>;
+  subscriptionLoading: boolean;
+  subscriptionErrorMessage?: string;
+  subscriptionStatus?: string;
+}) {
   const [email, setEmail] = useState('');
   const [statusMessage, setStatusMessage] = useState<string | undefined>();
   const [errorMessage, setErrorMessage] = useState<string | undefined>();
   const [submitting, setSubmitting] = useState(false);
+  const [googleSubmitting, setGoogleSubmitting] = useState(false);
 
   const handleSignIn = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -541,6 +649,20 @@ function AccountPanel({ authSession, subscriptionStatus }: { authSession: Return
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    setStatusMessage(undefined);
+    setErrorMessage(undefined);
+    setGoogleSubmitting(true);
+
+    try {
+      await authSession.signInWithGoogle();
+      setStatusMessage('Opening Google sign-in...');
+    } catch (error) {
+      setErrorMessage(error instanceof Error ? error.message : 'Could not start Google sign-in.');
+      setGoogleSubmitting(false);
+    }
+  };
+
   if (authSession.loading) {
     return <p className="text-sm leading-6 text-ink/70">Checking account...</p>;
   }
@@ -556,11 +678,7 @@ function AccountPanel({ authSession, subscriptionStatus }: { authSession: Return
           <p>Signed in as</p>
           <p className="mt-2 select-all rounded-md border border-slatewood/15 bg-[#fbf4e6] px-3 py-2 font-mono text-sm font-bold text-ink">{authSession.email ?? 'your account'}</p>
         </div>
-        <p className="text-ink/65">
-          {subscriptionStatus === 'ACTIVE'
-            ? 'Your verified Cartographer subscription is active on this account.'
-            : 'Signed-in accounts use verified subscription status for Cartographer access.'}
-        </p>
+        <AccountStatusCard subscriptionLoading={subscriptionLoading} subscriptionErrorMessage={subscriptionErrorMessage} subscriptionStatus={subscriptionStatus} />
         {statusMessage && <p className="rounded-md border border-moss/20 bg-moss/[0.07] px-3 py-2 font-bold text-moss">{statusMessage}</p>}
         {errorMessage && <p className="rounded-md border border-ember/25 bg-ember/10 px-3 py-2 font-bold text-ember">{errorMessage}</p>}
         <button
@@ -577,6 +695,25 @@ function AccountPanel({ authSession, subscriptionStatus }: { authSession: Return
 
   return (
     <form onSubmit={handleSignIn} className="space-y-4 text-sm leading-6 text-ink/75">
+      <div className="rounded-md border border-slatewood/15 bg-[#fbf4e6] px-3 py-2 text-sm leading-6 text-ink/72">
+        <p className="font-bold text-ink">You are not signed in.</p>
+        <p className="mt-1 text-ink/65">Sign in to save dossiers and manage account access.</p>
+        <p className="mt-2 font-bold text-ink">Current plan: Surveyor</p>
+        <p className="mt-1 text-ink/65">Free access is active.</p>
+      </div>
+      <button
+        type="button"
+        onClick={handleGoogleSignIn}
+        disabled={googleSubmitting || submitting}
+        className="inline-flex min-h-11 w-full items-center justify-center gap-2 rounded-md border border-ember bg-ember px-3 py-2 text-sm font-bold text-white shadow-tool transition hover:bg-ember/90 disabled:cursor-not-allowed disabled:bg-ink/20"
+      >
+        {googleSubmitting ? 'Opening Google sign-in...' : 'Sign in with Google'}
+      </button>
+      <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.16em] text-ink/40">
+        <span className="h-px flex-1 bg-slatewood/15" aria-hidden="true" />
+        <span>Email fallback</span>
+        <span className="h-px flex-1 bg-slatewood/15" aria-hidden="true" />
+      </div>
       <p>Enter your email and we&apos;ll send a sign-in link.</p>
       <label className="block">
         <span className="ledger-label text-xs font-bold uppercase text-ink/45">Email address</span>
@@ -593,7 +730,7 @@ function AccountPanel({ authSession, subscriptionStatus }: { authSession: Return
       {errorMessage && <p className="rounded-md border border-ember/25 bg-ember/10 px-3 py-2 font-bold text-ember">{errorMessage}</p>}
       <button
         type="submit"
-        disabled={submitting}
+        disabled={submitting || googleSubmitting}
         className="inline-flex min-h-10 items-center justify-center gap-2 rounded-md border border-slatewood bg-slatewood px-3 py-2 text-sm font-bold text-white shadow-tool transition hover:bg-slatewood/90 disabled:cursor-not-allowed disabled:bg-ink/20"
       >
         {submitting ? 'Sending...' : 'Send sign-in link'}
