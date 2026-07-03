@@ -34,7 +34,7 @@ const viewItems: NavItem[] = [
 ];
 
 const testerBuildAnnouncement = {
-  text: 'Tester build update: all five showcase maps are calibrated, and Battle Map Print is now available for Cartographer maps.',
+  text: 'Tester build: Dungeon Dossier is nearly ready for launch. Try the free tavern sample, test the print tools, and send feedback from Account.',
 };
 const supportEmail = 'dungeondossierapp@gmail.com';
 
@@ -709,6 +709,7 @@ function AccountPanel({
       >
         {googleSubmitting ? 'Opening Google sign-in...' : 'Sign in with Google'}
       </button>
+      <p className="text-xs leading-5 text-ink/55">Google sign-in is securely handled through Supabase for Dungeon Dossier. Final testing phase will begin soon!</p>
       <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.16em] text-ink/40">
         <span className="h-px flex-1 bg-slatewood/15" aria-hidden="true" />
         <span>Email fallback</span>
