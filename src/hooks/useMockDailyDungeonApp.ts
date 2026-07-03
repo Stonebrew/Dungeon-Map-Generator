@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
-import { currentTier, mockDungeons, plans, rerollAllowancesByTier, rerollCountsByTier } from '../data/mockDungeon';
+import { availableMockDungeons, currentTier, plans, rerollAllowancesByTier, rerollCountsByTier } from '../data/mockDungeon';
+import { getLocalDateKey, getTodaysDungeon } from '../lib/contentQueue';
 import { canAccessDungeonFeature, canAccessFeature, getArchiveSlotLimit, isFreeSamplePacket, type FeatureKey } from '../lib/entitlements';
 import type { RerollCounts, TierId } from '../types';
 
@@ -24,10 +25,6 @@ function cloneRerollCounts() {
   return Object.fromEntries(
     Object.entries(rerollCountsByTier).map(([tier, counts]) => [tier, { ...counts }]),
   ) as Record<TierId, RerollCounts>;
-}
-
-function getLocalDateKey() {
-  return new Date().toLocaleDateString('en-CA');
 }
 
 function getNewPacketRefreshUsage() {
@@ -85,10 +82,12 @@ function getInitialRerollCounts() {
 // Prototype-only state layer. Replace this hook with real daily dungeon,
 // account, entitlement, archive, favorite, and reroll APIs when the backend exists.
 export function useMockDailyDungeonApp(entitlementTier?: TierId) {
+  const dungeons = availableMockDungeons;
+  const defaultDungeon = getTodaysDungeon(dungeons) ?? dungeons[0];
   const [view, setView] = useState<ViewId>('today');
   const [lockedFeature, setLockedFeature] = useState<FeatureKey | undefined>();
   const [placeholderFeature, setPlaceholderFeature] = useState<PlaceholderFeature | undefined>();
-  const [selectedDungeonId, setSelectedDungeonId] = useState(mockDungeons[0].id);
+  const [selectedDungeonId, setSelectedDungeonId] = useState(defaultDungeon.id);
   const [selectedTier, setSelectedTier] = useState<TierId>(currentTier);
   const [savedDungeonIds, setSavedDungeonIds] = useState<Set<string>>(() => new Set());
   const [archiveLimitMessage, setArchiveLimitMessage] = useState<string | undefined>();
@@ -97,11 +96,11 @@ export function useMockDailyDungeonApp(entitlementTier?: TierId) {
 
   const currentPlan = useMemo(() => plans.find((plan) => plan.id === activeTier), [activeTier]);
   const selectedDungeon = useMemo(
-    () => mockDungeons.find((dungeon) => dungeon.id === selectedDungeonId) ?? mockDungeons[0],
-    [selectedDungeonId],
+    () => dungeons.find((dungeon) => dungeon.id === selectedDungeonId) ?? defaultDungeon,
+    [defaultDungeon, dungeons, selectedDungeonId],
   );
   const newPacketRefreshTarget = useMemo(() => {
-    const refreshDungeons = mockDungeons.filter((dungeon) => !isFreeSamplePacket(dungeon));
+    const refreshDungeons = dungeons.filter((dungeon) => !isFreeSamplePacket(dungeon));
 
     if (refreshDungeons.length < 2) {
       return undefined;
@@ -110,7 +109,7 @@ export function useMockDailyDungeonApp(entitlementTier?: TierId) {
     const currentIndex = refreshDungeons.findIndex((dungeon) => dungeon.id === selectedDungeonId);
     const nextIndex = currentIndex >= 0 ? (currentIndex + 1) % refreshDungeons.length : 0;
     return refreshDungeons[nextIndex];
-  }, [selectedDungeonId]);
+  }, [dungeons, selectedDungeonId]);
 
   const showLockedFeature = (feature: FeatureKey) => {
     setLockedFeature(feature);
@@ -232,7 +231,7 @@ export function useMockDailyDungeonApp(entitlementTier?: TierId) {
     archiveLimitMessage,
     sessionRerollCounts,
     plans,
-    mockDungeons,
+    mockDungeons: dungeons,
     rerollAllowancesByTier,
     setSelectedDungeonId,
     setView,

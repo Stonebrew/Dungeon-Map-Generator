@@ -1,4 +1,5 @@
 import type { Dungeon, DungeonRoom, MapConnection, MapStyle, Plan, RerollAllowance, RerollCounts, RoomExit, TierId } from '../types';
+import { getAvailableDungeons } from '../lib/contentQueue';
 
 export const currentTier: TierId = 'lantern';
 
@@ -852,6 +853,9 @@ const premiumMapPocDungeonDraft: DraftDungeon = {
   id: 'dd-2026-05-16-premium-map-poc',
   dateIso: '2026-05-16',
   date: 'May 16, 2026',
+  releaseDate: '2026-05-16',
+  tier: 'cartographer',
+  status: 'active',
   title: 'The Verdant Watercourt',
   theme: 'Overgrown ruined temple water garden with reversed flow, hidden culverts, and a restless shrine custodian',
   difficulty: 'Moderate',
@@ -1196,6 +1200,9 @@ const volcanicPremiumMapPocDungeonDraft: DraftDungeon = {
   id: 'dd-2026-05-17-premium-volcanic-map-poc',
   dateIso: '2026-05-17',
   date: 'May 17, 2026',
+  releaseDate: '2026-05-17',
+  tier: 'cartographer',
+  status: 'active',
   title: 'The Ashen Crucible',
   theme: 'Volcanic fire-temple ruin with basalt stairs, broken bridges, and a dangerous cinder relic',
   difficulty: 'High',
@@ -1503,6 +1510,9 @@ const arcticTemplePremiumMapPocDungeonDraft: DraftDungeon = {
   id: 'dd-2026-05-18-premium-arctic-temple-map-poc',
   dateIso: '2026-05-18',
   date: 'May 18, 2026',
+  releaseDate: '2026-05-18',
+  tier: 'cartographer',
+  status: 'active',
   title: 'The Frostwake Spire',
   theme: 'Arctic temple of ice bridges, frozen side courts, and a central awakening chamber',
   difficulty: 'High',
@@ -1839,6 +1849,9 @@ const enchantedVillagePremiumMapDungeonDraft: DraftDungeon = {
   id: 'dd-2026-05-19-premium-enchanted-village',
   dateIso: '2026-05-19',
   date: 'May 19, 2026',
+  releaseDate: '2026-05-19',
+  tier: 'cartographer',
+  status: 'active',
   title: 'The Bramblebell Moot',
   theme: 'Enchanted forest village of talking paths, hidden bargains, and fey-lit cottages',
   difficulty: 'Moderate',
@@ -2424,6 +2437,9 @@ const desertTombPremiumMapDungeonDraft: DraftDungeon = {
   id: 'dd-2026-05-20-premium-desert-tomb',
   dateIso: '2026-05-20',
   date: 'May 20, 2026',
+  releaseDate: '2026-05-20',
+  tier: 'cartographer',
+  status: 'active',
   title: 'The Tomb of Amun-Serekh',
   theme: 'Haunted desert tomb of a paranoid pharaoh, broken wards, spider-haunted corridors, and a mummy king',
   difficulty: 'High',
@@ -4560,6 +4576,9 @@ const freeSampleTavernDungeonDraft: DraftDungeon = {
   id: 'dd-2026-05-21-free-sample-tavern',
   dateIso: '2026-05-21',
   date: 'Free Sample',
+  releaseDate: '2026-05-21',
+  tier: 'surveyor',
+  status: 'active',
   title: 'Free Sample Packet Tavern',
   theme: 'Lively fantasy tavern with a private room, two guest rooms, a busy kitchen, and a hidden coin stash',
   difficulty: 'Low',
@@ -4982,6 +5001,8 @@ export const retiredLegacyDungeons: Dungeon[] = [
   desertTempleDungeon,
 ];
 
+// To queue a future public packet, add it here with status "scheduled" and a YYYY-MM-DD releaseDate.
+// Normal app flows use availableMockDungeons, so future-dated packets stay hidden until release.
 export const mockDungeons: Dungeon[] = [
   freeSampleTavernDungeon,
   premiumMapPocDungeon,
@@ -4990,3 +5011,5 @@ export const mockDungeons: Dungeon[] = [
   enchantedVillagePremiumMapDungeon,
   desertTombPremiumMapDungeon,
 ];
+
+export const availableMockDungeons: Dungeon[] = getAvailableDungeons(mockDungeons);

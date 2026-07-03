@@ -63,6 +63,9 @@ const manifest = {
       title: dungeon.title,
       theme: dungeon.theme,
       difficulty: dungeon.difficulty,
+      releaseDate: dungeon.releaseDate,
+      tier: dungeon.tier,
+      status: dungeon.status,
       mapStyle: dungeon.map.style,
       roomCount: dungeon.rooms.length,
     };

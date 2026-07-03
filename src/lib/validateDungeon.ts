@@ -48,6 +48,9 @@ const validPremiumMapMarkerValues = new Set(['treasure', 'hazard', 'secret', 'bo
 const validPremiumMapSchematicFootprintShapes = new Set(['ellipse', 'rect']);
 const validPremiumBattleMapPrintStatusValues = new Set(['calibrated', 'uncalibrated', 'unavailable']);
 const validPremiumBattleMapPrintOverlapValues = new Set([0, 0.25, 0.5]);
+const validDungeonContentStatusValues = new Set(['scheduled', 'active', 'archived']);
+const validDungeonContentTierValues = new Set(['surveyor', 'cartographer']);
+const dateOnlyPattern = /^\d{4}-\d{2}-\d{2}$/;
 
 function validateOptionalValue(value: string | undefined, validValues: Set<string>, label: string, warnings: DungeonValidationIssue[], roomNumbers?: number[]) {
   if (value && !validValues.has(value)) {
@@ -416,6 +419,15 @@ export function validateDungeon(dungeon: Dungeon): DungeonValidationResult {
 
   validateOptionalValues(dungeon.map.layout?.grammar, validLayoutGrammarValues, 'Map layout grammar', warnings);
   validatePremiumMapMetadata(dungeon.map.premiumMap, roomsByNumber, warnings);
+  validateOptionalValue(dungeon.status, validDungeonContentStatusValues, 'Dungeon content status', warnings);
+  validateOptionalValue(dungeon.tier, validDungeonContentTierValues, 'Dungeon content tier', warnings);
+
+  if (dungeon.releaseDate && !dateOnlyPattern.test(dungeon.releaseDate)) {
+    warnings.push({
+      severity: 'warning',
+      message: `Dungeon releaseDate "${dungeon.releaseDate}" should use YYYY-MM-DD format for date-only queue comparisons.`,
+    });
+  }
 
   if (connections.length === 0) {
     warnings.push({

@@ -232,6 +232,10 @@ export type Dungeon = {
   dateIso: string;
   // Display date used by the current UI. Keep formatting in the frontend or backend presentation layer.
   date: string;
+  // Repo-based content queue metadata. Add future packets with status "scheduled" and a YYYY-MM-DD releaseDate.
+  releaseDate?: string;
+  tier?: 'surveyor' | 'cartographer';
+  status?: 'scheduled' | 'active' | 'archived';
   title: string;
   theme: string;
   difficulty: string;

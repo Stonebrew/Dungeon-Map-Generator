@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-03T02:28:14.713Z",
+  "generatedAt": "2026-07-03T06:51:36.842Z",
   "source": "src/data/mockDungeon.ts",
   "contract": "Dungeon",
   "count": 6,
@@ -12,6 +12,9 @@
       "title": "Free Sample Packet Tavern",
       "theme": "Lively fantasy tavern with a private room, two guest rooms, a busy kitchen, and a hidden coin stash",
       "difficulty": "Low",
+      "releaseDate": "2026-05-21",
+      "tier": "surveyor",
+      "status": "active",
       "mapStyle": "shrine",
       "roomCount": 6
     },
@@ -23,6 +26,9 @@
       "title": "The Verdant Watercourt",
       "theme": "Overgrown ruined temple water garden with reversed flow, hidden culverts, and a restless shrine custodian",
       "difficulty": "Moderate",
+      "releaseDate": "2026-05-16",
+      "tier": "cartographer",
+      "status": "active",
       "mapStyle": "shrine",
       "roomCount": 8
     },
@@ -34,6 +40,9 @@
       "title": "The Ashen Crucible",
       "theme": "Volcanic fire-temple ruin with basalt stairs, broken bridges, and a dangerous cinder relic",
       "difficulty": "High",
+      "releaseDate": "2026-05-17",
+      "tier": "cartographer",
+      "status": "active",
       "mapStyle": "volcanicForge",
       "roomCount": 7
     },
@@ -45,6 +54,9 @@
       "title": "The Frostwake Spire",
       "theme": "Arctic temple of ice bridges, frozen side courts, and a central awakening chamber",
       "difficulty": "High",
+      "releaseDate": "2026-05-18",
+      "tier": "cartographer",
+      "status": "active",
       "mapStyle": "frozenRuin",
       "roomCount": 9
     },
@@ -56,6 +68,9 @@
       "title": "The Bramblebell Moot",
       "theme": "Enchanted forest village of talking paths, hidden bargains, and fey-lit cottages",
       "difficulty": "Moderate",
+      "releaseDate": "2026-05-19",
+      "tier": "cartographer",
+      "status": "active",
       "mapStyle": "forestRuin",
       "roomCount": 15
     },
@@ -67,6 +82,9 @@
       "title": "The Tomb of Amun-Serekh",
       "theme": "Haunted desert tomb of a paranoid pharaoh, broken wards, spider-haunted corridors, and a mummy king",
       "difficulty": "High",
+      "releaseDate": "2026-05-20",
+      "tier": "cartographer",
+      "status": "active",
       "mapStyle": "desertTemple",
       "roomCount": 9
     }
